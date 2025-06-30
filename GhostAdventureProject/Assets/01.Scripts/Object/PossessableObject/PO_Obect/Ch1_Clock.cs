@@ -22,8 +22,22 @@ public class Ch1_Clock : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            isControlMode = true;
-            zoomCamera.gameObject.SetActive(isControlMode);
+            if (isControlMode)
+            {
+                // 조작 중이면 조작 종료
+                isControlMode = false;
+                zoomCamera.gameObject.SetActive(false);
+            }
+            else
+            {
+                // 조작 시작
+                isControlMode = true;
+                zoomCamera.gameObject.SetActive(true);
+            }
+        }
+        if (!isControlMode && Input.GetKeyDown(KeyCode.E))
+        {
+            Unpossess();
         }
         
         if(!isControlMode) return;
@@ -42,10 +56,10 @@ public class Ch1_Clock : BasePossessable
         if (hour == 8 && minute == 14)
         {
             Debug.Log("정답");
+            tvObject.ActivateTV();
             isControlMode = false;
             zoomCamera.gameObject.SetActive(false);
             isCompleted = true;
-            tvObject.ActivateTV();
         }
     }
 
