@@ -36,7 +36,7 @@ public class UIManager : Singleton<UIManager>
 
     private void Start()
     {
-        gameover.SetActive(false);
+        // gameover.SetActive(false);
     }
 
     // 게임시작시 UI 셋팅

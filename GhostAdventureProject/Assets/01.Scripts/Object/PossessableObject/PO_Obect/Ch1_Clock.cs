@@ -16,8 +16,6 @@ public class Ch1_Clock : BasePossessable
 
     protected override void Update()
     {
-        base.Update();
-
         if (!isPossessed) return;
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -35,6 +33,7 @@ public class Ch1_Clock : BasePossessable
                 zoomCamera.gameObject.SetActive(true);
             }
         }
+        
         if (!isControlMode && Input.GetKeyDown(KeyCode.E))
         {
             Unpossess();
@@ -59,7 +58,7 @@ public class Ch1_Clock : BasePossessable
             tvObject.ActivateTV();
             isControlMode = false;
             zoomCamera.gameObject.SetActive(false);
-            hasActivated = true;
+            hasActivated = false;
         }
     }
 
