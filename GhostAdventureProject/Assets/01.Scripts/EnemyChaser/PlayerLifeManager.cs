@@ -22,7 +22,7 @@ public class PlayerLifeManager : MonoBehaviour
     // 생명 시스템 관련 메서드들
     // ================================
 
-    public void LosePlayerLife()
+    public void LosePlayerLife() 
     {
         currentPlayerLives--;
         Debug.Log($"생명 감소! 남은 생명: {currentPlayerLives}");
