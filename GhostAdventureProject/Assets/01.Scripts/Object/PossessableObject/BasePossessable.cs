@@ -5,16 +5,14 @@ using UnityEngine;
 
 public abstract class BasePossessable : MonoBehaviour
 {
-    public bool isPossessed;
-    public bool isCompleted;
+    protected bool isPossessed = false;
+    protected bool hasActivated = false;
+    protected bool isCompleted = true; // 해금 안된 오브젝트 마다 isCompleted 값 false로 초기화 해주기
+    public bool IsCompleted => isCompleted;
+    public bool HasActivated => hasActivated;
+    public bool IsPossessed => isPossessed;
     public bool IsPossessedState => isPossessed;
 
-    virtual protected void Start()
-    {
-        isPossessed = false;
-        isCompleted = true;
-        // 오브젝트 마다 isCompleted 값 초기화 해주기
-    }
     protected virtual void Update()
     {
         if (!isPossessed)

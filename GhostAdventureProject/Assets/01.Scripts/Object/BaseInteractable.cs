@@ -5,6 +5,7 @@ public class BaseInteractable : MonoBehaviour
     public GameObject interactionInfo;
     private BasePossessable BasePossessable;
     private bool isCompleted;
+    private bool hasActivated;
 
     void Start()
     {
@@ -14,13 +15,19 @@ public class BaseInteractable : MonoBehaviour
         BasePossessable = GetComponent<BasePossessable>();
 
         if (BasePossessable != null)
-            isCompleted = BasePossessable.isCompleted;
+        {
+            isCompleted = BasePossessable.IsCompleted;
+            hasActivated = BasePossessable.HasActivated;
+        }
     }
 
     public void SetInteractionPopup(bool pop)
     {
-        if (interactionInfo != null && isCompleted)
+        Debug.Log($"{gameObject.name}의 isCompleted: {isCompleted} / hasActivated: {hasActivated}");
+        if (interactionInfo != null && isCompleted && !hasActivated)
+        {
             interactionInfo.SetActive(pop);
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)
