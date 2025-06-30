@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RatPossessable : MoveBasePossessable
+public class Ch1_Rat : MoveBasePossessable
 {
     protected override void Update()
     {
