@@ -74,21 +74,40 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         startPos = transform.position;
-        currentPlayerLives = maxPlayerLives; // 생명 초기화
+        currentPlayerLives = maxPlayerLives;
 
-        if (Player != null)
+        // GameManager를 통해 실제 생성된 플레이어 찾기
+        if (Player == null && GameManager.Instance != null)
         {
-            playerHide = Player.GetComponent<PlayerHide>();
+            GameObject playerObj = GameManager.Instance.Player;
+            if (playerObj != null)
+            {
+                Player = playerObj.transform;
+                playerHide = Player.GetComponent<PlayerHide>();
+                Debug.Log("GameManager를 통해 플레이어를 찾았습니다!");
+            }
         }
+
         SetupPatrolPoints();
         ChangeState(AIState.Patrolling);
     }
 
     void Update()
     {
-        stateTimer += Time.deltaTime;
+        // 플레이어가 없으면 다시 찾기 시도
+        if (Player == null && GameManager.Instance != null)
+        {
+            GameObject playerObj = GameManager.Instance.Player;
+            if (playerObj != null)
+            {
+                Player = playerObj.transform;
+                playerHide = Player.GetComponent<PlayerHide>();
+                Debug.Log("런타임에 플레이어를 찾았습니다!");
+            }
+            return; // 플레이어가 없으면 AI 로직 실행 안함
+        }
 
-        // 플레이어를 잡는 범위 체크
+        // 플레이어를 잡는 범위 체크 (기존 코드)
         if (currentState == AIState.Chasing &&
             Vector3.Distance(transform.position, Player.position) <= catchRange)
         {
@@ -96,6 +115,7 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
+        stateTimer += Time.deltaTime;
         UpdateCurrentState();
         CheckStateTransitions();
     }
