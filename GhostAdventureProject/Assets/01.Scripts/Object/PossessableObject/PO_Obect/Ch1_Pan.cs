@@ -8,11 +8,13 @@ public class Ch1_Pan : BasePossessable
     [SerializeField] private AudioClip isFall;
 
     private Ch1_Rat rat;
+    private Ch1_Cat cat;
 
     protected override void Start()
     {
         base.Start();
         rat = FindObjectOfType<Ch1_Rat>();
+        cat = FindObjectOfType<Ch1_Cat>();
     }
 
     protected override void Update()
@@ -37,25 +39,28 @@ public class Ch1_Pan : BasePossessable
         // 애니메이션 시퀀스 생성
         Sequence panSequence = DOTween.Sequence();
 
-        // 1. 오른쪽으로 기울이며 아래로 떨어짐 (0.3초)
+        // 1. 팬이 기울이며 아래로 떨어짐 (0.3초 동시에 실행)
         panSequence.Append(transform.DOLocalRotate(new Vector3(0f, 0f, -60f), 0.3f).SetEase(Ease.InQuad));
         panSequence.Join(transform.DOLocalMoveY(originalPos.y - 1.5f, 0.3f).SetEase(Ease.InQuad));
 
-        // 2. 사운드 재생
+        // 2. 0.3초가 끝난 후 → 사운드 재생
         panSequence.AppendCallback(() =>
         {
             SoundManager.Instance.PlaySFX(isFall);
         });
 
-        // 3. 회전 원래대로 복귀
+        // 3. 회전 원래대로 복귀 (0.2초)
         panSequence.Append(transform.DOLocalRotateQuaternion(originalRot, 0.2f).SetEase(Ease.OutBounce));
 
-        //고양이가 깨고 (애니메이션)
-        //고양이 isCompleted = true;
-        //쥐가 도망가고 (애니메이션)
-        //쥐 isCompleted = true;
-        rat.ActivateRat();
-        hasActivated = false; // 이벤트 완료 후 활성화 상태 초기화
+        // 4. 0.2초 대기 후 쥐 도망 애니메이션 실행
+        panSequence.AppendInterval(0.05f);
+        panSequence.AppendCallback(() =>
+        {
+            rat.ActivateRat();
+            cat.ActivateCat();
+            hasActivated = false; // 이벤트 완료 후 초기화
+            Unpossess();
+        });
     }
 
 

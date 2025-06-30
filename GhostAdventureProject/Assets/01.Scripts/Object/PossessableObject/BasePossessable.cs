@@ -11,6 +11,9 @@ public abstract class BasePossessable : MonoBehaviour
     public bool IsPossessed => isPossessed;
     public bool IsPossessedState => isPossessed;
 
+    protected Animator anim;
+
+
     protected virtual void Start()
     {
         isPossessed = false;
