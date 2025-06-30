@@ -21,7 +21,7 @@ public class Ch1_TV : BasePossessable
         if (animator != null)
             animator.SetTrigger("PowerOn");
 
-        Debug.Log("TV 전원 켜짐 → 이제 빙의 가능");
+        Debug.Log("TV 전원 켜짐 - 이제 빙의 가능");
     }
 
     protected override void Update()
