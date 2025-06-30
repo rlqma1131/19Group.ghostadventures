@@ -49,7 +49,7 @@ public class PossessionSystem : Singleton<PossessionSystem>
 
     public void SetInteractTarget(BasePossessable target)
     {
-        if (!target.isCompleted)
+        if (!target.IsCompleted)
             return;
 
         currentTarget = target;

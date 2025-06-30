@@ -8,7 +8,6 @@ public class Ch1_CelebrityBox : BasePossessable
     [SerializeField] private GameObject noteObject;
     [SerializeField] private Animator animator;
     
-    private bool hasActivated = false;
 
     protected override void Update()
     {
