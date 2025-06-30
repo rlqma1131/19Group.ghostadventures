@@ -6,7 +6,8 @@ using UnityEngine;
 public class EnemyAI : MonoBehaviour
 {
     [Header("기본 설정")]
-    public Transform Player;
+    [Tooltip("런타임에 GameManager를 통해 자동으로 할당됩니다")]
+    public Transform Player; // 수동 할당 불필요
     public float detectionRange = 5f;
     public float moveSpeed = 2f;
 
@@ -33,10 +34,6 @@ public class EnemyAI : MonoBehaviour
     [Header("유인 오브젝트 설정")]
     public float distractionRange = 15f; // 유인 감지 범위
 
-    [Header("생명 시스템 설정")]
-    public int maxPlayerLives = 2; // 챕터당 목숨 2개
-    private int currentPlayerLives;
-
     private Vector3 startPos;
     private Vector3[] patrolPoints;
     private int currentPatrolIndex = 0;
@@ -51,6 +48,7 @@ public class EnemyAI : MonoBehaviour
     private bool isSearchWaiting = false;
 
     private PlayerHide playerHide;
+    private PlayerLifeManager playerLifeManager; // 생명 관리자 참조
     private Transform currentHideArea;
     private Transform currentDistraction; // 현재 끌린 유인 오브젝트
 
@@ -74,7 +72,6 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         startPos = transform.position;
-        currentPlayerLives = maxPlayerLives;
 
         // GameManager를 통해 실제 생성된 플레이어 찾기
         if (Player == null && GameManager.Instance != null)
@@ -88,8 +85,37 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
+        // PlayerLifeManager 찾기 (Player에서 직접 가져오기)
+        if (Player != null)
+        {
+            playerLifeManager = Player.GetComponent<PlayerLifeManager>();
+        }
+
+        // 또는 싱글톤으로 찾기
+        if (playerLifeManager == null)
+        {
+            playerLifeManager = PlayerLifeManager.Instance;
+        }
+
+        if (playerLifeManager == null)
+        {
+            Debug.LogError("PlayerLifeManager를 찾을 수 없습니다!");
+        }
+
         SetupPatrolPoints();
         ChangeState(AIState.Patrolling);
+    }
+
+    void OnEnable()
+    {
+        // 생명을 잃었을 때 스턴 처리를 위한 이벤트 구독
+        PlayerLifeManager.OnLifeLost += HandlePlayerLifeLost;
+    }
+
+    void OnDisable()
+    {
+        // 이벤트 구독 해제
+        PlayerLifeManager.OnLifeLost -= HandlePlayerLifeLost;
     }
 
     void Update()
@@ -107,7 +133,7 @@ public class EnemyAI : MonoBehaviour
             return; // 플레이어가 없으면 AI 로직 실행 안함
         }
 
-        // 플레이어를 잡는 범위 체크 (기존 코드)
+        // 플레이어를 잡는 범위 체크
         if (currentState == AIState.Chasing &&
             Vector3.Distance(transform.position, Player.position) <= catchRange)
         {
@@ -195,8 +221,11 @@ public class EnemyAI : MonoBehaviour
             enemyAnimator.SetTrigger("PlayerEscaped");
         }
 
-        // 생명 감소 및 스턴 처리
-        LosePlayerLife();  // 생명 관리 스크립트도 이름 바꿔야함 
+        // PlayerLifeManager에게 생명 감소 요청
+        if (playerLifeManager != null)
+        {
+            playerLifeManager.LosePlayerLife();
+        }
     }
 
     // QTE 실패 시 호출되는 메서드
@@ -210,45 +239,14 @@ public class EnemyAI : MonoBehaviour
             enemyAnimator.SetTrigger("PlayerCaught");
         }
 
-        // 게임오버 처리
-        HandleGameOver(); // 나중에 이름 바꿔야함 
+        // PlayerLifeManager가 게임오버 처리함 (이벤트로)
     }
 
-    // ================================
-    // 생명 시스템 관련 메서드들
-    // ================================
-
-    void LosePlayerLife()
+    // PlayerLifeManager에서 생명을 잃었을 때 호출되는 이벤트 핸들러
+    void HandlePlayerLifeLost()
     {
-        currentPlayerLives--;
-        Debug.Log($"생명 감소! 남은 생명: {currentPlayerLives}");
-
-        if (currentPlayerLives <= 0)
-        {
-            HandleGameOver();
-        }
-        else
-        {
-            // 2초 스턴 후 다시 추적
-            StartCoroutine(StunAfterQTE());
-        }
-    }
-
-    void HandleGameOver()
-    {
-        Debug.Log("게임오버!");
-
-        // TODO: 게임오버 UI 표시 (팀원이 구현 예정)
-        /*
-        GameOverUI gameOverUI = FindObjectOfType<GameOverUI>();
-        if (gameOverUI != null)
-        {
-            gameOverUI.ShowGameOver();
-        }
-        */
-
-        // 임시로 게임 일시정지
-        Time.timeScale = 0f;
+        // 2초 스턴 후 다시 추적
+        StartCoroutine(StunAfterQTE());
     }
 
     IEnumerator StunAfterQTE()
@@ -328,7 +326,6 @@ public class EnemyAI : MonoBehaviour
         SetTarget(soundPosition);
         ChangeState(AIState.DistractedByDecoy);
         */
-
     }
 
     void UpdateCurrentState()
@@ -437,6 +434,7 @@ public class EnemyAI : MonoBehaviour
                 // CaughtPlayer와 StunnedAfterQTE는 코루틴에서 상태 변경 처리
         }
     }
+
     void UpdatePatrolling()
     {
         if (isPatrolWaiting)
@@ -600,19 +598,21 @@ public class EnemyAI : MonoBehaviour
     }
 
     // ================================
-    // 공개 메서드들 (외부에서 호출 가능)
+    // 디버그용 메서드들 (PlayerLifeManager 대신 호출)
     // ================================
 
-    // 현재 생명 수 반환
+    // 현재 생명 수 반환 (PlayerLifeManager를 통해)
     public int GetCurrentLives()
     {
-        return currentPlayerLives;
+        return playerLifeManager != null ? playerLifeManager.GetCurrentLives() : 0;
     }
 
-    // 생명 리셋 (챕터 시작 시 호출)
+    // 생명 리셋 (PlayerLifeManager를 통해)
     public void ResetLives()
     {
-        currentPlayerLives = maxPlayerLives;
-        Debug.Log("생명이 리셋되었습니다.");
+        if (playerLifeManager != null)
+        {
+            playerLifeManager.ResetLives();
+        }
     }
 }
