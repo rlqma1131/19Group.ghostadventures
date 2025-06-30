@@ -7,6 +7,13 @@ public class Ch1_Pan : BasePossessable
 {
     [SerializeField] private AudioClip isFall;
 
+    protected override void Start()
+    {
+        base.Start();
+        isCompleted = true;
+        // 초기화 작업이 필요하다면 여기에 추가
+    }
+
     protected override void Update()
     {
         base.Update();
@@ -35,15 +42,15 @@ public class Ch1_Pan : BasePossessable
         panSequence.Append(transform.DOLocalRotate(new Vector3(0f, 0f, -60f), 0.3f).SetEase(Ease.InQuad));
         panSequence.Join(transform.DOLocalMoveY(originalPos.y - 1.5f, 0.3f).SetEase(Ease.InQuad));
 
-        // 2. 사운드 재생 (0.3초 지연)
+        // 2. 사운드 재생
         panSequence.AppendCallback(() =>
         {
             SoundManager.Instance.PlaySFX(isFall);
         });
 
-        // 3. 원래 위치, 회전으로 복귀
+        // 3. 회전 원래대로 복귀
         panSequence.Append(transform.DOLocalRotateQuaternion(originalRot, 0.2f).SetEase(Ease.OutBounce));
-        panSequence.Join(transform.DOLocalMoveY(originalPos.y, 0.2f).SetEase(Ease.OutBounce));
     }
+
 
 }

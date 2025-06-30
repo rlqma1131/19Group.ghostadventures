@@ -154,12 +154,14 @@ public class SoundManager : Singleton<SoundManager>
         sfxSource.PlayOneShot(clip, volume);
     }
 
+    // BGM 볼륨조절
     public void SetBGMVolume(float sliderValue)
     {
         float adjustedVolume = Mathf.Pow(sliderValue, 2f); // 지수 적용
         bgmSource.volume = adjustedVolume;
     }
 
+    // SFX 볼륨조절
     //public void SetSFXVolume(float sliderValue)
     //{
     //    float adjustedVolume = Mathf.Pow(sliderValue, 2f); // 지수 적용
