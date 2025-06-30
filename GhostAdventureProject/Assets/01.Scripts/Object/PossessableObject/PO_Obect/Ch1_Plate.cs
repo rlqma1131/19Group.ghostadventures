@@ -7,11 +7,6 @@ public class Ch1_Plate : BasePossessable
 {
     [SerializeField] private AudioClip isShaking;
 
-    protected override void Start()
-    {
-        base.Start();
-    }
-
     protected override void Update()
     {
         base.Update();

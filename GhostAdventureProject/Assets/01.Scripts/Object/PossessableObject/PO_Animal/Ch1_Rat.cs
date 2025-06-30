@@ -4,25 +4,36 @@ using UnityEngine;
 
 public class Ch1_Rat : MoveBasePossessable
 {
+    private Animator anim;
+    [SerializeField] private Vector2 point1 = new Vector2(-3.5f, -1.5f); // 포인트1 좌표
+    [SerializeField] private Vector2 point2 = new Vector2(3.5f, -1.5f); // 포인트2 좌표
+
     protected override void Start()
     {
         base.Start();
-    
-        isCompleted = false;
+
+        anim = GetComponentInChildren<Animator>();
+
+        hasActivated = false;
     }
 
     protected override void Update()
     {
         base.Update();
 
-        // if(상호작용 인풋)
-        //     OnActivate();
-
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            OnActivate();
+        }
     }
 
     public void ActivateRat()
     {
-        isCompleted = true;
+        hasActivated = true;
+        anim.SetBool("Move", true);
+        // 포인트1로 이동
+        anim.SetTrigger("Escape");
+        // 포인트2로 이동
     }
 
     public void OnActivate()

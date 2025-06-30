@@ -7,18 +7,19 @@ public class Ch1_Pan : BasePossessable
 {
     [SerializeField] private AudioClip isFall;
 
+    private Ch1_Rat rat;
+
     protected override void Start()
     {
         base.Start();
-        isCompleted = true;
-        // 초기화 작업이 필요하다면 여기에 추가
+        rat = FindObjectOfType<Ch1_Rat>();
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (!isPossessed || hasActivated)
+        if (!isPossessed || !hasActivated)
             return;
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -29,8 +30,6 @@ public class Ch1_Pan : BasePossessable
 
     private void TriggerPanEvent()
     {
-        hasActivated = true;
-
         // 초기값 저장
         Vector3 originalPos = transform.localPosition;
         Quaternion originalRot = transform.localRotation;
@@ -50,6 +49,13 @@ public class Ch1_Pan : BasePossessable
 
         // 3. 회전 원래대로 복귀
         panSequence.Append(transform.DOLocalRotateQuaternion(originalRot, 0.2f).SetEase(Ease.OutBounce));
+
+        //고양이가 깨고 (애니메이션)
+        //고양이 isCompleted = true;
+        //쥐가 도망가고 (애니메이션)
+        //쥐 isCompleted = true;
+        rat.ActivateRat();
+        hasActivated = false; // 이벤트 완료 후 활성화 상태 초기화
     }
 
 
