@@ -15,9 +15,9 @@ public class Ch1_TV : BasePossessable
     
     public void ActivateTV()
     {
-        if (isCompleted) return;
+        if (hasActivated) return;
 
-        isCompleted = true;
+        hasActivated = true;
         if (animator != null)
             animator.SetTrigger("PowerOn");
 
@@ -28,7 +28,7 @@ public class Ch1_TV : BasePossessable
     {
         base.Update();
         
-        if (!isPossessed || !isCompleted )
+        if (!isPossessed || !hasActivated )
             return;
 
         if (Input.GetKeyDown(KeyCode.Q))

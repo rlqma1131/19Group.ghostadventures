@@ -59,7 +59,6 @@ public class Ch1_Clock : BasePossessable
             tvObject.ActivateTV();
             isControlMode = false;
             zoomCamera.gameObject.SetActive(false);
-            isCompleted = true;
             hasActivated = true;
         }
     }
