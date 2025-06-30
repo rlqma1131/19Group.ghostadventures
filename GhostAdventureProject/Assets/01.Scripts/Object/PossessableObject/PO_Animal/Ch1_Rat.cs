@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Ch1_Rat : MoveBasePossessable
 {
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+    
         isCompleted = false;
     }
 
@@ -16,6 +18,11 @@ public class Ch1_Rat : MoveBasePossessable
         // if(상호작용 인풋)
         //     OnActivate();
 
+    }
+
+    public void ActivateRat()
+    {
+        isCompleted = true;
     }
 
     public void OnActivate()
