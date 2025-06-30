@@ -76,6 +76,8 @@ public class EnemyAI : MonoBehaviour
         startPos = transform.position;
         currentPlayerLives = maxPlayerLives; // 생명 초기화
 
+        if (Player == null) Player = GameObject.FindGameObjectWithTag("Player")?.transform;
+
         if (Player != null)
         {
             playerHide = Player.GetComponent<PlayerHide>();
@@ -86,6 +88,20 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
+        // 안전장치: 플레이어가 없으면 다시 찾기 시도
+        if (Player == null)
+        {
+            Player = GameObject.FindGameObjectWithTag("Player")?.transform;
+            if (Player != null)
+            {
+                playerHide = Player.GetComponent<PlayerHide>();
+                Debug.Log("Update에서 플레이어를 찾았습니다!");
+            }
+            else
+            {
+                return; // 플레이어가 없으면 AI 로직 실행 안함
+            }
+        }
         stateTimer += Time.deltaTime;
 
         // 플레이어를 잡는 범위 체크

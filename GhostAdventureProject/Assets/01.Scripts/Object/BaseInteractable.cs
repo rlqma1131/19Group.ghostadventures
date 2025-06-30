@@ -23,7 +23,6 @@ public class BaseInteractable : MonoBehaviour
 
     public void SetInteractionPopup(bool pop)
     {
-        Debug.Log($"{gameObject.name}의 isCompleted: {isCompleted} / hasActivated: {hasActivated}");
         if (interactionInfo != null && isCompleted && !hasActivated)
         {
             interactionInfo.SetActive(pop);
