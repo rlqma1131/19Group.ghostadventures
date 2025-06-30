@@ -68,7 +68,7 @@ public class MemoryFragment : MonoBehaviour
             .Join(drop.transform.DOPunchScale(Vector3.one * 0.1f, bounceDuration, 5, 1))
             .WaitForCompletion();
 
-        // === 2. 타원 궤도로 회전 (시작 위치 부드럽게 맞추고 반시계 방향) ===
+        // === 2. 타원 궤도로 회전 ===
         Vector3 center = startPos;
         Vector3 local = drop.transform.position - center;
 
@@ -77,12 +77,12 @@ public class MemoryFragment : MonoBehaviour
         float startAngleDeg = startAngleRad * Mathf.Rad2Deg;
         float currentAngle = startAngleDeg;
 
-        // 시작 위치 계산 (끊김 방지용)
+        // 시작 위치 계산
         float rad = startAngleDeg * Mathf.Deg2Rad;
         Vector3 initialOffset = new Vector3(Mathf.Cos(rad) * ellipseRadiusX, 0f, Mathf.Sin(rad) * ellipseRadiusZ);
         Vector3 initialPos = center + new Vector3(initialOffset.x, 0f, 0f);
 
-        // 🔧 현재 위치에서 회전 궤도 시작점으로 부드럽게 이동 (끊김 방지)
+        // 현재 위치에서 회전 궤도 시작점으로 부드럽게 이동
         yield return drop.transform.DOMove(initialPos, 0.1f).SetEase(Ease.InOutSine).WaitForCompletion();
 
         // 반시계 방향 회전: angle 감소

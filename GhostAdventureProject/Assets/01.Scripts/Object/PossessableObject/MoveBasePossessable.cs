@@ -6,6 +6,7 @@ using UnityEngine;
 public class MoveBasePossessable : BasePossessable
 {
     [SerializeField] private float moveSpeed = 3f;
+
     protected override void Update()
     {
         base.Update();
