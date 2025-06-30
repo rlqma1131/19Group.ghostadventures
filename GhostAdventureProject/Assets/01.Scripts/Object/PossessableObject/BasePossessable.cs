@@ -7,8 +7,6 @@ public abstract class BasePossessable : MonoBehaviour
 {
     protected bool isPossessed;
     protected bool hasActivated;
-    protected bool isCompleted;
-    public bool IsCompleted => isCompleted;
     public bool HasActivated => hasActivated;
     public bool IsPossessed => isPossessed;
     public bool IsPossessedState => isPossessed;
@@ -16,9 +14,8 @@ public abstract class BasePossessable : MonoBehaviour
     protected virtual void Start()
     {
         isPossessed = false;
-        hasActivated = false;
-        isCompleted = true;
-        // 해금 안된 오브젝트는 isCompleted 값 false로 초기화 해주기
+        hasActivated = true;
+        // 해금 안된 오브젝트는 hasActivated 값 false로 초기화 해주기
     }
 
     protected virtual void Update()
@@ -30,14 +27,21 @@ public abstract class BasePossessable : MonoBehaviour
             Unpossess();
     }
 
+    // 상호작용 메시지 표시 대상 설정
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (!hasActivated)
+            return;
+
         if (other.CompareTag("Player"))
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
+        if (!hasActivated)
+            return;
+
         if (other.CompareTag("Player"))
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
     }
