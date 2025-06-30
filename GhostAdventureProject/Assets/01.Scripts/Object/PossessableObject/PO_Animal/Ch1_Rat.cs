@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Ch1_Rat : MoveBasePossessable
 {
+    protected override void Start()
+    {
+        base.Start();
+        isCompleted = false;
+    }
+
     protected override void Update()
     {
         base.Update();

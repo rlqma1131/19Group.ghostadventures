@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Ch1_Plate : BasePossessable
 {
+    [SerializeField] private AudioClip isShaking;
     private bool hasActivated = false;
 
     protected override void Update()
@@ -29,6 +30,9 @@ public class Ch1_Plate : BasePossessable
         int shakeCount = 3;
         float startAngle = 5f;
         float durationPerShake = 0.05f;
+
+        SoundManager.Instance.PlaySFX(isShaking);
+        Debug.Log("Plate is shaking!");
 
         for (int i = 0; i < shakeCount; i++)
         {
