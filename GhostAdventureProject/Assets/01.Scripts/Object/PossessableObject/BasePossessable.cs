@@ -12,6 +12,7 @@ public abstract class BasePossessable : MonoBehaviour
     virtual protected void Start()
     {
         isPossessed = false;
+        isCompleted = true;
         // 오브젝트 마다 isCompleted 값 초기화 해주기
     }
     protected virtual void Update()

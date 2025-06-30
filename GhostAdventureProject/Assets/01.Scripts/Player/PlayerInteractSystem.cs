@@ -45,8 +45,8 @@ public class PlayerInteractSystem : Singleton<PlayerInteractSystem>
         if (currentClosest != null)
         {
             var next = currentClosest.GetComponent<BaseInteractable>();
-            if (next != null) next.SetInteractionPopup(true);
-            else Debug.LogWarning($"[{currentClosest.name}]에 BaseInteractable이 없어요");
+            if (next != null)
+                next.SetInteractionPopup(true);
         }
     }
 
