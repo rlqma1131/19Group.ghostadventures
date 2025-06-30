@@ -3,17 +3,30 @@
 public class BaseInteractable : MonoBehaviour
 {
     public GameObject interactionInfo;
+    private BasePossessable BasePossessable;
+    private bool isCompleted;
+    private bool hasActivated;
 
     void Start()
     {
         if (interactionInfo != null)
             interactionInfo.SetActive(false);
+
+        BasePossessable = GetComponent<BasePossessable>();
+
+        if (BasePossessable != null)
+        {
+            isCompleted = BasePossessable.IsCompleted;
+            hasActivated = BasePossessable.HasActivated;
+        }
     }
 
     public void SetInteractionPopup(bool pop)
     {
-        if (interactionInfo != null)
+        if (interactionInfo != null && isCompleted && !hasActivated)
+        {
             interactionInfo.SetActive(pop);
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)

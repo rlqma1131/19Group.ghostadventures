@@ -49,6 +49,9 @@ public class PossessionSystem : Singleton<PossessionSystem>
 
     public void SetInteractTarget(BasePossessable target)
     {
+        if (!target.IsCompleted)
+            return;
+
         currentTarget = target;
         if (Player != null)
             Player.currentTarget = currentTarget;

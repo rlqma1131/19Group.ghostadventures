@@ -11,6 +11,7 @@ public class PossessionQTESystem : Singleton<PossessionQTESystem>
     {
         QTEUI.gameObject.SetActive(false);
     }
+
     public void StartQTE()
     {
         Time.timeScale = 0.3f;
@@ -29,29 +30,27 @@ public class PossessionQTESystem : Singleton<PossessionQTESystem>
         if (success)
         {
             Debug.Log("QTE succeeded");
-            //Player.currentTarget?.
-                OnQTESuccess();
+            GameManager.Instance.PlayerController.currentTarget?.OnQTESuccess();
         }
         else
         {
             Debug.Log("QTE failed");
-            //Player.currentTarget?.
-                OnQTEFailure();
+            GameManager.Instance.PlayerController.currentTarget?.OnQTEFailure();
         }
     }
 
-    public void OnQTESuccess()
-    {
-        Debug.Log("QTE 성공 - 빙의 완료");
+    //public void OnQTESuccess()
+    //{
+    //    Debug.Log("QTE 성공 - 빙의 완료");
 
-        PossessionSystem.Instance.CurrentTarget.isPossessed = true;
-        PossessionStateManager.Instance.StartPossessionTransition();
-    }
+    //    PossessionSystem.Instance.CurrentTarget.isPossessed = true;
+    //    PossessionStateManager.Instance.StartPossessionTransition();
+    //}
 
-    public void OnQTEFailure()
-    {
-        Debug.Log("QTE 실패 - 빙의 취소");
-        PossessionSystem.Instance.CurrentTarget.isPossessed = false;
-        SoulEnergySystem.Instance.Consume(1);
-    }
+    //public void OnQTEFailure()
+    //{
+    //    Debug.Log("QTE 실패 - 빙의 취소");
+    //    PossessionSystem.Instance.CurrentTarget.isPossessed = false;
+    //    SoulEnergySystem.Instance.Consume(1);
+    //}
 }

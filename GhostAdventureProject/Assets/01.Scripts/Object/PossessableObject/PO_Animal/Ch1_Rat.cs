@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RatPossessable : MoveBasePossessable
+public class Ch1_Rat : MoveBasePossessable
 {
+    void Start()
+    {
+        isCompleted = false;
+    }
+
     protected override void Update()
     {
         base.Update();
