@@ -5,10 +5,15 @@ using UnityEngine;
 
 public abstract class BasePossessable : MonoBehaviour
 {
-    public bool isPossessed = false;
-
+    public bool isPossessed;
+    public bool isCompleted;
     public bool IsPossessedState => isPossessed;
 
+    virtual protected void Start()
+    {
+        isPossessed = false;
+        // 오브젝트 마다 isCompleted 값 초기화 해주기
+    }
     protected virtual void Update()
     {
         if (!isPossessed)
@@ -37,18 +42,18 @@ public abstract class BasePossessable : MonoBehaviour
         PossessionStateManager.Instance.StartUnpossessTransition();
     }
 
-    //public void OnQTESuccess()
-    //{
-    //    Debug.Log("QTE 성공 - 빙의 완료");
+    public void OnQTESuccess()
+    {
+        Debug.Log("QTE 성공 - 빙의 완료");
 
-    //    isPossessed = true;
-    //    PossessionStateManager.Instance.StartPossessionTransition();
-    //}
+        isPossessed = true;
+        PossessionStateManager.Instance.StartPossessionTransition();
+    }
 
-    //public void OnQTEFailure()
-    //{
-    //    Debug.Log("QTE 실패 - 빙의 취소");
-    //    isPossessed = false;
-    //    SoulEnergySystem.Instance.Consume(1);
-    //}
+    public void OnQTEFailure()
+    {
+        Debug.Log("QTE 실패 - 빙의 취소");
+        isPossessed = false;
+        SoulEnergySystem.Instance.Consume(1);
+    }
 }
