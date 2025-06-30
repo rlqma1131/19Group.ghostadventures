@@ -6,7 +6,6 @@ using UnityEngine;
 public class Ch1_Plate : BasePossessable
 {
     [SerializeField] private AudioClip isShaking;
-    private bool hasActivated = false;
 
     protected override void Update()
     {
