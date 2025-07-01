@@ -51,7 +51,7 @@ public class MemoryFragment : MonoBehaviour
     {
         if (isScanned) return;
         isScanned = true;
-        //MemoryManager.Instance.TryCollect(data);
+        MemoryManager.Instance.TryCollect(data);
 
         Sprite dropSprite = GetFragmentSpriteByType(data.type);
         if (fragmentDropPrefab == null || dropSprite == null) return;

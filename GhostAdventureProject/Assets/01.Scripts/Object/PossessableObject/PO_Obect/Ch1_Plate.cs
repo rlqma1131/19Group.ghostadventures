@@ -37,6 +37,7 @@ public class Ch1_Plate : BasePossessable
 
         SoundManager.Instance.PlaySFX(isShaking);
         Debug.Log("Plate is shaking!");
+        SoundTriggerer.TriggerSound(transform.position);
 
         for (int i = 0; i < shakeCount; i++)
         {

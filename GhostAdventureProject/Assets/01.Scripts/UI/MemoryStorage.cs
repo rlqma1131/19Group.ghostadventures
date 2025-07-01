@@ -13,13 +13,13 @@ public class MemoryStorage : MonoBehaviour
 
     private void OnEnable()
     {
-        //MemoryManager.Instance.OnMemoryCollected += AddMemoryNode;
+        MemoryManager.Instance.OnMemoryCollected += AddMemoryNode;
         RedrawStorage(); // 초기화 시
     }
 
     private void OnDisable()
     {
-        //MemoryManager.Instance.OnMemoryCollected -= AddMemoryNode;
+        MemoryManager.Instance.OnMemoryCollected -= AddMemoryNode;
     }
 
     private void RedrawStorage()
@@ -29,10 +29,10 @@ public class MemoryStorage : MonoBehaviour
         nodePositions.Clear();
 
         // 만약 수집된 메모리를 직접 가져올 수 있다면:
-        // foreach (MemoryData memory in MemoryManager.Instance.GetCollectedMemories())
-        // {
-        //     AddMemoryNode(memory);
-        // }
+        foreach (MemoryData memory in MemoryManager.Instance.GetCollectedMemories())
+        {
+            AddMemoryNode(memory);
+        }
     }
 
     private void AddMemoryNode(MemoryData memory)
