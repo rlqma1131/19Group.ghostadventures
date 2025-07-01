@@ -33,8 +33,8 @@
 //             .ToList();
 //     }
 
-    public void OpenMemoryStorage()
-    {
-        UIManager.Instance.MemoryStorageUI.gameObject.SetActive(true);
-    }
-}
+//    public void OpenMemoryStorage()
+//    {
+//        UIManager.Instance.MemoryStorageUI.gameObject.SetActive(true);
+//    }
+//}

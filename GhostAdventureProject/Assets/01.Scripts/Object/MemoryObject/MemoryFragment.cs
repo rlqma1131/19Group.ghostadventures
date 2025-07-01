@@ -31,6 +31,7 @@ public class MemoryFragment : MonoBehaviour
     {
         // 디버깅용
         isScannable = true;
+
     }
 
     // 상호작용 메시지 대상

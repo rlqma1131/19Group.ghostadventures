@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 4303829504218261804}
   - component: {fileID: 8121931031213196679}
   - component: {fileID: 8533584637545730389}
+  - component: {fileID: 4168422782266344506}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -141,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2192d8f1b1da3c34ea637aa11ab4800b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scan_duration: 4
+  scan_duration: 1
   scanPanel: {fileID: 0}
   scanCircleUI: {fileID: 0}
   playerTransform: {fileID: 574512815190063881}
@@ -287,3 +288,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxPlayerLives: 2
+--- !u!114 &4168422782266344506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3339839161576889418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 00000000cd85fff5c9c4735711c5bdcd
+  m_ShapePath:
+  - {x: -0.32, y: -0.28, z: 0}
+  - {x: -0.32, y: 0.28, z: 0}
+  - {x: 0.32, y: 0.28, z: 0}
+  - {x: 0.32, y: -0.28, z: 0}
+  m_ShapePathHash: 0
+  m_Mesh: {fileID: 0}
+  m_InstanceId: -64716
+  m_LocalBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0.32, y: 0.28, z: 0}
