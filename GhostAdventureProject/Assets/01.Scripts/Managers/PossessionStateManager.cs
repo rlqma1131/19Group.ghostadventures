@@ -23,8 +23,6 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
     {
         possessedTarget = PossessionSystem.Instance.CurrentTarget;
         PossessionSystem.Instance.PlayPossessionInAnimation();
-        Debug.Log("target" + possessedTarget);
-        itemInventory.Instance.OpenInventory(possessedTarget); // 빙의 인벤토리 표시됨
     }
 
     public void PossessionInAnimationComplete() // 빙의 애니메이션 종료 후 빙의 전환 완료 처리
@@ -34,6 +32,8 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
         /// 추가적인 연출이나 효과
         /// 빙의오브젝트 강조효과, 사운드 등
         currentState = State.Possessing;
+        Debug.Log("target" + possessedTarget);
+        itemInventory.Instance.OpenInventory(possessedTarget); // 빙의 인벤토리 표시됨
     }
 
     public void StartUnpossessTransition() // 빙의 해체 요청 ( 위치 이동 , 활성화, 빙의 해제 애니메이션 실행 )
@@ -41,6 +41,7 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
         PlayerTransform.position = possessedTarget.transform.position + spawnOffset;
         Player.SetActive(true);
         PossessionSystem.Instance.StartPossessionOutSequence();
+        itemInventory.Instance.CloseInventory(); // 빙의 인벤토리 사라짐
     }
     
     public void PossessionOutAnimationComplete() // 빙의 해제 애니메이션 종료 후 상태 복귀

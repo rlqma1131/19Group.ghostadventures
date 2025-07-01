@@ -68,4 +68,9 @@ public class itemInventory : Singleton<itemInventory>
         HideInventory();
 
     }
+
+    public void CloseInventory()
+    {
+        HideInventory();
+    }
 }
