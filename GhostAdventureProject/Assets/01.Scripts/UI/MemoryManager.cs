@@ -32,4 +32,9 @@ public class MemoryManager : MonoBehaviour
 //             .Select(id => MemoryData.memoryID/* id로 MemoryData 찾는 로직 필요 */)
 //             .ToList();
 //     }
+
+    public void OpenMemoryStorage()
+    {
+        UIManager.Instance.MemoryStorageUI.gameObject.SetActive(true);
+    }
 }

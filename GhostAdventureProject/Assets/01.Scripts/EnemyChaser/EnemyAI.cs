@@ -339,12 +339,9 @@ private IEnumerator HandleQTEFlow()
 
         Debug.Log("소리를 감지했습니다! 해당 위치로 이동합니다.");
 
-        // TODO: 소리 위치로 이동하는 로직 구현
-        /*
+        
         SetTarget(soundPosition);
         ChangeState(AIState.DistractedByDecoy);
-        */
-
     }
 
     void UpdateCurrentState()

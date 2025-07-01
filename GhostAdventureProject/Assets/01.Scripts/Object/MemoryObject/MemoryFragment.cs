@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 public class MemoryFragment : MonoBehaviour
 {
     public MemoryData data;
-    public bool isScanned = false;
-    
+    private bool isScanned = false;
+    public bool IsScanned => isScanned;
+    protected bool isScannable;
+    public bool IsScannable => isScannable;
 
     [Header("드랍 조각 프리팹")]
     [SerializeField] private GameObject fragmentDropPrefab;
@@ -25,9 +27,10 @@ public class MemoryFragment : MonoBehaviour
     [Header("흡수 연출 설정")]
     [SerializeField] private float absorbTime = 0.6f;
 
+    // 상호작용 메시지 대상
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && isScannable)
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }
 
@@ -37,7 +40,7 @@ public class MemoryFragment : MonoBehaviour
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
     }
 
-    public void IsScanned()
+    public void IsScannedCheck()
     {
         if (isScanned) return;
         isScanned = true;
@@ -149,4 +152,6 @@ public class MemoryFragment : MonoBehaviour
                 break;
         }
     }
+
+    public virtual void AfterScan() { }
 }

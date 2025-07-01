@@ -22,6 +22,9 @@ public class MemoryScan : MonoBehaviour
     [SerializeField] private GameObject currentScanObject; // 현재 스캔 대상 오브젝트
     [SerializeField] private MemoryFragment currentMemoryFragment;
 
+    // 기억조각 스캔 가능 여부
+    private bool isSannable;
+
     private Camera mainCamera;
 
     void Start()
@@ -36,6 +39,14 @@ public class MemoryScan : MonoBehaviour
 
     void Update()
     {
+        if (currentMemoryFragment != null)
+        {
+            isSannable = currentMemoryFragment.IsScannable;
+        }
+
+        if (!isSannable)
+            return;
+
         // 스캔 가능한 상태가 아니거나, 스캔 중이 아닐 때 입력을 받음
         if (isNearMemory && !isScanning && Input.GetKeyDown(KeyCode.E))
         {
@@ -75,7 +86,7 @@ public class MemoryScan : MonoBehaviour
 
     private void StartScan()
     {
-        if (!currentMemoryFragment.isScanned)
+        if (!currentMemoryFragment.IsScanned)
         {
 
             isScanning = true;
@@ -135,9 +146,9 @@ public class MemoryScan : MonoBehaviour
         scanCircleUI?.gameObject.SetActive(false);
 
         // 이미 스캔되었는지 확인
-        if (currentMemoryFragment != null && !currentMemoryFragment.isScanned)
+        if (currentMemoryFragment != null && !currentMemoryFragment.IsScanned)
         {
-            currentMemoryFragment.IsScanned();
+            currentMemoryFragment.IsScannedCheck();
             // 스캔 완료 후 메모리 오브젝트 파괴
             //Destroy(currentScanObject);
         }
@@ -157,6 +168,8 @@ public class MemoryScan : MonoBehaviour
         //SceneManager.LoadScene($"{currentMemoryFragment.data.CutSceneName}", LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
         //Time.timeScale = 0f; // 시간 흐름을 원래대로 복구
 
+        //각 오브젝트 별로 기억 재생 이후 구현할 메서드
+        currentMemoryFragment.AfterScan();
     }
 
     private void CancelScan(string reason)
