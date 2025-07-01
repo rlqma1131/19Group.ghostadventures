@@ -7,6 +7,7 @@ public class Ch1_Pan : BasePossessable
 {
     [SerializeField] private AudioClip isFall;
 
+    private EnemyAI enemyAI;
     private Ch1_Rat rat;
     private Ch1_Cat cat;
 
@@ -15,6 +16,7 @@ public class Ch1_Pan : BasePossessable
         base.Start();
         rat = FindObjectOfType<Ch1_Rat>();
         cat = FindObjectOfType<Ch1_Cat>();
+        enemyAI = FindObjectOfType<EnemyAI>();
     }
 
     protected override void Update()
@@ -47,6 +49,7 @@ public class Ch1_Pan : BasePossessable
         panSequence.AppendCallback(() =>
         {
             SoundManager.Instance.PlaySFX(isFall);
+            enemyAI.OnSoundDetected(this.transform.position);
         });
 
         // 3. 회전 원래대로 복귀 (0.2초)
