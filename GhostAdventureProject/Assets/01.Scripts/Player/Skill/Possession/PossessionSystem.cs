@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class PossessionSystem : Singleton<PossessionSystem>
 {
-    private PlayerController Player => GameManager.Instance.PlayerController;
-
     // 디버깅용
     [SerializeField] private BasePossessable currentTarget;
-    public BasePossessable CurrentTarget => currentTarget;
+    private GameObject scanPanel;
 
+    private PlayerController Player => GameManager.Instance.PlayerController;
+    public BasePossessable CurrentTarget => currentTarget;
     public bool canMove { get; set; } = true;
 
     private void OnTriggerEnter2D(Collider2D other)

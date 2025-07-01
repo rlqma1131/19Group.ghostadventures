@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,13 +13,13 @@ public class MemoryStorage : MonoBehaviour
 
     private void OnEnable()
     {
-        MemoryManager.Instance.OnMemoryCollected += AddMemoryNode;
+        //MemoryManager.Instance.OnMemoryCollected += AddMemoryNode;
         RedrawStorage(); // 초기화 시
     }
 
     private void OnDisable()
     {
-        MemoryManager.Instance.OnMemoryCollected -= AddMemoryNode;
+        //MemoryManager.Instance.OnMemoryCollected -= AddMemoryNode;
     }
 
     private void RedrawStorage()
