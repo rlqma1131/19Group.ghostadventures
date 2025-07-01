@@ -9,6 +9,7 @@ public class MemoryNode : MonoBehaviour
 {
     // 컷씬 이미지를 가져와야 하는데 어디서 가져와야함?
 [SerializeField] private Image icon;
+[SerializeField] private TextMeshProUGUI name;
 
     private MemoryData memory;
 
@@ -16,6 +17,7 @@ public class MemoryNode : MonoBehaviour
     {
         memory = memoryData;
         icon.sprite = memory.MemoryObjectSprite;
+        name.text = memory.memoryTitle;
 
     //     switch (memory.type)
     //     {
