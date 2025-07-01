@@ -7,8 +7,7 @@ public class MemoryManager : MonoBehaviour
     // 기억 수집 및 상태 관리
     public static MemoryManager Instance;
 
-    private HashSet<string> collectedMemoryIDs = new HashSet<string>();
-
+    public List<string> collectedMemoryIDs = new List<string>();
     public event Action<MemoryData> OnMemoryCollected;
 
     private void Awake()
@@ -17,13 +16,20 @@ public class MemoryManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public void CollectMemory(MemoryData memoryData)
+    public void TryCollect(MemoryData memoryData)
     {
-        if (collectedMemoryIDs.Contains(memoryData.memoryID)) return;
+        // scan 여부는 MemoryFragment에서 이미 체크한 상태라고 가정
+        if (collectedMemoryIDs.Contains(memoryData.memoryTitle)) return;
 
-        collectedMemoryIDs.Add(memoryData.memoryID);
-        OnMemoryCollected?.Invoke(memoryData); // UI 업데이트 트리거
+        collectedMemoryIDs.Add(memoryData.memoryTitle);
+        OnMemoryCollected?.Invoke(memoryData);
     }
 
-    public bool HasCollected(string memoryID) => collectedMemoryIDs.Contains(memoryID); 
+//     public List<MemoryData> GetCollectedMemories()
+//     {
+//         // 필요 시 UI 초기화용으로 호출
+//         return collectedMemoryIDs
+//             .Select(id => MemoryData.memoryID/* id로 MemoryData 찾는 로직 필요 */)
+//             .ToList();
+//     }
 }

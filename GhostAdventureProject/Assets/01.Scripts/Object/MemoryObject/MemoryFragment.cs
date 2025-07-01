@@ -7,6 +7,7 @@ public class MemoryFragment : MonoBehaviour
 {
     public MemoryData data;
     public bool isScanned = false;
+    
 
     [Header("드랍 조각 프리팹")]
     [SerializeField] private GameObject fragmentDropPrefab;
@@ -40,6 +41,7 @@ public class MemoryFragment : MonoBehaviour
     {
         if (isScanned) return;
         isScanned = true;
+        MemoryManager.Instance.TryCollect(data);
 
         Sprite dropSprite = GetFragmentSpriteByType(data.type);
         if (fragmentDropPrefab == null || dropSprite == null) return;
