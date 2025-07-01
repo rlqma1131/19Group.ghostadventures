@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class itemInventory : MonoBehaviour
+public class itemInventory : Singleton<itemInventory>
 {
     public Transform slotParent;
     public GameObject slotPrefab;
@@ -9,24 +9,12 @@ public class itemInventory : MonoBehaviour
     private List<GameObject> spawnedSlots = new List<GameObject>();
 
 
-    void Update()
+    void Start()
     {
-        BasePossessable possessed = FindPossessed();
-        if (possessed != null)
-        {
-            HaveItem haveItem = possessed.GetComponent<HaveItem>();
-
-            if (haveItem != null)
-            {
-                ShowInventory(haveItem.inventorySlots);
-                return;
-            }
-        }
-
-        HideInventory();
+        UIManager.Instance.iteminventory.gameObject.SetActive(false);
     }
 
-
+    // 미사용(보류)
     BasePossessable FindPossessed()
     {
         BasePossessable[] all = FindObjectsOfType<BasePossessable>();
@@ -57,7 +45,7 @@ public class itemInventory : MonoBehaviour
     public void HideInventory()
     {
         Clear();
-        // gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     private void Clear()
@@ -67,5 +55,17 @@ public class itemInventory : MonoBehaviour
             Destroy(slot);
         }
         spawnedSlots.Clear();
+    }
+
+    public void OpenInventory(BasePossessable target)
+    {
+        HaveItem haveItem = target.GetComponent<HaveItem>();
+        if (haveItem != null)
+        {
+            ShowInventory(haveItem.inventorySlots);
+            return;
+        }
+        HideInventory();
+
     }
 }

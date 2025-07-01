@@ -19,6 +19,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private MemoryStorage memoryStorage;// 기억저장소
     [SerializeField] private Inventory_Player inventory_player; // 인벤토리-플레이어
     [SerializeField] private InventoryExpandViewer inventoryExpandViewer; // 인벤토리 확대뷰어
+    public itemInventory iteminventory;
     [SerializeField] private PlayButton_test playbutton; // 플레이버튼
     public GameObject gameover; // 게임오버(텍스트)
 
