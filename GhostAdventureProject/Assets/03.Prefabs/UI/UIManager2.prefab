@@ -2716,13 +2716,14 @@ GameObject:
   - component: {fileID: 786519104180153376}
   - component: {fileID: 2758104394663472307}
   - component: {fileID: 2438998831781752564}
+  - component: {fileID: 3019416567360675252}
   m_Layer: 0
   m_Name: MemoryStorage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3146071605749591058
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2796,6 +2797,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3019416567360675252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4515074064995299761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &4789715401304018172
 GameObject:
   m_ObjectHideFlags: 0
@@ -3460,7 +3487,7 @@ MonoBehaviour:
   qte1: {fileID: 5431256876759258674}
   qte2: {fileID: 621976857356762916}
   scanUI: {fileID: 7526767086768589947}
-  memoryStorage: {fileID: 0}
+  memoryStorage: {fileID: 786519104180153376}
   inventory_player: {fileID: 3414279695761755596}
   inventoryExpandViewer: {fileID: 2875967890383573714}
   iteminventory: {fileID: 3566475732807862491}
@@ -4723,9 +4750,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 786519104180153376}
-        m_TargetAssemblyTypeName: MemoryStorage, Assembly-CSharp
-        m_MethodName: TogglePanel
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: MemoryManager, Assembly-CSharp
+        m_MethodName: OpenMemoryStorage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5269,6 +5296,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3146071605749591058}
     m_Modifications:
+    - target: {fileID: 586071472258373683, guid: cddf9015f123d417b847a4798095a9b6, type: 3}
+      propertyPath: name
+      value: 
+      objectReference: {fileID: 6797904000693787966}
     - target: {fileID: 2163140001867318917, guid: cddf9015f123d417b847a4798095a9b6, type: 3}
       propertyPath: m_Name
       value: MemoryNode (1)
@@ -5283,19 +5314,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6952764322283946334, guid: cddf9015f123d417b847a4798095a9b6, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6952764322283946334, guid: cddf9015f123d417b847a4798095a9b6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6952764322283946334, guid: cddf9015f123d417b847a4798095a9b6, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6952764322283946334, guid: cddf9015f123d417b847a4798095a9b6, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6952764322283946334, guid: cddf9015f123d417b847a4798095a9b6, type: 3}
       propertyPath: m_SizeDelta.x
@@ -5353,6 +5384,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8302418231934375468, guid: cddf9015f123d417b847a4798095a9b6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5363,3 +5398,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6952764322283946334, guid: cddf9015f123d417b847a4798095a9b6, type: 3}
   m_PrefabInstance: {fileID: 5114784728250546826}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6797904000693787966 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1777897346738694068, guid: cddf9015f123d417b847a4798095a9b6, type: 3}
+  m_PrefabInstance: {fileID: 5114784728250546826}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
