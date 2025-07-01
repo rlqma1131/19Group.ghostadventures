@@ -21,11 +21,17 @@ public class MemoryFragment : MonoBehaviour
 
     [Header("회전 연출 설정")]
     [SerializeField] private float rotateTime = 1.2f;
-    [SerializeField] private float ellipseRadiusX = 0.5f;
-    [SerializeField] private float ellipseRadiusZ = 1.0f;
+    [SerializeField] private float ellipseRadiusX = 0.8f;
+    [SerializeField] private float ellipseRadiusZ = 1.5f;
 
     [Header("흡수 연출 설정")]
     [SerializeField] private float absorbTime = 0.6f;
+
+    private void Start()
+    {
+        // 디버깅용
+        isScannable = true;
+    }
 
     // 상호작용 메시지 대상
     private void OnTriggerEnter2D(Collider2D other)
@@ -44,7 +50,7 @@ public class MemoryFragment : MonoBehaviour
     {
         if (isScanned) return;
         isScanned = true;
-        MemoryManager.Instance.TryCollect(data);
+        //MemoryManager.Instance.TryCollect(data);
 
         Sprite dropSprite = GetFragmentSpriteByType(data.type);
         if (fragmentDropPrefab == null || dropSprite == null) return;
