@@ -10,6 +10,7 @@ public class Ch1_Pan : BasePossessable
     private EnemyAI enemyAI;
     private Ch1_Rat rat;
     private Ch1_Cat cat;
+    private Ch1_Cake_MemoryFake_02 cake;
 
     protected override void Start()
     {
@@ -49,6 +50,8 @@ public class Ch1_Pan : BasePossessable
         panSequence.AppendCallback(() =>
         {
             SoundManager.Instance.PlaySFX(isFall);
+
+            // 적 AI 유인 메서드
             enemyAI.OnSoundDetected(this.transform.position);
         });
 
@@ -61,6 +64,8 @@ public class Ch1_Pan : BasePossessable
         {
             rat.ActivateRat();
             cat.ActivateCat();
+            cake.ActivateCake();
+
             hasActivated = false; // 이벤트 완료 후 초기화
             Unpossess();
         });

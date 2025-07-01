@@ -6,7 +6,10 @@ using UnityEngine.SceneManagement;
 public class MemoryFragment : MonoBehaviour
 {
     public MemoryData data;
-    public bool isScanned = false;
+    private bool isScanned = false;
+    public bool IsScanned => isScanned;
+    protected bool isScannable;
+    public bool IsScannable => isScannable;
 
     [Header("드랍 조각 프리팹")]
     [SerializeField] private GameObject fragmentDropPrefab;
@@ -36,7 +39,7 @@ public class MemoryFragment : MonoBehaviour
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
     }
 
-    public void IsScanned()
+    public void IsScannedCheck()
     {
         if (isScanned) return;
         isScanned = true;
@@ -147,4 +150,6 @@ public class MemoryFragment : MonoBehaviour
                 break;
         }
     }
+
+    public virtual void AfterScan() { }
 }
