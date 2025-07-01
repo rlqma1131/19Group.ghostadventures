@@ -14,6 +14,8 @@ public class TypewriterDialogue : MonoBehaviour
     public TextMeshProUGUI dialogueText; //대화 텍스트 컴포넌트
     public float typingSpeed = 0.05f; // 타이핑 속도 
 
+    private bool isAuto = false; // 자동 대화
+    public float autoNextDelay = 0.7f; // 한 대사 완료 후 다음으로 넘어가기까지의 지연 시간
 
     [System.Serializable] // 구조체를 인스펙터에 노출시키기 위해 필요
     public class DialogueSet
@@ -177,6 +179,7 @@ public class TypewriterDialogue : MonoBehaviour
 
     void NextLine()
     {
+
         if (index < dialogues.Length - 1)
         {
             index++;
@@ -208,6 +211,86 @@ public class TypewriterDialogue : MonoBehaviour
             }
         }
     }
+
+
+    public void StartAutoDialogueByIndex(int dialogueSetIndex)
+    {
+        StopAllCoroutines();
+
+        if (allDialogueSets == null || dialogueSetIndex < 0 || dialogueSetIndex >= allDialogueSets.Length)
+        {
+            Debug.LogError($"잘못된 대화 묶음 인덱스: {dialogueSetIndex}. 자동 대화 시작 실패.");
+            return;
+        }
+
+        this.dialogues = allDialogueSets[dialogueSetIndex].dialogues;
+        index = 0;
+        isAuto = true; // 자동 모드 ON
+        dialogueText.gameObject.SetActive(true);
+        StartCoroutine(TypeLineAuto());
+
+
+    }
+
+    IEnumerator TypeLineAuto()
+    {
+        isTyping = true;
+        isShakingDialogue = false;
+        dialogueText.text = "";
+
+        if (dialogues == null || dialogues.Length <= index)
+        {
+            Debug.LogWarning("대사 배열이 비어있거나 인덱스가 범위를 벗어났습니다. 대화 종료.");
+            dialogueText.gameObject.SetActive(false);
+            isTyping = false;
+            skipTyping = false;
+            if (timelineControl != null) timelineControl.ResumeTimeline();
+            yield break;
+        }
+
+        foreach (char letter in dialogues[index].ToCharArray())
+        {
+            dialogueText.text += letter;
+            yield return new WaitForSecondsRealtime(typingSpeed);
+        }
+
+        isTyping = false;
+        skipTyping = false;
+
+
+        if (isAuto)
+        {
+            yield return new WaitForSecondsRealtime(autoNextDelay);
+            NextLineAuto(); 
+        }
+    }
+
+    void NextLineAuto()
+    {
+        if (index < dialogues.Length - 1)
+        {
+            index++;
+            StopAllCoroutines();
+            StartCoroutine(TypeLineAuto());
+        }
+        else
+        {
+            dialogueText.text = "";
+            dialogueText.gameObject.SetActive(false);
+            isAuto = false;
+            if (timelineControl != null)
+            {
+                timelineControl.ResumeTimeline();
+            }
+            else
+            {
+                Debug.LogWarning("TimelineControl이 할당되지 않아 타임라인을 재개할 수 없습니다.");
+            }
+        }
+    }
+
+
+
 
     void ShakeDialogue(float duration = 0.2f, float strength = 8f) //텍스트 흔들기 메서드
     {

@@ -13,7 +13,7 @@ public class Ch1_CelebrityBox : BasePossessable
     {
         base.Update();
         
-        if (!isPossessed || hasActivated)
+        if (!isPossessed || !hasActivated)
             return;
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -37,6 +37,8 @@ public class Ch1_CelebrityBox : BasePossessable
         // note 활성화
         if(noteObject != null)
             noteObject.SetActive(true);
+        
+        hasActivated = false;
         
         // Unpossess();
     }

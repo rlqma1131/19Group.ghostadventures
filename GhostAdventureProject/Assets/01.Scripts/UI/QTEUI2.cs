@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using UnityEditor.AnimatedValues;
 
-public class QTEUI2 : Singleton<QTEUI2>
+public class QTEUI2 : MonoBehaviour
 {
     [Header("UI References")]
     public GameObject qteUI;
@@ -20,6 +21,8 @@ public class QTEUI2 : Singleton<QTEUI2>
     private int currentPressCount = 0;
     private float currentTime = 0f;
     private bool isRunning = false;
+    private bool isSuccess;
+    private bool canStartQTE = true;
 
     public void Start()
     {
@@ -29,6 +32,10 @@ public class QTEUI2 : Singleton<QTEUI2>
     }
     public void StartQTE()
     {
+        // if(!canStartQTE || isRunning)
+        //     return;
+
+        
         qteUI.SetActive(true);
         currentPressCount = 0;
         currentTime = 0f;
@@ -55,32 +62,44 @@ public class QTEUI2 : Singleton<QTEUI2>
             yield return null;
         }
 
-        isRunning = false;
-        qteUI.SetActive(false);
+        
 
         if (currentPressCount >= requiredPresses)
         {
             // resultText.text = "탈출 성공!";
             // resultText.color = Color.green;
-            Debug.Log("탈출 성공");
             success.gameObject.SetActive(true);
             // yield return null;
             // 성공 처리 로직
+            isSuccess = true;
+            // StartCoroutine(QTECooldown(2f));
+
         }
         else
         {
             // resultText.text = "탈출 실패!";
             // resultText.color = Color.red;
-            Debug.Log("탈출 실패. GameOver");
             fail.gameObject.SetActive(true);
+            isSuccess = false;
             // yield return null;
             // 실패 처리 로직
         }
+        isRunning = false;
+        yield return new WaitForSeconds(1.5f);
+        qteUI.SetActive(false);
 
         // resultText.gameObject.SetActive(true);
     }
 
+    // private IEnumerator QTECooldown(float delay)
+    // {
+    //     canStartQTE = false;
+    //     yield return new WaitForSeconds(delay);
+    //     canStartQTE = true;
+    // }
+
 
     // (선택) 외부에서 QTE 상태 확인용
     public bool IsQTERunning() => isRunning;
+    public bool IsSuccess() => isSuccess;
 }

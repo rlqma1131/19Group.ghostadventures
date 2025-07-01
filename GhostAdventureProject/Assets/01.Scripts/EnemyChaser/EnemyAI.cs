@@ -74,40 +74,37 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         startPos = transform.position;
-        currentPlayerLives = maxPlayerLives;
+        currentPlayerLives = maxPlayerLives; // 생명 초기화
 
-        // GameManager를 통해 실제 생성된 플레이어 찾기
-        if (Player == null && GameManager.Instance != null)
+        if (Player == null) Player = GameObject.FindGameObjectWithTag("Player")?.transform;
+
+        if (Player != null)
         {
-            GameObject playerObj = GameManager.Instance.Player;
-            if (playerObj != null)
-            {
-                Player = playerObj.transform;
-                playerHide = Player.GetComponent<PlayerHide>();
-                Debug.Log("GameManager를 통해 플레이어를 찾았습니다!");
-            }
+            playerHide = Player.GetComponent<PlayerHide>();
         }
-
         SetupPatrolPoints();
         ChangeState(AIState.Patrolling);
     }
 
     void Update()
     {
-        // 플레이어가 없으면 다시 찾기 시도
-        if (Player == null && GameManager.Instance != null)
+        // 안전장치: 플레이어가 없으면 다시 찾기 시도
+        if (Player == null)
         {
-            GameObject playerObj = GameManager.Instance.Player;
-            if (playerObj != null)
+            Player = GameObject.FindGameObjectWithTag("Player")?.transform;
+            if (Player != null)
             {
-                Player = playerObj.transform;
                 playerHide = Player.GetComponent<PlayerHide>();
-                Debug.Log("런타임에 플레이어를 찾았습니다!");
+                Debug.Log("Update에서 플레이어를 찾았습니다!");
             }
-            return; // 플레이어가 없으면 AI 로직 실행 안함
+            else
+            {
+                return; // 플레이어가 없으면 AI 로직 실행 안함
+            }
         }
+        stateTimer += Time.deltaTime;
 
-        // 플레이어를 잡는 범위 체크 (기존 코드)
+        // 플레이어를 잡는 범위 체크
         if (currentState == AIState.Chasing &&
             Vector3.Distance(transform.position, Player.position) <= catchRange)
         {
@@ -115,7 +112,6 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
-        stateTimer += Time.deltaTime;
         UpdateCurrentState();
         CheckStateTransitions();
     }
@@ -159,7 +155,7 @@ public class EnemyAI : MonoBehaviour
             enemyAnimator.SetTrigger("CatchPlayer");
         }
 
-        Debug.Log("플레이어를 잡았습니다! QTE 시작!");
+        StartCoroutine(HandleQTEFlow());
 
         // TODO: QTE UI 연결 (팀원이 구현 예정)
         /*
@@ -181,8 +177,29 @@ public class EnemyAI : MonoBehaviour
         */
 
         // 임시로 QTE 성공 처리 (테스트용)
-        OnQTESuccess();
+        // OnQTESuccess();
+        
     }
+
+
+private IEnumerator HandleQTEFlow()
+{
+    var qte2 = UIManager.Instance.QTE_UI_2;
+
+    qte2.StartQTE();
+
+    // QTE가 끝날 때까지 기다리기
+    while (qte2.IsQTERunning())
+    {
+        yield return null;
+    }
+
+    // 이제 isSuccess를 확인해도 됨
+    if (qte2.IsSuccess())
+        OnQTESuccess();
+    else
+        OnQTEFailure();
+}
 
     // QTE 성공 시 호출되는 메서드
     void OnQTESuccess()
@@ -211,7 +228,7 @@ public class EnemyAI : MonoBehaviour
         }
 
         // 게임오버 처리
-        HandleGameOver(); // 나중에 이름 바꿔야함 
+        StartCoroutine(DelayedGameOver()); // 나중에 이름 바꿔야함 
     }
 
     // ================================
@@ -234,21 +251,20 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+
+    private IEnumerator DelayedGameOver()
+    {
+        yield return new WaitForSeconds(1.5f);  // 1.5초 대기
+        HandleGameOver();
+    }
+
     void HandleGameOver()
     {
         Debug.Log("게임오버!");
-
-        // TODO: 게임오버 UI 표시 (팀원이 구현 예정)
-        /*
-        GameOverUI gameOverUI = FindObjectOfType<GameOverUI>();
-        if (gameOverUI != null)
-        {
-            gameOverUI.ShowGameOver();
-        }
-        */
+        UIManager.Instance.ShowOnly(UIManager.Instance.gameover);
 
         // 임시로 게임 일시정지
-        Time.timeScale = 0f;
+        // Time.timeScale = 0f;
     }
 
     IEnumerator StunAfterQTE()
