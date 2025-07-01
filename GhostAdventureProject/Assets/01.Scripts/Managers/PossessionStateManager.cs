@@ -23,6 +23,8 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
     {
         possessedTarget = PossessionSystem.Instance.CurrentTarget;
         PossessionSystem.Instance.PlayPossessionInAnimation();
+        Debug.Log("target" + possessedTarget);
+        itemInventory.Instance.OpenInventory(possessedTarget); // 빙의 인벤토리 표시됨
     }
 
     public void PossessionInAnimationComplete() // 빙의 애니메이션 종료 후 빙의 전환 완료 처리
