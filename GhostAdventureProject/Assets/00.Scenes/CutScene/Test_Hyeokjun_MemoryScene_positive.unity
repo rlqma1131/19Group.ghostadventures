@@ -850,6 +850,7 @@ MonoBehaviour:
   timelineControl: {fileID: 1296952562}
   dialogueText: {fileID: 475575893}
   typingSpeed: 0.05
+  autoNextDelay: 0.7
   allDialogueSets:
   - setName: "\uB300\uC0AC\uCD9C\uB825"
     dialogues:
@@ -892,6 +893,7 @@ MonoBehaviour:
     m_Signals:
     - {fileID: 11400000, guid: 70a8354b2bbeee7488faa71a96701892, type: 2}
     - {fileID: 11400000, guid: 200cd5c0a4c5bbf4896c3e349b8d6bd0, type: 2}
+    - {fileID: 11400000, guid: 03810337d20c5954c8a1b9e5145d3ebc, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -936,6 +938,20 @@ MonoBehaviour:
         - m_Target: {fileID: 1296952562}
           m_TargetAssemblyTypeName: TimelineControl, Assembly-CSharp
           m_MethodName: PauseTimeline
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1296952562}
+          m_TargetAssemblyTypeName: TimelineControl, Assembly-CSharp
+          m_MethodName: CloseScene
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

@@ -3,17 +3,13 @@ using UnityEngine.Playables;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class CutsceneManager : MonoBehaviour
+public class CutsceneManager : Singleton<CutsceneManager>
 {
-    public static CutsceneManager Instance;
+    public GameObject fadePanelPrefab;       // 패널 프리팹
+    public GameObject directorPrefab;        // 타임라인이 미리 연결된 디렉터 프리팹
 
-    public PlayableDirector director;
-    public GameObject fadePanel;
-
-    void Awake()
-    {
-        Instance = this;
-    }
+    private GameObject fadePanelInstance;
+    private PlayableDirector directorInstance;
 
     void OnEnable()
     {
@@ -27,31 +23,61 @@ public class CutsceneManager : MonoBehaviour
 
     public IEnumerator PlayCutscene()
     {
+        Debug.Log("컷신 재생 시작");
+
+        if (fadePanelInstance == null)
+            fadePanelInstance = Instantiate(fadePanelPrefab);
+        fadePanelInstance.SetActive(true);
+
+        if (directorInstance == null)
+        {
+            GameObject go = Instantiate(directorPrefab);
+            directorInstance = go.GetComponent<PlayableDirector>();
+        }
+
         bool isDone = false;
 
         void OnPlayableDirectorStopped(PlayableDirector obj)
         {
-            if (obj == director)
+            if (obj == directorInstance)
             {
+                Debug.Log("컷신 재생 완료");
                 isDone = true;
-                director.stopped -= OnPlayableDirectorStopped;
+                directorInstance.stopped -= OnPlayableDirectorStopped;
             }
         }
 
-        director.stopped += OnPlayableDirectorStopped;
-        
-        director.Play();
+        directorInstance.stopped += OnPlayableDirectorStopped;
+        directorInstance.Play();
 
         yield return new WaitUntil(() => isDone);
 
-        fadePanel.SetActive(false);
+        if (fadePanelInstance != null)
+            fadePanelInstance.SetActive(false);
+
+        // 오브젝트 정리
+        Destroy(fadePanelInstance);
+        Destroy(directorInstance.gameObject);
+        fadePanelInstance = null;
+        directorInstance = null;
     }
 
     void OnSceneUnloaded(Scene scene)
     {
         Debug.Log($"{scene.name} 씬 언로드됨");
-        if (fadePanel != null)
-            fadePanel.SetActive(false);
+
+        if (fadePanelInstance != null)
+        {
+            Destroy(fadePanelInstance);
+            fadePanelInstance = null;
+        }
+
+        if (directorInstance != null)
+        {
+            Destroy(directorInstance.gameObject);
+            directorInstance = null;
+        }
+
         Time.timeScale = 1f;
     }
 }
