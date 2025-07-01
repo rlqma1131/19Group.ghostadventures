@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class MemoryFragment : MonoBehaviour
 {
     public MemoryData data;
-    private bool isScanned = false;
+    protected bool isScanned = false;
     public bool IsScanned => isScanned;
     protected bool isScannable;
     public bool IsScannable => isScannable;

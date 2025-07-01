@@ -11,6 +11,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject PossessionStateManager;
     [SerializeField] private GameObject soundManager;
     [SerializeField] private GameObject cutSceneManager;
+    [SerializeField] private GameObject HideAreaManager;
 
     public GameObject playerPrefab;
 
@@ -47,6 +48,7 @@ public class GameManager : Singleton<GameManager>
         EnsureManagerExists<PossessionStateManager>(PossessionStateManager);
         EnsureManagerExists<SoundManager>(soundManager);
         EnsureManagerExists<CutsceneManager>(cutSceneManager);
+        EnsureManagerExists<HideAreaManager>(HideAreaManager);
 
         // 다른 매니저들도 같은 방식으로
         // 추후 스테이지 초기화, UI 초기화 등 여기에 추가

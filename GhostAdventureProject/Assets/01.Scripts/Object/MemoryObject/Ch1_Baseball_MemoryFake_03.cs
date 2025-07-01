@@ -1,0 +1,20 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Ch1_Baseball_MemoryFake_03 : MemoryFragment
+{
+    [SerializeField] private GameObject alphabet_A;
+
+    void Start()
+    {
+        isScannable = true;
+        alphabet_A.SetActive(false);
+    }
+
+    public override void AfterScan()
+    {
+        isScanned = true;
+        alphabet_A.SetActive(true);
+    }
+}
