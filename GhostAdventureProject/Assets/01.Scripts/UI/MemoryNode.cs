@@ -15,19 +15,20 @@ public class MemoryNode : MonoBehaviour
     public void Initialize(MemoryData memoryData)
     {
         memory = memoryData;
+        icon.sprite = memory.MemoryObjectSprite;
 
-        switch (memory.type)
-        {
-            case MemoryData.MemoryType.Positive:
-                icon.sprite = memory.PositiveFragmentSprite;
-                break;
-            case MemoryData.MemoryType.Negative:
-                icon.sprite = memory.NegativeFragmentSprite;
-                break;
-            case MemoryData.MemoryType.Fake:
-                icon.sprite = memory.FakeFragmentSprite;
-                break;
-        }
+    //     switch (memory.type)
+    //     {
+    //         case MemoryData.MemoryType.Positive:
+    //             icon.sprite = memory.PositiveFragmentSprite;
+    //             break;
+    //         case MemoryData.MemoryType.Negative:
+    //             icon.sprite = memory.NegativeFragmentSprite;
+    //             break;
+    //         case MemoryData.MemoryType.Fake:
+    //             icon.sprite = memory.FakeFragmentSprite;
+    //             break;
+    //     }
     }
 
 }
