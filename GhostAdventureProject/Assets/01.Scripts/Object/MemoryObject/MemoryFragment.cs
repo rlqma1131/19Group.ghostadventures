@@ -27,9 +27,10 @@ public class MemoryFragment : MonoBehaviour
     [Header("흡수 연출 설정")]
     [SerializeField] private float absorbTime = 0.6f;
 
+    // 상호작용 메시지 대상
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && isScannable)
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }
 

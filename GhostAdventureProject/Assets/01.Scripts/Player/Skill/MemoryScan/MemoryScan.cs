@@ -35,11 +35,15 @@ public class MemoryScan : MonoBehaviour
         scanCircleUI = UIManager.Instance.scanUI.transform.Find("CircleUI")?.GetComponent<Image>();
         scanCircleUI?.gameObject.SetActive(false);
 
-        isSannable = currentMemoryFragment.IsScannable;
     }
 
     void Update()
     {
+        if (currentMemoryFragment != null)
+        {
+            isSannable = currentMemoryFragment.IsScannable;
+        }
+
         if (!isSannable)
             return;
 

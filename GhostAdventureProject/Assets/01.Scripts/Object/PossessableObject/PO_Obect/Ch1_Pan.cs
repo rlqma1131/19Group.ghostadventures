@@ -17,6 +17,7 @@ public class Ch1_Pan : BasePossessable
         base.Start();
         rat = FindObjectOfType<Ch1_Rat>();
         cat = FindObjectOfType<Ch1_Cat>();
+        cake = FindObjectOfType<Ch1_Cake_MemoryFake_02>();
         enemyAI = FindObjectOfType<EnemyAI>();
     }
 
@@ -52,7 +53,7 @@ public class Ch1_Pan : BasePossessable
             SoundManager.Instance.PlaySFX(isFall);
 
             // 적 AI 유인 메서드
-            enemyAI.OnSoundDetected(this.transform.position);
+            //enemyAI.OnSoundDetected(this.transform.position);
         });
 
         // 3. 회전 원래대로 복귀 (0.2초)
