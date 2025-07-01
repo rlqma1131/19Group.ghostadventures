@@ -29,10 +29,10 @@ public class MemoryStorage : MonoBehaviour
         nodePositions.Clear();
 
         // 만약 수집된 메모리를 직접 가져올 수 있다면:
-        // foreach (MemoryData memory in MemoryManager.Instance.GetCollectedMemories())
-        // {
-        //     AddMemoryNode(memory);
-        // }
+        foreach (MemoryData memory in MemoryManager.Instance.GetCollectedMemories())
+        {
+            AddMemoryNode(memory);
+        }
     }
 
     private void AddMemoryNode(MemoryData memory)
