@@ -53,7 +53,7 @@ public class Ch1_Pan : BasePossessable
             SoundManager.Instance.PlaySFX(isFall);
 
             // 적 AI 유인 메서드
-            //enemyAI.OnSoundDetected(this.transform.position);
+            SoundTriggerer.TriggerSound(transform.position);
         });
 
         // 3. 회전 원래대로 복귀 (0.2초)

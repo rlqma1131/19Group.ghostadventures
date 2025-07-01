@@ -10,6 +10,11 @@ public class EnemyAI : MonoBehaviour
     public float detectionRange = 5f;
     public float moveSpeed = 2f;
 
+    [Header("유인되고 난 후 ")]
+    public float distractionSpeed = 1f; // 유인 오브젝트로 이동할 때 속도
+    public float distractionTimer = 0f;
+    public float distractionDuration = 5f; // 머무는 시간
+
     [Header("QTE 설정")]
     public float catchRange = 1.5f; // 플레이어를 잡는 범위
 
@@ -71,6 +76,11 @@ public class EnemyAI : MonoBehaviour
 
     private AIState currentState = AIState.Patrolling;
 
+    void Awake()
+    {
+        if (enemyAnimator == null)
+            enemyAnimator = GetComponent<Animator>();
+    }
     void Start()
     {
         startPos = transform.position;
@@ -152,33 +162,16 @@ public class EnemyAI : MonoBehaviour
         // 플레이어를 잡았을 때 애니메이션 재생
         if (enemyAnimator != null)
         {
-            enemyAnimator.SetTrigger("CatchPlayer");
+            enemyAnimator.SetTrigger("QTEIn");
+        }
+
+        if (enemyAnimator != null)
+        {
+            enemyAnimator.SetTrigger("QTEIn");
         }
 
         StartCoroutine(HandleQTEFlow());
-
-        // TODO: QTE UI 연결 (팀원이 구현 예정)
-        /*
-        QTEUI qte = FindObjectOfType<QTEUI>();
-        if (qte != null)
-        {
-            qte.ShowQTEUI((bool success) =>
-            {
-                if (success)
-                {
-                    OnQTESuccess();
-                }
-                else
-                {
-                    OnQTEFailure();
-                }
-            });
-        }
-        */
-
-        // 임시로 QTE 성공 처리 (테스트용)
-        // OnQTESuccess();
-        
+       
     }
 
 
@@ -206,14 +199,12 @@ private IEnumerator HandleQTEFlow()
     {
         Debug.Log("QTE 성공! 플레이어가 탈출했습니다.");
 
-        // 플레이어가 탈출했을 때 애니메이션 재생
         if (enemyAnimator != null)
         {
-            enemyAnimator.SetTrigger("PlayerEscaped");
+            enemyAnimator.SetTrigger("QTESuccess");
         }
 
-        // 생명 감소 및 스턴 처리
-        LosePlayerLife();  // 생명 관리 스크립트도 이름 바꿔야함 
+        LosePlayerLife();
     }
 
     // QTE 실패 시 호출되는 메서드
@@ -221,14 +212,12 @@ private IEnumerator HandleQTEFlow()
     {
         Debug.Log("QTE 실패! 플레이어가 잡혔습니다.");
 
-        // 플레이어를 잡았을 때 애니메이션 재생
         if (enemyAnimator != null)
         {
-            enemyAnimator.SetTrigger("PlayerCaught");
+            enemyAnimator.SetTrigger("QTEFail");
         }
 
-        // 게임오버 처리
-        StartCoroutine(DelayedGameOver()); // 나중에 이름 바꿔야함 
+        StartCoroutine(DelayedGameOver());
     }
 
     // ================================
@@ -274,7 +263,7 @@ private IEnumerator HandleQTEFlow()
         // 적 스턴 애니메이션 재생
         if (enemyAnimator != null)
         {
-            enemyAnimator.SetBool("IsStunned", true);
+            enemyAnimator.SetBool("QTEFail", true);
         }
 
         Debug.Log("적이 2초간 스턴됩니다.");
@@ -283,7 +272,7 @@ private IEnumerator HandleQTEFlow()
         // 스턴 애니메이션 해제
         if (enemyAnimator != null)
         {
-            enemyAnimator.SetBool("IsStunned", false);
+            enemyAnimator.SetBool("QTEFail", false);
         }
 
         // 플레이어가 감지 범위에 있는지 확인 후 추격 또는 순찰
@@ -306,15 +295,16 @@ private IEnumerator HandleQTEFlow()
     // 유인 오브젝트에 끌리는 메서드
     public void GetDistractedBy(Transform distractionObject)
     {
-        // QTE 중이거나 스턴 중일 때는 유인 안됨
         if (currentState == AIState.CaughtPlayer || currentState == AIState.StunnedAfterQTE)
             return;
 
         currentDistraction = distractionObject;
+        distractionTimer = 0f; // 5초 타이머 초기화
         ChangeState(AIState.DistractedByDecoy);
 
-        Debug.Log("적이 유인 오브젝트에 끌렸습니다!");
+        Debug.Log("적이 소리 위치로 유인되었습니다!");
     }
+
 
     // 유인 해제 메서드
     public void EndDistraction()
@@ -323,14 +313,13 @@ private IEnumerator HandleQTEFlow()
         {
             currentDistraction = null;
             ChangeState(AIState.Patrolling);
-            Debug.Log("유인 효과가 끝났습니다.");
+            Debug.Log("유인 효과가 끝났습니다. 순찰로 복귀합니다.");
         }
     }
 
     // 소리 기반 유인 메서드
     public void OnSoundDetected(Vector3 soundPosition)
     {
-        // 소리 감지 범위 체크
         if (currentState == AIState.CaughtPlayer || currentState == AIState.StunnedAfterQTE)
         {
             Debug.Log("적이 QTE 중이거나 스턴 상태라 소리를 무시합니다.");
@@ -339,8 +328,9 @@ private IEnumerator HandleQTEFlow()
 
         Debug.Log("소리를 감지했습니다! 해당 위치로 이동합니다.");
 
-        
+        currentDistraction = null; // 기존 유인 해제
         SetTarget(soundPosition);
+        distractionTimer = 0f; // 타이머 초기화
         ChangeState(AIState.DistractedByDecoy);
     }
 
@@ -382,14 +372,36 @@ private IEnumerator HandleQTEFlow()
                 StopMoving(); // 스턴 중에는 움직이지 않음
                 break;
         }
+
+        // 이동 여부에 따라 애니메이션 트리거 업데이트
+        switch (currentState)
+        {
+            case AIState.Patrolling:
+            case AIState.Chasing:
+            case AIState.Searching:
+            case AIState.SearchComplete:
+            case AIState.Returning:
+                enemyAnimator?.SetBool("IsMoving", true);
+                break;
+            default:
+                enemyAnimator?.SetBool("IsMoving", false);
+                break;
+        }
     }
 
     void UpdateDistractedState()
     {
+        distractionTimer += Time.deltaTime;
+
         if (currentDistraction != null)
         {
             SetTarget(currentDistraction.position);
-            MoveToTarget(moveSpeed * 0.8f); // 조금 느리게 이동
+            MoveToTarget(distractionSpeed);
+        }
+
+        if (distractionTimer >= distractionDuration)
+        {
+            EndDistraction();
         }
     }
 
