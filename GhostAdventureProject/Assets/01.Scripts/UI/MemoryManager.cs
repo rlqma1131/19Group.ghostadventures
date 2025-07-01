@@ -1,29 +1,29 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿//using System;
+//using System.Collections.Generic;
+//using UnityEngine;
 
-public class MemoryManager : MonoBehaviour
-{
-    // 기억 수집 및 상태 관리
-    public static MemoryManager Instance;
+//public class MemoryManager : MonoBehaviour
+//{
+//    // 기억 수집 및 상태 관리
+//    public static MemoryManager Instance;
 
-    public List<string> collectedMemoryIDs = new List<string>();
-    public event Action<MemoryData> OnMemoryCollected;
+//    public List<string> collectedMemoryIDs = new List<string>();
+//    public event Action<MemoryData> OnMemoryCollected;
 
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
+//    private void Awake()
+//    {
+//        if (Instance == null) Instance = this;
+//        else Destroy(gameObject);
+//    }
 
-    public void TryCollect(MemoryData memoryData)
-    {
-        // scan 여부는 MemoryFragment에서 이미 체크한 상태라고 가정
-        if (collectedMemoryIDs.Contains(memoryData.memoryTitle)) return;
+//    public void TryCollect(MemoryData memoryData)
+//    {
+//        // scan 여부는 MemoryFragment에서 이미 체크한 상태라고 가정
+//        if (collectedMemoryIDs.Contains(memoryData.memoryTitle)) return;
 
-        collectedMemoryIDs.Add(memoryData.memoryTitle);
-        OnMemoryCollected?.Invoke(memoryData);
-    }
+//        collectedMemoryIDs.Add(memoryData.memoryTitle);
+//        OnMemoryCollected?.Invoke(memoryData);
+//    }
 
 //     public List<MemoryData> GetCollectedMemories()
 //     {
