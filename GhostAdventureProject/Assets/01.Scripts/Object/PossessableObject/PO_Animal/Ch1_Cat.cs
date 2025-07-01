@@ -21,6 +21,11 @@ public class Ch1_Cat : MoveBasePossessable
         {
             CatAct();
         }
+        // 점프 추가
+        //else if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Jump();
+        //}
     }
 
     public void Blink()
