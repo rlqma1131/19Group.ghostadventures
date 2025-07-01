@@ -4,27 +4,32 @@ using UnityEngine;
 
 public class HaveItem : MonoBehaviour
 {
-    [Header("초기 아이템 설정")]
-    public List<ItemData> defaultItems = new List<ItemData>();
-    public List<int> defaultCounts = new List<int>();
+    [Header("에디터에서 아이템 추가")]
+    public List<ItemData> initialItems = new List<ItemData>();
 
     [HideInInspector]
-    public List<InventorySlot_IO> haveItemSlots = new List<InventorySlot_IO>();
+    public List<itemInventorySlot> inventorySlots = new List<itemInventorySlot>();
 
     private void Awake()
     {
-        InitializeSlots();
+        ConvertToSlots();
     }
 
-    private void InitializeSlots()
+    private void ConvertToSlots()
     {
-        haveItemSlots.Clear();
+        inventorySlots.Clear();
 
-        for (int i = 0; i < defaultItems.Count; i++)
+        foreach (var item in initialItems)
         {
-            ItemData item = defaultItems[i];
-            // int count = (i < defaultCounts.Count) ? defaultCounts[i] : 1;
-            // haveItemSlots.Add(new InventorySlot_IO(item, count, null, null));
+            var existingSlot = inventorySlots.Find(slot => slot.item == item);
+            if (existingSlot != null)
+            {
+                existingSlot.quantity++;
+            }
+            else
+            {
+                inventorySlots.Add(new itemInventorySlot(item, 1));
+            }
         }
     }
 }
