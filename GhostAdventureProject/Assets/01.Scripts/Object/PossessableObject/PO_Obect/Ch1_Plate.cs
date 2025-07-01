@@ -7,6 +7,14 @@ public class Ch1_Plate : BasePossessable
 {
     [SerializeField] private AudioClip isShaking;
 
+    private Ch1_Cat cat;
+
+    protected override void Start()
+    {
+        base.Start();
+        cat = FindObjectOfType<Ch1_Cat>();
+    }
+
     protected override void Update()
     {
         base.Update();
@@ -22,9 +30,6 @@ public class Ch1_Plate : BasePossessable
 
     private void TriggerPlateEvent()
     {
-        if (hasActivated) return;
-        hasActivated = true;
-
         Sequence shakeSeq = DOTween.Sequence();
         int shakeCount = 3;
         float startAngle = 5f;
@@ -42,5 +47,8 @@ public class Ch1_Plate : BasePossessable
 
         shakeSeq.Append(transform.DOLocalRotate(Vector3.zero, 0.03f));
         shakeSeq.OnComplete(() => hasActivated = false);
+
+        // 고양이는 눈 깜빡이기만
+        cat.Blink();
     }
 }
