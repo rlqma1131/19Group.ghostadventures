@@ -8,13 +8,26 @@ public class MemoryManager : MonoBehaviour
    public static MemoryManager Instance;
 
    public List<string> collectedMemoryIDs = new List<string>();
+   private Dictionary<string, MemoryData> memoryDataDict = new();
    public event Action<MemoryData> OnMemoryCollected;
 
    private void Awake()
    {
        if (Instance == null) Instance = this;
        else Destroy(gameObject);
+       LoadAllMemoryData(); 
    }
+
+
+    private void LoadAllMemoryData()
+    {
+        var all = Resources.LoadAll<MemoryData>("MemoryData"); // Resources 폴더 사용 시
+        foreach (var memory in all)
+        {
+            if (!memoryDataDict.ContainsKey(memory.memoryTitle))
+                memoryDataDict.Add(memory.memoryTitle, memory);
+        }
+    }
 
    public void TryCollect(MemoryData memoryData)
    {
@@ -25,13 +38,15 @@ public class MemoryManager : MonoBehaviour
        OnMemoryCollected?.Invoke(memoryData);
    }
 
-    // public List<MemoryData> GetCollectedMemories()
-    // {
-    //     // // 필요 시 UI 초기화용으로 호출
-    //     return collectedMemoryIDs
-    //     //     .Select(id => MemoryData.memoryID/* id로 MemoryData 찾는 로직 필요 */)
-    //     //     .ToList();
-    // }
+    public List<MemoryData> GetCollectedMemories()
+    {
+        List<MemoryData> result = new();
+        foreach (var id in collectedMemoryIDs)
+        {
+            if (memoryDataDict.TryGetValue(id, out var memory))
+                result.Add(memory);
+        }
+        return result;    }
 
     public void OpenMemoryStorage()
     {
