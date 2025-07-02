@@ -8,11 +8,11 @@ public class TimelineControl : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.S))
         {
 
 
-            CloseScene(); //Esc키를 누르면 연출씬 닫기
+            CloseScene(); //S키를 누르면 연출씬 닫기
         }
     }
     void Awake()
