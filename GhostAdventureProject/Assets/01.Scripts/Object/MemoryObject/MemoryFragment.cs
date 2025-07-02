@@ -6,9 +6,8 @@ using UnityEngine.SceneManagement;
 public class MemoryFragment : MonoBehaviour
 {
     public MemoryData data;
-    private bool isScanned = false;
-    public bool IsScanned => isScanned;
-    protected bool isScannable;
+    
+    protected bool isScannable = false;
     public bool IsScannable => isScannable;
 
     [Header("드랍 조각 프리팹")]
@@ -49,8 +48,8 @@ public class MemoryFragment : MonoBehaviour
 
     public void IsScannedCheck()
     {
-        if (isScanned) return;
-        isScanned = true;
+        if (!isScannable) return;
+        isScannable = false;
         MemoryManager.Instance.TryCollect(data);
 
         Sprite dropSprite = GetFragmentSpriteByType(data.type);
@@ -121,7 +120,7 @@ public class MemoryFragment : MonoBehaviour
         if (drop.TryGetComponent(out SpriteRenderer finalSR))
             absorb.Join(finalSR.DOFade(0f, absorbTime));
         yield return absorb.WaitForCompletion();
-        yield return CutsceneManager.Instance.PlayCutscene(); // 컷신 재생
+        //yield return CutsceneManager.Instance.PlayCutscene(); // 컷신 재생
 
         Destroy(drop);
         SceneManager.LoadScene(data.CutSceneName, LoadSceneMode.Additive); // 스캔 완료 후 씬 전환

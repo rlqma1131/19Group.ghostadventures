@@ -5,9 +5,10 @@ public class PlayerHide : MonoBehaviour
     private KeyCode hideKey = KeyCode.F;
 
 
-    private bool isHiding = false;
-    private bool canHide = false;
+    [SerializeField] private bool isHiding = false;
+    [SerializeField] private bool canHide = false;
 
+    private HideAreaID currentHideArea;
     private SpriteRenderer spriteRenderer;
     private Collider2D col;
     private Rigidbody2D rb;
@@ -42,7 +43,7 @@ public class PlayerHide : MonoBehaviour
     {
         isHiding = true;
         spriteRenderer.enabled = false;
-        col.enabled = false;
+        //col.enabled = false;
         rb.velocity = Vector2.zero;     // 멈추기
         rb.isKinematic = true;
     }
@@ -51,8 +52,13 @@ public class PlayerHide : MonoBehaviour
     {
         isHiding = false;
         spriteRenderer.enabled = true;
-        col.enabled = true;
+        //col.enabled = true;
         rb.isKinematic = false;
+
+        if (currentHideArea != null)
+        {
+            Ch1_HideAreaEvent.Instance.RegisterArea(currentHideArea.areaID);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -60,6 +66,7 @@ public class PlayerHide : MonoBehaviour
         if (other.CompareTag("HideArea"))
         {
             canHide = true;
+            currentHideArea = other.GetComponent<HideAreaID>();
         }
     }
 
@@ -68,6 +75,11 @@ public class PlayerHide : MonoBehaviour
         if (other.CompareTag("HideArea"))
         {
             canHide = false;
+
+            if (!isHiding)
+            {
+                currentHideArea = null;
+            }
         }
     }
 }

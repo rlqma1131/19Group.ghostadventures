@@ -1,9 +1,32 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Collections.AllocatorManager;
 
-public class FakeEndingManager : Singleton<FakeEndingManager>
+public class ChapterEndingManager : Singleton<ChapterEndingManager>
 {
     private HashSet<string> collectedFakeMemories = new();
+    private HashSet<string> collectedAllCh1Clue = new();
+
+    public void CollectCh1Clue(string clueId)
+    {
+        collectedAllCh1Clue.Add(clueId);
+        Debug.Log($"단서 수집: {clueId}");
+        if (AllCh1CluesCollected())
+        {
+            UnlockCh1GarageEvent();
+        }
+    }
+
+    public bool AllCh1CluesCollected()
+    {
+        return collectedAllCh1Clue.Count >= 4;
+    }
+
+    private void UnlockCh1GarageEvent()
+    {
+        Debug.Log("1장 차고 이벤트 해금!");
+        //자동 저장 등
+    }
 
     public void CollectFakeMemory(string id)
     {
