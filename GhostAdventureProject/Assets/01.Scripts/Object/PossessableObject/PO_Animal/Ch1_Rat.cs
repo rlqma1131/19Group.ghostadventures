@@ -34,8 +34,6 @@ public class Ch1_Rat : MoveBasePossessable
 
     public void ActivateRat()
     {
-        hasActivated = true;
-
         // 1. Move 애니메이션 활성화
         anim.SetBool("Move", true);
 
@@ -43,9 +41,13 @@ public class Ch1_Rat : MoveBasePossessable
         transform.DOMove(point1, 1f).SetEase(Ease.OutQuad).OnComplete(() =>
         {
             // 3. Escape 시작
-            anim.SetBool("Move", false);
             anim.SetTrigger("Escape");
         });
+    }
+
+    public void RatCanObssessed()
+    {
+        hasActivated = true;
     }
 
     // 이 함수는 Escape 애니메이션의 마지막 프레임에 이벤트로 연결
@@ -53,6 +55,7 @@ public class Ch1_Rat : MoveBasePossessable
     {
         // 4. point2로 순간이동
         transform.position = point2;
+        anim.SetBool("Move", false); // Idle 상태로 대기
     }
 
     public void RatAct()
