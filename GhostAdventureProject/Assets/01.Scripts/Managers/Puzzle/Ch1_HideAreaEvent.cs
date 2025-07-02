@@ -10,6 +10,7 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
 
     private Ch1_Closet closet => FindObjectOfType<Ch1_Closet>();
     private PlayerHide PlayerHide => FindObjectOfType<PlayerHide>();
+    private Ch1_Rat rat => FindObjectOfType<Ch1_Rat>();
 
     public void RegisterArea(string id)
     {
@@ -23,9 +24,16 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
         {
             if (IsCorrectOrder())
             {
+                // 기억조각 드러남
                 closet.Unlock();
+
+                // 쥐 빙의 가능
+                rat.ActivateRat();
+
                 // 옷장열리는 효과음
                  SoundManager.Instance.PlaySFX(UnlockCloset);
+
+                // 플레이어 나타남
                 PlayerHide.ShowPlayer();
 
                 // 퍼즐 풀면 아이방 HideArea에 못숨도록
@@ -58,6 +66,19 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
             if (area.CompareTag("HideArea"))
             {
                 area.tag = "Untagged";
+            }
+        }
+    }
+
+    // 그림 발견하고 부터 숨기 가능
+    public void RestoreHideAreaTags()
+    {
+        HideAreaID[] areas = FindObjectsOfType<HideAreaID>();
+        foreach (var area in areas)
+        {
+            if (area.CompareTag("Untagged"))
+            {
+                area.tag = "HideArea";
             }
         }
     }

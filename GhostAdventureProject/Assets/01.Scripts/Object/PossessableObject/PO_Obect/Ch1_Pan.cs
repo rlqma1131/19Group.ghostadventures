@@ -7,18 +7,14 @@ public class Ch1_Pan : BasePossessable
 {
     [SerializeField] private AudioClip isFall;
 
-    private EnemyAI enemyAI;
-    private Ch1_Rat rat;
     private Ch1_Cat cat;
     private Ch1_Cake_MemoryFake_02 cake;
 
     protected override void Start()
     {
         base.Start();
-        rat = FindObjectOfType<Ch1_Rat>();
         cat = FindObjectOfType<Ch1_Cat>();
         cake = FindObjectOfType<Ch1_Cake_MemoryFake_02>();
-        enemyAI = FindObjectOfType<EnemyAI>();
     }
 
     protected override void Update()
@@ -63,7 +59,6 @@ public class Ch1_Pan : BasePossessable
         panSequence.AppendInterval(0.05f);
         panSequence.AppendCallback(() =>
         {
-            rat.ActivateRat();
             cat.ActivateCat();
             cake.ActivateCake();
 
