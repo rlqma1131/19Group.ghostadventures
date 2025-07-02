@@ -170,6 +170,8 @@ public class EnemyAI : MonoBehaviour
 
         // 외부 생명 시스템 호출
         PlayerLifeManager.Instance.LosePlayerLife();
+        // 스턴 코루틴 추가
+        StartCoroutine(StunAfterQTE());
     }
 
     private void OnQTEFailure()
