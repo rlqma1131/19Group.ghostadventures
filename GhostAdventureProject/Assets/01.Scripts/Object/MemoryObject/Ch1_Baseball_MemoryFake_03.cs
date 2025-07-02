@@ -16,5 +16,6 @@ public class Ch1_Baseball_MemoryFake_03 : MemoryFragment
     {
         isScannable = false;
         alphabet_A.SetActive(true);
+        ChapterEndingManager.Instance.CollectCh1Clue("A");
     }
 }

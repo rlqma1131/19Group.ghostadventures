@@ -6,12 +6,12 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
     [Header("Managers")]
-    [SerializeField] private GameObject fakeEndingManager;
+    [SerializeField] private GameObject ChapterEndingManager;
     [SerializeField] private GameObject uiManager;
     [SerializeField] private GameObject PossessionStateManager;
     [SerializeField] private GameObject soundManager;
     // [SerializeField] private GameObject cutSceneManager;
-    [SerializeField] private GameObject HideAreaManager;
+    [SerializeField] private GameObject HideAreaEventManager;
 
     public GameObject playerPrefab;
 
@@ -43,12 +43,12 @@ public class GameManager : Singleton<GameManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log($"씬 로드됨: {scene.name}");
-        EnsureManagerExists<FakeEndingManager>(fakeEndingManager);
+        EnsureManagerExists<ChapterEndingManager>(ChapterEndingManager);
         EnsureManagerExists<UIManager>(uiManager);
         EnsureManagerExists<PossessionStateManager>(PossessionStateManager);
         EnsureManagerExists<SoundManager>(soundManager);
         // EnsureManagerExists<CutsceneManager>(cutSceneManager);
-        EnsureManagerExists<HideAreaManager>(HideAreaManager);
+        EnsureManagerExists<Ch1_HideAreaEvent>(HideAreaEventManager);
 
         // 다른 매니저들도 같은 방식으로
         // 추후 스테이지 초기화, UI 초기화 등 여기에 추가
