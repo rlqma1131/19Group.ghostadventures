@@ -86,7 +86,7 @@ public class MemoryScan : MonoBehaviour
 
     private void StartScan()
     {
-        if (!currentMemoryFragment.IsScanned)
+        if (currentMemoryFragment.IsScannable)
         {
 
             isScanning = true;
@@ -146,11 +146,9 @@ public class MemoryScan : MonoBehaviour
         scanCircleUI?.gameObject.SetActive(false);
 
         // 이미 스캔되었는지 확인
-        if (currentMemoryFragment != null && !currentMemoryFragment.IsScanned)
+        if (currentMemoryFragment != null && currentMemoryFragment.IsScannable)
         {
             currentMemoryFragment.IsScannedCheck();
-            // 스캔 완료 후 메모리 오브젝트 파괴
-            //Destroy(currentScanObject);
         }
         else
         {
