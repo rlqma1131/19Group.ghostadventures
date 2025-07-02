@@ -10,16 +10,16 @@ public class EnemyAI : MonoBehaviour
     public float detectionRange = 5f;
     public float moveSpeed = 2f;
 
-    [Header("유인되고 난 후 ")]
-    public float distractionSpeed = 1f; // 유인 오브젝트로 이동할 때 속도
+    [Header("유인되고 난 후")]
+    public float distractionSpeed = 1f;
     public float distractionTimer = 0f;
-    public float distractionDuration = 5f; // 머무는 시간
+    public float distractionDuration = 5f;
 
     [Header("QTE 설정")]
-    public float catchRange = 1.5f; // 플레이어를 잡는 범위
+    public float catchRange = 1.5f;
 
     [Header("애니메이션 설정")]
-    public Animator enemyAnimator; // 적 애니메이터
+    public Animator enemyAnimator;
 
     [Header("순찰 설정")]
     public float patrolDistance = 3f;
@@ -35,12 +35,8 @@ public class EnemyAI : MonoBehaviour
     public float lostTargetWaitTime = 2f;
     public float returnedWaitTime = 1f;
 
-    [Header("유인 오브젝트 설정")]
-    public float distractionRange = 15f; // 유인 감지 범위
-
-    [Header("생명 시스템 설정")]
-    public int maxPlayerLives = 2; // 챕터당 목숨 2개
-    private int currentPlayerLives;
+    [Header("유인 감지 거리")]
+    public float distractionRange = 15f;
 
     private Vector3 startPos;
     private Vector3[] patrolPoints;
@@ -57,7 +53,7 @@ public class EnemyAI : MonoBehaviour
 
     private PlayerHide playerHide;
     private Transform currentHideArea;
-    private Transform currentDistraction; // 현재 끌린 유인 오브젝트
+    private Transform currentDistraction;
 
     private enum AIState
     {
@@ -69,52 +65,42 @@ public class EnemyAI : MonoBehaviour
         LostTarget,
         Returning,
         Waiting,
-        CaughtPlayer,        // 플레이어를 잡은 상태
-        DistractedByDecoy,   // 유인 오브젝트에 끌린 상태
-        StunnedAfterQTE      // QTE 후 스턴 상태
+        CaughtPlayer,
+        DistractedByDecoy,
+        StunnedAfterQTE
     }
 
     private AIState currentState = AIState.Patrolling;
 
-    void Awake()
+    private void Awake()
     {
         if (enemyAnimator == null)
             enemyAnimator = GetComponent<Animator>();
     }
-    void Start()
+
+    private void Start()
     {
         startPos = transform.position;
-        currentPlayerLives = maxPlayerLives; // 생명 초기화
-
         if (Player == null) Player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        if (Player != null) playerHide = Player.GetComponent<PlayerHide>();
 
-        if (Player != null)
-        {
-            playerHide = Player.GetComponent<PlayerHide>();
-        }
         SetupPatrolPoints();
         ChangeState(AIState.Patrolling);
     }
 
-    void Update()
+    private void Update()
     {
-        // 안전장치: 플레이어가 없으면 다시 찾기 시도
         if (Player == null)
         {
             Player = GameObject.FindGameObjectWithTag("Player")?.transform;
             if (Player != null)
-            {
                 playerHide = Player.GetComponent<PlayerHide>();
-                Debug.Log("Update에서 플레이어를 찾았습니다!");
-            }
             else
-            {
-                return; // 플레이어가 없으면 AI 로직 실행 안함
-            }
+                return;
         }
+
         stateTimer += Time.deltaTime;
 
-        // 플레이어를 잡는 범위 체크
         if (currentState == AIState.Chasing &&
             Vector3.Distance(transform.position, Player.position) <= catchRange)
         {
@@ -126,7 +112,7 @@ public class EnemyAI : MonoBehaviour
         CheckStateTransitions();
     }
 
-    void ChangeState(AIState newState)
+    private void ChangeState(AIState newState)
     {
         currentState = newState;
         stateTimer = 0f;
@@ -150,34 +136,16 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    // ================================
-    // QTE 시스템 관련 메서드들
-    // ================================
-
-    void TryCatchPlayer()
+    private void TryCatchPlayer()
     {
         StopMoving();
         ChangeState(AIState.CaughtPlayer);
-
-        // 플레이어를 잡았을 때 애니메이션 재생
-        if (enemyAnimator != null)
-        {
-            enemyAnimator.SetTrigger("QTEIn");
-        }
-
-        if (enemyAnimator != null)
-        {
-            enemyAnimator.SetTrigger("QTEIn");
-        }
-
+        enemyAnimator?.SetTrigger("QTEIn");
         StartCoroutine(HandleQTEFlow());
-       
     }
-
 
     private IEnumerator HandleQTEFlow()
     {
-        // 카메라 줌 + 어두움
         QTEEffectManager.Instance.playerTarget = Player;
         QTEEffectManager.Instance.enemyTarget = this.transform;
         QTEEffectManager.Instance.StartQTEEffects();
@@ -186,231 +154,110 @@ public class EnemyAI : MonoBehaviour
         qte2.StartQTE();
 
         while (qte2.IsQTERunning())
-        {
             yield return null;
-        }
 
         if (qte2.IsSuccess())
             OnQTESuccess();
         else
             OnQTEFailure();
     }
-    // QTE 성공 시 호출되는 메서드
-    void OnQTESuccess()
+
+    private void OnQTESuccess()
     {
         Debug.Log("QTE 성공! 플레이어가 탈출했습니다.");
+        QTEEffectManager.Instance.EndQTEEffects();
+        enemyAnimator?.SetTrigger("QTESuccess");
 
-        QTEEffectManager.Instance.EndQTEEffects(); //QTE 연출 종료
-
-        if (enemyAnimator != null)
-        {
-            enemyAnimator.SetTrigger("QTESuccess");
-        }
-
-        LosePlayerLife();
+        // 외부 생명 시스템 호출
+        PlayerLifeManager.Instance.LosePlayerLife();
     }
 
-    // QTE 실패 시 호출되는 메서드
-    void OnQTEFailure()
+    private void OnQTEFailure()
     {
         Debug.Log("QTE 실패! 플레이어가 잡혔습니다.");
-
-        QTEEffectManager.Instance.EndQTEEffects(); // QTE 연출 종료
-
-        if (enemyAnimator != null)
-        {
-            enemyAnimator.SetTrigger("QTEFail");
-        }
+        QTEEffectManager.Instance.EndQTEEffects();
+        enemyAnimator?.SetTrigger("QTEFail");
 
         StartCoroutine(DelayedGameOver());
     }
 
-    // ================================
-    // 생명 시스템 관련 메서드들
-    // ================================
-
-    void LosePlayerLife()
-    {
-        currentPlayerLives--;
-        Debug.Log($"생명 감소! 남은 생명: {currentPlayerLives}");
-
-        if (currentPlayerLives <= 0)
-        {
-            HandleGameOver();
-        }
-        else
-        {
-            // 2초 스턴 후 다시 추적
-            StartCoroutine(StunAfterQTE());
-        }
-    }
-
-
     private IEnumerator DelayedGameOver()
     {
-        yield return new WaitForSeconds(1.5f);  // 1.5초 대기
-        HandleGameOver();
+        yield return new WaitForSeconds(1.5f);
+        PlayerLifeManager.Instance.HandleGameOver();
     }
 
-    void HandleGameOver()
+    public void OnSoundDetected(Vector3 soundPosition)
     {
-        Debug.Log("게임오버!");
-        UIManager.Instance.ShowOnly(UIManager.Instance.gameover);
+        if (currentState == AIState.CaughtPlayer || currentState == AIState.StunnedAfterQTE)
+            return;
 
-        // 임시로 게임 일시정지
-        // Time.timeScale = 0f;
+        Debug.Log("소리를 감지했습니다! 해당 위치로 이동합니다.");
+        currentDistraction = null;
+        SetTarget(soundPosition);
+        distractionTimer = 0f;
+        ChangeState(AIState.DistractedByDecoy);
     }
 
-    IEnumerator StunAfterQTE()
-    {
-        ChangeState(AIState.StunnedAfterQTE);
-
-        // 적 스턴 애니메이션 재생
-        if (enemyAnimator != null)
-        {
-            enemyAnimator.SetBool("QTEFail", true);
-        }
-
-        Debug.Log("적이 2초간 스턴됩니다.");
-        yield return new WaitForSeconds(2f); // 2초 스턴
-
-        // 스턴 애니메이션 해제
-        if (enemyAnimator != null)
-        {
-            enemyAnimator.SetBool("QTEFail", false);
-        }
-
-        // 플레이어가 감지 범위에 있는지 확인 후 추격 또는 순찰
-        if (Player != null && Vector3.Distance(transform.position, Player.position) < detectionRange)
-        {
-            ChangeState(AIState.Chasing);
-            Debug.Log("스턴 해제! 플레이어를 다시 추격합니다.");
-        }
-        else
-        {
-            ChangeState(AIState.Patrolling);
-            Debug.Log("스턴 해제! 순찰을 재개합니다.");
-        }
-    }
-
-    // ================================
-    // 유인 오브젝트 관련 메서드들
-    // ================================
-
-    // 유인 오브젝트에 끌리는 메서드
     public void GetDistractedBy(Transform distractionObject)
     {
         if (currentState == AIState.CaughtPlayer || currentState == AIState.StunnedAfterQTE)
             return;
 
         currentDistraction = distractionObject;
-        distractionTimer = 0f; // 5초 타이머 초기화
+        distractionTimer = 0f;
         ChangeState(AIState.DistractedByDecoy);
-
-        Debug.Log("적이 소리 위치로 유인되었습니다!");
     }
 
-
-    // 유인 해제 메서드
     public void EndDistraction()
     {
         if (currentState == AIState.DistractedByDecoy)
         {
             currentDistraction = null;
             ChangeState(AIState.Patrolling);
-            Debug.Log("유인 효과가 끝났습니다. 순찰로 복귀합니다.");
         }
     }
 
-    // 소리 기반 유인 메서드
-    public void OnSoundDetected(Vector3 soundPosition)
+    private IEnumerator StunAfterQTE()
     {
-        if (currentState == AIState.CaughtPlayer || currentState == AIState.StunnedAfterQTE)
-        {
-            Debug.Log("적이 QTE 중이거나 스턴 상태라 소리를 무시합니다.");
-            return;
-        }
+        ChangeState(AIState.StunnedAfterQTE);
+        enemyAnimator?.SetBool("QTEFail", true);
+        yield return new WaitForSeconds(2f);
+        enemyAnimator?.SetBool("QTEFail", false);
 
-        Debug.Log("소리를 감지했습니다! 해당 위치로 이동합니다.");
-
-        currentDistraction = null; // 기존 유인 해제
-        SetTarget(soundPosition);
-        distractionTimer = 0f; // 타이머 초기화
-        ChangeState(AIState.DistractedByDecoy);
+        if (Player != null && Vector3.Distance(transform.position, Player.position) < detectionRange)
+            ChangeState(AIState.Chasing);
+        else
+            ChangeState(AIState.Patrolling);
     }
 
-    void UpdateCurrentState()
+    private void UpdateCurrentState()
     {
         switch (currentState)
         {
-            case AIState.Patrolling:
-                UpdatePatrolling();
-                break;
-            case AIState.Chasing:
-                UpdateChasing();
-                break;
+            case AIState.Patrolling: UpdatePatrolling(); break;
+            case AIState.Chasing: UpdateChasing(); break;
             case AIState.SearchWaiting:
-                StopMoving();
-                break;
-            case AIState.Searching:
-                UpdateSearching();
-                break;
-            case AIState.SearchComplete:
-                UpdateSearchComplete();
-                break;
             case AIState.LostTarget:
-                StopMoving();
-                break;
-            case AIState.Returning:
-                MoveToTarget(moveSpeed * 0.9f);
-                break;
             case AIState.Waiting:
-                StopMoving();
-                break;
             case AIState.CaughtPlayer:
-                StopMoving(); // QTE 진행 중에는 움직이지 않음
-                break;
-            case AIState.DistractedByDecoy:
-                UpdateDistractedState();
-                break;
             case AIState.StunnedAfterQTE:
-                StopMoving(); // 스턴 중에는 움직이지 않음
-                break;
+                StopMoving(); break;
+            case AIState.Searching: UpdateSearching(); break;
+            case AIState.SearchComplete: UpdateSearchComplete(); break;
+            case AIState.Returning: MoveToTarget(moveSpeed * 0.9f); break;
+            case AIState.DistractedByDecoy: UpdateDistractedState(); break;
         }
 
-        // 이동 여부에 따라 애니메이션 트리거 업데이트
-        switch (currentState)
-        {
-            case AIState.Patrolling:
-            case AIState.Chasing:
-            case AIState.Searching:
-            case AIState.SearchComplete:
-            case AIState.Returning:
-                enemyAnimator?.SetBool("IsMoving", true);
-                break;
-            default:
-                enemyAnimator?.SetBool("IsMoving", false);
-                break;
-        }
+        enemyAnimator?.SetBool("IsMoving",
+            currentState == AIState.Patrolling ||
+            currentState == AIState.Chasing ||
+            currentState == AIState.Searching ||
+            currentState == AIState.SearchComplete ||
+            currentState == AIState.Returning);
     }
 
-    void UpdateDistractedState()
-    {
-        distractionTimer += Time.deltaTime;
-
-        if (currentDistraction != null)
-        {
-            SetTarget(currentDistraction.position);
-            MoveToTarget(distractionSpeed);
-        }
-
-        if (distractionTimer >= distractionDuration)
-        {
-            EndDistraction();
-        }
-    }
-
-    void CheckStateTransitions()
+    private void CheckStateTransitions()
     {
         if (Player == null)
         {
@@ -426,16 +273,8 @@ public class EnemyAI : MonoBehaviour
         switch (currentState)
         {
             case AIState.Patrolling:
-
-                if (hiding)
-                {
-                    FindCurrentHideArea();
-                    ChangeState(AIState.SearchWaiting);
-                }
-                else if (inRange)
-                {                  
-                    ChangeState(AIState.Chasing);
-                }
+                if (hiding) { FindCurrentHideArea(); ChangeState(AIState.SearchWaiting); }
+                else if (inRange) { ChangeState(AIState.Chasing); }
                 break;
             case AIState.Chasing:
                 if (hiding) { FindCurrentHideArea(); ChangeState(AIState.SearchWaiting); }
@@ -458,24 +297,25 @@ public class EnemyAI : MonoBehaviour
                 break;
             case AIState.Returning:
                 if (!hiding && inRange) ChangeState(AIState.Chasing);
-                else if (Vector3.Distance(transform.position, startPos) <= 0.5f) ChangeState(AIState.Waiting);
+                else if (Vector3.Distance(transform.position, startPos) <= 0.5f)
+                    ChangeState(AIState.Waiting);
                 break;
             case AIState.Waiting:
                 if (!hiding && inRange) ChangeState(AIState.Chasing);
-                else if (stateTimer >= returnedWaitTime) ChangeState(AIState.Patrolling);
+                else if (stateTimer >= returnedWaitTime)
+                    ChangeState(AIState.Patrolling);
                 break;
             case AIState.DistractedByDecoy:
-                // 플레이어가 감지되면 유인 해제하고 추격
                 if (!hiding && inRange)
                 {
                     currentDistraction = null;
                     ChangeState(AIState.Chasing);
                 }
                 break;
-                // CaughtPlayer와 StunnedAfterQTE는 코루틴에서 상태 변경 처리
         }
     }
-    void UpdatePatrolling()
+
+    private void UpdatePatrolling()
     {
         if (isPatrolWaiting)
         {
@@ -494,22 +334,20 @@ public class EnemyAI : MonoBehaviour
             isPatrolWaiting = true;
             stateTimer = 0f;
         }
-        else
-        {
-            MoveToTarget(moveSpeed * 0.7f);
-        }
+        else MoveToTarget(moveSpeed * 0.7f);
     }
 
-    void UpdateChasing()
+    private void UpdateChasing()
     {
         if (Player != null)
         {
             SetTarget(Player.position);
             MoveToTarget(moveSpeed);
+            Ch1_HideAreaEvent.Instance.UnTagAllHideAreas(); // 퍼즐 방 은신처 무효화
         }
     }
 
-    void UpdateSearching()
+    private void UpdateSearching()
     {
         if (isSearchWaiting)
         {
@@ -527,71 +365,67 @@ public class EnemyAI : MonoBehaviour
             isSearchWaiting = true;
             stateTimer = 0f;
         }
-        else
-        {
-            MoveToTarget(moveSpeed * 0.6f);
-        }
+        else MoveToTarget(moveSpeed * 0.6f);
     }
 
-    void UpdateSearchComplete()
+    private void UpdateSearchComplete()
     {
         if (Vector3.Distance(transform.position, searchCenter) > 0.3f)
-        {
             MoveToTarget(moveSpeed * 0.6f);
-        }
     }
 
-    void SetTarget(Vector3 target)
+    private void UpdateDistractedState()
     {
-        targetPosition = target;
-        isMoving = true;
+        distractionTimer += Time.deltaTime;
+        if (currentDistraction != null)
+        {
+            SetTarget(currentDistraction.position);
+            MoveToTarget(distractionSpeed);
+        }
+
+        if (distractionTimer >= distractionDuration)
+            EndDistraction();
     }
 
-    void MoveToTarget(float speed)
+    private void SetTarget(Vector3 target) => (targetPosition, isMoving) = (target, true);
+
+    private void MoveToTarget(float speed)
     {
         if (!isMoving) return;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
     }
 
-    void StopMoving()
-    {
-        isMoving = false;
-    }
+    private void StopMoving() => isMoving = false;
 
-    void SetNextPatrolTarget()
+    private void SetNextPatrolTarget()
     {
         if (patrolPoints == null || patrolPoints.Length == 0) return;
         SetTarget(patrolPoints[currentPatrolIndex]);
         currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
     }
 
-    void SetupPatrolPoints()
+    private void SetupPatrolPoints()
     {
-        Vector3 leftPoint = startPos + Vector3.left * patrolDistance;
-        Vector3 rightPoint = startPos + Vector3.right * patrolDistance;
-
-        List<Vector3> validPoints = new List<Vector3>();
-        if (!IsBlocked(leftPoint)) validPoints.Add(leftPoint);
-        if (!IsBlocked(rightPoint)) validPoints.Add(rightPoint);
-
-        if (validPoints.Count == 2)
-            patrolPoints = new Vector3[] { validPoints[0], validPoints[1] };
-        else if (validPoints.Count == 1)
-            patrolPoints = new Vector3[] { startPos, validPoints[0] };
-        else
-            patrolPoints = new Vector3[] {
-                startPos + Vector3.left * 0.5f,
-                startPos + Vector3.right * 0.5f
-            };
+        Vector3 left = startPos + Vector3.left * patrolDistance;
+        Vector3 right = startPos + Vector3.right * patrolDistance;
+        List<Vector3> valid = new();
+        if (!IsBlocked(left)) valid.Add(left);
+        if (!IsBlocked(right)) valid.Add(right);
+        patrolPoints = valid.Count switch
+        {
+            2 => new[] { valid[0], valid[1] },
+            1 => new[] { startPos, valid[0] },
+            _ => new[] { startPos + Vector3.left * 0.5f, startPos + Vector3.right * 0.5f }
+        };
     }
 
-    bool IsBlocked(Vector3 position)
+    private bool IsBlocked(Vector3 pos)
     {
-        Collider2D obstacle = Physics2D.OverlapCircle(position, 0.2f);
-        return obstacle != null && obstacle.CompareTag("Ground");
+        Collider2D col = Physics2D.OverlapCircle(pos, 0.2f);
+        return col != null && col.CompareTag("Ground");
     }
 
-    void SetupSearchPattern()
+    private void SetupSearchPattern()
     {
         searchCenter = transform.position;
         currentSearchLap = 0;
@@ -599,7 +433,7 @@ public class EnemyAI : MonoBehaviour
         SetNextSearchTarget();
     }
 
-    void SetNextSearchTarget()
+    private void SetNextSearchTarget()
     {
         if (currentSearchLap >= searchLaps)
         {
@@ -608,49 +442,31 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
-        Vector3 nextTarget = searchingRight
+        Vector3 next = searchingRight
             ? searchCenter + Vector3.right * searchDistance
             : searchCenter + Vector3.left * searchDistance;
 
         searchingRight = !searchingRight;
         if (!searchingRight) currentSearchLap++;
-
-        SetTarget(nextTarget);
+        SetTarget(next);
     }
 
-    void FindCurrentHideArea()
+    private void FindCurrentHideArea()
     {
-        GameObject[] hideAreas = GameObject.FindGameObjectsWithTag("HideArea");
+        GameObject[] areas = GameObject.FindGameObjectsWithTag("HideArea");
         float closest = float.MaxValue;
-        Transform closestArea = null;
+        Transform nearest = null;
 
-        foreach (GameObject obj in hideAreas)
+        foreach (GameObject obj in areas)
         {
-            float dist = Vector3.Distance(Player.position, obj.transform.position);
-            if (dist < closest)
+            float d = Vector3.Distance(Player.position, obj.transform.position);
+            if (d < closest)
             {
-                closest = dist;
-                closestArea = obj.transform;
+                closest = d;
+                nearest = obj.transform;
             }
         }
 
-        currentHideArea = closestArea;
-    }
-
-    // ================================
-    // 공개 메서드들 (외부에서 호출 가능)
-    // ================================
-
-    // 현재 생명 수 반환
-    public int GetCurrentLives()
-    {
-        return currentPlayerLives;
-    }
-
-    // 생명 리셋 (챕터 시작 시 호출)
-    public void ResetLives()
-    {
-        currentPlayerLives = maxPlayerLives;
-        Debug.Log("생명이 리셋되었습니다.");
+        currentHideArea = nearest;
     }
 }

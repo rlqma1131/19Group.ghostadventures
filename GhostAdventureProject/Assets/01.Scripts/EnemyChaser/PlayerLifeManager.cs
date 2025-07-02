@@ -121,4 +121,5 @@ public class PlayerLifeManager : MonoBehaviour
     {
         playerAnimator?.SetTrigger("StruggleOut");
     }
+
 }
