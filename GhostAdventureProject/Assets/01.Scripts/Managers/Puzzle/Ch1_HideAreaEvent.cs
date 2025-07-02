@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class HideAreaManager : Singleton<HideAreaManager>
+public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
 {
     [SerializeField] private List<string> correctOrder = new() { "A", "B", "C" };
     private List<string> currentOrder = new();

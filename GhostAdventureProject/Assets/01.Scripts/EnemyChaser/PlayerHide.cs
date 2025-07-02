@@ -57,7 +57,7 @@ public class PlayerHide : MonoBehaviour
 
         if (currentHideArea != null)
         {
-            HideAreaManager.Instance.RegisterArea(currentHideArea.areaID);
+            Ch1_HideAreaEvent.Instance.RegisterArea(currentHideArea.areaID);
         }
     }
 

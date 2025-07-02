@@ -120,7 +120,7 @@ public class MemoryFragment : MonoBehaviour
         if (drop.TryGetComponent(out SpriteRenderer finalSR))
             absorb.Join(finalSR.DOFade(0f, absorbTime));
         yield return absorb.WaitForCompletion();
-        yield return CutsceneManager.Instance.PlayCutscene(); // 컷신 재생
+        //yield return CutsceneManager.Instance.PlayCutscene(); // 컷신 재생
 
         Destroy(drop);
         SceneManager.LoadScene(data.CutSceneName, LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
