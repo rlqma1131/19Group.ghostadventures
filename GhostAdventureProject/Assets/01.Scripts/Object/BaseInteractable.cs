@@ -18,6 +18,18 @@ public class BaseInteractable : MonoBehaviour
         }
     }
 
+    // 은신처일때만 적용 (외에는 각 스크립트에서 관리)
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (gameObject.CompareTag("HideArea")) 
+        {
+            if (collision.CompareTag("Player"))
+            {
+                SetInteractionPopup(true);
+            }
+        }
+    }
+
     void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))

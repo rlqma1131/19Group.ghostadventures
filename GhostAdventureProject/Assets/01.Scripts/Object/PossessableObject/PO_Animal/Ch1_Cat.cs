@@ -62,5 +62,6 @@ public class Ch1_Cat : MoveBasePossessable
     void CatAct()
     {
         // 문열기
+        anim.SetTrigger("Open");
     }
 }

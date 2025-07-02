@@ -5,31 +5,43 @@ public class Ch1_Drawing : MonoBehaviour
     [SerializeField] private GameObject zoomCamera;
 
     private bool zoomActivatedOnce = false;
+    private bool isPlayerInside = false;
 
     void Update()
     {
-        if (IsPlayerInRange() && Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            zoomCamera.SetActive(!zoomCamera.activeSelf);
+            if (!zoomCamera.activeSelf && !isPlayerInside)
+                return;
 
-            if (!zoomCamera.activeSelf && !zoomActivatedOnce)
+            bool isZoomActive = !zoomCamera.activeSelf;
+            zoomCamera.SetActive(isZoomActive);
+
+            if (!isZoomActive) // 줌 꺼짐
             {
-                Ch1_HideAreaEvent.Instance.RestoreHideAreaTags();
-                zoomActivatedOnce = true;
+                if (!zoomActivatedOnce)
+                {
+                    Ch1_HideAreaEvent.Instance.RestoreHideAreaTags();
+                    zoomActivatedOnce = true;
+                }
+
+                if (isPlayerInside)
+                    PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            }
+            else // 줌 켜짐
+            {
+                PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
             }
         }
-    }
-
-    private bool IsPlayerInRange()
-    {
-        return PlayerInteractSystem.Instance.CurrentClosest == gameObject;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            if(!zoomCamera.activeSelf)
+            isPlayerInside = true;
+
+            if (!zoomCamera.activeSelf)
                 PlayerInteractSystem.Instance.AddInteractable(gameObject);
         }
     }
@@ -38,11 +50,12 @@ public class Ch1_Drawing : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // 범위를 벗어나면 카메라 꺼짐
+            isPlayerInside = false;
+
             if (zoomCamera.activeSelf)
                 zoomCamera.SetActive(false);
 
-           PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
         }
     }
 }
