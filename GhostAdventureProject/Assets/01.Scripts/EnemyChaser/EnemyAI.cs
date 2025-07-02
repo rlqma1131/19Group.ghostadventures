@@ -175,29 +175,32 @@ public class EnemyAI : MonoBehaviour
     }
 
 
-private IEnumerator HandleQTEFlow()
-{
-    var qte2 = UIManager.Instance.QTE_UI_2;
-
-    qte2.StartQTE();
-
-    // QTE가 끝날 때까지 기다리기
-    while (qte2.IsQTERunning())
+    private IEnumerator HandleQTEFlow()
     {
-        yield return null;
+        // 카메라 줌 + 어두움
+        QTEEffectManager.Instance.playerTarget = Player;
+        QTEEffectManager.Instance.enemyTarget = this.transform;
+        QTEEffectManager.Instance.StartQTEEffects();
+
+        var qte2 = UIManager.Instance.QTE_UI_2;
+        qte2.StartQTE();
+
+        while (qte2.IsQTERunning())
+        {
+            yield return null;
+        }
+
+        if (qte2.IsSuccess())
+            OnQTESuccess();
+        else
+            OnQTEFailure();
     }
-
-    // 이제 isSuccess를 확인해도 됨
-    if (qte2.IsSuccess())
-        OnQTESuccess();
-    else
-        OnQTEFailure();
-}
-
     // QTE 성공 시 호출되는 메서드
     void OnQTESuccess()
     {
         Debug.Log("QTE 성공! 플레이어가 탈출했습니다.");
+
+        QTEEffectManager.Instance.EndQTEEffects(); //QTE 연출 종료
 
         if (enemyAnimator != null)
         {
@@ -211,6 +214,8 @@ private IEnumerator HandleQTEFlow()
     void OnQTEFailure()
     {
         Debug.Log("QTE 실패! 플레이어가 잡혔습니다.");
+
+        QTEEffectManager.Instance.EndQTEEffects(); // QTE 연출 종료
 
         if (enemyAnimator != null)
         {
@@ -421,8 +426,16 @@ private IEnumerator HandleQTEFlow()
         switch (currentState)
         {
             case AIState.Patrolling:
-                if (hiding) { FindCurrentHideArea(); ChangeState(AIState.SearchWaiting); }
-                else if (inRange) ChangeState(AIState.Chasing);
+
+                if (hiding)
+                {
+                    FindCurrentHideArea();
+                    ChangeState(AIState.SearchWaiting);
+                }
+                else if (inRange)
+                {                  
+                    ChangeState(AIState.Chasing);
+                }
                 break;
             case AIState.Chasing:
                 if (hiding) { FindCurrentHideArea(); ChangeState(AIState.SearchWaiting); }
