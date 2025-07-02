@@ -259,6 +259,7 @@ public class EnemyAI : MonoBehaviour
 
     private void CheckStateTransitions()
     {
+        // 플레이어가 사라졌다면 순찰 상태로 되돌림
         if (Player == null)
         {
             if (currentState != AIState.Patrolling)
@@ -266,46 +267,112 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
+        // 플레이어가 은신 중인지 체크
         bool hiding = playerHide != null && playerHide.IsHiding;
+
+        // 거리 계산 (적과 플레이어 사이)
         float dist = Vector3.Distance(transform.position, Player.position);
         bool inRange = dist < detectionRange;
 
+        // 상태별 전이 조건 확인
         switch (currentState)
         {
             case AIState.Patrolling:
-                if (hiding) { FindCurrentHideArea(); ChangeState(AIState.SearchWaiting); }
-                else if (inRange) { ChangeState(AIState.Chasing); }
+                // 플레이어가 숨으면 수색 대기 상태로
+                if (hiding)
+                {
+                    FindCurrentHideArea();
+                    ChangeState(AIState.SearchWaiting);
+                }
+                // 플레이어가 탐지 범위 안에 들어오면 추격 시작
+                else if (inRange)
+                {
+                    // 추격 시작 시, 퍼즐 방 은신처 무효화
+                    ChangeState(AIState.Chasing);
+                }
                 break;
+
             case AIState.Chasing:
-                if (hiding) { FindCurrentHideArea(); ChangeState(AIState.SearchWaiting); }
-                else if (!inRange) ChangeState(AIState.LostTarget);
+                // 플레이어가 도중에 숨으면 수색 대기 상태로 전환
+                if (hiding)
+                {
+                    FindCurrentHideArea();
+                    ChangeState(AIState.SearchWaiting);
+                }
+                // 플레이어가 범위 밖으로 벗어나면 추격 종료
+                else if (!inRange)
+                {
+                    // 추격 종료 시, 은신처 다시 태그 복구
+                    Ch1_HideAreaEvent.Instance.ReTagAllHideAreas();
+                    ChangeState(AIState.LostTarget);
+                }
                 break;
+
             case AIState.SearchWaiting:
-                if (!hiding && inRange) ChangeState(AIState.Chasing);
-                else if (stateTimer >= searchWaitTime) ChangeState(AIState.Searching);
+                // 플레이어가 다시 보이면 추격 상태로
+                if (!hiding && inRange)
+                    ChangeState(AIState.Chasing);
+                // 일정 시간 기다리면 수색 시작
+                else if (stateTimer >= searchWaitTime)
+                    ChangeState(AIState.Searching);
                 break;
+
             case AIState.Searching:
-                if (!hiding && inRange) ChangeState(AIState.Chasing);
+                // 수색 중 다시 탐지되면 추격
+                if (!hiding && inRange)
+                    ChangeState(AIState.Chasing);
                 break;
+
             case AIState.SearchComplete:
-                if (!hiding && inRange) ChangeState(AIState.Chasing);
-                else if (stateTimer >= searchEndWaitTime) ChangeState(AIState.Returning);
+                // 수색 종료 후 다시 발견되면 추격
+                if (!hiding && inRange)
+                    ChangeState(AIState.Chasing);
+                // 아니면 일정 시간 후 복귀
+                else if (stateTimer >= searchEndWaitTime)
+                {
+                    Ch1_HideAreaEvent.Instance.ReTagAllHideAreas(); // 복귀 전 은신처 다시 태그
+                    ChangeState(AIState.Returning);
+                }
                 break;
+
             case AIState.LostTarget:
-                if (!hiding && inRange) ChangeState(AIState.Chasing);
-                else if (stateTimer >= lostTargetWaitTime) ChangeState(AIState.Returning);
+                // 다시 탐지되면 추격
+                if (!hiding && inRange)
+                    ChangeState(AIState.Chasing);
+                // 시간이 지나면 복귀
+                else if (stateTimer >= lostTargetWaitTime)
+                {
+                    Ch1_HideAreaEvent.Instance.ReTagAllHideAreas(); // 복귀 전 은신처 다시 태그
+                    ChangeState(AIState.Returning);
+                }
                 break;
+
             case AIState.Returning:
-                if (!hiding && inRange) ChangeState(AIState.Chasing);
+                // 복귀 도중 다시 탐지되면 추격
+                if (!hiding && inRange)
+                    ChangeState(AIState.Chasing);
+                // 복귀 완료 시 대기 상태로 전환
                 else if (Vector3.Distance(transform.position, startPos) <= 0.5f)
+                {
+                    Ch1_HideAreaEvent.Instance.ReTagAllHideAreas(); // 복귀 완료 → 은신처 태그 복구
                     ChangeState(AIState.Waiting);
+                }
                 break;
+
             case AIState.Waiting:
-                if (!hiding && inRange) ChangeState(AIState.Chasing);
+                // 대기 중 플레이어 탐지되면 추격
+                if (!hiding && inRange)
+                    ChangeState(AIState.Chasing);
+                // 일정 시간 후 다시 순찰 시작
                 else if (stateTimer >= returnedWaitTime)
+                {
+                    Ch1_HideAreaEvent.Instance.ReTagAllHideAreas(); // 다시 순찰 시작 전 은신처 복구
                     ChangeState(AIState.Patrolling);
+                }
                 break;
+
             case AIState.DistractedByDecoy:
+                // 유인 도중 플레이어 발견 시 유인 종료 후 추격
                 if (!hiding && inRange)
                 {
                     currentDistraction = null;
@@ -314,6 +381,8 @@ public class EnemyAI : MonoBehaviour
                 break;
         }
     }
+
+
 
     private void UpdatePatrolling()
     {

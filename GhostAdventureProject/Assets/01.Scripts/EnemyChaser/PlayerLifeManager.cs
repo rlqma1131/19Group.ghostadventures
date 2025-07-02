@@ -44,7 +44,7 @@ public class PlayerLifeManager : MonoBehaviour
     }
 
 
-    private void HandleGameOver()
+    public void HandleGameOver()
     {
         Debug.Log("게임오버!");
         OnGameOver?.Invoke(); // 게임오버 UI 등이 이 이벤트를 듣고 처리
