@@ -14,7 +14,7 @@ public class Ch1_Drawing : MonoBehaviour
 
             if (!zoomCamera.activeSelf && !zoomActivatedOnce)
             {
-                RestoreHideAreaTags();
+                Ch1_HideAreaEvent.Instance.RestoreHideAreaTags();
                 zoomActivatedOnce = true;
             }
         }
@@ -23,18 +23,6 @@ public class Ch1_Drawing : MonoBehaviour
     private bool IsPlayerInRange()
     {
         return PlayerInteractSystem.Instance.CurrentClosest == gameObject;
-    }
-
-    private void RestoreHideAreaTags()
-    {
-        HideAreaID[] areas = FindObjectsOfType<HideAreaID>();
-        foreach (var area in areas)
-        {
-            if (area.CompareTag("Untagged"))
-            {
-                area.tag = "HideArea";
-            }
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
