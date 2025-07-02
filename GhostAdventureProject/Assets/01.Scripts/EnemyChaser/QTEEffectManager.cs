@@ -13,7 +13,8 @@ public class QTEEffectManager : MonoBehaviour
     [Header("카메라 연출")]
     public Camera mainCamera;
     public float zoomFOV = 30f;
-    private float defaultFOV;
+    private float initialFOV;
+    private Vector3 initialCamPosition;
 
     public float zoomDuration = 0.5f;
     public float moveDuration = 0.5f;
@@ -21,8 +22,6 @@ public class QTEEffectManager : MonoBehaviour
     [Header("QTE 대상")]
     public Transform playerTarget;
     public Transform enemyTarget;
-
-    private Vector3 originalCamPosition;
 
     private void Awake()
     {
@@ -38,14 +37,16 @@ public class QTEEffectManager : MonoBehaviour
         if (mainCamera == null)
             mainCamera = Camera.main;
 
-        // ✅ 최초 시작 시 카메라 원래 FOV 저장
-        defaultFOV = mainCamera.fieldOfView;
-        originalCamPosition = mainCamera.transform.position;
+        // 최초 시작 시 기준값 저장
+        initialFOV = mainCamera.fieldOfView;
+        initialCamPosition = mainCamera.transform.position;
     }
 
     public void StartQTEEffects()
     {
-        zoomDuration = 5f; // QTE 연출은 천천히
+     
+        zoomDuration = 5f;
+
         StartCoroutine(FadeToAlphaRange(0f, 0.9f, fadeDuration));
         StartCoroutine(ZoomTo(zoomFOV, zoomDuration));
 
@@ -53,18 +54,19 @@ public class QTEEffectManager : MonoBehaviour
         {
             Vector3 mid = (playerTarget.position + enemyTarget.position) / 2f;
             Vector3 camPos = new Vector3(mid.x, mid.y, mainCamera.transform.position.z);
-            originalCamPosition = mainCamera.transform.position;
             StartCoroutine(MoveCameraTo(camPos, zoomDuration));
         }
     }
 
     public void EndQTEEffects()
     {
-        zoomDuration = 0.5f; // 복귀는 빠르게
+  
+        StopAllCoroutines(); // 모든 코루틴 중지 !!! 
+        zoomDuration = 0.5f;
 
         StartCoroutine(FadeToAlphaRange(darkOverlay.alpha, 0f, fadeDuration));
-        StartCoroutine(ZoomTo(defaultFOV, zoomDuration));
-        StartCoroutine(MoveCameraTo(originalCamPosition, zoomDuration));
+        StartCoroutine(ZoomTo(initialFOV, zoomDuration));
+        StartCoroutine(MoveCameraTo(initialCamPosition, zoomDuration));
     }
 
     private IEnumerator FadeToAlphaRange(float fromAlpha, float toAlpha, float duration)
@@ -76,7 +78,7 @@ public class QTEEffectManager : MonoBehaviour
         {
             elapsed += Time.unscaledDeltaTime;
             float t = elapsed / duration;
-            t = t * t * (3f - 2f * t); // 부드러운 SmootherStep
+            t = t * t * (3f - 2f * t);
             darkOverlay.alpha = Mathf.Lerp(fromAlpha, toAlpha, t);
             yield return null;
         }

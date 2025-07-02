@@ -303,7 +303,7 @@ public class EnemyAI : MonoBehaviour
                 else if (!inRange)
                 {
                     // 추격 종료 시, 은신처 다시 태그 복구
-                    Ch1_HideAreaEvent.Instance.ReTagAllHideAreas();
+                    
                     ChangeState(AIState.LostTarget);
                 }
                 break;
@@ -330,7 +330,7 @@ public class EnemyAI : MonoBehaviour
                 // 아니면 일정 시간 후 복귀
                 else if (stateTimer >= searchEndWaitTime)
                 {
-                    Ch1_HideAreaEvent.Instance.ReTagAllHideAreas(); // 복귀 전 은신처 다시 태그
+                    
                     ChangeState(AIState.Returning);
                 }
                 break;
@@ -342,7 +342,7 @@ public class EnemyAI : MonoBehaviour
                 // 시간이 지나면 복귀
                 else if (stateTimer >= lostTargetWaitTime)
                 {
-                    Ch1_HideAreaEvent.Instance.ReTagAllHideAreas(); // 복귀 전 은신처 다시 태그
+                    
                     ChangeState(AIState.Returning);
                 }
                 break;
@@ -354,7 +354,7 @@ public class EnemyAI : MonoBehaviour
                 // 복귀 완료 시 대기 상태로 전환
                 else if (Vector3.Distance(transform.position, startPos) <= 0.5f)
                 {
-                    Ch1_HideAreaEvent.Instance.ReTagAllHideAreas(); // 복귀 완료 → 은신처 태그 복구
+                    
                     ChangeState(AIState.Waiting);
                 }
                 break;
@@ -366,7 +366,7 @@ public class EnemyAI : MonoBehaviour
                 // 일정 시간 후 다시 순찰 시작
                 else if (stateTimer >= returnedWaitTime)
                 {
-                    Ch1_HideAreaEvent.Instance.ReTagAllHideAreas(); // 다시 순찰 시작 전 은신처 복구
+                    
                     ChangeState(AIState.Patrolling);
                 }
                 break;
@@ -412,7 +412,7 @@ public class EnemyAI : MonoBehaviour
         {
             SetTarget(Player.position);
             MoveToTarget(moveSpeed);
-            Ch1_HideAreaEvent.Instance.UnTagAllHideAreas(); // 퍼즐 방 은신처 무효화
+           
         }
     }
 
