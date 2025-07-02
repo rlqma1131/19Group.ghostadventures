@@ -5,6 +5,7 @@ public class PlayerInteractSystem : Singleton<PlayerInteractSystem>
 {
     private List<GameObject> nearbyInteractables = new();
     private GameObject currentClosest;
+    public GameObject CurrentClosest => currentClosest;
 
     private void Update()
     {

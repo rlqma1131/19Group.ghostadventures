@@ -12,6 +12,7 @@ public class UIManager : Singleton<UIManager>
 
     // 각 UI에 연결 ======================================================
     [SerializeField] private SoulGauge soulGauge; // 영혼에너지 
+    [SerializeField] private Hp hp; // 목숨
     [SerializeField] private Prompt prompt; // 프롬프트
     [SerializeField] private QTEUI qte1;// QTE
     [SerializeField] private QTEUI2 qte2; // QTE2
@@ -25,6 +26,7 @@ public class UIManager : Singleton<UIManager>
 
     // 외부 접근용
     public SoulGauge SoulGaugeUI => soulGauge;
+    public Hp HpUI => hp;
     public Prompt PromptUI => prompt;
     public QTEUI QTE_UI => qte1;
     public QTEUI2 QTE_UI_2 => qte2;
@@ -67,6 +69,14 @@ public class UIManager : Singleton<UIManager>
             ui.SetActive(true);
         }
         playbutton.gameObject.SetActive(false);
+    }
+
+    public void CloseAll()
+    {
+        foreach(GameObject ui in allUIs)
+        {
+            ui.SetActive(false);
+        }
     }
 
 

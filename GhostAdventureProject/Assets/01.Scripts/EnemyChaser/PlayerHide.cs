@@ -43,22 +43,22 @@ public class PlayerHide : MonoBehaviour
     {
         isHiding = true;
         spriteRenderer.enabled = false;
-        //col.enabled = false;
+        col.enabled = false;
         rb.velocity = Vector2.zero;     // 멈추기
         rb.isKinematic = true;
-    }
-
-    private void ShowPlayer()
-    {
-        isHiding = false;
-        spriteRenderer.enabled = true;
-        //col.enabled = true;
-        rb.isKinematic = false;
 
         if (currentHideArea != null)
         {
             Ch1_HideAreaEvent.Instance.RegisterArea(currentHideArea.areaID);
         }
+    }
+
+    public void ShowPlayer()
+    {
+        isHiding = false;
+        spriteRenderer.enabled = true;
+        col.enabled = true;
+        rb.isKinematic = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

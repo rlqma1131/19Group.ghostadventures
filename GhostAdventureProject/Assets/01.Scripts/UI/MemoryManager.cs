@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MemoryManager : MonoBehaviour
 {
@@ -10,12 +11,14 @@ public class MemoryManager : MonoBehaviour
    public List<string> collectedMemoryIDs = new List<string>();
    private Dictionary<string, MemoryData> memoryDataDict = new();
    public event Action<MemoryData> OnMemoryCollected;
+   public Button closeMemoryStorage;
 
    private void Awake()
    {
        if (Instance == null) Instance = this;
        else Destroy(gameObject);
-       LoadAllMemoryData(); 
+       LoadAllMemoryData();
+       closeMemoryStorage.gameObject.SetActive(false);
    }
 
 
@@ -51,10 +54,12 @@ public class MemoryManager : MonoBehaviour
     public void OpenMemoryStorage()
     {
         UIManager.Instance.MemoryStorageUI.gameObject.SetActive(true);
+        closeMemoryStorage.gameObject.SetActive(true);
     }
     
     public void CloseMemoryStorage()
     {
         UIManager.Instance.MemoryStorageUI.gameObject.SetActive(false);
+        closeMemoryStorage.gameObject.SetActive(false);
     }
 }
