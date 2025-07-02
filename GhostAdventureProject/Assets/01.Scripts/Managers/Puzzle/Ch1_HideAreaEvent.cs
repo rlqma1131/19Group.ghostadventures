@@ -58,7 +58,7 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
         return true;
     }
 
-    private void UnTagAllHideAreas()
+    public void UnTagAllHideAreas()
     {
         HideAreaID[] areas = FindObjectsOfType<HideAreaID>();
         foreach (var area in areas)
