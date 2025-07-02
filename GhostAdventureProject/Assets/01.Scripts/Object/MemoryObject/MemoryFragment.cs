@@ -6,9 +6,8 @@ using UnityEngine.SceneManagement;
 public class MemoryFragment : MonoBehaviour
 {
     public MemoryData data;
-    protected bool isScanned = false;
-    public bool IsScanned => isScanned;
-    protected bool isScannable;
+    
+    protected bool isScannable = false;
     public bool IsScannable => isScannable;
 
     [Header("드랍 조각 프리팹")]
@@ -48,8 +47,8 @@ public class MemoryFragment : MonoBehaviour
 
     public void IsScannedCheck()
     {
-        if (isScanned) return;
-        isScanned = true;
+        if (!isScannable) return;
+        isScannable = false;
         //MemoryManager.Instance.TryCollect(data);
 
         Sprite dropSprite = GetFragmentSpriteByType(data.type);

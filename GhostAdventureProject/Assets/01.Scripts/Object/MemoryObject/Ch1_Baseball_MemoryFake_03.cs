@@ -14,7 +14,7 @@ public class Ch1_Baseball_MemoryFake_03 : MemoryFragment
 
     public override void AfterScan()
     {
-        isScanned = true;
+        isScannable = false;
         alphabet_A.SetActive(true);
     }
 }

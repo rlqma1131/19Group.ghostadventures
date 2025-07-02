@@ -4,7 +4,7 @@ public class Ch1_Drawing : MonoBehaviour
 {
     [SerializeField] private GameObject zoomCamera;
 
-    private bool zoom = false;
+    //private bool zoom = false;
     private bool isPlayerInRange = false;
 
     void Update()
