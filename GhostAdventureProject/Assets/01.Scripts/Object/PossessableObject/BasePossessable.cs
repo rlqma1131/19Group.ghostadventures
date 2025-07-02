@@ -56,7 +56,7 @@ public abstract class BasePossessable : MonoBehaviour
         PossessionStateManager.Instance.StartUnpossessTransition();
     }
 
-    public void OnQTESuccess()
+    public virtual void OnQTESuccess()
     {
         Debug.Log("QTE 성공 - 빙의 완료");
 
