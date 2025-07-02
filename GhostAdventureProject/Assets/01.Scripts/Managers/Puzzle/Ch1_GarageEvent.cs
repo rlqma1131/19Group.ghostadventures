@@ -16,6 +16,7 @@ public class Ch1_GarageEvent : MonoBehaviour
         {
             // 꼬마유령 등장
             // "내 이름을 불러줘"
+
             // 이름 입력 창 띄우기
             // 맞 == 진행
             // 틀 == "..." 재도전 or 나가기

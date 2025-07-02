@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
 {
-    [SerializeField] private List<string> correctOrder = new() { "A", "B", "C" };
-    private List<string> currentOrder = new();
-    private Ch1_Closet closet;
+    [SerializeField] private AudioClip UnlockCloset;
 
-    private void Start()
-    {
-        closet = FindObjectOfType<Ch1_Closet>();
-    }
+    [SerializeField] private List<string> correctOrder = new() { "침대", "인형", "의자" };
+    private List<string> currentOrder = new();
+
+    private Ch1_Closet closet => FindObjectOfType<Ch1_Closet>();
+    private PlayerHide PlayerHide => FindObjectOfType<PlayerHide>();
+    private Ch1_Rat rat => FindObjectOfType<Ch1_Rat>();
 
     public void RegisterArea(string id)
     {
@@ -24,16 +24,26 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
         {
             if (IsCorrectOrder())
             {
+                // 기억조각 드러남
                 closet.Unlock();
-                Debug.Log("정답입니다!");
-                // 정답 효과음
-                // SoundManager.Instance.PlaySFX("Unlock");
+
+                // 쥐 빙의 가능
+                rat.ActivateRat();
+
+                // 옷장열리는 효과음
+                 SoundManager.Instance.PlaySFX(UnlockCloset);
+
+                // 플레이어 나타남
+                PlayerHide.ShowPlayer();
+
+                // 퍼즐 풀면 아이방 HideArea에 못숨도록
+                UnTagAllHideAreas();
             }
             else
             {
                 currentOrder.Clear();
-                // 틀림 효과음
-                // SoundManager.Instance.PlaySFX("Wrong");
+                // 틀림 메시지 출력
+                UIManager.Instance.PromptUI.ShowPrompt("...아무 일도 일어나지 않았다.", 2f);
             }
         }
     }
@@ -46,5 +56,30 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
                 return false;
         }
         return true;
+    }
+
+    private void UnTagAllHideAreas()
+    {
+        HideAreaID[] areas = FindObjectsOfType<HideAreaID>();
+        foreach (var area in areas)
+        {
+            if (area.CompareTag("HideArea"))
+            {
+                area.tag = "Untagged";
+            }
+        }
+    }
+
+    // 그림 발견하고 부터 숨기 가능
+    public void RestoreHideAreaTags()
+    {
+        HideAreaID[] areas = FindObjectsOfType<HideAreaID>();
+        foreach (var area in areas)
+        {
+            if (area.CompareTag("Untagged"))
+            {
+                area.tag = "HideArea";
+            }
+        }
     }
 }
