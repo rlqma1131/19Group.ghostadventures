@@ -71,5 +71,13 @@ public class UIManager : Singleton<UIManager>
         playbutton.gameObject.SetActive(false);
     }
 
+    public void CloseAll()
+    {
+        foreach(GameObject ui in allUIs)
+        {
+            ui.SetActive(false);
+        }
+    }
+
 
 }
