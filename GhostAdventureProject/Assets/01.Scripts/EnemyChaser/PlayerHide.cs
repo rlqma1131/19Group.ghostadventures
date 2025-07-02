@@ -43,7 +43,7 @@ public class PlayerHide : MonoBehaviour
     {
         isHiding = true;
         spriteRenderer.enabled = false;
-        //col.enabled = false;
+        col.enabled = false;
         rb.velocity = Vector2.zero;     // 멈추기
         rb.isKinematic = true;
 
@@ -57,7 +57,7 @@ public class PlayerHide : MonoBehaviour
     {
         isHiding = false;
         spriteRenderer.enabled = true;
-        //col.enabled = true;
+        col.enabled = true;
         rb.isKinematic = false;
     }
 
