@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ch1_Rat : MoveBasePossessable
+public class Ch1_Mouse : MoveBasePossessable
 {
     [SerializeField] private Vector2 point1 = new Vector2(-3.5f, -1.5f); // 포인트1 좌표
     [SerializeField] private Vector2 point2 = new Vector2(3.5f, -1.5f); // 포인트2 좌표
@@ -14,9 +14,9 @@ public class Ch1_Rat : MoveBasePossessable
 
         hasActivated = false;
 
-        var relay = anim.GetComponent<Ch1_Rat_Event>();
+        var relay = anim.GetComponent<Ch1_Mouse_Event>();
         if (relay != null)
-            relay.rat = this;
+            relay.mouse = this;
     }
 
     protected override void Update()
@@ -28,11 +28,11 @@ public class Ch1_Rat : MoveBasePossessable
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            RatAct();
+            MouseAct();
         }
     }
 
-    public void ActivateRat()
+    public void ActivateMouse()
     {
         // 1. Move 애니메이션 활성화
         anim.SetBool("Move", true);
@@ -45,7 +45,7 @@ public class Ch1_Rat : MoveBasePossessable
         });
     }
 
-    public void RatCanObssessed()
+    public void MouseCanObssessed()
     {
         hasActivated = true;
     }
@@ -58,7 +58,7 @@ public class Ch1_Rat : MoveBasePossessable
         anim.SetBool("Move", false); // Idle 상태로 대기
     }
 
-    public void RatAct()
+    public void MouseAct()
     {
         // 기타 고유 기능
     }
