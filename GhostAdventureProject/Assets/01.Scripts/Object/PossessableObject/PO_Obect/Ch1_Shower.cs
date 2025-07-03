@@ -1,7 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// 1. 온도조절 가능 키를 띄운다
+/// 2. 컨트롤모드로 넘어간다 ( 손잡이 왼쪽- 뜨거운 / 오른쪽- 차가운 )
+/// </summary>
 public class Ch1_Shower : BasePossessable
 {
     public bool IsHotWater => isWater && temperature == 1;
