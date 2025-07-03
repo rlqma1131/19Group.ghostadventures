@@ -1144,6 +1144,7 @@ GameObject:
   - component: {fileID: 446204580}
   - component: {fileID: 446204582}
   - component: {fileID: 446204581}
+  - component: {fileID: 446204583}
   m_Layer: 0
   m_Name: Particle System
   m_TagString: Untagged
@@ -1876,7 +1877,7 @@ ParticleSystem:
     serializedVersion: 6
     enabled: 1
     type: 4
-    angle: 30
+    angle: 72.2
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
@@ -2080,8 +2081,8 @@ ParticleSystem:
     serializedVersion: 4
     rateOverTime:
       serializedVersion: 2
-      minMaxState: 3
-      scalar: 100
+      minMaxState: 0
+      scalar: 200
       minScalar: 50
       maxCurve:
         serializedVersion: 2
@@ -5967,6 +5968,27 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!95 &446204583
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446204579}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &482267622
 GameObject:
   m_ObjectHideFlags: 0
@@ -7469,6 +7491,8 @@ PlayableDirector:
     value: {fileID: 176610222}
   - key: {fileID: 4504212023581408569, guid: 285b1195ed9415d4d8fd1b9355093bca, type: 2}
     value: {fileID: 1575738000}
+  - key: {fileID: -960002321299147095, guid: 285b1195ed9415d4d8fd1b9355093bca, type: 2}
+    value: {fileID: 446204583}
   m_ExposedReferences:
     m_References:
     - 560e54acc543d224aa6dbbbf42af750f: {fileID: 519377585}
@@ -9507,7 +9531,7 @@ Transform:
   m_GameObject: {fileID: 1385374718}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.2829778, y: 1.6477847, z: -10.79}
+  m_LocalPosition: {x: -0.2, y: -0.2, z: -10.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10328,7 +10352,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 3288334335
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -10607,7 +10631,7 @@ Transform:
   m_GameObject: {fileID: 1688026333}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.69, y: 2.73, z: -10.79}
+  m_LocalPosition: {x: 0, y: 0, z: -10.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
