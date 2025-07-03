@@ -80,7 +80,7 @@ public class TypewriterDialogue : MonoBehaviour
     /// 지정된 인덱스의 대사 묶음을 가져와 일반적인 타이핑 효과로 대화창을 시작
 
     /// <param name="dialogueSetIndex">allDialogueSets 배열에서 사용할 대사 묶음의 인덱스</param>
-    public void StartDialogueByIndex(int dialogueSetIndex) 
+    public void StartDialogueByIndex(int dialogueSetIndex)
     {
         StopAllCoroutines();
 
@@ -117,7 +117,7 @@ public class TypewriterDialogue : MonoBehaviour
     IEnumerator TypeLine()
     {
         isTyping = true;
-        isShakingDialogue = false; 
+        isShakingDialogue = false;
         dialogueText.text = "";
 
         if (dialogues == null || dialogues.Length <= index)
@@ -184,8 +184,8 @@ public class TypewriterDialogue : MonoBehaviour
         {
             index++;
             StopAllCoroutines();
-            
-                                        
+
+
 
             // isShakingDialogue 값에 따라 코루틴 선택
             if (isShakingDialogue)
@@ -232,6 +232,81 @@ public class TypewriterDialogue : MonoBehaviour
 
     }
 
+    public void StartShakeAutoDialogueByIndex(int dialogueSetIndex)
+    {
+        StopAllCoroutines();
+
+        if (allDialogueSets == null || dialogueSetIndex < 0 || dialogueSetIndex >= allDialogueSets.Length)
+        {
+            Debug.LogError($"잘못된 대화 묶음 인덱스: {dialogueSetIndex}. 자동 대화 시작 실패.");
+            return;
+        }
+
+        this.dialogues = allDialogueSets[dialogueSetIndex].dialogues;
+        index = 0;
+        isAuto = true; // 자동 모드 ON
+        dialogueText.gameObject.SetActive(true);
+        StartCoroutine(ShakeTypeLineAuto());
+
+    }
+
+    IEnumerator ShakeTypeLineAuto()
+    {
+        isTyping = true;
+        isShakingDialogue = false;
+        dialogueText.text = "";
+
+        if (dialogues == null || dialogues.Length <= index)
+        {
+            Debug.LogWarning("대사 배열이 비어있거나 인덱스가 범위를 벗어났습니다. 대화 종료.");
+            dialogueText.gameObject.SetActive(false);
+            isTyping = false;
+            skipTyping = false;
+            if (timelineControl != null) timelineControl.ResumeTimeline();
+            yield break;
+        }
+
+        foreach (char letter in dialogues[index].ToCharArray())
+        {
+            dialogueText.text += letter;
+            ShakeDialogue(0.2f, 8f);
+            yield return new WaitForSecondsRealtime(typingSpeed);
+        }
+
+        isTyping = false;
+        skipTyping = false;
+
+
+        if (isAuto)
+        {
+            yield return new WaitForSecondsRealtime(autoNextDelay);
+            NextLineAuto();
+        }
+    }
+
+    void NextLineAuto()
+    {
+        if (index < dialogues.Length - 1)
+        {
+            index++;
+            StopAllCoroutines();
+            StartCoroutine(TypeLineAuto());
+        }
+        else
+        {
+            dialogueText.text = "";
+            dialogueText.gameObject.SetActive(false);
+            isAuto = false;
+            if (timelineControl != null)
+            {
+                timelineControl.ResumeTimeline();
+            }
+            else
+            {
+                Debug.LogWarning("TimelineControl이 할당되지 않아 타임라인을 재개할 수 없습니다.");
+            }
+        }
+    }
     IEnumerator TypeLineAuto()
     {
         isTyping = true;
@@ -261,34 +336,9 @@ public class TypewriterDialogue : MonoBehaviour
         if (isAuto)
         {
             yield return new WaitForSecondsRealtime(autoNextDelay);
-            NextLineAuto(); 
+            NextLineAuto();
         }
     }
-
-    void NextLineAuto()
-    {
-        if (index < dialogues.Length - 1)
-        {
-            index++;
-            StopAllCoroutines();
-            StartCoroutine(TypeLineAuto());
-        }
-        else
-        {
-            dialogueText.text = "";
-            dialogueText.gameObject.SetActive(false);
-            isAuto = false;
-            if (timelineControl != null)
-            {
-                timelineControl.ResumeTimeline();
-            }
-            else
-            {
-                Debug.LogWarning("TimelineControl이 할당되지 않아 타임라인을 재개할 수 없습니다.");
-            }
-        }
-    }
-
 
 
 
@@ -304,3 +354,4 @@ public class TypewriterDialogue : MonoBehaviour
         ).SetUpdate(true);
     }
 }
+
