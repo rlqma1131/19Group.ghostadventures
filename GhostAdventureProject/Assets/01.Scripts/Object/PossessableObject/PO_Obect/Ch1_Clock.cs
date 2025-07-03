@@ -18,25 +18,19 @@ public class Ch1_Clock : BasePossessable
     {
         if (!isPossessed) return;
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        // 조작 시작
+        isControlMode = true;
+        zoomCamera.gameObject.SetActive(true);
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
             if (isControlMode)
             {
-                // 조작 중이면 조작 종료
+                // 확대 중이면 줌아웃 / 빙의 종료
                 isControlMode = false;
                 zoomCamera.gameObject.SetActive(false);
+                Unpossess();
             }
-            else
-            {
-                // 조작 시작
-                isControlMode = true;
-                zoomCamera.gameObject.SetActive(true);
-            }
-        }
-        
-        if (!isControlMode && Input.GetKeyDown(KeyCode.E))
-        {
-            Unpossess();
         }
         
         if(!isControlMode) return;
