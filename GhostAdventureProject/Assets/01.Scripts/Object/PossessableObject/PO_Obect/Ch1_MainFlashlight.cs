@@ -9,9 +9,9 @@ public class Ch1_MainFlashlight : BasePossessable
 {
     [SerializeField] private Camera controlCamera;
     [SerializeField] private List<Ch1_FlashlightBeam> flashlightBeams;
-    [SerializeField] private Color targetColor = new Color(1, 1, 1);
-    [SerializeField] private SpriteRenderer wallLetterRenderer;
+    // [SerializeField] private SpriteRenderer wallLetterRenderer;
     [SerializeField] private Animator clearDoorAnimator;
+    [SerializeField] private List<GameObject> mirrorBeamVisuals; // 맵에서 보여질 빛 시각화용
     
     private bool isControlMode = false;
     private bool puzzleCompleted = false;
@@ -23,7 +23,7 @@ public class Ch1_MainFlashlight : BasePossessable
     private float timeRemaining;
     private bool timerActive = false;
     private bool timerExpired = false;
-    private bool timerStarted = false;
+    // private bool timerStarted = false;
 
     protected override void Update()
     {
@@ -94,8 +94,18 @@ public class Ch1_MainFlashlight : BasePossessable
             if (Input.GetKeyDown(KeyCode.Alpha1 + i))
             {
                 flashlightBeams[i].ToggleBeam();
+                SyncMirrorVisuals();
                 CheckColorPuzzle();
             }
+        }
+    }
+    
+    private void SyncMirrorVisuals()
+    {
+        for (int i = 0; i < flashlightBeams.Count; i++)
+        {
+            bool isOn = flashlightBeams[i].isOn;
+            mirrorBeamVisuals[i].SetActive(isOn);
         }
     }
     
@@ -114,7 +124,7 @@ public class Ch1_MainFlashlight : BasePossessable
             timeRemaining = timeLimit;
             timerActive = true;
             timerExpired = false;
-            timerStarted = true;
+            // timerStarted = true;
 
             if (timerPanel != null)
                 timerPanel.SetActive(true);
@@ -142,67 +152,59 @@ public class Ch1_MainFlashlight : BasePossessable
 
     private void CheckColorPuzzle()
     {
-        Color combined = Color.black;
+        // 정답: 2, 4, 5번 (index 기준으로 1, 3, 4)
+        bool light2 = flashlightBeams[1].isOn;
+        bool light4 = flashlightBeams[3].isOn;
+        bool light5 = flashlightBeams[4].isOn;
 
-        foreach (var beam in flashlightBeams)
+        // 다른 빛이 켜지면 안 됨
+        bool othersOff = true;
+        for (int i = 0; i < flashlightBeams.Count; i++)
         {
-            if(beam.isOn)
+            if ((i != 1 && i != 3 && i != 4) && flashlightBeams[i].isOn)
             {
-                Debug.Log($"켜진 빔 색상: {beam.BeamColor}");
-                combined += beam.BeamColor;
+                othersOff = false;
+                break;
             }
         }
 
-        Debug.Log($"조합된 색상: {combined}");
-        
-        if (ApproximatelyEqual(combined, targetColor))
+        if (light2 && light4 && light5 && othersOff)
         {
             if (!puzzleCompleted)
             {
                 puzzleCompleted = true;
 
-                RevealLetter();
-                // clearDoorAnimator?.SetTrigger("Open");
-
-                // 타이머 중지
                 timerActive = false;
                 if (timerPanel != null)
-                    timerPanel.SetActive(false); // UI 숨김
+                    timerPanel.SetActive(false);
 
                 Debug.Log("퍼즐 성공!");
             }
         }
-        else
-        {
-            if (!puzzleCompleted)
-                HideLetter();
-        }
+        // else
+        // {
+        //     if (!puzzleCompleted)
+        //         HideLetter();
+        // }
     }
 
-    private void RevealLetter()
-    {
-        if (wallLetterRenderer != null)
-        {
-            var c = wallLetterRenderer.color;
-            c.a = 1f;
-            wallLetterRenderer.color = c;
-        }
-    }
-
-    private void HideLetter()
-    {
-        if (wallLetterRenderer != null)
-        {
-            var c = wallLetterRenderer.color;
-            c.a = 0f;
-            wallLetterRenderer.color = c;
-        }
-    }
-
-    private bool ApproximatelyEqual(Color a, Color b, float tolerance = 0.2f)
-    {
-        return Mathf.Abs(a.r - b.r) < tolerance &&
-               Mathf.Abs(a.g - b.g) < tolerance &&
-               Mathf.Abs(a.b - b.b) < tolerance;
-    }
+    // private void RevealLetter()
+    // {
+    //     if (wallLetterRenderer != null)
+    //     {
+    //         var c = wallLetterRenderer.color;
+    //         c.a = 1f;
+    //         wallLetterRenderer.color = c;
+    //     }
+    // }
+    //
+    // private void HideLetter()
+    // {
+    //     if (wallLetterRenderer != null)
+    //     {
+    //         var c = wallLetterRenderer.color;
+    //         c.a = 0f;
+    //         wallLetterRenderer.color = c;
+    //     }
+    // }
 }
