@@ -7,7 +7,7 @@ public class MemoryFragment : MonoBehaviour
 {
     public MemoryData data;
     
-    protected bool isScannable = false;
+    [SerializeField] protected bool isScannable = false; // 디버깅용
     public bool IsScannable => isScannable;
 
     [Header("드랍 조각 프리팹")]
@@ -26,12 +26,11 @@ public class MemoryFragment : MonoBehaviour
     [Header("흡수 연출 설정")]
     [SerializeField] private float absorbTime = 0.6f;
 
-    private void Start()
-    {
-        // 디버깅용
-        isScannable = true;
-
-    }
+    //private void Start()
+    //{
+    //    // 디버깅용
+    //    isScannable = true;
+    //}
 
     // 상호작용 메시지 대상
     private void OnTriggerEnter2D(Collider2D other)

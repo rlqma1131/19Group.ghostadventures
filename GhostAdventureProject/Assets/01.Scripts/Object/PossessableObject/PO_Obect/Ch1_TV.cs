@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -66,8 +66,8 @@ public class Ch1_TV : BasePossessable
         if (Input.GetKeyDown(KeyCode.W)) { channel = Mathf.Clamp(channel + 1, 1, 9); UpdateChannelDisplay(); }
         if (Input.GetKeyDown(KeyCode.S)) { channel = Mathf.Clamp(channel - 1, 1, 9); UpdateChannelDisplay(); }
 
-
-        if (channel == 9 && Input.GetKeyDown(KeyCode.A))
+        // 확정은 Space
+        if (channel == 9 && Input.GetKeyDown(KeyCode.Space))
         {
             ShowMemoryandDoorOpen();
             hasActivated = false;
@@ -98,5 +98,7 @@ public class Ch1_TV : BasePossessable
                 DoorAnimator.SetTrigger("DoorOpen");
             Debug.Log("문 열림 완료");
         }
+
+        Unpossess();
     }
 }

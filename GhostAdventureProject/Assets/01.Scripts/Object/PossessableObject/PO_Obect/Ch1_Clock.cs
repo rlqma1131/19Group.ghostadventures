@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -59,6 +59,8 @@ public class Ch1_Clock : BasePossessable
             isControlMode = false;
             zoomCamera.gameObject.SetActive(false);
             hasActivated = false;
+
+            Unpossess();
         }
     }
 

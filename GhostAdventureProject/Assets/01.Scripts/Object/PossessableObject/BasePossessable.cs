@@ -42,9 +42,6 @@ public abstract class BasePossessable : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (!hasActivated)
-            return;
-
         if (other.CompareTag("Player"))
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
     }

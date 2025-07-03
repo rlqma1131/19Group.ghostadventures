@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
 
         HandleMovement();
 
-        if (Input.GetKeyDown(KeyCode.E) && currentTarget != null)
+        if (Input.GetKeyDown(KeyCode.E) && CurrentTargetIsPossessable())
             PossessionSystem.Instance.TryPossess();
     }
 
@@ -42,4 +42,14 @@ public class PlayerController : MonoBehaviour
         bool isMoving = move.magnitude > 0.01f;
         animator.SetBool("Move", isMoving);
     }
+
+    private bool CurrentTargetIsPossessable()
+    {
+        // 가까운 대상이 빙의 가능 상태인지 확인
+        return currentTarget != null
+            && PlayerInteractSystem.Instance.CurrentClosest == currentTarget.gameObject
+            && currentTarget.HasActivated
+            && !currentTarget.IsPossessedState;
+    }
+
 }

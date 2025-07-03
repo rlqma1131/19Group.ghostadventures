@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerInteractSystem : Singleton<PlayerInteractSystem>
 {
     private List<GameObject> nearbyInteractables = new();
-    private GameObject currentClosest;
+    [SerializeField] private GameObject currentClosest; // 디버깅용
     public GameObject CurrentClosest => currentClosest;
 
     private void Update()

@@ -28,7 +28,7 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
                 closet.Unlock();
 
                 // 쥐 빙의 가능
-                rat.ActivateRat();
+                rat.RatCanObssessed();
 
                 // 옷장열리는 효과음
                  SoundManager.Instance.PlaySFX(UnlockCloset);

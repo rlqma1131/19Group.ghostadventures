@@ -37,6 +37,12 @@ public class SoulEnergySystem : Singleton<SoulEnergySystem>
         UIManager.Instance.SoulGaugeUI.SetSoulGauge(currentEnergy);
     }
 
+    public void RestoreAll() // 전체 회복
+    {
+        currentEnergy = maxEnergy;
+        UIManager.Instance.SoulGaugeUI.SetSoulGauge(currentEnergy);
+    }
+
     private void OnEnable()
     {
         currentRestoreInterval = baseRestoreInterval;
