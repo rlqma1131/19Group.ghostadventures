@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ch1_CelebrityBox : BasePossessable
 {
     // [SerializeField] private GameObject effect;
-    [SerializeField] private GameObject noteObject;
+    [SerializeField] private GameObject birthdayLetter;
     [SerializeField] private Animator animator;
     
 
@@ -29,17 +29,23 @@ public class Ch1_CelebrityBox : BasePossessable
         // 박스 애니메이션 트리거
         if(animator != null)
             animator.SetTrigger("Explode");
-        
+
         // 폭발 이펙트 ( 넣는다면 )
         // if(effect != null)
         //     Instantiate(effect, transform.position, Quaternion.identity);
-        
-        // note 활성화
-        if(noteObject != null)
-            noteObject.SetActive(true);
-        
+
+        // Letter 활성화
+        StartCoroutine(ShowLetterWithDelay());
+
         hasActivated = false;
         
-        // Unpossess();
+         Unpossess();
+    }
+    private IEnumerator ShowLetterWithDelay()
+    {
+        birthdayLetter.SetActive(true);
+        yield return null; // 한 프레임 기다림
+        Animator anim = birthdayLetter.GetComponent<Animator>();
+        anim?.SetTrigger("Pop");
     }
 }
