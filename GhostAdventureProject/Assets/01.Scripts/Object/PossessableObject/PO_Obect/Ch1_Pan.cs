@@ -7,19 +7,9 @@ public class Ch1_Pan : BasePossessable
 {
     [SerializeField] private AudioClip isFall;
 
-    private EnemyAI enemyAI;
-    private Ch1_Rat rat;
-    private Ch1_Cat cat;
-    private Ch1_Cake_MemoryFake_02 cake;
-
-    protected override void Start()
-    {
-        base.Start();
-        rat = FindObjectOfType<Ch1_Rat>();
-        cat = FindObjectOfType<Ch1_Cat>();
-        cake = FindObjectOfType<Ch1_Cake_MemoryFake_02>();
-        enemyAI = FindObjectOfType<EnemyAI>();
-    }
+    private Ch1_Cat cat => FindObjectOfType<Ch1_Cat>();
+    private Ch1_Cake_MemoryFake_02 cake => FindObjectOfType<Ch1_Cake_MemoryFake_02>();
+    private Ch1_Rat rat => FindObjectOfType<Ch1_Rat>();
 
     protected override void Update()
     {

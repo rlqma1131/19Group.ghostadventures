@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class PossessionSystem : Singleton<PossessionSystem>
 {
-    // 디버깅용
-    [SerializeField] private BasePossessable currentTarget;
-    private GameObject scanPanel;
+    [SerializeField] private GameObject scanPanel;
+    [SerializeField] private BasePossessable currentTarget; // 디버깅용
+    public BasePossessable CurrentTarget => currentTarget;
 
     private PlayerController Player => GameManager.Instance.PlayerController;
-    public BasePossessable CurrentTarget => currentTarget;
     public bool canMove { get; set; } = true;
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -37,7 +36,25 @@ public class PossessionSystem : Singleton<PossessionSystem>
             Debug.Log("Not enough energy");
             return false;
         }
-        SoulEnergySystem.Instance.Consume(3);
+
+        switch (currentTarget.tag)
+        {
+            case "Animal":
+                SoulEnergySystem.Instance.Consume(2);
+                break;
+            case "Cat":
+                // 고양이는 풀 충전
+                SoulEnergySystem.Instance.RestoreAll();
+                break;
+            case "Person":
+                // 사람 구현되면 피로도에 따라 소모량 조정
+                SoulEnergySystem.Instance.Consume(3);
+                break;
+            default:
+                SoulEnergySystem.Instance.Consume(3);
+                break;
+        }
+
         RequestPossession();
         return true;
     }

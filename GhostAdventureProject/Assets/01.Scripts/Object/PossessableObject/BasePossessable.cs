@@ -42,9 +42,6 @@ public abstract class BasePossessable : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (!hasActivated)
-            return;
-
         if (other.CompareTag("Player"))
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
     }
@@ -56,7 +53,7 @@ public abstract class BasePossessable : MonoBehaviour
         PossessionStateManager.Instance.StartUnpossessTransition();
     }
 
-    public void OnQTESuccess()
+    public virtual void OnQTESuccess()
     {
         Debug.Log("QTE 성공 - 빙의 완료");
 
