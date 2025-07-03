@@ -10,7 +10,7 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
 
     private Ch1_Closet closet => FindObjectOfType<Ch1_Closet>();
     private PlayerHide PlayerHide => FindObjectOfType<PlayerHide>();
-    private Ch1_Rat rat => FindObjectOfType<Ch1_Rat>();
+    private Ch1_Mouse mouse => FindObjectOfType<Ch1_Mouse>();
 
     public void RegisterArea(string id)
     {
@@ -28,7 +28,7 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
                 closet.Unlock();
 
                 // 쥐 빙의 가능
-                rat.RatCanObssessed();
+                mouse.MouseCanObssessed();
 
                 // 옷장열리는 효과음
                  SoundManager.Instance.PlaySFX(UnlockCloset);
