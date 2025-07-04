@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Ch1_Drawing : MonoBehaviour
 {
     [SerializeField] private GameObject zoomCamera;
 
-    private bool zoomActivatedOnce = false;
+    private Image zoomPanel;
+    private RectTransform startPos; // 두트윈 시작 위치
+    private GameObject drawingZoom; // 고해상도 시계 UI
     private bool isPlayerInside = false;
 
     void Update()

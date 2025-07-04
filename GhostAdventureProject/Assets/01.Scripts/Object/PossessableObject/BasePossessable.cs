@@ -67,4 +67,5 @@ public abstract class BasePossessable : MonoBehaviour
         isPossessed = false;
         SoulEnergySystem.Instance.Consume(1);
     }
+    public virtual void OnPossessionEnterComplete() { }
 }
