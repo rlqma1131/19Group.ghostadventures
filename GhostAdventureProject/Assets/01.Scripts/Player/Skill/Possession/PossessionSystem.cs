@@ -6,6 +6,7 @@ public class PossessionSystem : Singleton<PossessionSystem>
 {
     [SerializeField] private GameObject scanPanel;
     [SerializeField] private BasePossessable currentTarget; // 디버깅용
+    private BasePossessable obssessingTarget;
     public BasePossessable CurrentTarget => currentTarget;
 
     private PlayerController Player => GameManager.Instance.PlayerController;
@@ -36,6 +37,8 @@ public class PossessionSystem : Singleton<PossessionSystem>
             Debug.Log("Not enough energy");
             return false;
         }
+
+        obssessingTarget = currentTarget;
 
         switch (currentTarget.tag)
         {
@@ -107,6 +110,17 @@ public class PossessionSystem : Singleton<PossessionSystem>
     public void OnPossessionInAnimationComplete() // 빙의 시작 애니메이션 후 이벤트
     {
         PossessionStateManager.Instance.PossessionInAnimationComplete();
+
+        if (obssessingTarget != null)
+        {
+            // ex) 애니메이션 끝나고 확대
+            obssessingTarget.OnPossessionEnterComplete();
+            Debug.Log($"빙의 애니메이션 종료 / 대상: {obssessingTarget.name}");
+        }
+        else
+        {
+            Debug.LogWarning("빙의 대상이 설정되지 않아서 이벤트가 호출되지 않았어요!");
+        }
     }
 
     public void OnPossessionOutAnimationComplete() // 빙의 해제 애니메이션 후 이벤트

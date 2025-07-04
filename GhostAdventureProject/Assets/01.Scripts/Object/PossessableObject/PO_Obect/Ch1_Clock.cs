@@ -1,39 +1,55 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Ch1_Clock : BasePossessable
 {
-    [SerializeField] private Transform hourHand;
-    [SerializeField] private Transform minuteHand;
-    [SerializeField] private Camera zoomCamera;
-    [SerializeField] private Ch1_TV  tvObject;
+    private Image zoomPanel;
+    private RectTransform startPos; // 두트윈 시작 위치
+    private GameObject clockZoom; // 고해상도 시계 UI
+    private Transform hourHand;
+    private Transform minuteHand;
+    private Ch1_TV  tvObject;
     
     private bool isControlMode = false;
 
     private int hour = 0;
     private int minute = 0;
 
+    protected override void Start()
+    {
+        base.Start();
+
+        // 확대UI 초기화
+        zoomPanel = GameObject.Find("ZoomPanel").GetComponent<Image>();
+        clockZoom = GameObject.Find("Ch1_ClockZoom");
+        startPos = GameObject.Find("Ch1_ClockZoom").GetComponent<RectTransform>();
+        hourHand = GameObject.Find("HourHand").transform;
+        minuteHand = GameObject.Find("MinuteHand").transform;
+
+        // UI 초기화
+        clockZoom.SetActive(false); 
+
+        // 시곗바늘 위치 초기화
+        UpdateHands();
+    }
+
     protected override void Update()
     {
         if (!isPossessed) return;
 
-        // 조작 시작
-        isControlMode = true;
-        zoomCamera.gameObject.SetActive(true);
-
+        // 최초 상호작용
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (isControlMode)
-            {
-                // 확대 중이면 줌아웃 / 빙의 종료
-                isControlMode = false;
-                zoomCamera.gameObject.SetActive(false);
-                Unpossess();
-            }
+            // 조작 종료
+            isControlMode = false;
+            HideClockUI();
+            Unpossess();
         }
-        
-        if(!isControlMode) return;
+
+        if (!isControlMode) return;
 
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -51,9 +67,8 @@ public class Ch1_Clock : BasePossessable
             Debug.Log("정답");
             tvObject.ActivateTV();
             isControlMode = false;
-            zoomCamera.gameObject.SetActive(false);
+            HideClockUI();
             hasActivated = false;
-
             Unpossess();
         }
     }
@@ -64,5 +79,35 @@ public class Ch1_Clock : BasePossessable
             hourHand.localRotation = Quaternion.Euler(0, 0, -30f * hour);
         if (minuteHand != null)
             minuteHand.localRotation = Quaternion.Euler(0, 0, -6f * minute);
+    }
+
+    private void ShowClockUI()
+    {
+        //뒤에 어둡게 판넬 켜기
+        zoomPanel.color = new Color(zoomPanel.color.r, zoomPanel.color.g, zoomPanel.color.b, 0f);
+        zoomPanel.DOFade(150f / 255f, 0.5f);
+
+        clockZoom.SetActive(true);
+        startPos.anchoredPosition = new Vector2(0, -Screen.height); // 아래에서 시작
+        startPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
+    }
+
+    private void HideClockUI()
+    {
+        // 판넬 끄기
+        zoomPanel.DOFade(0f, 0.5f);
+
+        startPos.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
+            .SetEase(Ease.InCubic)
+            .OnComplete(() =>
+            {
+                clockZoom.SetActive(false);
+            });
+    }
+
+    public override void OnPossessionEnterComplete()
+    {
+        isControlMode = true;
+        ShowClockUI();
     }
 }
