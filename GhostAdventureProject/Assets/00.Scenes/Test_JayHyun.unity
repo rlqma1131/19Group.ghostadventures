@@ -4083,6 +4083,7 @@ GameObject:
   - component: {fileID: 423611157}
   - component: {fileID: 423611156}
   - component: {fileID: 423611159}
+  - component: {fileID: 423611160}
   m_Layer: 0
   m_Name: LockedDoor[Inwall]
   m_TagString: Untagged
@@ -4222,6 +4223,21 @@ MonoBehaviour:
   lockedSound: {fileID: 0}
   unlockSound: {fileID: 0}
   pairedDoor: {fileID: 1558053340}
+--- !u!114 &423611160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 423611154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b73e3403024594f940f3d8f8e5f454, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionRange: 1.5
+  fadeSpeed: 1
+  maxAlpha: 0.4
 --- !u!1 &511616479
 GameObject:
   m_ObjectHideFlags: 0
@@ -4577,6 +4593,7 @@ GameObject:
   - component: {fileID: 833972389}
   - component: {fileID: 833972392}
   - component: {fileID: 833972391}
+  - component: {fileID: 833972393}
   m_Layer: 0
   m_Name: OpenDoor[Inwall]
   m_TagString: Untagged
@@ -4710,6 +4727,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.6, y: 2.9333334}
   m_EdgeRadius: 0
+--- !u!114 &833972393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833972388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b73e3403024594f940f3d8f8e5f454, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionRange: 1.5
+  fadeSpeed: 1
+  maxAlpha: 0.4
 --- !u!1 &852967188
 GameObject:
   m_ObjectHideFlags: 0
