@@ -6,6 +6,8 @@ public class AutoTeleport : MonoBehaviour
     [SerializeField] private Transform targetTransform; // 목표 Transform (드래그 앤 드롭)
     [SerializeField] private Vector2 targetPos; // 목표 위치 좌표 (백업용)
 
+
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         // GameManager를 통해 플레이어 확인

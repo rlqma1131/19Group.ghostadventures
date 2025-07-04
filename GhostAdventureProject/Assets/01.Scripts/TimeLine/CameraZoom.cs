@@ -35,6 +35,7 @@ public class CameraZoom : MonoBehaviour
 
     public void ZoomIn()
     {
+        
         target = GameObject.FindGameObjectWithTag("Player").transform; // 플레이어 태그로 타겟 설정
         originalSize = virtualCam.m_Lens.OrthographicSize;
         originalCamPosition = virtualCam.transform.position; // 카메라 초기 위치 저장
@@ -72,6 +73,7 @@ public class CameraZoom : MonoBehaviour
 
     public void ZoomOut()
     {
+        
         if (!isZoomedIn) return;
         isZoomedIn = false;
 
@@ -95,6 +97,8 @@ public class CameraZoom : MonoBehaviour
         zoomOutSequence.Join(
             virtualCam.transform.DOMove(originalCamPosition, zoomDuration).SetEase(Ease.InOutCubic)
         );
+        
     }
 
+    
 }
