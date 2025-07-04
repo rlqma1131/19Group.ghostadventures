@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using Cinemachine;
+using Unity.VisualScripting;
+using TMPro;
 
 public class FollowCamera : MonoBehaviour
 {
@@ -19,4 +21,16 @@ public class FollowCamera : MonoBehaviour
 
 
     }
+
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("CameraColider"))
+    //    { 
+    //        if (Camera != null)
+    //        {
+    //            Camera.OnTargetObjectWarped(this.transform, this.transform.position - Camera.transform.position);
+    //        }
+    //    }
+    //}
 }
