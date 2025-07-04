@@ -8,7 +8,7 @@ public class HaveItem : MonoBehaviour
     public List<ItemData> initialItems = new List<ItemData>();
 
     [HideInInspector]
-    public List<itemInventorySlot> inventorySlots = new List<itemInventorySlot>();
+    public List<InventorySlot_PossessableObject> inventorySlots = new List<InventorySlot_PossessableObject>();
 
     private void Awake()
     {
@@ -28,7 +28,7 @@ public class HaveItem : MonoBehaviour
             }
             else
             {
-                inventorySlots.Add(new itemInventorySlot(item, 1));
+                inventorySlots.Add(new InventorySlot_PossessableObject(item, 1));
             }
         }
     }

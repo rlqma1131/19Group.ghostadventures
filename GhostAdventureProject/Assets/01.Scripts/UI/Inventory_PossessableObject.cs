@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class itemInventory : Singleton<itemInventory>
+public class Inventory_PossessableObject : MonoBehaviour
 {
     public Transform slotParent;
     public GameObject slotPrefab;
@@ -11,7 +11,7 @@ public class itemInventory : Singleton<itemInventory>
 
     void Start()
     {
-        UIManager.Instance.iteminventory.gameObject.SetActive(false);
+        UIManager.Instance.Inventory_PossessableObjectUI.gameObject.SetActive(false);
     }
 
     // 미사용(보류)
@@ -28,14 +28,14 @@ public class itemInventory : Singleton<itemInventory>
         return null;
     }
 
-    public void ShowInventory(List<itemInventorySlot> slots)
+    public void ShowInventory(List<InventorySlot_PossessableObject> slots)
     {
         Clear();
 
         foreach (var slot in slots)
         {
             GameObject obj = Instantiate(slotPrefab, slotParent);
-            obj.GetComponent<itemInventorySlot>().SetSlot(slot);
+            obj.GetComponent<InventorySlot_PossessableObject>().SetSlot(slot);
             spawnedSlots.Add(obj);
         }
 
