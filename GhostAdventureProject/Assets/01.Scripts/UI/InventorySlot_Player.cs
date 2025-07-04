@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
-public class InventorySlot : MonoBehaviour
+public class InventorySlot_Player : MonoBehaviour
 {
     public Image icon;
     // public TextMeshProUGUI clueName;
