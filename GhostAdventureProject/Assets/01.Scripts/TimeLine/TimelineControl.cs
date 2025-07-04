@@ -42,10 +42,6 @@ public class TimelineControl : MonoBehaviour
 
     }
 
-    public void MoveScene(string Scenename)
-    {
-        // 타임라인이 종료되면 씬 이동
-        SceneManager.LoadScene(Scenename);
-    }
+
 
 }
