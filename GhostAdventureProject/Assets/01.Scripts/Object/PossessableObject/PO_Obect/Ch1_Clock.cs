@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Ch1_Clock : BasePossessable
 {
     private Image zoomPanel;
-    private RectTransform startPos; // 두트윈 시작 위치
+    private RectTransform clockPos; // 두트윈 시작 위치
     private GameObject clockZoom; // 고해상도 시계 UI
     private Transform hourHand;
     private Transform minuteHand;
@@ -25,7 +25,7 @@ public class Ch1_Clock : BasePossessable
         // 확대UI 초기화
         zoomPanel = GameObject.Find("ZoomPanel").GetComponent<Image>();
         clockZoom = GameObject.Find("Ch1_ClockZoom");
-        startPos = GameObject.Find("Ch1_ClockZoom").GetComponent<RectTransform>();
+        clockPos = GameObject.Find("Ch1_ClockZoom").GetComponent<RectTransform>();
         hourHand = GameObject.Find("HourHand").transform;
         minuteHand = GameObject.Find("MinuteHand").transform;
 
@@ -88,8 +88,8 @@ public class Ch1_Clock : BasePossessable
         zoomPanel.DOFade(150f / 255f, 0.5f);
 
         clockZoom.SetActive(true);
-        startPos.anchoredPosition = new Vector2(0, -Screen.height); // 아래에서 시작
-        startPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
+        clockPos.anchoredPosition = new Vector2(0, -Screen.height); // 아래에서 시작
+        clockPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
     }
 
     private void HideClockUI()
@@ -97,7 +97,7 @@ public class Ch1_Clock : BasePossessable
         // 판넬 끄기
         zoomPanel.DOFade(0f, 0.5f);
 
-        startPos.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
+        clockPos.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
             .SetEase(Ease.InCubic)
             .OnComplete(() =>
             {
