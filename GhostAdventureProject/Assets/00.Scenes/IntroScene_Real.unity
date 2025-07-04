@@ -7493,6 +7493,8 @@ PlayableDirector:
     value: {fileID: 1575738000}
   - key: {fileID: -960002321299147095, guid: 285b1195ed9415d4d8fd1b9355093bca, type: 2}
     value: {fileID: 446204583}
+  - key: {fileID: -531545741780864589, guid: 285b1195ed9415d4d8fd1b9355093bca, type: 2}
+    value: {fileID: 1373205618}
   m_ExposedReferences:
     m_References:
     - 560e54acc543d224aa6dbbbf42af750f: {fileID: 519377585}
@@ -8390,6 +8392,7 @@ GameObject:
   - component: {fileID: 1373205620}
   - component: {fileID: 1373205619}
   - component: {fileID: 1373205618}
+  - component: {fileID: 1373205621}
   m_Layer: 0
   m_Name: TimelineManager
   m_TagString: Untagged
@@ -8412,6 +8415,7 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: db729e2a8128b3c44b096da691be56b3, type: 2}
+    - {fileID: 11400000, guid: 0364bc58da7b3164080c5d80a0025793, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -8425,6 +8429,20 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1373205621}
+          m_TargetAssemblyTypeName: MoveScene, Assembly-CSharp
+          m_MethodName: GoScene
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: TestScene
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!114 &1373205619
@@ -8455,6 +8473,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1373205621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373205617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7b89cafb83b5c143813de0dc6244147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1373797958
 GameObject:
   m_ObjectHideFlags: 0
