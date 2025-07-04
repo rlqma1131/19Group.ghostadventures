@@ -23,7 +23,7 @@ public class Inventory_Player : MonoBehaviour
     // public Transform clueSlotParent;
 
     public List<ClueData> collectedClues = new List<ClueData>(); // 단서데이터를 모아놓은 리스트
-    public List<InventorySlot> inventorySlots; // 슬롯 4개
+    public List<InventorySlot_Player> inventorySlots; // 슬롯 4개
     private int currentPage = 0;
     private int cluesPerPage = 4;
     // [SerializeField] TextMeshProUGUI currentPageText; // 현재 페이지 표시
