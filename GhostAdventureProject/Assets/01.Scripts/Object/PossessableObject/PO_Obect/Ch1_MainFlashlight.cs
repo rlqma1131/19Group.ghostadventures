@@ -179,6 +179,11 @@ public class Ch1_MainFlashlight : BasePossessable
                     timerPanel.SetActive(false);
 
                 Debug.Log("퍼즐 성공!");
+                
+                // 문 열기
+                if (clearDoorAnimator != null)
+                    clearDoorAnimator.SetTrigger("DoorOpen");
+                Debug.Log("문 열림 완료");
             }
         }
         // else
