@@ -42,26 +42,26 @@ public class AutoTeleport : MonoBehaviour
         player.transform.position = teleportPosition;
 
         // 모든 가상 카메라 비활성화
-        foreach (var cam in virtualCameras)
-        {
-            cam.gameObject.SetActive(false);
-        }
+        //foreach (var cam in virtualCameras)
+        //{
+        //    cam.gameObject.SetActive(false);
+        //}
 
-        // 타겟 카메라 활성화 및 Follow 설정
+        //// 타겟 카메라 활성화 및 Follow 설정
 
-        if (targetCameraIndex >= 0 && targetCameraIndex < virtualCameras.Length)
-        {
-            var targetCam = virtualCameras[targetCameraIndex];
+        //if (targetCameraIndex >= 0 && targetCameraIndex < virtualCameras.Length)
+        //{
+        //    var targetCam = virtualCameras[targetCameraIndex];
 
 
 
-            targetCam.gameObject.SetActive(true);
-            targetCam.OnTargetObjectWarped(player.transform, teleportPosition - oldPosition); // 플레이어가 순간이동했을 때 카메라 위치 업데이트
-        }
+        //    targetCam.gameObject.SetActive(true);
+        //    targetCam.OnTargetObjectWarped(player.transform, teleportPosition - oldPosition); // 플레이어가 순간이동했을 때 카메라 위치 업데이트
+        //}
 
-        else
-        {
-            Debug.LogWarning("Target camera index is out of range!");
-        }
+        //else
+        //{
+        //    Debug.LogWarning("Target camera index is out of range!");
+        //}
     }
 }

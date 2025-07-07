@@ -35,7 +35,7 @@ public class CameraZoom : MonoBehaviour
 
     public void ZoomIn()
     {
-        virtualCam.Priority = 11; // 카메라 우선순위 높이기
+        virtualCam.Priority = 15; // 카메라 우선순위 높이기
         target = GameObject.FindGameObjectWithTag("Player").transform; // 플레이어 태그로 타겟 설정
         originalSize = virtualCam.m_Lens.OrthographicSize;
         originalCamPosition = virtualCam.transform.position; // 카메라 초기 위치 저장
@@ -78,7 +78,7 @@ public class CameraZoom : MonoBehaviour
 
     public void ZoomOut()
     {
-        virtualCam.Priority = 11; // 카메라 우선순위 높이기
+        virtualCam.Priority = 15; // 카메라 우선순위 높이기
         if (!isZoomedIn) return;
         isZoomedIn = false;
 
