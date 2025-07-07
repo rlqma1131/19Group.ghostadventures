@@ -1797,6 +1797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d4c34dab7233b9499e322e6dbc42b3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasActivated: 0
   controlCamera: {fileID: 1971405753}
   flashlightBeams:
   - {fileID: 2132542818}
@@ -9745,6 +9746,7 @@ GameObject:
   m_Component:
   - component: {fileID: 640850540}
   - component: {fileID: 640850541}
+  - component: {fileID: 640850542}
   m_Layer: 0
   m_Name: v0Poly
   m_TagString: Untagged
@@ -9818,6 +9820,19 @@ PolygonCollider2D:
       - {x: 2.9909463, y: -7.724717}
       - {x: 3.0991688, y: 3.1334856}
   m_UseDelaunayMesh: 0
+--- !u!114 &640850542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640850539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0183fc7329dc43418a2214934fefb49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Vcam: {fileID: 1574818359}
 --- !u!1 &643880206 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6584644825477121519, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
@@ -11545,16 +11560,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTransform: {fileID: 0}
   targetPos: {x: 9, y: 0}
-  virtualCameras:
-  - {fileID: 1574818359}
-  - {fileID: 1381666222}
-  - {fileID: 377076569}
-  - {fileID: 1300034121}
-  - {fileID: 377419391}
-  - {fileID: 1623621088}
-  - {fileID: 1623621088}
-  - {fileID: 330598439}
-  targetCameraIndex: 1
 --- !u!61 &782364140
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18092,6 +18097,7 @@ GameObject:
   m_Component:
   - component: {fileID: 916490150}
   - component: {fileID: 916490151}
+  - component: {fileID: 916490152}
   m_Layer: 0
   m_Name: v6Poly
   m_TagString: Untagged
@@ -18166,6 +18172,19 @@ PolygonCollider2D:
       - {x: 4.000784, y: -6.9076843}
       - {x: 4.334261, y: 3.0630012}
   m_UseDelaunayMesh: 0
+--- !u!114 &916490152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916490149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0183fc7329dc43418a2214934fefb49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Vcam: {fileID: 330598439}
 --- !u!1 &922743300
 GameObject:
   m_ObjectHideFlags: 0
@@ -22871,6 +22890,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1172800215}
   - component: {fileID: 1172800216}
+  - component: {fileID: 1172800217}
   m_Layer: 0
   m_Name: v4Poly
   m_TagString: Untagged
@@ -22945,6 +22965,19 @@ PolygonCollider2D:
       - {x: 7.061758, y: -7.3939857}
       - {x: 6.765764, y: 4.2343993}
   m_UseDelaunayMesh: 0
+--- !u!114 &1172800217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1172800214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0183fc7329dc43418a2214934fefb49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Vcam: {fileID: 377419391}
 --- !u!1 &1175776248
 GameObject:
   m_ObjectHideFlags: 0
@@ -26526,6 +26559,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1401484779}
   - component: {fileID: 1401484780}
+  - component: {fileID: 1401484781}
   m_Layer: 0
   m_Name: v2Poly
   m_TagString: Untagged
@@ -26600,6 +26634,19 @@ PolygonCollider2D:
       - {x: 20.460623, y: -7.67743}
       - {x: 20.02292, y: 3.4693274}
   m_UseDelaunayMesh: 0
+--- !u!114 &1401484781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401484778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0183fc7329dc43418a2214934fefb49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Vcam: {fileID: 377076569}
 --- !u!1 &1420220194
 GameObject:
   m_ObjectHideFlags: 0
@@ -27669,15 +27716,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTransform: {fileID: 0}
   targetPos: {x: 42, y: 0}
-  virtualCameras:
-  - {fileID: 1574818359}
-  - {fileID: 1381666222}
-  - {fileID: 377076569}
-  - {fileID: 1300034121}
-  - {fileID: 377419391}
-  - {fileID: 1623621088}
-  - {fileID: 330598439}
-  targetCameraIndex: 1
 --- !u!61 &1486737583
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -29174,7 +29212,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 10
+  m_Priority: 11
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
@@ -32598,8 +32636,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.00085002184, y: 0.00009998679, z: 0}
-    m_Extent: {x: 1.00015, y: 0.99950004, z: 0}
+    m_Center: {x: -0.00025001168, y: -0.00019997358, z: 0}
+    m_Extent: {x: 0.99955, y: 1.0004001, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0.3
@@ -32898,6 +32936,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -1.51
       objectReference: {fileID: 0}
+    - target: {fileID: 1605545958051755793, guid: 10f9562b9026ecf4bbe7a3235e0faf93, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 4058511833628008825, guid: 10f9562b9026ecf4bbe7a3235e0faf93, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -33022,6 +33064,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1735845571}
   - component: {fileID: 1735845572}
+  - component: {fileID: 1735845573}
   m_Layer: 0
   m_Name: v1Poly
   m_TagString: Untagged
@@ -33095,6 +33138,19 @@ PolygonCollider2D:
       - {x: 6.4465547, y: -7.67743}
       - {x: 6.8195744, y: 3.7469895}
   m_UseDelaunayMesh: 0
+--- !u!114 &1735845573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735845570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0183fc7329dc43418a2214934fefb49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Vcam: {fileID: 1381666222}
 --- !u!1 &1739684173
 GameObject:
   m_ObjectHideFlags: 0
@@ -36849,6 +36905,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1805112532}
   - component: {fileID: 1805112533}
+  - component: {fileID: 1805112534}
   m_Layer: 0
   m_Name: v5Poly
   m_TagString: Untagged
@@ -36923,6 +36980,19 @@ PolygonCollider2D:
       - {x: 8.362402, y: -7.7191477}
       - {x: 8.391573, y: 3.3672998}
   m_UseDelaunayMesh: 0
+--- !u!114 &1805112534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1805112531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0183fc7329dc43418a2214934fefb49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Vcam: {fileID: 1623621088}
 --- !u!1 &1806157484
 GameObject:
   m_ObjectHideFlags: 0
@@ -39481,6 +39551,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1962918372}
   - component: {fileID: 1962918373}
+  - component: {fileID: 1962918374}
   m_Layer: 0
   m_Name: v3Poly
   m_TagString: Untagged
@@ -39555,6 +39626,19 @@ PolygonCollider2D:
       - {x: 1.4698696, y: -7.3939857}
       - {x: 1.1738758, y: 3.3276057}
   m_UseDelaunayMesh: 0
+--- !u!114 &1962918374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962918371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0183fc7329dc43418a2214934fefb49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Vcam: {fileID: 1300034121}
 --- !u!1 &1971405750
 GameObject:
   m_ObjectHideFlags: 0
