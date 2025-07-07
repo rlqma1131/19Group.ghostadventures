@@ -5,8 +5,8 @@ using UnityEngine;
 
 public abstract class BasePossessable : MonoBehaviour
 {
+    [SerializeField] protected bool hasActivated;
     protected bool isPossessed;
-    protected bool hasActivated;
     public bool HasActivated => hasActivated;
     public bool IsPossessed => isPossessed;
     public bool IsPossessedState => isPossessed;
