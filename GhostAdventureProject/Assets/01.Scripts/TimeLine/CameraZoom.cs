@@ -35,10 +35,11 @@ public class CameraZoom : MonoBehaviour
 
     public void ZoomIn()
     {
+        virtualCam.Priority = 11; // 카메라 우선순위 높이기
         target = GameObject.FindGameObjectWithTag("Player").transform; // 플레이어 태그로 타겟 설정
         originalSize = virtualCam.m_Lens.OrthographicSize;
         originalCamPosition = virtualCam.transform.position; // 카메라 초기 위치 저장
-        virtualCam.Follow = null;
+        //virtualCam.Follow = null;
         if (isZoomedIn) return;
         isZoomedIn = true;
 
@@ -66,12 +67,18 @@ public class CameraZoom : MonoBehaviour
         zoomInSequence.Join(
             virtualCam.transform.DOMove(targetPos, zoomDuration).SetEase(Ease.OutCubic)
         );
+        zoomInSequence.OnComplete(() =>
+        {
+
+            virtualCam.Priority = 5; // 원래 우선순위나 기본값으로 낮추기
+        });
 
 
     }
 
     public void ZoomOut()
     {
+        virtualCam.Priority = 11; // 카메라 우선순위 높이기
         if (!isZoomedIn) return;
         isZoomedIn = false;
 
@@ -95,6 +102,14 @@ public class CameraZoom : MonoBehaviour
         zoomOutSequence.Join(
             virtualCam.transform.DOMove(originalCamPosition, zoomDuration).SetEase(Ease.InOutCubic)
         );
+        zoomOutSequence.OnComplete(() =>
+        {
+
+            virtualCam.Priority = 5; // 원래 우선순위나 기본값으로 낮추기
+        });
+
+
     }
+
 
 }
