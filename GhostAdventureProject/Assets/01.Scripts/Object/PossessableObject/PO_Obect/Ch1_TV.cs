@@ -8,6 +8,7 @@ public class Ch1_TV : BasePossessable
 {
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
     [SerializeField] private GameObject memoryObject;
+    [SerializeField] private LockedDoor Door;
     [SerializeField] private GameObject doorOpen; // 열릴 문
     [SerializeField] private TextMeshProUGUI channelTxt;
 
