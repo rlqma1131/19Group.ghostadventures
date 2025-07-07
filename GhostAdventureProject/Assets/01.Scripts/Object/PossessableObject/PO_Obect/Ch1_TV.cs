@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using Cinemachine;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class Ch1_TV : BasePossessable
 {
-    [SerializeField] private Camera zoomCamera;
+    [SerializeField] private CinemachineVirtualCamera zoomCamera;
     [SerializeField] private GameObject memoryObject;
     [SerializeField] private GameObject doorOpen; // 열릴 문
     [SerializeField] private TextMeshProUGUI channelTxt;

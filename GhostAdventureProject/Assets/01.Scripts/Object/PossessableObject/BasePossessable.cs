@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class BasePossessable : MonoBehaviour
 {
     [SerializeField] protected bool hasActivated;
-    protected bool isPossessed;
+    public bool isPossessed;
     public bool HasActivated => hasActivated;
     public bool IsPossessed => isPossessed;
     public bool IsPossessedState => isPossessed;
@@ -57,7 +57,6 @@ public abstract class BasePossessable : MonoBehaviour
     {
         Debug.Log("QTE 성공 - 빙의 완료");
 
-        isPossessed = true;
         PossessionStateManager.Instance.StartPossessionTransition();
     }
 

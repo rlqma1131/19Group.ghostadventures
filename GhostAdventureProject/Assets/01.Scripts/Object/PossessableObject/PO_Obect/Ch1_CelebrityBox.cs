@@ -38,8 +38,6 @@ public class Ch1_CelebrityBox : BasePossessable
         StartCoroutine(ShowLetterWithDelay());
 
         hasActivated = false;
-        
-         Unpossess();
     }
     private IEnumerator ShowLetterWithDelay()
     {
@@ -47,5 +45,8 @@ public class Ch1_CelebrityBox : BasePossessable
         yield return null; // 한 프레임 기다림
         Animator anim = birthdayLetter.GetComponent<Animator>();
         anim?.SetTrigger("Pop");
+
+        yield return null;
+        Unpossess(); // 빙의 해제
     }
 }
