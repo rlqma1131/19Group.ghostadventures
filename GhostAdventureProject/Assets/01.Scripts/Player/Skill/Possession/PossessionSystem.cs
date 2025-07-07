@@ -114,6 +114,7 @@ public class PossessionSystem : Singleton<PossessionSystem>
         if (obssessingTarget != null)
         {
             // ex) 애니메이션 끝나고 확대
+            obssessingTarget.isPossessed = true;
             obssessingTarget.OnPossessionEnterComplete();
             Debug.Log($"빙의 애니메이션 종료 / 대상: {obssessingTarget.name}");
         }

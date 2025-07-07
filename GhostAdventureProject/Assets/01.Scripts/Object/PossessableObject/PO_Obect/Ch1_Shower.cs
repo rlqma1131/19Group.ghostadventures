@@ -1,53 +1,80 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-/// <summary>
-/// 1. 온도조절 가능 키를 띄운다
-/// 2. 컨트롤모드로 넘어간다 ( 손잡이 왼쪽- 뜨거운 / 오른쪽- 차가운 )
-/// </summary>
+
 public class Ch1_Shower : BasePossessable
 {
-    public bool IsHotWater => isWater && temperature == 1;
+    public bool IsHotWater => isWater && temperature == 3;
 
-    [SerializeField] private Animator waterAnimator;
+    [SerializeField] private GameObject water;
     [SerializeField] private GameObject steamEffect;
+    [SerializeField] private GameObject temperatureArch;
+    [SerializeField] private GameObject Needle;
+    [SerializeField] private AudioSource onWaterSound; // 물 켜는 소리 효과
+    [SerializeField] private AudioSource offWaterSound; // 물 끄는 소리 효과
+
     private bool isWater = false;
     private int temperature = 0;
 
+    private Quaternion initialNeedleRotation;
+
+    protected override void Start()
+    {
+        base.Start();
+        water.SetActive(false);
+        temperatureArch.SetActive(false);
+        Needle.SetActive(false);
+        initialNeedleRotation = Needle.transform.rotation; // 바늘 회전값 저장 & 초기화
+    }
+
     protected override void Update()
     {
-        base.Update();
-        
         if (!isPossessed)
             return;
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            temperature = Mathf.Max(-1, temperature - 1);
+            temperature = Mathf.Max(-3, temperature - 1);
+            UpdateNeedleRotation();
             Debug.Log("온도 조절: " + temperature);
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.A))
         {
-            temperature = Mathf.Min(1, temperature + 1);
+            temperature = Mathf.Min(3, temperature + 1);
+            UpdateNeedleRotation();
             Debug.Log("온도 조절: " + temperature);
         }
 
         if (Input.GetKeyDown(KeyCode.W))
         {
             isWater = !isWater;
-            waterAnimator?.SetBool("IsRunning", isWater); // 애니메이션 트리거 호출
+            water.SetActive(isWater);
+            temperatureArch.SetActive(isWater);
+            Needle.SetActive(isWater);
             Debug.Log($"물 상태: {(isWater ? "ON" : "OFF")}, 온도: {temperature}");
         }
-        
-        if (isWater && temperature == 1)
+
+        if (steamEffect != null)
         {
-            if (steamEffect != null && !steamEffect.activeSelf)
-                steamEffect.SetActive(true);
+            steamEffect.SetActive(isWater && temperature == 3);
         }
-        else
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if (steamEffect != null && steamEffect.activeSelf)
-                steamEffect.SetActive(false);
+            Unpossess();
+            temperatureArch.SetActive(false);
+            Needle.SetActive(false);
+
+            temperature = 0;
+            UpdateNeedleRotation();
+        }
+    }
+    private void UpdateNeedleRotation()
+    {
+        if (Needle != null)
+        {
+            float zAngle = temperature * 20f;
+            Needle.transform.rotation = Quaternion.Euler(0f, 0f, zAngle);
         }
     }
 }
