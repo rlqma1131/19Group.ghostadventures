@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,35 +6,45 @@ using UnityEngine;
 public class Ch1_Mirror : MonoBehaviour
 {
     [SerializeField] private Ch1_Shower shower;
-    [SerializeField] private CanvasGroup fogCanvas;
-    [SerializeField] private GameObject wLetter;
-    [SerializeField] private float fogDuration = 5f;
+    [SerializeField] private SpriteRenderer letterW;
+    [SerializeField] private float fogDuration = 15f;
 
     private float fogTime = 0f;
     private bool revealed = false;
+    private void Start()
+    {
+        SetAlpha(0f);
+    }
 
     private void Update()
     {
-        if(fogCanvas == null || shower == null || revealed)
+        if (letterW == null || shower == null || revealed)
             return;
 
         if (shower.IsHotWater)
         {
             fogTime += Time.deltaTime;
-            fogCanvas.alpha = Mathf.Clamp01(fogTime / fogDuration);
-
-            if (fogTime >= fogDuration)
-            {
-                fogCanvas.alpha = 1f;
-                wLetter.SetActive(true);
-                revealed = true;
-            }
+            fogTime = Mathf.Min(fogTime, fogDuration); // 최대값 제한
         }
         else
         {
-            fogTime = 0f;                      // 시간 초기화
-            fogCanvas.alpha = 0f;
-            wLetter.SetActive(false);
+            fogTime -= Time.deltaTime;
+            fogTime = Mathf.Max(fogTime, 0f); // 0 이하로 떨어지지 않도록
         }
+
+        float alpha = Mathf.Clamp01(fogTime / fogDuration);
+        SetAlpha(alpha);
+
+        if (!revealed && fogTime >= fogDuration)
+        {
+            revealed = true;
+        }
+    }
+
+    private void SetAlpha(float alpha)
+    {
+        Color alphaLetterW = this.letterW.color;
+        alphaLetterW.a = alpha;
+        this.letterW.color = alphaLetterW;
     }
 }
