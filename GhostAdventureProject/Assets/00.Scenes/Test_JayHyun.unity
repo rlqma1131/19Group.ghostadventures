@@ -2284,7 +2284,7 @@ GameObject:
   - component: {fileID: 110786119}
   - component: {fileID: 110786118}
   m_Layer: 0
-  m_Name: Enemy[AI]
+  m_Name: "\uC0AC\uC2E0\uC0AC\uC2E0\uC0AC\uC2E0\uC0AC\uC2E0\uC0AC\uC2E0\uC0AC\uC2E0\uC0AC\uC2E0\uC0AC\uC2E0\uC0AC\uC2E0\uC0AC\uC2E0\uC0AC\uC2E0"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2606,6 +2606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasActivated: 0
+  isPossessed: 0
   moveSpeed: 3
 --- !u!114 &147265297
 MonoBehaviour:
@@ -3926,7 +3927,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &366032577
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4303,7 +4304,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &423611156
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4743,6 +4744,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasActivated: 0
+  isPossessed: 0
   isFall: {fileID: 8300000, guid: ba48f3939907ec342aaf26cd682735a6, type: 3}
 --- !u!58 &796065337
 CircleCollider2D:
@@ -4814,7 +4816,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &833972389
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6340,6 +6342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasActivated: 0
+  isPossessed: 0
   moveSpeed: 3
 --- !u!114 &1241653317
 MonoBehaviour:
@@ -6369,6 +6372,65 @@ Transform:
   m_Children:
   - {fileID: 1916396667}
   - {fileID: 1205007907}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1354553529
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1354553531}
+  - component: {fileID: 1354553530}
+  m_Layer: 0
+  m_Name: 'MirrorGhostManager '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1354553530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354553529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d2ae339d19ebfa4b9174792591c90fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mirrors:
+  - mirror: {fileID: 0}
+    ghostVisual: {fileID: 0}
+    audioSource: {fileID: 0}
+    stageSounds: []
+    stageVisuals: []
+    currentState: 0
+    currentStage: 0
+    stayTimer: 0
+    stageTimer: 0
+    isActive: 0
+  detectionRange: 10
+  stayThreshold: 5
+  stageProgressTime: 2
+  playerCamera: {fileID: 1201384061}
+--- !u!4 &1354553531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354553529}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1374882278
@@ -7910,7 +7972,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1558053337
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8751,3 +8813,4 @@ SceneRoots:
   - {fileID: 1743312408}
   - {fileID: 852967190}
   - {fileID: 1463303801}
+  - {fileID: 1354553531}
