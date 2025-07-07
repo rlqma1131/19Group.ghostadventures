@@ -7,9 +7,9 @@ public class AutoTeleport : MonoBehaviour
     [SerializeField] private Transform targetTransform; // 목표 Transform (드래그 앤 드롭)
     [SerializeField] private Vector2 targetPos; // 목표 좌표 (백업용)
 
-    [Header("Camera Settings")]
-    [SerializeField] private CinemachineVirtualCamera[] virtualCameras; // 모든 가상 카메라 배열
-    [SerializeField] private int targetCameraIndex = 0; // 이동할 맵에 맞는 카메라 인덱스
+    //[Header("Camera Settings")]
+    //[SerializeField] private CinemachineVirtualCamera[] virtualCameras; // 모든 가상 카메라 배열
+    //[SerializeField] private int targetCameraIndex = 0; // 이동할 맵에 맞는 카메라 인덱스
 
     private void OnTriggerEnter2D(Collider2D other)
     {
