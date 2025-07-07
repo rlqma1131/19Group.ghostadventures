@@ -1345,13 +1345,14 @@ GameObject:
   - component: {fileID: 99826381}
   - component: {fileID: 99826380}
   - component: {fileID: 99826379}
+  - component: {fileID: 99826384}
   m_Layer: 0
   m_Name: Enemy[AI]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!50 &99826379
 Rigidbody2D:
   serializedVersion: 4
@@ -1444,8 +1445,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 1.0625, y: 3.3125}
+    newSize: {x: 1.0625, y: 3.3125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -1494,12 +1495,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 101
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: -254099469, guid: 1e067099d963bb54da07e0c8708a4676, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.0625, y: 3.3125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1514,12 +1515,33 @@ Transform:
   m_GameObject: {fileID: 99826378}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: -1.5, z: 0}
+  m_LocalPosition: {x: 5, y: -1.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &99826384
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99826378}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a77d6379ed085d14f8d7ec340e408b1f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &107785457
 GameObject:
   m_ObjectHideFlags: 0
@@ -1797,6 +1819,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d4c34dab7233b9499e322e6dbc42b3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasActivated: 0
   controlCamera: {fileID: 1971405753}
   flashlightBeams:
   - {fileID: 2132542818}
@@ -10814,6 +10837,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: NPC1
       objectReference: {fileID: 0}
+    - target: {fileID: 4350810739565170432, guid: cc463e80800db474ab0d794b64462b71, type: 3}
+      propertyPath: m_Color.b
+      value: 0.50501895
+      objectReference: {fileID: 0}
+    - target: {fileID: 4350810739565170432, guid: cc463e80800db474ab0d794b64462b71, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9056604
+      objectReference: {fileID: 0}
+    - target: {fileID: 4350810739565170432, guid: cc463e80800db474ab0d794b64462b71, type: 3}
+      propertyPath: m_Color.r
+      value: 0.3033108
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11545,16 +11580,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTransform: {fileID: 0}
   targetPos: {x: 9, y: 0}
-  virtualCameras:
-  - {fileID: 1574818359}
-  - {fileID: 1381666222}
-  - {fileID: 377076569}
-  - {fileID: 1300034121}
-  - {fileID: 377419391}
-  - {fileID: 1623621088}
-  - {fileID: 1623621088}
-  - {fileID: 330598439}
-  targetCameraIndex: 1
 --- !u!61 &782364140
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -27669,15 +27694,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTransform: {fileID: 0}
   targetPos: {x: 42, y: 0}
-  virtualCameras:
-  - {fileID: 1574818359}
-  - {fileID: 1381666222}
-  - {fileID: 377076569}
-  - {fileID: 1300034121}
-  - {fileID: 377419391}
-  - {fileID: 1623621088}
-  - {fileID: 330598439}
-  targetCameraIndex: 1
 --- !u!61 &1486737583
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -36371,7 +36387,7 @@ Transform:
   m_GameObject: {fileID: 1789423618}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.14184237, y: -0.31942976, z: -10.127113}
+  m_LocalPosition: {x: 200.08551, y: -1.7077103, z: -10.127113}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

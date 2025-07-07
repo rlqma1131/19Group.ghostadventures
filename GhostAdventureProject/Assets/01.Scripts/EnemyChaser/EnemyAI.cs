@@ -38,7 +38,13 @@ public class EnemyAI : MonoBehaviour
     [Header("유인 감지 거리")]
     public float distractionRange = 15f;
 
+    [Header("방향 전환 설정")]
+    public bool useFlipX = true; // SpriteRenderer의 flipX 사용 여부
+    public bool useScale = false; // Transform Scale 사용 여부 (flipX 대신)
+
     private Vector3 startPos;
+    private SpriteRenderer spriteRenderer;
+    private Vector3 lastPosition;
     private Vector3[] patrolPoints;
     private int currentPatrolIndex = 0;
     private Vector3 targetPosition;
@@ -76,11 +82,16 @@ public class EnemyAI : MonoBehaviour
     {
         if (enemyAnimator == null)
             enemyAnimator = GetComponent<Animator>();
+
+        // SpriteRenderer 컴포넌트 가져오기
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Start()
     {
         startPos = transform.position;
+        lastPosition = transform.position; // 초기 위치 저장
+
         if (Player == null) Player = GameObject.FindGameObjectWithTag("Player")?.transform;
         if (Player != null) playerHide = Player.GetComponent<PlayerHide>();
 
@@ -110,6 +121,7 @@ public class EnemyAI : MonoBehaviour
 
         UpdateCurrentState();
         CheckStateTransitions();
+        UpdateFacingDirection();
     }
 
     private void ChangeState(AIState newState)
@@ -123,24 +135,36 @@ public class EnemyAI : MonoBehaviour
                 SetNextPatrolTarget();
                 isPatrolWaiting = false;
                 break;
+            case AIState.Chasing:
+                // 추격 시작 시 즉시 Walk 애니메이션 설정
+                enemyAnimator?.SetBool("IsWalking", true);
+                break;
+            case AIState.CaughtPlayer:
+                //  CaughtPlayer 상태에서는 애니메이션 건드리지 않음
+                StopMoving();
+                break;
             case AIState.Searching:
                 SetupSearchPattern();
                 isSearchWaiting = false;
                 break;
             case AIState.Returning:
                 SetTarget(startPos);
+                // 복귀 시작 시 즉시 Walk 애니메이션 설정
+                enemyAnimator?.SetBool("IsWalking", true);
                 break;
             default:
                 StopMoving();
+                // 정지 상태일 때 즉시 Idle 애니메이션 설정
+                enemyAnimator?.SetBool("IsWalking", false);
                 break;
         }
     }
 
     private void TryCatchPlayer()
     {
-        StopMoving();
-        ChangeState(AIState.CaughtPlayer);
         enemyAnimator?.SetTrigger("QTEIn");
+        ChangeState(AIState.CaughtPlayer);
+        StopMoving();
         StartCoroutine(HandleQTEFlow());
     }
 
@@ -151,41 +175,75 @@ public class EnemyAI : MonoBehaviour
         QTEEffectManager.Instance.StartQTEEffects();
 
         var qte2 = UIManager.Instance.QTE_UI_2;
+
         qte2.StartQTE();
 
         while (qte2.IsQTERunning())
+        {
             yield return null;
+        }
 
         if (qte2.IsSuccess())
+        {
             OnQTESuccess();
+        }
         else
+        {
             OnQTEFailure();
+        }
     }
 
     private void OnQTESuccess()
     {
         Debug.Log("QTE 성공! 플레이어가 탈출했습니다.");
         QTEEffectManager.Instance.EndQTEEffects();
+
         enemyAnimator?.SetTrigger("QTESuccess");
 
         // 외부 생명 시스템 호출
         PlayerLifeManager.Instance.LosePlayerLife();
-        // 스턴 코루틴 추가
-        StartCoroutine(StunAfterQTE());
+
+        // ✅ QTESuccess 애니메이션이 충분히 재생된 후에 스턴 시작
+        StartCoroutine(DelayedStunAfterQTE());
     }
 
     private void OnQTEFailure()
     {
         Debug.Log("QTE 실패! 플레이어가 잡혔습니다.");
         QTEEffectManager.Instance.EndQTEEffects();
+
         enemyAnimator?.SetTrigger("QTEFail");
 
-        StartCoroutine(DelayedGameOver());
+        // ✅ QTEFail 애니메이션이 충분히 재생된 후에 게임오버
+        StartCoroutine(DelayedGameOverAfterAnimation());
     }
 
-    private IEnumerator DelayedGameOver()
+    // ✅ QTESuccess 애니메이션 재생 시간을 기다린 후 스턴
+    private IEnumerator DelayedStunAfterQTE()
     {
-        yield return new WaitForSeconds(1.5f);
+        // QTESuccess 애니메이션 재생 시간 기다리기 (2초)
+        yield return new WaitForSeconds(2f);
+
+        // 이제 스턴 상태로 전환
+        ChangeState(AIState.StunnedAfterQTE);
+        enemyAnimator?.SetBool("IsIdle", true);
+
+        yield return new WaitForSeconds(2f);
+
+        enemyAnimator?.SetBool("IsIdle", false);
+
+        if (Player != null && Vector3.Distance(transform.position, Player.position) < detectionRange)
+            ChangeState(AIState.Chasing);
+        else
+            ChangeState(AIState.Patrolling);
+    }
+
+    // ✅ QTEFail 애니메이션 재생 시간을 기다린 후 게임오버
+    private IEnumerator DelayedGameOverAfterAnimation()
+    {
+        // QTEFail 애니메이션 재생 시간 기다리기 (2초)
+        yield return new WaitForSeconds(2f);
+
         PlayerLifeManager.Instance.HandleGameOver();
     }
 
@@ -220,19 +278,6 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private IEnumerator StunAfterQTE()
-    {
-        ChangeState(AIState.StunnedAfterQTE);
-        enemyAnimator?.SetBool("QTEFail", true);
-        yield return new WaitForSeconds(2f);
-        enemyAnimator?.SetBool("QTEFail", false);
-
-        if (Player != null && Vector3.Distance(transform.position, Player.position) < detectionRange)
-            ChangeState(AIState.Chasing);
-        else
-            ChangeState(AIState.Patrolling);
-    }
-
     private void UpdateCurrentState()
     {
         switch (currentState)
@@ -251,12 +296,20 @@ public class EnemyAI : MonoBehaviour
             case AIState.DistractedByDecoy: UpdateDistractedState(); break;
         }
 
-        enemyAnimator?.SetBool("IsMoving",
-            currentState == AIState.Patrolling ||
-            currentState == AIState.Chasing ||
-            currentState == AIState.Searching ||
-            currentState == AIState.SearchComplete ||
-            currentState == AIState.Returning);
+        // ✅ QTE 상태일 때는 IsWalking 업데이트 건드리지 않음
+        if (currentState != AIState.CaughtPlayer)
+        {
+            // IsWalking Bool 값 업데이트
+            bool shouldWalk = isMoving && (
+                currentState == AIState.Patrolling ||          // 순찰 중 추가
+                currentState == AIState.Chasing ||             // 추격 중
+                currentState == AIState.Returning ||           // 복귀 중
+                currentState == AIState.DistractedByDecoy ||   // 유인 중
+                (currentState == AIState.Searching && !isSearchWaiting) ||  // 수색 중 (대기 아닐 때)
+                currentState == AIState.SearchComplete);       // 수색 완료 후 복귀
+
+            enemyAnimator?.SetBool("IsWalking", shouldWalk);
+        }
     }
 
     private void CheckStateTransitions()
@@ -379,8 +432,6 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-
-
     private void UpdatePatrolling()
     {
         if (isPatrolWaiting)
@@ -400,7 +451,10 @@ public class EnemyAI : MonoBehaviour
             isPatrolWaiting = true;
             stateTimer = 0f;
         }
-        else MoveToTarget(moveSpeed * 0.7f);
+        else
+        {
+            MoveToTarget(moveSpeed * 0.7f);
+        }
     }
 
     private void UpdateChasing()
@@ -458,7 +512,41 @@ public class EnemyAI : MonoBehaviour
     private void MoveToTarget(float speed)
     {
         if (!isMoving) return;
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+        Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+        transform.position = newPosition;
+    }
+
+    private void UpdateFacingDirection()
+    {
+        // 위치가 변경되었는지 확인
+        if (Vector3.Distance(transform.position, lastPosition) > 0.01f)
+        {
+            float moveDirection = transform.position.x - lastPosition.x;
+
+            if (Mathf.Abs(moveDirection) > 0.01f) // 수평 이동이 있을 때만
+            {
+                bool shouldFaceRight = moveDirection > 0;
+                SetFacingDirection(shouldFaceRight);
+            }
+
+            lastPosition = transform.position;
+        }
+    }
+
+    private void SetFacingDirection(bool faceRight)
+    {
+        if (useFlipX && spriteRenderer != null)
+        {
+            // SpriteRenderer의 flipX 사용
+            spriteRenderer.flipX = !faceRight; // 보통 flipX = true가 왼쪽을 의미
+        }
+        else if (useScale)
+        {
+            // Transform Scale 사용
+            Vector3 scale = transform.localScale;
+            scale.x = faceRight ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+            transform.localScale = scale;
+        }
     }
 
     private void StopMoving() => isMoving = false;
