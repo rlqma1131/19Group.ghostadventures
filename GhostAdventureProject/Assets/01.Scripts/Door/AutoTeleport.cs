@@ -56,7 +56,7 @@ public class AutoTeleport : MonoBehaviour
 
 
             targetCam.gameObject.SetActive(true);
-            targetCam.OnTargetObjectWarped(player.transform, teleportPosition - oldPosition);
+            targetCam.OnTargetObjectWarped(player.transform, teleportPosition - oldPosition); // 플레이어가 순간이동했을 때 카메라 위치 업데이트
         }
 
         else
