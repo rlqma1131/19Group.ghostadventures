@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HaveItem : MonoBehaviour
+public class HaveItem : Singleton<HaveItem>
 {
     [Header("에디터에서 아이템 추가")]
     public List<ItemData> initialItems = new List<ItemData>();
