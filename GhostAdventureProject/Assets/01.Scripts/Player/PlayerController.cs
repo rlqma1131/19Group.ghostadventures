@@ -51,5 +51,4 @@ public class PlayerController : MonoBehaviour
             && currentTarget.HasActivated
             && !currentTarget.IsPossessedState;
     }
-
 }
