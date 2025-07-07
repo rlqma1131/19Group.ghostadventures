@@ -10,7 +10,12 @@ public class FollowCamera : MonoBehaviour
 
         foreach (var cam in cameras)
         {
-            cam.Follow = this.transform;
+
+            if (cam.Follow == null)
+            {
+                cam.Follow = this.transform;
+            }
+           
             
         }
 
