@@ -1,22 +1,18 @@
-using System.Collections;
+﻿using Cinemachine;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Ch1_MainFlashlight : BasePossessable
 {
-    [SerializeField] private Camera controlCamera;
+    [SerializeField] private CinemachineVirtualCamera zoomCamera;
     [SerializeField] private List<Ch1_FlashlightBeam> flashlightBeams;
-    // [SerializeField] private SpriteRenderer wallLetterRenderer;
     [SerializeField] private Animator clearDoorAnimator;
     [SerializeField] private List<GameObject> mirrorBeamVisuals; // 맵에서 보여질 빛 시각화용
     
     private bool isControlMode = false;
     private bool puzzleCompleted = false;
 
-    // [SerializeField] private Slider timerSlider;
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private GameObject timerPanel;
     [SerializeField] private float timeLimit = 15f;
@@ -43,7 +39,7 @@ public class Ch1_MainFlashlight : BasePossessable
                 if (isControlMode)
                 {
                     isControlMode = false;
-                    controlCamera.gameObject.SetActive(false);
+                    zoomCamera.Priority = 20;   // 카메라 우선순위 높이기
                 }
 
                 Unpossess();
@@ -67,8 +63,8 @@ public class Ch1_MainFlashlight : BasePossessable
             {
                 // 조작 중이면 조작 종료
                 isControlMode = false;
-                controlCamera.gameObject.SetActive(false);
-                
+                zoomCamera.Priority = 5; // 카메라 우선순위 낮추기
+
                 if (puzzleCompleted)
                 {
                     hasActivated = false;
@@ -83,7 +79,7 @@ public class Ch1_MainFlashlight : BasePossessable
             {
                 // 조작 시작
                 isControlMode = true;
-                controlCamera.gameObject.SetActive(true);
+                zoomCamera.Priority = 20; // 카메라 우선순위 높이기
             }
         }
         
