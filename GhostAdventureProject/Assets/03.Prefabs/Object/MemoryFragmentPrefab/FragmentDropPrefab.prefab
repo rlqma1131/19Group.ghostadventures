@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4909147369601459823}
   - component: {fileID: 4510545697144544898}
+  - component: {fileID: -5943360674855224365}
   m_Layer: 0
   m_Name: FragmentDropPrefab
   m_TagString: Untagged
@@ -70,8 +71,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2059531157
+  m_SortingLayer: 4
   m_SortingOrder: 501
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -84,3 +85,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-5943360674855224365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3038222122984259640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d24bf20d772628c46a6ea52f5eae99d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minPixelSize: 0.04
+  maxPixelSize: 0.21
+  explosionMin: 0.6
+  explosionMax: 1.4
+  explodeDuration: 1
+  absorbDuration: 1
+  delayBeforeAbsorb: 0.8
+  pixelStep: 26
+  ColorValue: 5

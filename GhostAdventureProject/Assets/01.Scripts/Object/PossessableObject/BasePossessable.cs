@@ -5,13 +5,13 @@ using UnityEngine;
 
 public abstract class BasePossessable : MonoBehaviour
 {
+    [SerializeField] protected Animator anim;
     [SerializeField] protected bool hasActivated;
     public bool isPossessed;
     public bool HasActivated => hasActivated;
     public bool IsPossessed => isPossessed;
     public bool IsPossessedState => isPossessed;
 
-    protected Animator anim;
 
 
     protected virtual void Start()
