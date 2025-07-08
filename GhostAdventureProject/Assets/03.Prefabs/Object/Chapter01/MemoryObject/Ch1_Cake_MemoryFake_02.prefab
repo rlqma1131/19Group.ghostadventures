@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 6098454250597674097}
   - component: {fileID: 4478171886901770088}
   - component: {fileID: 1581852186038403845}
-  - component: {fileID: 3496068302958507542}
-  - component: {fileID: 4022168693862614601}
+  - component: {fileID: 670237750752137414}
   m_Layer: 10
   m_Name: Ch1_Cake_MemoryFake_02
   m_TagString: Untagged
@@ -30,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -2.16, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3628512381676542533}
@@ -68,12 +67,12 @@ MonoBehaviour:
   dropOffset: {x: 0, y: 0, z: 0}
   bounceHeight: 0.3
   bounceDuration: 0.5
-  rotateTime: 1.2
-  ellipseRadiusX: 0.5
-  ellipseRadiusZ: 1
+  rotateTime: 3
+  ellipseRadiusX: 1.82
+  ellipseRadiusZ: 1.5
   absorbTime: 0.6
---- !u!58 &3496068302958507542
-CircleCollider2D:
+--- !u!61 &670237750752137414
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -104,31 +103,19 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.000000834465, y: 0.023432612}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 0.5
---- !u!114 &4022168693862614601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3683686307078424590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fe739dcbe30c0e449f777386a3b2371, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: c9500486131ffbb4aacd45c92979a630, type: 2}
-  isScannable: 0
-  fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
-  dropOffset: {x: 0, y: 0, z: 0}
-  bounceHeight: 0.3
-  bounceDuration: 0.5
-  rotateTime: 1.2
-  ellipseRadiusX: 0.5
-  ellipseRadiusZ: 1
-  absorbTime: 0.6
+  m_Size: {x: 2.8277452, y: 2.6871488}
+  m_EdgeRadius: 0
 --- !u!1 &8380123118317424010
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,7 +127,6 @@ GameObject:
   - component: {fileID: 3628512381676542533}
   - component: {fileID: 4745182114657101138}
   - component: {fileID: 7501836540273500706}
-  - component: {fileID: 5866618187596759970}
   m_Layer: 10
   m_Name: MainSprite
   m_TagString: Untagged
@@ -201,9 +187,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -2059531157
+  m_SortingLayer: 4
+  m_SortingOrder: 110
   m_Sprite: {fileID: 21300000, guid: 47be1937ae46e0948b23087e74b05f1c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -236,19 +222,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5866618187596759970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8380123118317424010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e362efabfd4ef5149bbb451f40eab145, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mouse: {fileID: 0}
 --- !u!1001 &7474215180962500031
 PrefabInstance:
   m_ObjectHideFlags: 0
