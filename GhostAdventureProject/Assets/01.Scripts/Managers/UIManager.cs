@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -99,6 +99,18 @@ public class UIManager : Singleton<UIManager>
     public void startEndingUI_CloseAll()
     {
         startEndingUI.SetActive(false);
+    }
+
+    // 플레이모드UI 모두 끄기
+    public void PlayModeUI_OpenAll()
+    {
+        playModeUI.SetActive(true);
+    }
+
+    // 스타트엔딩UI 모두 끄기
+    public void startEndingUI_OpenAll()
+    {
+        startEndingUI.SetActive(true);
     }
 
 
