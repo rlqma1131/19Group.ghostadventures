@@ -15,7 +15,7 @@ public class PixelExploder : MonoBehaviour
     public float delayBeforeAbsorb = 0.8f;
     public int pixelStep = 2;
 
-    [Header("🌈 Glow Brightness")]
+    [Header("Glow Brightness")]
     public float ColorValue = 5f;
 
     private List<GameObject> pixelPieces = new List<GameObject>();
@@ -33,15 +33,18 @@ public class PixelExploder : MonoBehaviour
         }
     }
 
-    void Explode()
+   public void Explode()
     {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+            playerTransform = player.transform;
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         Sprite sprite = sr.sprite;
         Texture2D tex = sprite.texture;
 
         if (!tex.isReadable)
         {
-            Debug.LogError("⚠️ Sprite 텍스처의 Read/Write Enable이 꺼져있습니다!");
+            Debug.LogError("Sprite 텍스처의 Read/Write Enable이 꺼져있습니다!");
             return;
         }
 
@@ -90,6 +93,9 @@ public class PixelExploder : MonoBehaviour
                 var renderer = pixelObj.GetComponent<MeshRenderer>();
                 var filter = pixelObj.GetComponent<MeshFilter>();
                 renderer.material = mat;
+
+                renderer.sortingLayerName = "Object";
+                renderer.sortingOrder = 200;
 
                 // 버텍스 컬러로 색상 표현
                 Mesh mesh = filter.mesh;
