@@ -167,6 +167,7 @@ public class MemoryScan : MonoBehaviour
         //Time.timeScale = 0f; // 시간 흐름을 원래대로 복구
 
         //각 오브젝트 별로 기억 재생 이후 구현할 메서드
+
         currentMemoryFragment.AfterScan();
     }
 

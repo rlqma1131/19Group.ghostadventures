@@ -19082,8 +19082,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   virtualCam: {fileID: 945856548}
   target: {fileID: 0}
-  zoomInSize: 2
-  zoomDuration: 4
+  zoomInSize: 4
+  zoomDuration: 5
 --- !u!114 &945856548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31783,7 +31783,7 @@ PlayableDirector:
   - key: {fileID: 2345849907642480519, guid: c1bb09cc454dca94e8607b639c145da4, type: 2}
     value: {fileID: 945856546}
   - key: {fileID: 1085085366592553543, guid: c1bb09cc454dca94e8607b639c145da4, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 945856546}
   m_ExposedReferences:
     m_References: []
 --- !u!4 &1616510786
@@ -38073,6 +38073,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1863541133}
   - component: {fileID: 1863541134}
+  - component: {fileID: 1863541135}
   m_Layer: 0
   m_Name: living_room_16
   m_TagString: Untagged
@@ -38147,6 +38148,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1863541135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863541132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d24bf20d772628c46a6ea52f5eae99d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minPixelSize: 0.03
+  maxPixelSize: 0.06
+  explosionMin: 0.6
+  explosionMax: 1.4
+  explodeDuration: 1
+  absorbDuration: 1
+  delayBeforeAbsorb: 0.8
+  pixelStep: 2
+  ColorValue: 5
 --- !u!1 &1865125542
 GameObject:
   m_ObjectHideFlags: 0
