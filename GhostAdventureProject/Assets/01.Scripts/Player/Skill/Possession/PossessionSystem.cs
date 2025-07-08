@@ -61,6 +61,7 @@ public class PossessionSystem : Singleton<PossessionSystem>
         RequestPossession();
         return true;
     }
+
     public void RequestPossession()
     {
         Debug.Log($"{name} 빙의 시도 - QTE 호출");
