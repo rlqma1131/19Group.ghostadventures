@@ -7,9 +7,9 @@ public class Ch1_MainFlashlight : BasePossessable
 {
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
     [SerializeField] private List<Ch1_FlashlightBeam> flashlightBeams;
-    [SerializeField] private Animator clearDoorAnimator;
     [SerializeField] private List<GameObject> mirrorBeamVisuals; // 맵에서 보여질 빛 시각화용
-    
+    [SerializeField] private LockedDoor Door; // 퍼즐 성공 시 열릴 문
+
     private bool isControlMode = false;
     private bool puzzleCompleted = false;
 
@@ -19,7 +19,6 @@ public class Ch1_MainFlashlight : BasePossessable
     private float timeRemaining;
     private bool timerActive = false;
     private bool timerExpired = false;
-    // private bool timerStarted = false;
 
     protected override void Update()
     {
@@ -57,7 +56,7 @@ public class Ch1_MainFlashlight : BasePossessable
         if(!isPossessed)
             return;
         
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             if (isControlMode)
             {
@@ -65,21 +64,7 @@ public class Ch1_MainFlashlight : BasePossessable
                 isControlMode = false;
                 zoomCamera.Priority = 5; // 카메라 우선순위 낮추기
 
-                if (puzzleCompleted)
-                {
-                    hasActivated = false;
-                    Unpossess();
-                }
-                else
-                {
-                    Unpossess(); // 퍼즐 미완료 상태여도 해제 가능
-                }
-            }
-            else if (!puzzleCompleted)
-            {
-                // 조작 시작
-                isControlMode = true;
-                zoomCamera.Priority = 20; // 카메라 우선순위 높이기
+                Unpossess();
             }
         }
         
@@ -120,29 +105,24 @@ public class Ch1_MainFlashlight : BasePossessable
             timeRemaining = timeLimit;
             timerActive = true;
             timerExpired = false;
-            // timerStarted = true;
 
             if (timerPanel != null)
                 timerPanel.SetActive(true);
 
-            // if (timerSlider != null)
-            // {
-            //     timerSlider.maxValue = timeLimit;
-            //     timerSlider.value = timeRemaining;
-            // }
-
             UpdateTimerText();
-
-            Debug.Log("타이머 재시작 (재도전)");
         }
     }
-    
+
     private void UpdateTimerText()
     {
         if (timerText != null)
         {
             int seconds = Mathf.CeilToInt(timeRemaining);
-            timerText.text = $"남은 시간: {seconds}s";
+            timerText.text = seconds.ToString();
+
+            // 색상 변화 (15초 → 흰색, 5초 → 빨간색)
+            float t = Mathf.InverseLerp(5f, 15f, timeRemaining); // 15일 때 1, 5일 때 0
+            timerText.color = Color.Lerp(Color.red, Color.white, t);
         }
     }
 
@@ -174,38 +154,19 @@ public class Ch1_MainFlashlight : BasePossessable
                 if (timerPanel != null)
                     timerPanel.SetActive(false);
 
-                Debug.Log("퍼즐 성공!");
-                
+                zoomCamera.Priority = 5; // 카메라 우선순위 낮추기
+                Unpossess(); // 퍼즐 성공 후 빙의 해제
+
                 // 문 열기
-                if (clearDoorAnimator != null)
-                    clearDoorAnimator.SetTrigger("DoorOpen");
-                Debug.Log("문 열림 완료");
+                Door.SolvePuzzle();
             }
         }
-        // else
-        // {
-        //     if (!puzzleCompleted)
-        //         HideLetter();
-        // }
     }
 
-    // private void RevealLetter()
-    // {
-    //     if (wallLetterRenderer != null)
-    //     {
-    //         var c = wallLetterRenderer.color;
-    //         c.a = 1f;
-    //         wallLetterRenderer.color = c;
-    //     }
-    // }
-    //
-    // private void HideLetter()
-    // {
-    //     if (wallLetterRenderer != null)
-    //     {
-    //         var c = wallLetterRenderer.color;
-    //         c.a = 0f;
-    //         wallLetterRenderer.color = c;
-    //     }
-    // }
+    // 빙의 하고 바로 줌
+    public override void OnPossessionEnterComplete()
+    {
+        isControlMode = true;
+        zoomCamera.Priority = 20;
+    }
 }
