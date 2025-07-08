@@ -42,13 +42,12 @@ public class UIManager : Singleton<UIManager>
     // -------------------------------------------------------------------------------------------
 
     
-    
     [Header("UICanvas 전체 키고 끌때 사용")]
     [SerializeField] private GameObject playModeUI; // 플레이모드 모든 UI(Canvas)
     [SerializeField] private GameObject startEndingUI; // 게임 시작/엔딩 모든 UI(Canvas)
 
+    
     [Header("전체UI List")]
-    // 3. 모든UI List
     [SerializeField] private List <GameObject> allUIs; // 모든 UI
 
 
@@ -89,13 +88,13 @@ public class UIManager : Singleton<UIManager>
         playbutton.gameObject.SetActive(false);
     }
 
-    // 플레이모드UI 모두 끄기
+    // 플레이모드UI Canvas 끄기
     public void PlayModeUI_CloseAll()
     {
         playModeUI.SetActive(false);
     }
 
-    // 스타트엔딩UI 모두 끄기
+    // 스타트엔딩UI Canvas 끄기
     public void startEndingUI_CloseAll()
     {
         startEndingUI.SetActive(false);

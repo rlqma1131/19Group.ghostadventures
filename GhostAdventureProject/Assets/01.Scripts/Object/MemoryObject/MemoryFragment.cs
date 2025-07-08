@@ -26,6 +26,26 @@ public class MemoryFragment : MonoBehaviour
     [Header("흡수 연출 설정")]
     [SerializeField] private float absorbTime = 0.6f;
 
+
+    #if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (!Application.isPlaying) return;
+
+        if (isScannable)
+        {
+            // 실행 중에 isScannable을 수동으로 true로 바꾼 경우 처리
+            Debug.Log($"[DEBUG] 인스펙터에서 isScannable 체크됨: {data.memoryID}");
+
+            // 등록되지 않았으면 등록
+            if (!MemoryManager.Instance.IsScanned(data))
+            {
+                MemoryManager.Instance.TryCollect(data);
+            }
+        }
+    }
+    #endif
+
     //private void Start()
     //{
     //    // 디버깅용
