@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class HaveItem : Singleton<HaveItem>
 {
-    [Header("에디터에서 아이템 추가")]
+    [Header("ItemData Scriptable Object를 넣어주세요")]
     public List<ItemData> initialItems = new List<ItemData>();
 
     [HideInInspector]
     public List<InventorySlot_PossessableObject> inventorySlots = new List<InventorySlot_PossessableObject>();
 
-    private void Awake()
+    private void Start()
     {
         ConvertToSlots();
     }
@@ -21,7 +22,7 @@ public class HaveItem : Singleton<HaveItem>
 
         foreach (var item in initialItems)
         {
-            var existingSlot = inventorySlots.Find(slot => slot.item == item);
+            var existingSlot = inventorySlots.Find(slot => slot.item.Item_Name == item.Item_Name);
             if (existingSlot != null)
             {
                 existingSlot.quantity++;
