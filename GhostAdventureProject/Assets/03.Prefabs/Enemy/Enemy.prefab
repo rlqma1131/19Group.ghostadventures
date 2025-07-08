@@ -14,6 +14,11 @@ GameObject:
   - component: {fileID: 555908176777732798}
   - component: {fileID: 9101718303206831572}
   - component: {fileID: 6055837916050139090}
+  - component: {fileID: 7764729853407386546}
+  - component: {fileID: 522405038322158573}
+  - component: {fileID: 4021909710416709265}
+  - component: {fileID: 6950903684035425170}
+  - component: {fileID: 616106383034378099}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -146,24 +151,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
-  detectionRange: 5
-  moveSpeed: 4
-  distractionSpeed: 1
-  distractionTimer: 0
-  distractionDuration: 5
-  catchRange: 1.5
+  detectionRange: 20
   enemyAnimator: {fileID: 0}
-  patrolDistance: 3
-  patrolWaitTime: 1
-  searchWaitTime: 2
-  searchEndWaitTime: 2
-  searchDistance: 1.5
-  searchLaps: 2
   lostTargetWaitTime: 2
   returnedWaitTime: 1
+  returnToOriginalPosition: 0
+  randomPatrolRadius: 5
+  distractionDuration: 5
   distractionRange: 1000
-  useFlipX: 1
-  useScale: 0
+  residualChaseDuration: 2
 --- !u!50 &9101718303206831572
 Rigidbody2D:
   serializedVersion: 4
@@ -172,7 +168,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 575559655872409034}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -212,3 +208,89 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7764729853407386546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575559655872409034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a23f98a207981a6408278b89d46be0fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canUseTeleport: 1
+  teleportChaseRange: 30
+  teleportCooldownTime: 5
+  postTeleportChaseTime: 2
+  enablePostTeleportChase: 0
+  teleportZones:
+  - zoneName: TelePortZone1
+    targetPosition: {x: -20, y: 0, z: 0}
+  - zoneName: TelePortZone2
+    targetPosition: {x: -69, y: 0, z: 0}
+--- !u!114 &522405038322158573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575559655872409034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70d25232f7b71754f998316ff923f819, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolSpeed: 4
+  chaseSpeed: 7
+  moveSpeed: 2
+  distractionSpeed: 1
+  lockYPosition: 1
+  fixedYPosition: 0
+  useFlipX: 1
+  useScale: 0
+  isMoving: 0
+--- !u!114 &4021909710416709265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575559655872409034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb27728ee2c7c8459bc84d820c075b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  catchRange: 1.5
+--- !u!114 &6950903684035425170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575559655872409034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ead48845626fde44a91483552d333322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolDistance: 10
+  patrolWaitTime: 2
+--- !u!114 &616106383034378099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575559655872409034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cd144bf4530430478825d62a5c31da5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  searchWaitTime: 2
+  searchEndWaitTime: 2
+  searchDistance: 1.5
+  searchLaps: 2

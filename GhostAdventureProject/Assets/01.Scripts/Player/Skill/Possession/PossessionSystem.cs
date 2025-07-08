@@ -13,6 +13,12 @@ public class PossessionSystem : Singleton<PossessionSystem>
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // HideArea는 무시하고 빙의 가능 오브젝트만 처리
+        if (other.CompareTag("HideArea"))
+        {
+            return; // HideArea는 PlayerHide.cs에서 처리하도록 무시
+        }
+
         Debug.Log($"트리거 충돌: {other.name}");
         var possessionObject = other.GetComponent<BasePossessable>();
         if (possessionObject != null)
@@ -23,12 +29,19 @@ public class PossessionSystem : Singleton<PossessionSystem>
 
     private void OnTriggerExit2D(Collider2D other)
     {
+        // HideArea는 무시하고 빙의 가능 오브젝트만 처리
+        if (other.CompareTag("HideArea"))
+        {
+            return; // HideArea는 PlayerHide.cs에서 처리하도록 무시
+        }
+
         var possessionObject = other.GetComponent<BasePossessable>();
         if (possessionObject != null)
         {
             ClearInteractionTarget(possessionObject);
         }
     }
+
     public bool TryPossess()
     {
         if (!SoulEnergySystem.Instance.HasEnoughEnergy(3))
