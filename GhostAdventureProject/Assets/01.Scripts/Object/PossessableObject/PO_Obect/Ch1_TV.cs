@@ -7,18 +7,18 @@ using UnityEngine;
 public class Ch1_TV : BasePossessable
 {
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
+    [SerializeField] private Animator zoomAnim;
     [SerializeField] private GameObject memoryObject;
-    [SerializeField] private LockedDoor Door;
+    [SerializeField] private GameObject show;
     [SerializeField] private TextMeshProUGUI channelTxt;
+    [SerializeField] private LockedDoor Door;
 
     private bool isControlMode = false;
     private int channel = 1;
-    
-    [SerializeField] private Animator TvAnimator;
-    [SerializeField] private Animator DoorAnimator;
 
     protected override void Start()
     {
+        show.SetActive(false);
         hasActivated = false;
     }
 
@@ -27,18 +27,13 @@ public class Ch1_TV : BasePossessable
         if (hasActivated) return;
 
         hasActivated = true;
-        if (TvAnimator != null)
-            TvAnimator.SetTrigger("PowerOn");
-        channelTxt.gameObject.SetActive(true);
-
-        Debug.Log("TV 전원 켜짐 - 이제 빙의 가능");
+        if (anim != null)
+            anim.SetTrigger("On");
     }
 
     protected override void Update()
     {
-        // if (!isPossessed || !hasActivated )
-        //     return;
-        if (!isPossessed )
+        if (!isPossessed || !hasActivated)
             return;
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -47,13 +42,13 @@ public class Ch1_TV : BasePossessable
             {
                 // 조작 중이면 조작 종료
                 isControlMode = false;
-                zoomCamera.gameObject.SetActive(false);
+                zoomCamera.Priority = 5;
             }
             else
             {
                 // 조작 시작
                 isControlMode = true;
-                zoomCamera.gameObject.SetActive(true);
+                zoomCamera.Priority = 20; // 카메라 우선순위 높이기
             }
         }
         
@@ -64,12 +59,26 @@ public class Ch1_TV : BasePossessable
 
         if (!isControlMode) return;
 
-        if (Input.GetKeyDown(KeyCode.W)) { channel = Mathf.Clamp(channel + 1, 1, 9); UpdateChannelDisplay(); }
-        if (Input.GetKeyDown(KeyCode.S)) { channel = Mathf.Clamp(channel - 1, 1, 9); UpdateChannelDisplay(); }
+        // 채널 변경
+        if (Input.GetKeyDown(KeyCode.W)) 
+        { 
+            channel = Mathf.Clamp(channel + 1, 1, 9); 
+            UpdateChannelDisplay();
+            // 채널 변경 효과음 추가
+            zoomAnim.SetTrigger("Change");
+        }
+        if (Input.GetKeyDown(KeyCode.S)) 
+        { 
+            channel = Mathf.Clamp(channel - 1, 1, 9); 
+            UpdateChannelDisplay();
+            // 채널 변경 효과음 추가
+            zoomAnim.SetTrigger("Change");
+        }
 
         // 확정은 Space
         if (channel == 9 && Input.GetKeyDown(KeyCode.Space))
         {
+            // 정답 효과음 추가
             ShowMemoryandDoorOpen();
             hasActivated = false;
         }
@@ -78,23 +87,33 @@ public class Ch1_TV : BasePossessable
     private void UpdateChannelDisplay()
     {
         if(channelTxt != null)
-            channelTxt.text = channel.ToString();
+            channelTxt.text = ($"0{channel}");
     }
 
     private void ShowMemoryandDoorOpen()
     {
-        Debug.Log("채널 9에서 A 입력 → 연출 시작");
+        // 1. TV 줌 애니메이션 재생
+        show.SetActive(true);
+        zoomAnim.SetTrigger("Show");
+        StartCoroutine(WaitZoomEnding(3f));
+    }
 
-        isControlMode = false;
-        zoomCamera.gameObject.SetActive(false);
+    private IEnumerator WaitZoomEnding(float delay)
+    {
+        yield return new WaitForSeconds(delay);
 
-        // 1. 연출 오브젝트 보이기
+        // 2. 기억조각 보이기
         if (memoryObject != null)
+        {
             memoryObject.SetActive(true);
+            anim.SetTrigger("Solved");
+        }
 
-        // 2. 문 열기
+        // 3. 문 열기
         Door.SolvePuzzle();
 
+        isControlMode = false;
+        zoomCamera.Priority = 5;
         Unpossess();
     }
 }

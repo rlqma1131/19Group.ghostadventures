@@ -6,12 +6,12 @@ using UnityEngine.UI;
 
 public class Ch1_Clock : BasePossessable
 {
-    private Image zoomPanel;
-    private RectTransform clockPos; // 두트윈 시작 위치
-    private GameObject clockZoom; // 고해상도 시계 UI
-    private Transform hourHand;
-    private Transform minuteHand;
-    private Ch1_TV  tvObject;
+    [SerializeField] private Image zoomPanel;
+    [SerializeField] private RectTransform clockPos; // 두트윈 시작 위치
+    [SerializeField] private GameObject clockZoom; // 고해상도 시계 UI
+    [SerializeField] private Transform hourHand;
+    [SerializeField] private Transform minuteHand;
+    [SerializeField] private Ch1_TV  tvObject;
     
     private bool isControlMode = false;
 
@@ -23,11 +23,11 @@ public class Ch1_Clock : BasePossessable
         base.Start();
 
         // 확대UI 초기화
-        zoomPanel = GameObject.Find("ZoomPanel").GetComponent<Image>();
-        clockZoom = GameObject.Find("Ch1_ClockZoom");
-        clockPos = GameObject.Find("Ch1_ClockZoom").GetComponent<RectTransform>();
-        hourHand = GameObject.Find("HourHand").transform;
-        minuteHand = GameObject.Find("MinuteHand").transform;
+        //zoomPanel = GameObject.Find("ZoomPanel").GetComponent<Image>();
+        //clockZoom = GameObject.Find("Ch1_ClockZoom");
+        //clockPos = clockZoom.GetComponent<RectTransform>();
+        //hourHand = GameObject.Find("HourHand").transform;
+        //minuteHand = GameObject.Find("MinuteHand").transform;
 
         // UI 초기화
         clockZoom.SetActive(false); 
