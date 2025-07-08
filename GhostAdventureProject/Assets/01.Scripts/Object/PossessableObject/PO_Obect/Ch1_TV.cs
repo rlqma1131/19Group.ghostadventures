@@ -8,7 +8,7 @@ public class Ch1_TV : BasePossessable
 {
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
     [SerializeField] private GameObject memoryObject;
-    [SerializeField] private GameObject doorOpen; // 열릴 문
+    [SerializeField] private LockedDoor Door;
     [SerializeField] private TextMeshProUGUI channelTxt;
 
     private bool isControlMode = false;
@@ -93,12 +93,7 @@ public class Ch1_TV : BasePossessable
             memoryObject.SetActive(true);
 
         // 2. 문 열기
-        if (doorOpen != null)
-        {
-            if (DoorAnimator != null)
-                DoorAnimator.SetTrigger("DoorOpen");
-            Debug.Log("문 열림 완료");
-        }
+        Door.SolvePuzzle();
 
         Unpossess();
     }
