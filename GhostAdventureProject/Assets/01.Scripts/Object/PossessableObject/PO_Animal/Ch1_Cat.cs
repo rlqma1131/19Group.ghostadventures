@@ -6,6 +6,8 @@ public class Ch1_Cat : MoveBasePossessable
 {
     [SerializeField] private LockedDoor door;
 
+    private bool isNearDoor = false;
+
     protected override void Start()
     {
         base.Start();
@@ -19,10 +21,27 @@ public class Ch1_Cat : MoveBasePossessable
 
         base.Update();
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && isNearDoor)
         {
-            // 문 열고 빙의 해제
+            // 문 열기
             StartCoroutine(CatAct());
+        }
+    }
+
+    // 문 근처에 있는지 확인
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponent<LockedDoor>() == door)
+        {
+            isNearDoor = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.GetComponent<LockedDoor>() == door)
+        {
+            isNearDoor = false;
         }
     }
 
@@ -60,8 +79,6 @@ public class Ch1_Cat : MoveBasePossessable
 
     IEnumerator CatAct()
     {
-        // 문열기
-        // 문열림 효과음
         anim.SetTrigger("Open");
         door.SolvePuzzle();
 

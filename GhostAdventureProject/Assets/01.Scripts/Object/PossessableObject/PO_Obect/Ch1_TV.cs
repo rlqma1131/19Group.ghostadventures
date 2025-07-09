@@ -1,5 +1,6 @@
 ﻿using Cinemachine;
 using System.Collections;
+using System.Net.Sockets;
 using TMPro;
 using UnityEngine;
 
@@ -12,12 +13,16 @@ public class Ch1_TV : BasePossessable
     [SerializeField] private TextMeshProUGUI channelTxt;
     [SerializeField] private LockedDoor Door;
 
+    private Ch1_BirthdayHat_MemoryFake_01 birthdayHat;
+
     private bool isControlMode = false;
     private int channel = 1;
 
     protected override void Start()
     {
         show.SetActive(false);
+        birthdayHat = memoryObject.GetComponent<Ch1_BirthdayHat_MemoryFake_01>();
+        memoryObject.SetActive(false);
         hasActivated = false;
     }
 
@@ -35,29 +40,18 @@ public class Ch1_TV : BasePossessable
         if (!isPossessed || !hasActivated)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             if (isControlMode)
             {
-                // 조작 중이면 조작 종료
+                // 조작 종료
                 isControlMode = false;
+                isPossessed = false;
                 zoomCamera.Priority = 5;
-            }
-            else
-            {
-                // 조작 시작
-                isControlMode = true;
-                zoomCamera.Priority = 20; // 카메라 우선순위 높이기
+                Unpossess();
             }
         }
         
-        if (!isControlMode && Input.GetKeyDown(KeyCode.E))
-        {
-            Unpossess();
-        }
-
-        if (!isControlMode) return;
-
         // 채널 변경
         if (Input.GetKeyDown(KeyCode.W)) 
         { 
@@ -79,7 +73,6 @@ public class Ch1_TV : BasePossessable
         {
             // 정답 효과음 추가
             ShowMemoryandDoorOpen();
-            hasActivated = false;
         }
     }
 
@@ -93,6 +86,7 @@ public class Ch1_TV : BasePossessable
     {
         // 1. TV 줌 애니메이션 재생
         show.SetActive(true);
+        anim.SetTrigger("Solved");
         zoomAnim.SetTrigger("Show");
         StartCoroutine(WaitZoomEnding(3f));
     }
@@ -105,14 +99,28 @@ public class Ch1_TV : BasePossessable
         if (memoryObject != null)
         {
             memoryObject.SetActive(true);
+            birthdayHat.ActivateHat();
             anim.SetTrigger("Solved");
         }
 
         // 3. 문 열기
         Door.SolvePuzzle();
 
+        // 4. 빙의 해제
+        hasActivated = false;
+        isPossessed = false;
         isControlMode = false;
         zoomCamera.Priority = 5;
         Unpossess();
     }
+
+    public override void OnPossessionEnterComplete() 
+    {
+        zoomCamera.Priority = 20; // 빙의 시 카메라 우선순위 높이기
+        isControlMode = true;
+        isPossessed = true;
+        channelTxt.text = "01"; // 초기 채널 표시
+        UpdateChannelDisplay();
+    }
+
 }

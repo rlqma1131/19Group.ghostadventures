@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 3979063419738513402}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.02, y: -0.04, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -71,9 +71,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -2059531157
+  m_SortingLayer: 4
+  m_SortingOrder: 1
   m_Sprite: {fileID: -1754545327, guid: 379d3ba0d7a594e5abb24f485a36df7d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -132,7 +132,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd6bab367add0704b9a7d6ca213dde6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 0}
+  hasActivated: 0
+  isPossessed: 0
   isFall: {fileID: 8300000, guid: ba48f3939907ec342aaf26cd682735a6, type: 3}
+  startLocalPosition: {x: 2.493, y: 1.348, z: 0}
+  startLocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  dropYPos: -2.5
 --- !u!114 &679693716846512025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,7 +215,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3.2355917
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_LocalPosition.x
@@ -217,7 +223,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.8149652
+      value: 0.517
       objectReference: {fileID: 0}
     - target: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_LocalPosition.z
