@@ -39,6 +39,8 @@ public class EnemyAI : MonoBehaviour
 
     private PlayerHide playerHide;
 
+    public AIState CurrentState => currentState;
+
     // Y축 고정 (다른 컴포넌트에서 접근 가능하도록 public)
     public bool lockYPosition => movement.lockYPosition;
     public float fixedYPosition => movement.fixedYPosition;

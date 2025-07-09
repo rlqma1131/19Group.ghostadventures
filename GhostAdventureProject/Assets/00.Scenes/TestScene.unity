@@ -7834,7 +7834,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7588674267399368957, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.11
+      value: -1.94
       objectReference: {fileID: 0}
     - target: {fileID: 7588674267399368957, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7873,12 +7873,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7764729853407386546, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
-      propertyPath: canUseTeleport
-      value: 0
+      propertyPath: teleportZones.Array.data[0].targetPosition.x
+      value: -69
       objectReference: {fileID: 0}
-    - target: {fileID: 9101718303206831572, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
-      propertyPath: m_BodyType
-      value: 0
+    - target: {fileID: 7764729853407386546, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
+      propertyPath: teleportZones.Array.data[1].targetPosition.x
+      value: -20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9514,8 +9514,8 @@ Transform:
   m_GameObject: {fileID: 782364137}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.71, y: -0.48, z: 0.18562482}
-  m_LocalScale: {x: 0.28250813, y: 1.7515504, z: 0}
+  m_LocalPosition: {x: -22.51, y: -0.95, z: 0.18562482}
+  m_LocalScale: {x: 0.28250813, y: 3.809622, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 365622118}
@@ -9532,7 +9532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a47c2769741314bbfa8686fb4c164b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetTransform: {fileID: 0}
+  targetTransform: {fileID: 1486737581}
   targetPos: {x: 5, y: 0}
 --- !u!61 &782364140
 BoxCollider2D:
@@ -24991,8 +24991,8 @@ Transform:
   m_GameObject: {fileID: 1486737580}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.01, y: -0.48, z: 0}
-  m_LocalScale: {x: 0.28250813, y: 1.7515504, z: 0}
+  m_LocalPosition: {x: 8.92, y: -1.01, z: 0}
+  m_LocalScale: {x: 0.28250813, y: 4.2316904, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1959274381}
@@ -25009,7 +25009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a47c2769741314bbfa8686fb4c164b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetTransform: {fileID: 0}
+  targetTransform: {fileID: 782364138}
   targetPos: {x: 55, y: 0}
 --- !u!61 &1486737583
 BoxCollider2D:

@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
-  detectionRange: 20
+  detectionRange: 8
   enemyAnimator: {fileID: 0}
   lostTargetWaitTime: 2
   returnedWaitTime: 1
@@ -168,7 +168,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 575559655872409034}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -221,15 +221,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canUseTeleport: 1
-  teleportChaseRange: 30
+  teleportChaseRange: 10
   teleportCooldownTime: 5
   postTeleportChaseTime: 2
   enablePostTeleportChase: 0
-  teleportZones:
-  - zoneName: TelePortZone1
-    targetPosition: {x: -20, y: 0, z: 0}
-  - zoneName: TelePortZone2
-    targetPosition: {x: -69, y: 0, z: 0}
+  teleportZones: []
 --- !u!114 &522405038322158573
 MonoBehaviour:
   m_ObjectHideFlags: 0

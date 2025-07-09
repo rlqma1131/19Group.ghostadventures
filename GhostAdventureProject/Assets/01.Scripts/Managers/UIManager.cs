@@ -23,6 +23,9 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Inventory_PossessableObject inventory_PossessableObject; // 인벤토리-빙의오브젝트
     [SerializeField] private InventoryExpandViewer inventoryExpandViewer; // 인벤토리 확대뷰어
 
+    // QTE 이펙트 캔버스 추가
+    [SerializeField] private GameObject qteEffectCanvas; // QTE 이펙트 캔버스
+
     // 외부 접근용
     public SoulGauge SoulGaugeUI => soulGauge;
     public Prompt PromptUI => prompt;
@@ -32,7 +35,10 @@ public class UIManager : Singleton<UIManager>
     public Inventory_Player Inventory_PlayerUI => inventory_Player;
     public Inventory_PossessableObject Inventory_PossessableObjectUI => inventory_PossessableObject;
     public InventoryExpandViewer InventoryExpandViewerUI => inventoryExpandViewer;
-    
+
+    // QTE 이펙트 캔버스 외부 접근용
+    public GameObject QTEEffectCanvas => qteEffectCanvas;
+
     // -------------------------------------------------------------------------------------------
 
     // 2. 게임 시작/엔딩 UI
@@ -41,19 +47,19 @@ public class UIManager : Singleton<UIManager>
 
     // -------------------------------------------------------------------------------------------
 
-    
+
     [Header("UICanvas 전체 키고 끌때 사용")]
     [SerializeField] private GameObject playModeUI; // 플레이모드 모든 UI(Canvas)
     [SerializeField] private GameObject startEndingUI; // 게임 시작/엔딩 모든 UI(Canvas)
 
-    
+
     [Header("전체UI List")]
-    [SerializeField] private List <GameObject> allUIs; // 모든 UI
+    [SerializeField] private List<GameObject> allUIs; // 모든 UI
 
 
     // ===========================================================================================    
-    
-    
+
+
     private void Start()
     {
         // gameover.SetActive(false);
@@ -72,7 +78,7 @@ public class UIManager : Singleton<UIManager>
     // targetUI 하나만 보이게 하기
     public void ShowOnly(GameObject targetUI)
     {
-        foreach(GameObject ui in allUIs)
+        foreach (GameObject ui in allUIs)
         {
             ui.SetActive(ui == targetUI);
         }
@@ -81,7 +87,7 @@ public class UIManager : Singleton<UIManager>
     // 모든 UI 보이게 하기(play버튼 제외)
     public void ShowAll()
     {
-        foreach(GameObject ui in allUIs)
+        foreach (GameObject ui in allUIs)
         {
             ui.SetActive(true);
         }
@@ -112,5 +118,28 @@ public class UIManager : Singleton<UIManager>
         startEndingUI.SetActive(true);
     }
 
+    // QTE 이펙트 캔버스 제어 메서드들
+    public void ShowQTEEffectCanvas()
+    {
+        if (qteEffectCanvas != null)
+        {
+            qteEffectCanvas.SetActive(true);
+        }
+    }
 
+    public void HideQTEEffectCanvas()
+    {
+        if (qteEffectCanvas != null)
+        {
+            qteEffectCanvas.SetActive(false);
+        }
+    }
+
+    public void ToggleQTEEffectCanvas()
+    {
+        if (qteEffectCanvas != null)
+        {
+            qteEffectCanvas.SetActive(!qteEffectCanvas.activeSelf);
+        }
+    }
 }

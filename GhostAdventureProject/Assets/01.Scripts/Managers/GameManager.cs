@@ -11,12 +11,12 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject PossessionStateManager;
     [SerializeField] private GameObject soundManager;
     [SerializeField] private GameObject cutSceneManager;
+    [SerializeField] private GameObject qteEffectManager; // QTE 이펙트 매니저 추가
 
     // 디버깅용 (추후 삭제 예정)
     [SerializeField] private GameObject HideAreaManager;
 
     public GameObject playerPrefab;
-
     private GameObject currentPlayer;
     private PlayerController playerController;
 
@@ -45,12 +45,13 @@ public class GameManager : Singleton<GameManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log($"씬 로드됨: {scene.name}");
+
         EnsureManagerExists<ChapterEndingManager>(ChapterEndingManager);
         EnsureManagerExists<UIManager>(uiManager);
         EnsureManagerExists<PossessionStateManager>(PossessionStateManager);
         EnsureManagerExists<SoundManager>(soundManager);
         EnsureManagerExists<CutsceneManager>(cutSceneManager);
-
+        EnsureManagerExists<QTEEffectManager>(qteEffectManager); // QTE 이펙트 매니저 추가
         EnsureManagerExists<Ch1_HideAreaEvent>(HideAreaManager); // 디버깅용, 추후 삭제 예정
 
         // 다른 매니저들도 같은 방식으로
