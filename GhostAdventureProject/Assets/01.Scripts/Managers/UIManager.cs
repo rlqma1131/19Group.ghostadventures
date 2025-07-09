@@ -22,6 +22,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Inventory_Player inventory_Player; // 인벤토리-플레이어
     [SerializeField] private Inventory_PossessableObject inventory_PossessableObject; // 인벤토리-빙의오브젝트
     [SerializeField] private InventoryExpandViewer inventoryExpandViewer; // 인벤토리 확대뷰어
+    public GameObject interactionInfo;
 
     // QTE 이펙트 캔버스 추가
     [SerializeField] private GameObject qteEffectCanvas; // QTE 이펙트 캔버스
