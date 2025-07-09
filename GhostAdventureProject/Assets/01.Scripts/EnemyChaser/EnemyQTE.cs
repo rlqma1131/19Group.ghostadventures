@@ -38,6 +38,9 @@ public class EnemyQTE : MonoBehaviour
     // 콜라이더 충돌 감지
     private void OnTriggerEnter(Collider other)
     {
+        // EnemyAI가 없으면 실행하지 않음
+        if (enemyAI == null) return;
+
         // 플레이어와 충돌하고, QTE가 실행 중이 아닐 때만 실행
         if (other.CompareTag("Player") && !isQTERunning)
         {
@@ -139,6 +142,7 @@ public class EnemyQTE : MonoBehaviour
         PlayerLifeManager.Instance.HandleGameOver();
         isQTERunning = false; // QTE 완료 후 플래그 리셋
     }
+
 
     // 디버깅용 - 콜라이더 범위 시각화
     private void OnDrawGizmosSelected()
