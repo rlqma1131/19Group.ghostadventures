@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class BasePossessable : MonoBehaviour
+public abstract class BasePossessable : BaseInteractable
 {
     [SerializeField] protected Animator anim;
     [SerializeField] protected bool hasActivated;
@@ -8,8 +8,6 @@ public abstract class BasePossessable : MonoBehaviour
     public bool HasActivated => hasActivated;
     public bool IsPossessed => isPossessed;
     public bool IsPossessedState => isPossessed;
-
-
 
     protected virtual void Start()
     {
@@ -25,6 +23,13 @@ public abstract class BasePossessable : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
             Unpossess();
+    }
+
+    // 하이라이팅
+    // 각 오브젝트가 하이라이트색 변경 가능
+    protected override Material GetHighlightMaterial()
+    {
+        return obssessionOutline;
     }
 
     // 상호작용 메시지 표시 대상 설정
