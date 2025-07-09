@@ -1,8 +1,11 @@
 ﻿using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 public class Ch1_Cat : MoveBasePossessable
 {
+    [SerializeField] private LockedDoor door;
+
     protected override void Start()
     {
         base.Start();
@@ -15,15 +18,12 @@ public class Ch1_Cat : MoveBasePossessable
             return;
 
         base.Update();
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            CatAct();
+            // 문 열고 빙의 해제
+            StartCoroutine(CatAct());
         }
-        // 점프 추가
-        //else if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    Jump();
-        //}
     }
 
     public void Blink()
@@ -34,6 +34,7 @@ public class Ch1_Cat : MoveBasePossessable
     public void ActivateCat()
     {
         // 1. 점프 애니메이션
+        anim.SetTrigger("Surprise");
         float jumpHeight = 1.5f;
         float jumpDuration = 0.4f;
 
@@ -57,9 +58,16 @@ public class Ch1_Cat : MoveBasePossessable
         });
     }
 
-    void CatAct()
+    IEnumerator CatAct()
     {
         // 문열기
+        // 문열림 효과음
         anim.SetTrigger("Open");
+        door.SolvePuzzle();
+
+        yield return new WaitForSeconds(2f); // 2초 기다림
+
+        Unpossess();
+        hasActivated = false;
     }
 }
