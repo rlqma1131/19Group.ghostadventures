@@ -11,7 +11,7 @@ public class Ch1_Pan : BasePossessable
     [SerializeField] private float dropYPos = -1.5f;
 
     private Ch1_Cat cat => FindObjectOfType<Ch1_Cat>();
-    private Ch1_Cake_MemoryFake_02 cake => FindObjectOfType<Ch1_Cake_MemoryFake_02>();
+    private Ch1_MemoryFake_02_Cake cake => FindObjectOfType<Ch1_MemoryFake_02_Cake>();
     private Ch1_Mouse mouse => FindObjectOfType<Ch1_Mouse>();
 
     protected override void Start()

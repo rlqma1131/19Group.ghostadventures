@@ -40,12 +40,6 @@ public class PlayerInteractSystem : Singleton<PlayerInteractSystem>
         // 이전 오브젝트 처리
         if (currentClosest != null && currentClosest != newClosest)
         {
-            // 하이라이트 제거
-            if (currentClosest.TryGetComponent<IHighlightable>(out var prevHighlight))
-            {
-                prevHighlight.SetHighlight(false);
-            }
-
             // 팝업 끄기
             if (currentClosest.TryGetComponent<BaseInteractable>(out var prevInteractable))
             {
@@ -58,12 +52,6 @@ public class PlayerInteractSystem : Singleton<PlayerInteractSystem>
         // 새 오브젝트 처리
         if (currentClosest != null)
         {
-            // 하이라이트 켜기
-            if (currentClosest.TryGetComponent<IHighlightable>(out var nextHighlight))
-            {
-                nextHighlight.SetHighlight(true);
-            }
-
             // 팝업 켜기
             if (currentClosest.TryGetComponent<BaseInteractable>(out var nextInteractable))
             {

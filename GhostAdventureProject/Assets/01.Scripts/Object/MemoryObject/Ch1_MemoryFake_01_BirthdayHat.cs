@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Ch1_BirthdayHat_MemoryFake_01 : MemoryFragment
+public class Ch1_MemoryFake_01_BirthdayHat : MemoryFragment
 {
     private Animator anim;
 
