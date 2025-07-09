@@ -179,9 +179,11 @@ public class TypewriterDialogue : MonoBehaviour
 
     void NextLine()
     {
-        if (index >= dialogues.Length - 1)
+        if (dialogues == null || dialogues.Length == 0)
+        {
+            Debug.LogWarning("dialogues 배열이 비어 있거나 null입니다.");
             return;
-
+        }
         if (index < dialogues.Length - 1)
         {
             index++;
