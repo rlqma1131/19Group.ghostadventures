@@ -179,6 +179,8 @@ public class TypewriterDialogue : MonoBehaviour
 
     void NextLine()
     {
+        if (index >= dialogues.Length - 1)
+            return;
 
         if (index < dialogues.Length - 1)
         {

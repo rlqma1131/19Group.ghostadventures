@@ -39,10 +39,5 @@ public class TimelineControl : MonoBehaviour
         Time.timeScale = 1;
         UIManager.Instance.PlayModeUI_OpenAll(); // 플레이모드 UI 닫기
         SceneManager.UnloadSceneAsync(currentSceneName); //연출씬 닫고 원래 씬 이동
-
-
     }
-
-
-
 }
