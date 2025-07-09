@@ -10,8 +10,9 @@ public class SettingMenu : MonoBehaviour, IUIClosable
     [SerializeField] private GameObject escMenuPanel;
 
     [Header("Sound")]
-    // [SerializeField] private AudioSource bgmSource;
     [SerializeField] private Slider masterVolumeSlider;
+    [SerializeField] private Slider bgmSlider;
+    [SerializeField] private Slider sfxSlider;
 
     [Header("Language")]
     [SerializeField] private Dropdown languageDropdown;
@@ -27,6 +28,10 @@ public class SettingMenu : MonoBehaviour, IUIClosable
     private void Start()
     {
         settingsPanel.SetActive(false);
+        bgmSlider.onValueChanged.AddListener(SoundManager.Instance.SetBGMVolume);
+        bgmSlider.value = SoundManager.Instance.BGMVolume;
+        sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
+        sfxSlider.value = SoundManager.Instance.SFXVolume;
 
         // 초기화
         if (masterVolumeSlider != null)
@@ -43,6 +48,8 @@ public class SettingMenu : MonoBehaviour, IUIClosable
         {
             rebindJumpButton.onClick.AddListener(() => StartRebind("Jump"));
         }
+
+        
     }
 
     public void OpenSettings()
@@ -67,7 +74,6 @@ public class SettingMenu : MonoBehaviour, IUIClosable
         AudioListener.volume = value;
         Debug.Log($"Master Volume: {value}");
     }
-
     private void OnLanguageChanged(int index)
     {
         string selectedLang = languageDropdown.options[index].text;

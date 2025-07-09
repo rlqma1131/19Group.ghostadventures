@@ -161,15 +161,17 @@ public class SoundManager : Singleton<SoundManager>
         bgmSource.volume = adjustedVolume;
     }
 
-    // SFX 볼륨조절
-    //public void SetSFXVolume(float sliderValue)
-    //{
-    //    float adjustedVolume = Mathf.Pow(sliderValue, 2f); // 지수 적용
+    //SFX 볼륨조절
+    public void SetSFXVolume(float sliderValue)
+    {
+        float adjustedVolume = Mathf.Pow(sliderValue, 2f); // 지수 적용
+        bgmSource.volume = adjustedVolume;
+
     //    foreach (var source in sfxPool)
     //    {
     //        source.volume = adjustedVolume;
     //    }
-    //}
+    }
 
     public void SetBGMMute(bool mute)
     {
