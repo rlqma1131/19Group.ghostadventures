@@ -48,15 +48,8 @@ public class PlayerLifeManager : MonoBehaviour
     {
         Debug.Log("게임오버!");
         OnGameOver?.Invoke(); // 게임오버 UI 등이 이 이벤트를 듣고 처리
-
-        // TODO: 게임오버 UI 표시 (팀원이 구현 예정)
-        /*
-        GameOverUI gameOverUI = FindObjectOfType<GameOverUI>();
-        if (gameOverUI != null)
-        {
-            gameOverUI.ShowGameOver();
-        }
-        */
+        UIManager.Instance.gameover.SetActive(true); // 게임오버 UI 표시(테스트용)
+        //추후 onGameOver 이벤트에 연결예정
 
         // 임시로 게임 일시정지
         Time.timeScale = 0f;
