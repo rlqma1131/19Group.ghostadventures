@@ -103,6 +103,7 @@ public class EnemyMovement : MonoBehaviour
         }
         else if (useScale)
         {
+
             Vector3 scale = transform.localScale;
             scale.x = faceRight ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
             transform.localScale = scale;
