@@ -15,7 +15,7 @@ public class Ch1_MainFlashlight : BasePossessable
 
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private GameObject timerPanel;
-    [SerializeField] private float timeLimit = 15f;
+    [SerializeField] private float timeLimit = 60f;
     private float timeRemaining;
     private bool timerActive = false;
     private bool timerExpired = false;

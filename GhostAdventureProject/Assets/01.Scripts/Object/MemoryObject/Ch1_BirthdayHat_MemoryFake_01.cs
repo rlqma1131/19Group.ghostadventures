@@ -14,9 +14,4 @@ public class Ch1_BirthdayHat_MemoryFake_01 : MemoryFragment
     {
         isScannable = true;
     }
-
-    public override void AfterScan()
-    {
-        anim.SetTrigger("Show");
-    }
 }

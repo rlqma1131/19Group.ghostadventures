@@ -3,13 +3,15 @@ using UnityEngine;
 
 public class Ch1_Mouse : MoveBasePossessable
 {
-    [SerializeField] private Vector2 point1 = new Vector2(-3.5f, -1.5f); // 포인트1 좌표
-    [SerializeField] private Vector2 point2 = new Vector2(3.5f, -1.5f); // 포인트2 좌표
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Vector2 point1; // 포인트1 좌표
+    [SerializeField] private Vector2 point2; // 포인트2 좌표
 
     protected override void Start()
     {
         base.Start();
 
+        spriteRenderer.flipX = true;
         hasActivated = false;
 
         var relay = anim.GetComponent<Ch1_Mouse_Event>();
@@ -33,10 +35,11 @@ public class Ch1_Mouse : MoveBasePossessable
     public void ActivateMouse()
     {
         // 1. Move 애니메이션 활성화
-        anim.SetBool("Move", true);
+        spriteRenderer.flipX = false; // 좌우 반전 해제
+        anim.SetTrigger("Escape");
 
         // 2. point1까지 도망치는 이동 (1초)
-        transform.DOMove(point1, 1f).SetEase(Ease.OutQuad).OnComplete(() =>
+        transform.DOMove(point1, 2.5f).SetEase(Ease.OutQuad).OnComplete(() =>
         {
             // 3. Escape 시작
             anim.SetTrigger("Escape");
@@ -53,11 +56,13 @@ public class Ch1_Mouse : MoveBasePossessable
     {
         // 4. point2로 순간이동
         transform.position = point2;
+        hasActivated = true; // 빙의 가능 상태로 변경
         anim.SetBool("Move", false); // Idle 상태로 대기
     }
 
     public void MouseAct()
     {
-        // 기타 고유 기능
+        // 쥐구멍 이동
+        // 아이방 - 다용도실
     }
 }
