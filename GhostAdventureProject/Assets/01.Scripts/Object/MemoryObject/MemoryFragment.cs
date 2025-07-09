@@ -93,7 +93,8 @@ public class MemoryFragment : MonoBehaviour
         if (player == null) yield break;
 
         Vector3 startPos = drop.transform.position;
-
+        PossessionSystem.Instance.canMove = false; // 플레이어 이동 비활성화
+        UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
         // === 1. 튕기기 애니메이션 ===
         yield return DOTween.Sequence()
             .Append(drop.transform.DOMoveY(startPos.y + bounceHeight, bounceDuration / 2f).SetEase(Ease.OutQuad))
@@ -179,6 +180,7 @@ public class MemoryFragment : MonoBehaviour
         SceneManager.LoadScene(data.CutSceneName, LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
         Time.timeScale = 0;
         ApplyMemoryEffect(); // 메모리 효과 적용
+
     }
 
     private Sprite GetFragmentSpriteByType(MemoryData.MemoryType type)
