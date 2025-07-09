@@ -1631,6 +1631,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ch1_Flash
       objectReference: {fileID: 0}
+    - target: {fileID: 4829418949610346710, guid: 40b8d3ba8cb61874c8e37e415145bbf6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7347170257255900587, guid: 40b8d3ba8cb61874c8e37e415145bbf6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.20000267
@@ -3034,9 +3038,29 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 1.65
       objectReference: {fileID: 0}
+    - target: {fileID: 394314974632725412, guid: 10f9562b9026ecf4bbe7a3235e0faf93, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 394314974632725412, guid: 10f9562b9026ecf4bbe7a3235e0faf93, type: 3}
+      propertyPath: m_SortingOrder
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 394314974632725412, guid: 10f9562b9026ecf4bbe7a3235e0faf93, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -2059531157
+      objectReference: {fileID: 0}
+    - target: {fileID: 394314974632725412, guid: 10f9562b9026ecf4bbe7a3235e0faf93, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ae8b69d6af76da54ea5035c57f59e76c, type: 2}
     - target: {fileID: 632043904740123210, guid: 10f9562b9026ecf4bbe7a3235e0faf93, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4505836915533581272, guid: 10f9562b9026ecf4bbe7a3235e0faf93, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8491455659268840351, guid: 10f9562b9026ecf4bbe7a3235e0faf93, type: 3}
       propertyPath: m_Name
@@ -3336,23 +3360,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
   detectionRange: 5
-  moveSpeed: 4
-  distractionSpeed: 1
-  distractionTimer: 0
-  distractionDuration: 5
-  catchRange: 1.5
   enemyAnimator: {fileID: 0}
-  patrolDistance: 1
-  patrolWaitTime: 1
-  searchWaitTime: 2
-  searchEndWaitTime: 2
-  searchDistance: 1.5
-  searchLaps: 2
   lostTargetWaitTime: 2
   returnedWaitTime: 1
+  returnToOriginalPosition: 0
+  randomPatrolRadius: 5
+  distractionDuration: 5
   distractionRange: 15
-  useFlipX: 1
-  useScale: 0
+  residualChaseDuration: 2
 --- !u!61 &518958341
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10180,7 +10195,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2059531157
   m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingOrder: 101
   m_Sprite: {fileID: 1802413678, guid: 49723210fdd68469fa7b4c2a71c069a1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -10264,7 +10279,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2059531157
   m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingOrder: 100
   m_Sprite: {fileID: 262772675, guid: 49723210fdd68469fa7b4c2a71c069a1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -14950,6 +14965,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 902999760}
     m_Modifications:
+    - target: {fileID: 417321434634549212, guid: 86f26628c8845f1449e326f0051775e9, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 417321434634549212, guid: 86f26628c8845f1449e326f0051775e9, type: 3}
+      propertyPath: m_SortingOrder
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 417321434634549212, guid: 86f26628c8845f1449e326f0051775e9, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -2059531157
+      objectReference: {fileID: 0}
+    - target: {fileID: 417321434634549212, guid: 86f26628c8845f1449e326f0051775e9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ae8b69d6af76da54ea5035c57f59e76c, type: 2}
     - target: {fileID: 5161054362195788005, guid: 86f26628c8845f1449e326f0051775e9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 34.52
@@ -19852,6 +19883,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 417321434634549212, guid: 86f26628c8845f1449e326f0051775e9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ae8b69d6af76da54ea5035c57f59e76c, type: 2}
     - target: {fileID: 5161054362195788005, guid: 86f26628c8845f1449e326f0051775e9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.88
