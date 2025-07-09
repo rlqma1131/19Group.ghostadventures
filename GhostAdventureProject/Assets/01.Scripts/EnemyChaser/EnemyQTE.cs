@@ -42,7 +42,7 @@ public class EnemyQTE : MonoBehaviour
         if (other.CompareTag("Player") && !isQTERunning)
         {
             // Enemy가 추적 상태일 때만 QTE 실행
-            if (enemyAI.currentState == EnemyAI.AIState.Chasing)
+            if (enemyAI.CurrentState == EnemyAI.AIState.Chasing)
             {
                 StartQTE();
             }

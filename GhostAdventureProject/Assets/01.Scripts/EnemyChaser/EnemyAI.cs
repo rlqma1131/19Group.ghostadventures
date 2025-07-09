@@ -38,7 +38,6 @@ public class EnemyAI : MonoBehaviour
     private float distractionTimer = 0f;
 
     private PlayerHide playerHide;
-
     public AIState CurrentState => currentState;
 
     // Y축 고정 (다른 컴포넌트에서 접근 가능하도록 public)
