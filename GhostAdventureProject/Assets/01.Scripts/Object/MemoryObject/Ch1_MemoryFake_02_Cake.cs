@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Ch1_Cake_MemoryFake_02 : MemoryFragment
+public class Ch1_MemoryFake_02_Cake : MemoryFragment
 {
     private Animator anim;
 

@@ -46,12 +46,6 @@ public class MemoryFragment : BaseInteractable
     }
 #endif
 
-    // 하이라이팅
-    protected override Material GetHighlightMaterial()
-    {
-        return memoryOutline;
-    }
-
     // 상호작용 메시지 대상
     private void OnTriggerEnter2D(Collider2D other)
     {

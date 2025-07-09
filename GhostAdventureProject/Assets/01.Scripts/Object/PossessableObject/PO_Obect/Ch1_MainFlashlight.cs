@@ -1,4 +1,5 @@
 ﻿using Cinemachine;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class Ch1_MainFlashlight : BasePossessable
 
     private bool isControlMode = false;
     private bool puzzleCompleted = false;
+    private bool inputLocked = false;
 
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private GameObject timerPanel;
@@ -22,7 +24,7 @@ public class Ch1_MainFlashlight : BasePossessable
 
     protected override void Update()
     {
-        //  타이머 실행
+        // 타이머 실행
         if (timerActive && !puzzleCompleted && !timerExpired)
         {
             timeRemaining -= Time.deltaTime;
@@ -38,12 +40,12 @@ public class Ch1_MainFlashlight : BasePossessable
                 if (isControlMode)
                 {
                     isControlMode = false;
-                    zoomCamera.Priority = 20;   // 카메라 우선순위 높이기
+                    UIManager.Instance.PlayModeUI_CloseAll();
+                    zoomCamera.Priority = 20;
                 }
 
                 Unpossess();
 
-                // 타이머 UI 끄기
                 if (timerPanel != null)
                     timerPanel.SetActive(false);
 
@@ -52,23 +54,22 @@ public class Ch1_MainFlashlight : BasePossessable
 
             UpdateTimerText();
         }
-        
-        if(!isPossessed)
+
+        if (!isPossessed || inputLocked)
             return;
-        
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (isControlMode)
             {
-                // 조작 중이면 조작 종료
                 isControlMode = false;
-                zoomCamera.Priority = 5; // 카메라 우선순위 낮추기
-
+                UIManager.Instance.PlayModeUI_OpenAll();
+                zoomCamera.Priority = 5;
                 Unpossess();
             }
         }
-        
-        if(!isControlMode) return;
+
+        if (!isControlMode) return;
 
         for (int i = 0; i < flashlightBeams.Count; i++)
         {
@@ -76,11 +77,11 @@ public class Ch1_MainFlashlight : BasePossessable
             {
                 flashlightBeams[i].ToggleBeam();
                 SyncMirrorVisuals();
-                CheckColorPuzzle();
+                StartCoroutine(CheckColorPuzzle()); // ← 코루틴으로 호출
             }
         }
     }
-    
+
     private void SyncMirrorVisuals()
     {
         for (int i = 0; i < flashlightBeams.Count; i++)
@@ -126,7 +127,7 @@ public class Ch1_MainFlashlight : BasePossessable
         }
     }
 
-    private void CheckColorPuzzle()
+    private IEnumerator CheckColorPuzzle()
     {
         // 정답: 2, 4, 5번 (index 기준으로 1, 3, 4)
         bool light2 = flashlightBeams[1].isOn;
@@ -149,24 +150,30 @@ public class Ch1_MainFlashlight : BasePossessable
             if (!puzzleCompleted)
             {
                 puzzleCompleted = true;
+                inputLocked = true;
+
+                // 퍼즐 성공 후 3초 대기
+                yield return new WaitForSeconds(3f);
 
                 timerActive = false;
                 if (timerPanel != null)
                     timerPanel.SetActive(false);
 
-                zoomCamera.Priority = 5; // 카메라 우선순위 낮추기
-                Unpossess(); // 퍼즐 성공 후 빙의 해제
+                UIManager.Instance.PlayModeUI_OpenAll();
+                zoomCamera.Priority = 5;
+                Unpossess();
 
-                // 문 열기
                 Door.SolvePuzzle();
             }
         }
     }
 
+
     // 빙의 하고 바로 줌
     public override void OnPossessionEnterComplete()
     {
         isControlMode = true;
+        UIManager.Instance.PlayModeUI_CloseAll();
         zoomCamera.Priority = 20;
     }
 }
