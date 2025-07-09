@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingMenu : MonoBehaviour
+public class SettingMenu : MonoBehaviour, IUIClosable
 {
     [Header("Settings Panels")]
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject escMenuPanel;
 
     [Header("Sound")]
-    [SerializeField] private AudioSource bgmSource;
+    // [SerializeField] private AudioSource bgmSource;
     [SerializeField] private Slider masterVolumeSlider;
 
     [Header("Language")]
@@ -18,6 +18,10 @@ public class SettingMenu : MonoBehaviour
 
     [Header("Keybind")]
     [SerializeField] private Button rebindJumpButton;
+
+
+    [SerializeField] private KeybindConfig keybindConfig;
+
     // 필요 시 더 많은 키 바인딩 버튼들...
 
     private void Start()
@@ -47,10 +51,15 @@ public class SettingMenu : MonoBehaviour
         settingsPanel.SetActive(true);
     }
 
-    public void CloseSettings()
+    public void Close()
     {
-        settingsPanel.SetActive(false);
         escMenuPanel.SetActive(true);
+        settingsPanel.SetActive(false);
+    }
+
+    public bool IsOpen()
+    {
+        return settingsPanel.activeInHierarchy;
     }
 
     private void OnVolumeChanged(float value)
@@ -72,5 +81,45 @@ public class SettingMenu : MonoBehaviour
         Debug.Log($"Rebinding key for: {actionName}");
 
         // TODO: Input System을 통한 키 바인딩 재설정 구현
+    }
+
+    //--------------
+
+    private int waitingSlot = -1;
+
+    public void OnClick_RebindClueKey(int slotIndex)
+    {
+        waitingSlot = slotIndex;
+        Debug.Log($"단서 {slotIndex + 1} 키 변경 대기 중...");
+    }
+
+    private void Update()
+    {
+        if (waitingSlot != -1)
+        {
+            foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
+            {
+                if (Input.GetKeyDown(key))
+                {
+                    keybindConfig.SetKeyForSlot(waitingSlot, key);
+                    PlayerPrefs.SetString($"ClueKey{waitingSlot}", key.ToString());
+                    Debug.Log($"단서 {waitingSlot + 1} 키가 {key}로 설정됨");
+                    waitingSlot = -1;
+                    break;
+                }
+            }
+        }
+    }
+
+    private void LoadClueKeyBindings()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            string saved = PlayerPrefs.GetString($"ClueKey{i}", $"Alpha{i + 1}");
+            if (System.Enum.TryParse(saved, out KeyCode key))
+            {
+                keybindConfig.SetKeyForSlot(i, key);
+            }
+        }
     }
 }
