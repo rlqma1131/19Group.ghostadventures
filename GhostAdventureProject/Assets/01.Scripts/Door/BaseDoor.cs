@@ -8,8 +8,8 @@ public abstract class BaseDoor : MonoBehaviour
     [SerializeField] protected Vector2 targetPos; // 좌표 직접 입력 방식 (백업용)
 
     [Header("문 비주얼 설정")]
-    [SerializeField] protected Sprite closedSprite;
-    [SerializeField] protected Sprite openSprite;
+    [SerializeField] protected GameObject closedObject;
+    [SerializeField] protected GameObject OpenObject;
 
     protected bool playerNearby = false;
 
@@ -77,13 +77,13 @@ public abstract class BaseDoor : MonoBehaviour
     {
         if (spriteRenderer == null) return;
 
-        if (isLocked && closedSprite != null)
+        if (isLocked && closedObject != null)
         {
-            spriteRenderer.sprite = closedSprite;
+            closedObject.SetActive(true);
         }
-        else if (!isLocked && openSprite != null)
+        else if (!isLocked && OpenObject != null)
         {
-            spriteRenderer.sprite = openSprite;
+            closedObject.SetActive(false);
         }
     }
 
