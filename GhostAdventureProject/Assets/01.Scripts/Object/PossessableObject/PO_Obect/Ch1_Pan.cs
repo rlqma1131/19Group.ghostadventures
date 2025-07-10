@@ -62,6 +62,7 @@ public class Ch1_Pan : BasePossessable
             cat.ActivateCat();
             cake.ActivateCake();
 
+            Debug.Log("후라이팬 빙의 해제");
             hasActivated = false;
             Unpossess();
         });
