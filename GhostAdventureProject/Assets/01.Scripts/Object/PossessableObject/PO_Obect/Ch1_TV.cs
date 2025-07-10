@@ -13,7 +13,7 @@ public class Ch1_TV : BasePossessable
     [SerializeField] private TextMeshProUGUI channelTxt;
     [SerializeField] private LockedDoor Door;
 
-    private Ch1_BirthdayHat_MemoryFake_01 birthdayHat;
+    private Ch1_MemoryFake_01_BirthdayHat birthdayHat;
 
     private bool isControlMode = false;
     private int channel = 1;
@@ -21,7 +21,7 @@ public class Ch1_TV : BasePossessable
     protected override void Start()
     {
         show.SetActive(false);
-        birthdayHat = memoryObject.GetComponent<Ch1_BirthdayHat_MemoryFake_01>();
+        birthdayHat = memoryObject.GetComponent<Ch1_MemoryFake_01_BirthdayHat>();
         memoryObject.SetActive(false);
         hasActivated = false;
     }
@@ -47,6 +47,7 @@ public class Ch1_TV : BasePossessable
                 // 조작 종료
                 isControlMode = false;
                 isPossessed = false;
+                UIManager.Instance.PlayModeUI_OpenAll();
                 zoomCamera.Priority = 5;
                 Unpossess();
             }
@@ -110,12 +111,14 @@ public class Ch1_TV : BasePossessable
         hasActivated = false;
         isPossessed = false;
         isControlMode = false;
+        UIManager.Instance.PlayModeUI_OpenAll();
         zoomCamera.Priority = 5;
         Unpossess();
     }
 
     public override void OnPossessionEnterComplete() 
     {
+        UIManager.Instance.PlayModeUI_CloseAll();
         zoomCamera.Priority = 20; // 빙의 시 카메라 우선순위 높이기
         isControlMode = true;
         isPossessed = true;

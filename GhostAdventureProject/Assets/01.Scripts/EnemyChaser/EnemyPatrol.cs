@@ -1,16 +1,13 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
 {
-    [Header("순찰 설정")]
-    public float patrolDistance = 3f;
+    [Header("기본 순찰 설정")]
     public float patrolWaitTime = 1f;
+    public float patrolRadius = 10f; // 시작 위치 기준 순찰 반경
 
-    private Vector3[] patrolPoints;
-    private int currentPatrolIndex = 0;
     private Vector3 startPos;
-    private Vector3 currentPatrolCenter;  // 현재 순찰 중심점
+    private Vector3 currentTarget;
     private bool isPatrolWaiting = false;
     private float waitTimer = 0f;
 
@@ -26,17 +23,15 @@ public class EnemyPatrol : MonoBehaviour
     private void Start()
     {
         startPos = transform.position;
-        currentPatrolCenter = startPos;
-        SetupPatrolPoints();
+        GeneratePatrolTarget();
     }
 
     public void SetNewPatrolCenter(Vector3 newCenter, float radius)
     {
-        currentPatrolCenter = newCenter;
-        patrolDistance = radius;
-        SetupPatrolPoints();
-        currentPatrolIndex = 0;
-        Debug.Log($"새로운 순찰 중심점 설정: {newCenter}, 반경: {radius}");
+        // 새로운 중심점으로 순찰 시작
+        startPos = newCenter;
+        Debug.Log($"새로운 순찰 중심점: {newCenter}");
+        GeneratePatrolTarget();
     }
 
     public void UpdatePatrolling()
@@ -47,7 +42,7 @@ public class EnemyPatrol : MonoBehaviour
             if (waitTimer >= patrolWaitTime)
             {
                 isPatrolWaiting = false;
-                SetNextPatrolTarget();
+                GeneratePatrolTarget(); // 새로운 순찰 타겟 생성
                 waitTimer = 0f;
             }
             return;
@@ -67,42 +62,34 @@ public class EnemyPatrol : MonoBehaviour
 
     public void SetNextPatrolTarget()
     {
-        if (patrolPoints == null || patrolPoints.Length == 0) return;
-        movement.SetTarget(patrolPoints[currentPatrolIndex]);
-        currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+        GeneratePatrolTarget();
     }
 
-    private void SetupPatrolPoints()
+    private void GeneratePatrolTarget()
     {
-        Vector3 left = startPos + Vector3.left * patrolDistance;
-        Vector3 right = startPos + Vector3.right * patrolDistance;
+        // 시작 위치 기준으로 좌우 patrolRadius 범위 내에서 랜덤 X 좌표 생성
+        float randomX = startPos.x + Random.Range(-patrolRadius, patrolRadius);
 
-        if (movement.lockYPosition)
+        Vector3 newTarget = new Vector3(randomX, movement.fixedYPosition, transform.position.z);
+
+        // 벽 충돌 체크
+        if (IsBlocked(newTarget))
         {
-            left.y = movement.fixedYPosition;
-            right.y = movement.fixedYPosition;
-        }
+            // 충돌하면 반대 방향으로 시도
+            float oppositeX = startPos.x + (startPos.x - randomX);
+            newTarget = new Vector3(oppositeX, movement.fixedYPosition, transform.position.z);
 
-        List<Vector3> valid = new();
-        if (!IsBlocked(left)) valid.Add(left);
-        if (!IsBlocked(right)) valid.Add(right);
-
-        patrolPoints = valid.Count switch
-        {
-            2 => new[] { valid[0], valid[1] },
-            1 => new[] { startPos, valid[0] },
-            _ => new[] { startPos + Vector3.left * 0.5f, startPos + Vector3.right * 0.5f }
-        };
-
-        if (movement.lockYPosition)
-        {
-            for (int i = 0; i < patrolPoints.Length; i++)
+            // 그래도 충돌하면 시작 위치로
+            if (IsBlocked(newTarget))
             {
-                Vector3 point = patrolPoints[i];
-                point.y = movement.fixedYPosition;
-                patrolPoints[i] = point;
+                newTarget = new Vector3(startPos.x, movement.fixedYPosition, transform.position.z);
             }
         }
+
+        currentTarget = newTarget;
+        movement.SetTarget(currentTarget);
+
+        Debug.Log($"[EnemyPatrol] {gameObject.name} 순찰 타겟: {currentTarget}");
     }
 
     private bool IsBlocked(Vector3 pos)
@@ -112,4 +99,32 @@ public class EnemyPatrol : MonoBehaviour
     }
 
     public Vector3 GetStartPosition() => startPos;
+
+    // 디버깅용 - 순찰 범위와 현재 타겟 시각화
+    private void OnDrawGizmosSelected()
+    {
+        // 순찰 범위 표시 (시작 위치 기준)
+        Gizmos.color = Color.blue;
+        Vector3 leftBound = new Vector3(startPos.x - patrolRadius, transform.position.y, transform.position.z);
+        Vector3 rightBound = new Vector3(startPos.x + patrolRadius, transform.position.y, transform.position.z);
+        Gizmos.DrawLine(leftBound + Vector3.up * 2f, leftBound + Vector3.down * 2f);
+        Gizmos.DrawLine(rightBound + Vector3.up * 2f, rightBound + Vector3.down * 2f);
+
+        // 순찰 범위 전체 표시
+        Gizmos.color = new Color(0, 0, 1, 0.1f);
+        Gizmos.DrawCube(new Vector3(startPos.x, transform.position.y, transform.position.z),
+                       new Vector3(patrolRadius * 2f, 1f, 1f));
+
+        // 현재 타겟 표시
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(currentTarget, 0.5f);
+
+        // 시작 위치 표시
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(startPos, 0.3f);
+
+        // 현재 위치에서 타겟으로의 라인
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, currentTarget);
+    }
 }

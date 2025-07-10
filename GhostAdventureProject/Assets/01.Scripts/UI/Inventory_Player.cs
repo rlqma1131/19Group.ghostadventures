@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
@@ -106,27 +106,28 @@ public class Inventory_Player : MonoBehaviour
     //     }
     // }
 
-    // private void Update()
-    // {
-    //     for (int i = 0; i < 5; i++)
-    //     {
-    //         KeyCode key = keybindConfig.GetKeyForSlot(i);
 
-    //         if (Input.GetKeyDown(key))
-    //         {
-    //             int clueIndex = currentPage * cluesPerPage + i;
+    //private void Update()
+    //{
+    //    for (int i = 0; i < 5; i++)
+    //    {
+    //        KeyCode key = keybindConfig.GetKeyForSlot(i);
 
-    //             if (InventoryExpandViewer.Instance.IsShowing())
-    //             {
-    //                 InventoryExpandViewer.Instance.HideClue();
-    //             }
-    //             else if (clueIndex < collectedClues.Count)
-    //             {
-    //                 InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
-    //             }
-    //         }
-    //     }
-    // }
+    //        if (Input.GetKeyDown(key))
+    //        {
+    //            int clueIndex = currentPage * cluesPerPage + i;
+
+    //            if (InventoryExpandViewer.Instance.IsShowing())
+    //            {
+    //                InventoryExpandViewer.Instance.HideClue();
+    //            }
+    //            else if (clueIndex < collectedClues.Count)
+    //            {
+    //                InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
+    //            }
+    //        }
+    //    }
+    //}
 }
 
 

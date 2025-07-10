@@ -178,6 +178,7 @@ public class SoundManager : Singleton<SoundManager>
         bgmSource.mute = mute;
     }
 
+    // 음소거
     //public void SetSFXMute(bool mute)
     //{
     //    foreach (var source in sfxPool)

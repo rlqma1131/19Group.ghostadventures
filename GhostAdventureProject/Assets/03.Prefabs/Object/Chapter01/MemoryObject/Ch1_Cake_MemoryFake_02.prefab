@@ -9,9 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6098454250597674097}
-  - component: {fileID: 4478171886901770088}
-  - component: {fileID: 1581852186038403845}
   - component: {fileID: 670237750752137414}
+  - component: {fileID: 3826718677849522295}
   m_Layer: 10
   m_Name: Ch1_Cake_MemoryFake_02
   m_TagString: Untagged
@@ -36,41 +35,6 @@ Transform:
   - {fileID: 1876341934446184159}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4478171886901770088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3683686307078424590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 499cb42b5a18ebe44866759087d5f962, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 1262593921796776447}
---- !u!114 &1581852186038403845
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3683686307078424590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f54fc4eec34c9e4aa117fbb6c0abec8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: c9500486131ffbb4aacd45c92979a630, type: 2}
-  isScannable: 0
-  fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
-  dropOffset: {x: 0, y: 0, z: 0}
-  bounceHeight: 0.3
-  bounceDuration: 0.5
-  rotateTime: 3
-  ellipseRadiusX: 1.82
-  ellipseRadiusZ: 1.5
-  absorbTime: 0.6
 --- !u!61 &670237750752137414
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -116,6 +80,29 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.8277452, y: 2.6871488}
   m_EdgeRadius: 0
+--- !u!114 &3826718677849522295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3683686307078424590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f99cfdf1d2dd7d8489cbd2638713aeb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionInfo: {fileID: 1262593921796776447}
+  data: {fileID: 11400000, guid: c9500486131ffbb4aacd45c92979a630, type: 2}
+  isScannable: 0
+  fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
+  dropOffset: {x: 0, y: 0, z: 0}
+  bounceHeight: 0.3
+  bounceDuration: 0.5
+  rotateTime: 2
+  ellipseRadiusX: 0.8
+  ellipseRadiusZ: 1.5
+  absorbTime: 0.6
 --- !u!1 &8380123118317424010
 GameObject:
   m_ObjectHideFlags: 0
