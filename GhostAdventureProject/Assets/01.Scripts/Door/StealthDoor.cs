@@ -36,7 +36,7 @@ public class StealthDoor : MonoBehaviour
         }
 
         float distance = Vector2.Distance(transform.position, target.transform.position);
-        Debug.Log($"타겟: {target.name}, 거리: {distance}, 감지범위: {detectionRange}");
+        
 
         if (distance <= detectionRange)
             targetAlpha = maxAlpha;

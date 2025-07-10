@@ -107,4 +107,8 @@ public abstract class BaseDoor : MonoBehaviour
         string status = isLocked ? "잠김" : "열림";
         Debug.Log($"[테스트] 문 상태 변경: {status}");
     }
+
+    // Enemy가 접근할 수 있는 public 메서드들
+    public Transform GetTargetDoor() => targetDoor;
+    public Vector2 GetTargetPos() => targetPos;
 }
