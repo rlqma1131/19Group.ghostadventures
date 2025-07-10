@@ -78,6 +78,7 @@ public class LockedDoor : BaseDoor
         {
             isLocked = true;
             Debug.Log($"{gameObject.name} 문이 잠겼습니다!");
+            UpdateDoorVisual();
         }
 
         // 페어 문도 잠그기
@@ -90,8 +91,7 @@ public class LockedDoor : BaseDoor
 
     private void OnDoorUnlocked()
     {
-        // 문이 열렸을 때의 추가 효과
-        // 나중에 파티클, 애니메이션 등 추가 가능
+        UpdateDoorVisual();
     }
 
     private void PlaySound(AudioClip clip)
