@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-
 public interface IUIClosable
 {
     void Close();
     bool IsOpen();
 }
-
 
 public class UIManager : Singleton<UIManager>
 {
@@ -25,8 +23,8 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Inventory_Player inventory_Player; // 인벤토리-플레이어
     [SerializeField] private Inventory_PossessableObject inventory_PossessableObject; // 인벤토리-빙의오브젝트
     [SerializeField] private InventoryExpandViewer inventoryExpandViewer; // 인벤토리 확대뷰어
-    public GameObject interactionInfo;
-    [SerializeField] private ESCMenu escMenu;
+    public GameObject interactionInfo; // 상호작용키 (현재 오류)
+    [SerializeField] private ESCMenu escMenu; // ESC 메뉴
     
 
     // QTE 이펙트 캔버스 추가
