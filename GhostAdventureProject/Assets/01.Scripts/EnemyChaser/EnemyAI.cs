@@ -111,12 +111,6 @@ public class EnemyAI : MonoBehaviour
 
         stateTimer += Time.deltaTime;
 
-        // QTE 체크
-        if (currentState == AIState.Chasing && qteSystem.CanCatchPlayer())
-        {
-            qteSystem.StartQTE();
-            return;
-        }
 
         UpdateCurrentState();
         CheckStateTransitions();
