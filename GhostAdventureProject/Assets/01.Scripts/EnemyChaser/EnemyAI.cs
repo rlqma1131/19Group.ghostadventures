@@ -78,7 +78,7 @@ public class EnemyAI : MonoBehaviour
         search = GetComponent<EnemySearch>();
 
         if (enemyAnimator == null)
-            enemyAnimator = GetComponent<Animator>();
+            enemyAnimator = GetComponentInChildren<Animator>();
     }
 
     private void Start()
