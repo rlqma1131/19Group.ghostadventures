@@ -33,12 +33,12 @@ public class Inventory_Player : MonoBehaviour
     public void AddClue(ClueData clue)
     {
         
-        // if (!collectedClues.Contains(clue)) //같은 clue 중복획득 방지 
-        // {
+        if (!collectedClues.Contains(clue)) //같은 clue 중복획득 방지 
+        {
             collectedClues.Add(clue);
-            // UI 갱신 이벤트 호출
+            //UI 갱신 이벤트 호출
             RefreshUI();
-        // }
+        }
     }
 
     public void RefreshUI()
@@ -85,26 +85,26 @@ public class Inventory_Player : MonoBehaviour
         RefreshUI();
     }
 
-    // private void Update()
-    // {
-    //     for (int i = 1; i <= 5; i++)
-    //     {
-    //         if (Input.GetKeyDown(KeyCode.Alpha0 + i))
-    //         {
-    //             int slotIndex = i - 1;
-    //             int clueIndex = currentPage * cluesPerPage + slotIndex;
+    private void Update()
+    {
+        for (int i = 1; i <= 5; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+            {
+                int slotIndex = i - 1;
+                int clueIndex = currentPage * cluesPerPage + slotIndex;
 
-    //             if (InventoryExpandViewer.Instance.IsShowing())
-    //             {
-    //                 InventoryExpandViewer.Instance.HideClue();
-    //             }
-    //             else if (clueIndex < collectedClues.Count)
-    //             {
-    //                 InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
-    //             }
-    //         }
-    //     }
-    // }
+                if (InventoryExpandViewer.Instance.IsShowing())
+                {
+                    InventoryExpandViewer.Instance.HideClue();
+                }
+                else if (clueIndex < collectedClues.Count)
+                {
+                    InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
+                }
+            }
+        }
+    }
 
 
     //private void Update()

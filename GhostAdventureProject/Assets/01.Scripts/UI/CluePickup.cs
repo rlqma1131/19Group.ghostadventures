@@ -7,14 +7,10 @@ public class CluePickup : MonoBehaviour
     [Header("단서 ScriptableObject를 넣어주세요")]
     public ClueData clueData;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void PickupClue()
     {
-
-        if (other.CompareTag("Player"))  // 키입력 조건 추가예정
-        {
-            UIManager.Instance.Inventory_PlayerUI.AddClue(clueData);
-            Destroy(gameObject); // 단서 오브젝트 제거
-            UIManager.Instance.Inventory_PlayerUI.RefreshUI(); // UI에 반영
-        }
+        UIManager.Instance.Inventory_PlayerUI.AddClue(clueData);
+        // Destroy(gameObject); // 단서 오브젝트 제거
+        UIManager.Instance.Inventory_PlayerUI.RefreshUI(); // UI에 반영
     }
 }
