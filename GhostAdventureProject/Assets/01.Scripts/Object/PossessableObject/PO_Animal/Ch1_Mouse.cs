@@ -1,10 +1,17 @@
 ﻿using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 public class Ch1_Mouse : MoveBasePossessable
 {
+    [Header("팬 이벤트")]
     [SerializeField] private Transform point1Transform;
     [SerializeField] private Transform point2Transform;
+
+    [Header("다용도실 쥐구멍")]
+    [SerializeField] private Transform point3Transform;
+
+    public bool canEnter = false;
 
     protected override void Start()
     {
@@ -25,9 +32,9 @@ public class Ch1_Mouse : MoveBasePossessable
 
         base.Update();
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && canEnter)
         {
-            MouseAct();
+            StartCoroutine(MouseAct());
         }
     }
 
@@ -52,13 +59,19 @@ public class Ch1_Mouse : MoveBasePossessable
 
         // 2. 아이방으로 순간이동
         transform.position = point2Transform.position;
-        hasActivated = true;
         anim.SetBool("Move", false);
     }
 
-    public void MouseAct()
+    private IEnumerator MouseAct()
     {
         // 쥐구멍 이동
         // 아이방 - 다용도실
+        transform.position = point3Transform.position;
+
+        //2초 후 빙의 해제
+        yield return new WaitForSeconds(2f);
+
+        hasActivated = false;
+        Unpossess();
     }
 }

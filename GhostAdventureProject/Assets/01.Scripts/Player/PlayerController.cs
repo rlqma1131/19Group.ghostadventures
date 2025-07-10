@@ -19,14 +19,9 @@ public class PlayerController : MonoBehaviour
 
         HandleMovement();
 
-        if (Input.GetKeyDown(KeyCode.E) && CurrentTargetIsPossessable() == true)
+        if (Input.GetKeyDown(KeyCode.E) && CurrentTargetIsPossessable())
         {
             PossessionSystem.Instance.TryPossess();
-        }
-        else if (Input.GetKeyDown(KeyCode.E) && CurrentTargetIsPossessable() == false)
-        {
-            Debug.Log($"고양이는 {CurrentTargetIsPossessable()} 상태예요");
-            Debug.Log($"{PlayerInteractSystem.Instance.CurrentClosest}&{currentTarget.gameObject}");
         }
     }
 

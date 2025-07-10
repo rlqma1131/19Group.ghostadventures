@@ -54,13 +54,13 @@ public class PlayerHide : MonoBehaviour
 
     private void HidePlayer()
     {
+        Debug.Log($"숨기 시작: {currentHideArea.name}");
+
         isHiding = true;
         spriteRenderer.enabled = false;
         col.enabled = false;
         rb.velocity = Vector2.zero;
         rb.isKinematic = true;
-
-        Debug.Log($"숨기 시작: {currentHideArea.name}");
     }
 
     public void ShowPlayer()
