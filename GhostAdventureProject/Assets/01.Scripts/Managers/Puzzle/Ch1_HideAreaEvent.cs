@@ -11,6 +11,7 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
     private Ch1_Closet closet => FindObjectOfType<Ch1_Closet>();
     private PlayerHide PlayerHide => FindObjectOfType<PlayerHide>();
     private Ch1_Mouse mouse => FindObjectOfType<Ch1_Mouse>();
+    private PlayerHide playerHide => GameManager.Instance.Player.GetComponent<PlayerHide>();
 
     public bool Solved { get; private set; } = false;
 
@@ -42,6 +43,7 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
 
                 // 퍼즐 풀면 아이방 HideArea에 못숨도록
                 UnTagAllHideAreas();
+                playerHide.canHide = false;
             }
             else
             {

@@ -73,5 +73,6 @@ public class Ch1_Mouse : MoveBasePossessable
 
         hasActivated = false;
         Unpossess();
+        zoomCamera.Priority = 5;
     }
 }

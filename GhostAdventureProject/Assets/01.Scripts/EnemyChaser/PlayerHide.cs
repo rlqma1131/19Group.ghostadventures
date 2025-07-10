@@ -5,7 +5,7 @@ public class PlayerHide : MonoBehaviour
     private KeyCode hideKey = KeyCode.F;
 
     [SerializeField] private bool isHiding = false;
-    [SerializeField] private bool canHide = false;
+    public bool canHide = false;
 
     private GameObject currentHideArea;
     private bool isInMirrorArea = false;  // 거울 영역인지 확인
@@ -48,10 +48,13 @@ public class PlayerHide : MonoBehaviour
 
         if ((Input.GetKeyDown(hideKey) || Input.GetKeyDown(KeyCode.E)) && canHide)
         {
-            if (currentHideArea.areaID != null)
+            // Chapter1 아이방 퍼즐 풀기
+            HideAreaID hideID = currentHideArea.GetComponent<HideAreaID>();
+            if (hideID != null && !string.IsNullOrEmpty(hideID.areaID))
             {
-                Ch1_HideAreaEvent.Instance.RegisterArea(currentHideArea.areaID);
+                Ch1_HideAreaEvent.Instance.RegisterArea(hideID.areaID);
             }
+
             HidePlayer();
         }
     }
