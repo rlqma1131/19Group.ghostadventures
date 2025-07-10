@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Ch1_Mouse : MoveBasePossessable
 {
-    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Vector2 point1; // 포인트1 좌표
     [SerializeField] private Vector2 point2; // 포인트2 좌표
 

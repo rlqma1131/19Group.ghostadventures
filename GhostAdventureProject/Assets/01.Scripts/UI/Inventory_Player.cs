@@ -28,6 +28,8 @@ public class Inventory_Player : MonoBehaviour
     private int cluesPerPage = 4;
     // [SerializeField] TextMeshProUGUI currentPageText; // 현재 페이지 표시
 
+    [SerializeField] private KeybindConfig keybindConfig;
+
     public void AddClue(ClueData clue)
     {
         
@@ -103,6 +105,28 @@ public class Inventory_Player : MonoBehaviour
             }
         }
     }
+
+    // private void Update()
+    // {
+    //     for (int i = 0; i < 5; i++)
+    //     {
+    //         KeyCode key = keybindConfig.GetKeyForSlot(i);
+
+    //         if (Input.GetKeyDown(key))
+    //         {
+    //             int clueIndex = currentPage * cluesPerPage + i;
+
+    //             if (InventoryExpandViewer.Instance.IsShowing())
+    //             {
+    //                 InventoryExpandViewer.Instance.HideClue();
+    //             }
+    //             else if (clueIndex < collectedClues.Count)
+    //             {
+    //                 InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 

@@ -3,7 +3,7 @@
 public class MoveBasePossessable : BasePossessable
 {
     [SerializeField] private float moveSpeed = 3f;
-    private SpriteRenderer spriteRenderer;
+    protected SpriteRenderer spriteRenderer;
 
     protected override void Start()
     {
