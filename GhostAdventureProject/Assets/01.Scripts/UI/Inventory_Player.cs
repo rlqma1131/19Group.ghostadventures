@@ -106,6 +106,7 @@ public class Inventory_Player : MonoBehaviour
     //     }
     // }
 
+
     //private void Update()
     //{
     //    for (int i = 0; i < 5; i++)
