@@ -69,7 +69,7 @@ public class Ch1_Mouse : MoveBasePossessable
         transform.position = point3Transform.position;
 
         //2초 후 빙의 해제
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         hasActivated = false;
         Unpossess();

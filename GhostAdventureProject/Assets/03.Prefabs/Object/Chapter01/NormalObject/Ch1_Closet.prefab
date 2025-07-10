@@ -56,10 +56,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2559906320894238739}
-  - component: {fileID: 3772415248653427086}
   - component: {fileID: 7978475181466858523}
   - component: {fileID: 458013222782774413}
-  - component: {fileID: 4876185400615649431}
   m_Layer: 10
   m_Name: Ch1_Baseball
   m_TagString: Untagged
@@ -85,19 +83,6 @@ Transform:
   - {fileID: 1298488826860867035}
   m_Father: {fileID: 4134046223844422119}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3772415248653427086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1727160261382674069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 499cb42b5a18ebe44866759087d5f962, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 6563901382293355788}
 --- !u!114 &7978475181466858523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6ebd91cba714c645b13a57b4c7992d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 0}
+  interactionInfo: {fileID: 6563901382293355788}
   data: {fileID: 11400000, guid: 198d980b61e6bfe489f4dd8504399664, type: 2}
   isScannable: 0
   fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
@@ -157,29 +142,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.7
---- !u!114 &4876185400615649431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1727160261382674069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fe739dcbe30c0e449f777386a3b2371, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 0}
-  data: {fileID: 11400000, guid: 198d980b61e6bfe489f4dd8504399664, type: 2}
-  isScannable: 0
-  fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
-  dropOffset: {x: 0, y: 0, z: 0}
-  bounceHeight: 0.3
-  bounceDuration: 0.5
-  rotateTime: 1.2
-  ellipseRadiusX: 0.8
-  ellipseRadiusZ: 1.5
-  absorbTime: 0.6
 --- !u!1 &3908708974919136555
 GameObject:
   m_ObjectHideFlags: 0

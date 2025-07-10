@@ -89,6 +89,7 @@ public class Ch1_Cat : MoveBasePossessable
         yield return new WaitForSeconds(2f); // 2초 기다림
 
         Unpossess();
+        anim.SetTrigger("Sleep");
         hasActivated = false;
     }
 }

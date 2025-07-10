@@ -25,7 +25,10 @@ public class Ch1_Bottle : BasePossessable
     protected override void Update()
     {
         base.Update();
-        
+
+        if (!isPossessed)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
             TriggerBottleEvent();
