@@ -11,7 +11,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject possessionStateManager;
     [SerializeField] private GameObject soundManager;
     [SerializeField] private GameObject cutSceneManager;
-    [SerializeField] private GameObject qteEffectManager; // QTE 이펙트 매니저 추가
+    [SerializeField] private GameObject qteEffectManager;
 
     public GameObject playerPrefab;
     private GameObject currentPlayer;

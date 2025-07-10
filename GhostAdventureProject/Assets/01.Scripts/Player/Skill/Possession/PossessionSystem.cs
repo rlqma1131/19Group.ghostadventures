@@ -52,13 +52,14 @@ public class PossessionSystem : Singleton<PossessionSystem>
 
         obssessingTarget = currentTarget;
 
-        switch (currentTarget.tag)
+        switch (obssessingTarget.tag)
         {
             case "Animal":
                 SoulEnergySystem.Instance.Consume(2);
                 break;
             case "Cat":
                 // 고양이는 풀 충전
+                Debug.Log("고양이덕에 풀충전입니다옹");
                 SoulEnergySystem.Instance.RestoreAll();
                 break;
             case "Person":
@@ -70,6 +71,7 @@ public class PossessionSystem : Singleton<PossessionSystem>
                 break;
         }
 
+        Debug.Log($"{obssessingTarget}에게 빙의 시도");
         RequestPossession();
         return true;
     }
