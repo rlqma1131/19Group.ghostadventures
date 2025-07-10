@@ -63,6 +63,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca94c7768a752b4b80f3160ad779757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactionInfo: {fileID: 0}
   anim: {fileID: 0}
   hasActivated: 0
   isPossessed: 0
@@ -148,6 +149,7 @@ GameObject:
   - component: {fileID: 6768339901057310254}
   - component: {fileID: 2075856916449136008}
   - component: {fileID: 5021797865574571917}
+  - component: {fileID: 3052802349279589418}
   m_Layer: 0
   m_Name: BirthdayLetter
   m_TagString: Untagged
@@ -293,6 +295,7 @@ MonoBehaviour:
   letterZoom: {fileID: 0}
   letterPosition: {fileID: 0}
   zoomPanel: {fileID: 0}
+  cluePickup: {fileID: 0}
 --- !u!114 &5021797865574571917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,6 +309,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactionInfo: {fileID: 1922062958667152209}
+--- !u!114 &3052802349279589418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3008693456196701101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae73d99753cd94293a7f91a1d58e69e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clueData: {fileID: 11400000, guid: 1803fb72c658d4e76bd49b6c52545450, type: 2}
 --- !u!1 &4575639482830244433
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,7 +374,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a8349211e4a72d04abd797c5f29d70b4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -442,7 +458,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a8349211e4a72d04abd797c5f29d70b4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -30,9 +30,9 @@ public class InventoryExpandViewer : MonoBehaviour
 
         // 이미지가 클 경우 크기 조정
         float originalHeight = clue.clue_Image.texture.height;
-        if(originalHeight > 900f)
+        if(originalHeight > 800f)
         {
-            float fixedHeight = 900;
+            float fixedHeight = 800;
             float originalWidth = clue.clue_Image.texture.width;
             float aspectRatio = originalWidth / originalHeight;
             float calculatedWidth = fixedHeight * aspectRatio;
