@@ -6,15 +6,12 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
     [Header("Managers")]
-    [SerializeField] private GameObject ChapterEndingManager;
+    [SerializeField] private GameObject chapterEndingManager;
     [SerializeField] private GameObject uiManager;
-    [SerializeField] private GameObject PossessionStateManager;
+    [SerializeField] private GameObject possessionStateManager;
     [SerializeField] private GameObject soundManager;
     [SerializeField] private GameObject cutSceneManager;
     [SerializeField] private GameObject qteEffectManager; // QTE 이펙트 매니저 추가
-
-    // 디버깅용 (추후 삭제 예정)
-    [SerializeField] private GameObject HideAreaManager;
 
     public GameObject playerPrefab;
     private GameObject currentPlayer;
@@ -46,13 +43,12 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log($"씬 로드됨: {scene.name}");
 
-        EnsureManagerExists<ChapterEndingManager>(ChapterEndingManager);
+        EnsureManagerExists<ChapterEndingManager>(chapterEndingManager);
         EnsureManagerExists<UIManager>(uiManager);
-        EnsureManagerExists<PossessionStateManager>(PossessionStateManager);
+        EnsureManagerExists<PossessionStateManager>(possessionStateManager);
         EnsureManagerExists<SoundManager>(soundManager);
         EnsureManagerExists<CutsceneManager>(cutSceneManager);
         EnsureManagerExists<QTEEffectManager>(qteEffectManager); // QTE 이펙트 매니저 추가
-        EnsureManagerExists<Ch1_HideAreaEvent>(HideAreaManager); // 디버깅용, 추후 삭제 예정
 
         // 다른 매니저들도 같은 방식으로
         // 추후 스테이지 초기화, UI 초기화 등 여기에 추가
