@@ -41,6 +41,7 @@ public class InventorySlot_PossessableObject : MonoBehaviour
         quantityText.text = slot.quantity > 1 ? slot.quantity.ToString() : "";
         inventoryRef = Inventory_PossessableObject.Instance;
         item = slot.item;
+        Debug.Log("아이템 남은 개수" + quantity);
     }  
 
     // public void Setup(ItemData itemData, Inventory_PossessableObject inventory)

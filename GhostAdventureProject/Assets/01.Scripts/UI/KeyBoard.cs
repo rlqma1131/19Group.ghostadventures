@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class KeyBoard : MonoBehaviour
+public class KeyBoard : MonoBehaviour, IUIClosable
 {
     public TMP_Text[] letterSlots = new TMP_Text[4];
     private int currentIndex = 0;
@@ -53,12 +53,18 @@ public class KeyBoard : MonoBehaviour
     public void OpenKeyBoard()
     {
         keyBoardPanel.SetActive(true); // 키보드UI 열기
+        UIManager.Instance.PlayModeUI_CloseAll();
     }
     
     // 키보드UI 닫기
-    public void CloseKeyBoard()
+    public void Close()
     {
         keyBoardPanel.SetActive(false);
+        UIManager.Instance.PlayModeUI_OpenAll();
     }
-    
+
+    public bool IsOpen()
+    {
+        return this.gameObject.activeInHierarchy;
+    }
 }
