@@ -1,39 +1,63 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-/// <summary>
-/// Ch1 차고 문 앞에 콜라이더 트리거 설치 필요
-/// </summary>
-public class Ch1_GarageEvent : MonoBehaviour
+﻿using UnityEngine;
+
+public class Ch1_GarageEvent : BaseInteractable
 {
     private Ch1_MemoryPositive_01_TeddyBear bear;
+    private KeyBoard keyboard;
+    private KeyBoard_Enter answer;
+
+    private bool playerNearby = false;
 
     void Start()
     {
         bear = GetComponent<Ch1_MemoryPositive_01_TeddyBear>();    
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void Update()
     {
-        // 1장 단서가 모두 수집되었는지 확인
-        if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
+        if (!playerNearby)
             return;
 
-        // 1장 단서 모두 모이고 충돌 시 이벤트 발생
-        if (collision.gameObject.CompareTag("Player"))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            PossessionSystem.Instance.canMove = false;
+            if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
+            {
+                UIManager.Instance.PromptUI.ShowPrompt("...아무 일도 일어나지 않았다.", 2f);
+            }
+            else
+            {
+                // 1장 단서 모두 모이고 충돌 시 이벤트 발생
+                PossessionSystem.Instance.canMove = false;
 
-            // 꼬마유령 등장
-            // 깜짝놀래키기
-            // 이름 입력 창 띄우기
+                // [컷씬 재생]
+                // 꼬마유령 등장
+                // 깜짝놀래키기
 
-            // if(맞) == 진행 / 기억조각 스캔 가능
-            bear.ActivateTeddyBear();
-            PossessionSystem.Instance.canMove = true;
+                // 컷씬 끝나면
+                // 이름 입력 창 띄우기
+                keyboard.OpenKeyBoard();
+            }
+        }
 
-            // if(틀) == "..." 재도전 or 나가기
-            PossessionSystem.Instance.canMove = true;
+        if (!answer.correct)
+            return;
+
+        bear.ActivateTeddyBear();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerNearby = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerNearby = false;
         }
     }
 }
