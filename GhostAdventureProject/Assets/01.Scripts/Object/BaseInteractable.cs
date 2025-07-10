@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// 상호작용키 팝업 기능 구현하는 클래스
+/// 어떤 오브젝트와 상호작용할지는 PlayerInteractSystem.cs 에서 관리
+/// </summary>
 public class BaseInteractable : MonoBehaviour
 {
     public GameObject interactionInfo;
@@ -9,7 +13,7 @@ public class BaseInteractable : MonoBehaviour
         if (interactionInfo != null)
             interactionInfo.SetActive(false);
     }
-
+    
     public void SetInteractionPopup(bool pop)
     {
         if (interactionInfo != null)

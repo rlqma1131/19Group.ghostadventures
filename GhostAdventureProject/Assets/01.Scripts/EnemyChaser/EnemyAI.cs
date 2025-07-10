@@ -78,7 +78,7 @@ public class EnemyAI : MonoBehaviour
         search = GetComponent<EnemySearch>();
 
         if (enemyAnimator == null)
-            enemyAnimator = GetComponent<Animator>();
+            enemyAnimator = GetComponentInChildren<Animator>();
     }
 
     private void Start()
@@ -111,12 +111,6 @@ public class EnemyAI : MonoBehaviour
 
         stateTimer += Time.deltaTime;
 
-        // QTE 체크
-        if (currentState == AIState.Chasing && qteSystem.CanCatchPlayer())
-        {
-            qteSystem.StartQTE();
-            return;
-        }
 
         UpdateCurrentState();
         CheckStateTransitions();

@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// 가까운 하나의 오브젝트만 상호작용가능하게(상호작용키 팝업되도록) 하는 클래스
+/// 상호작용 팝업은 BaseInteractable.cs
+/// </summary>
 public class PlayerInteractSystem : Singleton<PlayerInteractSystem>
 {
     private List<GameObject> nearbyInteractables = new();
-    [SerializeField] private GameObject currentClosest; // 디버깅용
-    public GameObject CurrentClosest => currentClosest;
+    private GameObject currentClosest; 
+    public GameObject CurrentClosest => currentClosest;// 디버깅용
 
     private void Update()
     {
@@ -34,20 +37,26 @@ public class PlayerInteractSystem : Singleton<PlayerInteractSystem>
 
     private void UpdateClosest(GameObject newClosest)
     {
+        // 이전 오브젝트 처리
         if (currentClosest != null && currentClosest != newClosest)
         {
-            var prev = currentClosest.GetComponent<BaseInteractable>();
-            if (prev != null) prev.SetInteractionPopup(false);
+            // 팝업 끄기
+            if (currentClosest.TryGetComponent<BaseInteractable>(out var prevInteractable))
+            {
+                prevInteractable.SetInteractionPopup(false);
+            }
         }
 
         currentClosest = newClosest;
 
-        // 상호작용 가능키 표시
+        // 새 오브젝트 처리
         if (currentClosest != null)
         {
-            var next = currentClosest.GetComponent<BaseInteractable>();
-            if (next != null)
-                next.SetInteractionPopup(true);
+            // 팝업 켜기
+            if (currentClosest.TryGetComponent<BaseInteractable>(out var nextInteractable))
+            {
+                nextInteractable.SetInteractionPopup(true);
+            }
         }
     }
 

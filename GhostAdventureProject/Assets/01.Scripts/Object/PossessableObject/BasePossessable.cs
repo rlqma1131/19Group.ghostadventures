@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class BasePossessable : MonoBehaviour
+public abstract class BasePossessable : BaseInteractable
 {
     [SerializeField] protected Animator anim;
     [SerializeField] protected bool hasActivated;
@@ -8,8 +8,6 @@ public abstract class BasePossessable : MonoBehaviour
     public bool HasActivated => hasActivated;
     public bool IsPossessed => isPossessed;
     public bool IsPossessedState => isPossessed;
-
-
 
     protected virtual void Start()
     {

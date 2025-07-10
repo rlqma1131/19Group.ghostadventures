@@ -10,9 +10,9 @@ public class Ch1_Pan : BasePossessable
     [SerializeField] private Quaternion startLocalRotation = Quaternion.identity;
     [SerializeField] private float dropYPos = -1.5f;
 
-    private Ch1_Cat cat => FindObjectOfType<Ch1_Cat>();
-    private Ch1_Cake_MemoryFake_02 cake => FindObjectOfType<Ch1_Cake_MemoryFake_02>();
-    private Ch1_Mouse mouse => FindObjectOfType<Ch1_Mouse>();
+    [SerializeField] private Ch1_Cat cat;
+    [SerializeField] private Ch1_MemoryFake_02_Cake cake;
+    [SerializeField] private Ch1_Mouse mouse;
 
     protected override void Start()
     {
@@ -62,6 +62,7 @@ public class Ch1_Pan : BasePossessable
             cat.ActivateCat();
             cake.ActivateCake();
 
+            Debug.Log("후라이팬 빙의 해제");
             hasActivated = false;
             Unpossess();
         });
