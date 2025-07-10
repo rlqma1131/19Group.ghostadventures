@@ -99,23 +99,23 @@ public class SettingMenu : MonoBehaviour, IUIClosable
         Debug.Log($"단서 {slotIndex + 1} 키 변경 대기 중...");
     }
 
-    private void Update()
-    {
-        if (waitingSlot != -1)
-        {
-            foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
-            {
-                if (Input.GetKeyDown(key))
-                {
-                    keybindConfig.SetKeyForSlot(waitingSlot, key);
-                    PlayerPrefs.SetString($"ClueKey{waitingSlot}", key.ToString());
-                    Debug.Log($"단서 {waitingSlot + 1} 키가 {key}로 설정됨");
-                    waitingSlot = -1;
-                    break;
-                }
-            }
-        }
-    }
+    // private void Update()
+    // {
+    //     if (waitingSlot != -1)
+    //     {
+    //         foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
+    //         {
+    //             if (Input.GetKeyDown(key))
+    //             {
+    //                 keybindConfig.SetKeyForSlot(waitingSlot, key);
+    //                 PlayerPrefs.SetString($"ClueKey{waitingSlot}", key.ToString());
+    //                 Debug.Log($"단서 {waitingSlot + 1} 키가 {key}로 설정됨");
+    //                 waitingSlot = -1;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
 
     private void LoadClueKeyBindings()
     {
