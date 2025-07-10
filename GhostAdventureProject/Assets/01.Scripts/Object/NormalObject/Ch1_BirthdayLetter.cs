@@ -6,7 +6,8 @@ public class Ch1_BirthdayLetter : MonoBehaviour
 {
     [SerializeField] private GameObject letterZoom;
     [SerializeField] private RectTransform letterPosition; 
-    [SerializeField] private Image zoomPanel;           
+    [SerializeField] private Image zoomPanel;
+    [SerializeField] private CluePickup cluePickup;        
 
     private bool isZoomActive = false;
     private bool zoomActivatedOnce = false;
@@ -14,6 +15,9 @@ public class Ch1_BirthdayLetter : MonoBehaviour
 
     private void Start()
     {
+        // 단서 획득 컴포넌트
+        cluePickup = GetComponent<CluePickup>();
+
         // UI 컴포넌트 초기화
         letterZoom = GameObject.Find("Ch1_BirthdayLetterZoom");
         letterPosition = letterZoom.GetComponent<RectTransform>();
@@ -75,6 +79,8 @@ public class Ch1_BirthdayLetter : MonoBehaviour
                 if (isPlayerInside)
                     PlayerInteractSystem.Instance.AddInteractable(gameObject);
             });
+            
+        cluePickup.PickupClue();
     }
 
     private void OnTriggerEnter2D(Collider2D other)

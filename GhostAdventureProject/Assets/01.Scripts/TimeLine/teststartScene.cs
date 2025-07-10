@@ -11,11 +11,16 @@ public class teststartScene : MonoBehaviour
     {
         Debug.Log("Play버튼 클릭");
         SceneManager.LoadScene("IntroScene_Real");
+        if(UIManager.Instance != null)
+        {
+            UIManager.Instance.PlayModeUI_CloseAll();
+        }
+
     }
 
     public void ExitGameButton()
     {
-        // Application.Quit();
+        Application.Quit();
         Debug.Log("게임이 종료되었습니다");
     }
 
