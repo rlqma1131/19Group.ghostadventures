@@ -9,7 +9,15 @@ public class Cutscene_NPC : MonoBehaviour
     [SerializeField] private PlayableDirector director;
 
     bool isCutscenePlaying = false;
+    
+    public RoomInfo roomInfo;
+    [SerializeField] private GameObject GarageDoor;
+    void Start()
+    {
 
+        // 타임라인 재생 끝났을 때 호출될 함수 등록
+        director.stopped += OnTimelineStopped;
+    }
 
 
 
@@ -23,6 +31,8 @@ public class Cutscene_NPC : MonoBehaviour
         {
             director.Play();
             isCutscenePlaying = true;
+            PossessionSystem.Instance.canMove = false;
+            UIManager.Instance.PlayModeUI_CloseAll();
         }
         else
         {
@@ -32,9 +42,17 @@ public class Cutscene_NPC : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !isCutscenePlaying)
+        if (other.CompareTag("Player") && !isCutscenePlaying && roomInfo.roomCount >= 1)
         {
             Play_NPCscene();
         }
+    }
+
+    private void OnTimelineStopped(PlayableDirector director)
+    {
+
+        GarageDoor.SetActive(false);
+        PossessionSystem.Instance.canMove = true;
+        UIManager.Instance.PlayModeUI_OpenAll();
     }
 }
