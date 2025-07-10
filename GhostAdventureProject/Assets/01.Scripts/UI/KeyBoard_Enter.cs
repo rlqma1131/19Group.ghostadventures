@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class KeyBoard_Enter : MonoBehaviour
 {
     public TextMeshProUGUI outputText;  // 유저가 입력한 문자
-    public string correctAnswer;    // 정답
     public KeyBoard textSlot;
+    public string correctAnswer;    // 정답
+    public bool correct = false;
 
     void Start()
     {
@@ -23,16 +22,20 @@ public class KeyBoard_Enter : MonoBehaviour
     // 정답 확인
     public void CheckAnswer()
     {
-          string input = textSlot.GetCurrentWord();
-            if (input == correctAnswer)
-            {
-                Debug.Log("정답!");
-            }
-            else
-            {
-                Debug.Log("오답!");
-            }
-            textSlot.ClearAll();
-    }
+        string input = textSlot.GetCurrentWord();
 
+        if (input == correctAnswer)
+        {
+            correct = true;
+            PossessionSystem.Instance.canMove = true;
+            Debug.Log("정답!");
+        }
+        else
+        {
+            correct = false;
+            PossessionSystem.Instance.canMove = true;
+            Debug.Log("오답!");
+        }
+        textSlot.ClearAll();
+    }
 }
