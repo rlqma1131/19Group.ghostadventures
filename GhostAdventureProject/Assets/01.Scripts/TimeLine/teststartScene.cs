@@ -14,6 +14,7 @@ public class teststartScene : MonoBehaviour
         if(UIManager.Instance != null)
         {
             UIManager.Instance.PlayModeUI_CloseAll();
+            UIManager.Instance.startEndingUI_CloseAll();
         }
 
     }

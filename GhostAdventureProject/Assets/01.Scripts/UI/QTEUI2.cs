@@ -49,6 +49,12 @@ public class QTEUI2 : MonoBehaviour
     {
         while (currentTime < timeLimit)
         {
+            if(currentPressCount >= requiredPresses)
+            {
+                success.gameObject.SetActive(true);
+                isSuccess = true;
+                break;
+            }
             currentTime += Time.deltaTime;
             float remainingTime = Mathf.Max(0f, timeLimit - currentTime);
             timeText.text = remainingTime.ToString("F2");
