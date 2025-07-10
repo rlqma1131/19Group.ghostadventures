@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Ch1_Mouse : MoveBasePossessable
 {
-    [SerializeField] private Vector2 point1; // 포인트1 좌표
-    [SerializeField] private Vector2 point2; // 포인트2 좌표
+    [SerializeField] private Transform point1Transform;
+    [SerializeField] private Transform point2Transform;
 
     protected override void Start()
     {
@@ -33,16 +33,11 @@ public class Ch1_Mouse : MoveBasePossessable
 
     public void ActivateMouse()
     {
-        // 1. Move 애니메이션 활성화
-        spriteRenderer.flipX = false; // 좌우 반전 해제
+        spriteRenderer.flipX = false;
         anim.SetTrigger("Escape");
 
-        // 2. point1까지 도망치는 이동 (1초)
-        transform.DOMove(point1, 2.5f).SetEase(Ease.OutQuad).OnComplete(() =>
-        {
-            // 3. Escape 시작
-            anim.SetTrigger("Escape");
-        });
+        // 1. 쥐구멍으로 도망
+        transform.DOMove(point1Transform.position, 2.5f).SetEase(Ease.OutQuad);
     }
 
     public void MouseCanObssessed()
@@ -50,13 +45,15 @@ public class Ch1_Mouse : MoveBasePossessable
         hasActivated = true;
     }
 
-    // 이 함수는 Escape 애니메이션의 마지막 프레임에 이벤트로 연결
+    //[이벤트함수] Escape 애니메이션의 마지막 프레임에 이벤트로 연결
     public void OnEscapeEnd()
     {
-        // 4. point2로 순간이동
-        transform.position = point2;
-        hasActivated = true; // 빙의 가능 상태로 변경
-        anim.SetBool("Move", false); // Idle 상태로 대기
+        transform.DOKill(); // 두트윈 종료
+
+        // 2. 아이방으로 순간이동
+        transform.position = point2Transform.position;
+        hasActivated = true;
+        anim.SetBool("Move", false);
     }
 
     public void MouseAct()
