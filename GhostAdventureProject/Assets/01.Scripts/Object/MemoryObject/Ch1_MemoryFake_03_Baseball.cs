@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Ch1_Baseball_MemoryFake_03 : MemoryFragment
+public class Ch1_MemoryFake_03_Baseball : MemoryFragment
 {
     [SerializeField] private GameObject alphabet_A;
 

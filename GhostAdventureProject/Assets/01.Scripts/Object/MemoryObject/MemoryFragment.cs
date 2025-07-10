@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MemoryFragment : MonoBehaviour
+public class MemoryFragment : BaseInteractable
 {
     public MemoryData data;
     
@@ -44,17 +44,9 @@ public class MemoryFragment : MonoBehaviour
             }
         }
     }
-    #endif
-
-    //private void Start()
-    //{
-    //    // 디버깅용
-    //    isScannable = true;
-    //}
+#endif
 
     // 상호작용 메시지 대상
-
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && isScannable)

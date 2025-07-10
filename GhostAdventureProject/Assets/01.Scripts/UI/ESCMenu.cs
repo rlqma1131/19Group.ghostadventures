@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ESCMenu : MonoBehaviour
+public class ESCMenu : MonoBehaviour, IUIClosable
 {
     //esc키를 누르면 또는 버튼을 누르면
     //ESCMenu UI가 뜸
@@ -27,20 +27,39 @@ public class ESCMenu : MonoBehaviour
         escMenuUI.SetActive(false);
     }
 
-    // ESC메뉴 열기
+    // ESC메뉴 열기/닫기
+    public void ESCMenuToggle()
+    {
+        if (isPaused)
+        {
+            ResumeGame();
+        }
+        else
+        {
+            ESCMenu_Open();
+        }
+        
+    }
     public void ESCMenu_Open()
     {
         escMenuUI.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
-        
     }
-
-    // ESCMenu 닫기
-    public void ESCMenu_Close()
+    
+    public void Close()
     {
-
+        escMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;      
     }
+
+    public bool IsOpen()
+    {
+        return UIManager.Instance.ESCMenuUI.gameObject.activeInHierarchy;
+    }
+
+
     // 이어하기
     public void ResumeGame()
     {
@@ -53,7 +72,9 @@ public class ESCMenu : MonoBehaviour
     // 타이틀로
     public void GoToMainMenu()
     {
+        escMenuUI.SetActive(false);
         Time.timeScale = 1f;
+        isPaused = false;   
         SceneManager.LoadScene("StartScene");
     }
 
@@ -69,4 +90,5 @@ public class ESCMenu : MonoBehaviour
         // Application.Quit();
         Debug.Log("게임종료");
     }
+
 }

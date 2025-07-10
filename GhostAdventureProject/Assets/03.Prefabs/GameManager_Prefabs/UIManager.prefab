@@ -2134,7 +2134,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7238603445512115550}
         m_TargetAssemblyTypeName: ESCMenu, Assembly-CSharp
-        m_MethodName: ESCMenu_Open
+        m_MethodName: ESCMenuToggle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3941,6 +3941,7 @@ MonoBehaviour:
   nodeContainer: {fileID: 9205036196882516073}
   memoryNodePrefab: {fileID: 2163140001867318917, guid: cddf9015f123d417b847a4798095a9b6, type: 3}
   spacing: 150
+  closeButton: {fileID: 4663642622217373052}
 --- !u!222 &2758104394663472307
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4677,23 +4678,17 @@ MonoBehaviour:
   inventory_PossessableObject: {fileID: 3566475732807862491}
   inventoryExpandViewer: {fileID: 2875967890383573714}
   interactionInfo: {fileID: 2126542491770856285}
+  escMenu: {fileID: 7238603445512115550}
+  qteEffectCanvas: {fileID: 0}
   playbutton: {fileID: 3055630142236217410}
   gameover: {fileID: 1951381858542953093}
   playModeUI: {fileID: 3299804273585095502}
   startEndingUI: {fileID: 5274213249302121299}
-  allUIs:
-  - {fileID: 1399679809694739268}
-  - {fileID: 3057172368555150939}
-  - {fileID: 8266654412877939738}
-  - {fileID: 3286664990006350669}
-  - {fileID: 7526767086768589947}
-  - {fileID: 4515074064995299761}
-  - {fileID: 7880527999284290784}
-  - {fileID: 8037738935260707728}
-  - {fileID: 7015948221753221621}
-  - {fileID: 5288099029352870584}
-  - {fileID: 6122092740175606037}
-  - {fileID: 1951381858542953093}
+  closableUI:
+  - {fileID: 786519104180153376}
+  - {fileID: 4191478788584621673}
+  - {fileID: 7410792991972393997}
+  allUIs: []
 --- !u!1 &5448940725210835210
 GameObject:
   m_ObjectHideFlags: 0
@@ -5105,9 +5100,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4657486139291216301}
+  - component: {fileID: 5522332158711125551}
   - component: {fileID: 7521629753936910804}
   - component: {fileID: 4191478788584621673}
-  - component: {fileID: 5522332158711125551}
   m_Layer: 5
   m_Name: SettingMenu
   m_TagString: Untagged
@@ -5138,6 +5133,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 800, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5522332158711125551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6081062654540933144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02ad8946073144d581837ee1e80f9dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settingsPanel: {fileID: 6081062654540933144}
+  escMenuPanel: {fileID: 4393885216376415962}
+  masterVolumeSlider: {fileID: 7772051276546149125}
+  languageDropdown: {fileID: 0}
+  rebindJumpButton: {fileID: 0}
+  keybindConfig: {fileID: 0}
 --- !u!222 &7521629753936910804
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5176,24 +5189,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5522332158711125551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6081062654540933144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d02ad8946073144d581837ee1e80f9dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  settingsPanel: {fileID: 6081062654540933144}
-  escMenuPanel: {fileID: 4393885216376415962}
-  bgmSource: {fileID: 0}
-  masterVolumeSlider: {fileID: 7772051276546149125}
-  languageDropdown: {fileID: 0}
-  rebindJumpButton: {fileID: 0}
 --- !u!1 &6086984077482244104
 GameObject:
   m_ObjectHideFlags: 0
@@ -6858,7 +6853,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &658386364750263718
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7150,6 +7145,7 @@ MonoBehaviour:
   - {fileID: 3933531594775140789}
   - {fileID: 5925966169271939178}
   - {fileID: 6933118420152944282}
+  keybindConfig: {fileID: 0}
 --- !u!1 &8054407306981761391
 GameObject:
   m_ObjectHideFlags: 0
