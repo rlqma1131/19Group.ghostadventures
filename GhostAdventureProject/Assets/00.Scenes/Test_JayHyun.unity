@@ -2398,9 +2398,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e94ef911ec6ae55459840fb73512eb0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactionInfo: {fileID: 0}
   anim: {fileID: 0}
   hasActivated: 0
   isPossessed: 0
+  zoomCamera: {fileID: 0}
   moveSpeed: 3
 --- !u!114 &147265297
 MonoBehaviour:
@@ -3820,6 +3822,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetDoor: {fileID: 833972390}
   targetPos: {x: 0, y: 0}
+  closedObject: {fileID: 0}
+  OpenObject: {fileID: 0}
 --- !u!61 &366032580
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4326,6 +4330,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetDoor: {fileID: 1558053339}
   targetPos: {x: 0, y: 0}
+  closedObject: {fileID: 0}
+  OpenObject: {fileID: 0}
   puzzleId: "\uC774 \uBB38\uC740 \uC5B4\uB5A4 \uD37C\uC990\uACFC \uC5F0\uACB0\uB41C
     \uBB38\uC778\uC9C0 \uAD6C\uBD84\uD558\uB824\uACE0 \uC801\uC5B4\uB193\uC740 \uBA54\uBAA8
     \uAC19\uC740 \uACF5\uAC04"
@@ -4651,6 +4657,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd6bab367add0704b9a7d6ca213dde6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactionInfo: {fileID: 0}
   anim: {fileID: 0}
   hasActivated: 0
   isPossessed: 0
@@ -4658,6 +4665,9 @@ MonoBehaviour:
   startLocalPosition: {x: 0, y: 0, z: 0}
   startLocalRotation: {x: 0, y: 0, z: 0, w: 1}
   dropYPos: -1.5
+  cat: {fileID: 0}
+  cake: {fileID: 0}
+  mouse: {fileID: 0}
 --- !u!58 &796065337
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4810,6 +4820,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetDoor: {fileID: 366032578}
   targetPos: {x: 0, y: 0}
+  closedObject: {fileID: 0}
+  OpenObject: {fileID: 0}
 --- !u!61 &833972392
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5040,63 +5052,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &963137895
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4888382239133750826, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 4.66
-      objectReference: {fileID: 0}
-    - target: {fileID: 4888382239133750826, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4888382239133750826, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4888382239133750826, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4888382239133750826, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4888382239133750826, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4888382239133750826, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4888382239133750826, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4888382239133750826, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4888382239133750826, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6584644825477121519, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
-      propertyPath: m_Name
-      value: Memory_Positive_01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ab433385a83b1a44bbfade1d221807af, type: 3}
 --- !u!1 &1102222281
 GameObject:
   m_ObjectHideFlags: 0
@@ -6184,9 +6139,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60f4b843f12f81a4aa3b1cfb464c938d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactionInfo: {fileID: 0}
   anim: {fileID: 0}
   hasActivated: 0
   isPossessed: 0
+  zoomCamera: {fileID: 0}
   moveSpeed: 3
   door: {fileID: 0}
 --- !u!114 &1241653317
@@ -8066,6 +8023,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetDoor: {fileID: 423611158}
   targetPos: {x: 0, y: 0}
+  closedObject: {fileID: 0}
+  OpenObject: {fileID: 0}
   puzzleId: "\uC774 \uBB38\uC740 \uC5B4\uB5A4 \uD37C\uC990\uACFC \uC5F0\uACB0\uB41C
     \uBB38\uC778\uC9C0 \uAD6C\uBD84\uD558\uB824\uACE0 \uC801\uC5B4\uB193\uC740 \uBA54\uBAA8
     \uAC19\uC740 \uACF5\uAC04"
@@ -8391,6 +8350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe739dcbe30c0e449f777386a3b2371, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactionInfo: {fileID: 0}
   data: {fileID: 11400000, guid: c9500486131ffbb4aacd45c92979a630, type: 2}
   isScannable: 0
   fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
@@ -8991,7 +8951,6 @@ SceneRoots:
   - {fileID: 542488394}
   - {fileID: 145619386}
   - {fileID: 1451248424}
-  - {fileID: 963137895}
   - {fileID: 1926384403}
   - {fileID: 360470918}
   - {fileID: 6943392206141629228}
