@@ -2,18 +2,24 @@
 
 public abstract class BaseDoor : MonoBehaviour
 {
-    [Header("Door Settings")]
+    [Header("문 세팅")]
    protected bool isLocked = false;
     [SerializeField] protected Transform targetDoor; // 이동할 문 오브젝트 (드래그 앤 드롭)
     [SerializeField] protected Vector2 targetPos; // 좌표 직접 입력 방식 (백업용)
 
+    [Header("문 비주얼 설정")]
+    [SerializeField] protected Sprite closedSprite;
+    [SerializeField] protected Sprite openSprite;
+
     protected bool playerNearby = false;
 
     public bool IsLocked => isLocked;
+    protected SpriteRenderer spriteRenderer;
 
     protected virtual void Start()
     {
-        // 기본 초기화
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        UpdateDoorVisual();
     }
 
     protected virtual void Update()
@@ -66,4 +72,19 @@ public abstract class BaseDoor : MonoBehaviour
             player.transform.position = teleportPosition;
         }
     }
+
+    protected void UpdateDoorVisual()
+    {
+        if (spriteRenderer == null) return;
+
+        if (isLocked && closedSprite != null)
+        {
+            spriteRenderer.sprite = closedSprite;
+        }
+        else if (!isLocked && openSprite != null)
+        {
+            spriteRenderer.sprite = openSprite;
+        }
+    }
+
 }
