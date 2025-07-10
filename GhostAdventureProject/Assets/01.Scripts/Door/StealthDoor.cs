@@ -1,83 +1,97 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class StealthDoor : MonoBehaviour
 {
-    [Header("Stealth Door Settings")]
-    [SerializeField] private float detectionRange = 3f; // 플레이어 감지 범위
-    [SerializeField] private float fadeSpeed = 5f; // 페이드 속도
-    [SerializeField] private float maxAlpha = 0.8f; // 최대 투명도 (0.8 = 80%)
+    [Header("감지 설정")]
+    [SerializeField] private float detectionRange = 3f;  // 감지 거리
+    [SerializeField] private float fadeSpeed = 2f;        // 서서히 보여지는 속도
+    [SerializeField] private float maxAlpha = 1f;         // 최대로 보여질 투명도
 
-    private GameObject player;
-    private SpriteRenderer doorSpriteRenderer;
-    private float targetAlpha = 0f;
-    private float currentAlpha = 0f;
-    private Color originalColor;
+    private SpriteRenderer spriteRenderer;
+    private float currentAlpha = 0f;  // 현재 투명도
+    private float targetAlpha = 0f;   // 목표 투명도
 
     private void Start()
     {
-        // 컴포넌트 찾기
-        doorSpriteRenderer = GetComponent<SpriteRenderer>();
-
-        if (doorSpriteRenderer != null)
-        {
-            originalColor = doorSpriteRenderer.color;
-
-            // 항상 안 보이는 상태로 시작
-            currentAlpha = 0f;
-            targetAlpha = 0f;
-            SetDoorAlpha(currentAlpha);
-        }
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        SetAlpha(0f); // 시작할 땐 안 보이게
     }
 
     private void Update()
     {
-        // 플레이어 거리 체크
-        CheckPlayerDistance();
-
-        // 알파값 부드럽게 변경
-        UpdateDoorVisibility();
+        CheckTargetDistance();
+        UpdateAlpha();
     }
 
-    private void CheckPlayerDistance()
+    // "Player" 또는 "Cat" 중 가장 가까운 오브젝트 감지
+    private void CheckTargetDistance()
     {
-        // 플레이어가 없으면 다시 찾기
-        if (player == null)
-        {
-            player = GameObject.FindGameObjectWithTag("Player");
-        }
+        GameObject target = FindClosestTarget();
 
-        if (player == null) return;
+        if (target == null) return;
 
-        float distance = Vector2.Distance(transform.position, player.transform.position);
+        float distance = Vector2.Distance(transform.position, target.transform.position);
 
         if (distance <= detectionRange)
-        {
-            // 플레이어가 범위 안에 있으면 문 보이기 (최대 80%)
-            targetAlpha = maxAlpha;
-        }
+            targetAlpha = maxAlpha; // 보이게 설정
         else
-        {
-            // 플레이어가 범위 밖에 있으면 문 숨기기
-            targetAlpha = 0f;
-        }
+            targetAlpha = 0f;       // 숨기게 설정
     }
 
-    private void UpdateDoorVisibility()
+    // 가장 가까운 Player 또는 Cat 찾기
+    private GameObject FindClosestTarget()
     {
-        if (doorSpriteRenderer == null) return;
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject[] cats = GameObject.FindGameObjectsWithTag("Cat");
 
-        // 부드럽게 알파값 변경
+        GameObject closest = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (GameObject obj in players)
+        {
+            float dist = Vector2.Distance(transform.position, obj.transform.position);
+            if (dist < closestDistance)
+            {
+                closest = obj;
+                closestDistance = dist;
+            }
+        }
+
+        foreach (GameObject obj in cats)
+        {
+            float dist = Vector2.Distance(transform.position, obj.transform.position);
+            if (dist < closestDistance)
+            {
+                closest = obj;
+                closestDistance = dist;
+            }
+        }
+
+        return closest;
+    }
+
+    // 현재 알파값 → 목표 알파값으로 부드럽게 전환
+    private void UpdateAlpha()
+    {
         currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, fadeSpeed * Time.deltaTime);
-        SetDoorAlpha(currentAlpha);
+        SetAlpha(currentAlpha);
     }
 
-    private void SetDoorAlpha(float alpha)
+    // 실제 알파 적용
+    private void SetAlpha(float alpha)
     {
-        if (doorSpriteRenderer != null)
-        {
-            Color newColor = originalColor;
-            newColor.a = alpha;
-            doorSpriteRenderer.color = newColor;
-        }
+        if (spriteRenderer == null) return;
+
+        Color color = spriteRenderer.color;
+        color.a = alpha;
+        spriteRenderer.color = color;
+    }
+
+    // 감지 범위 시각화 (Scene 뷰용)
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(0f, 1f, 1f, 0.3f);
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
 }
