@@ -85,36 +85,14 @@ public class Inventory_Player : MonoBehaviour
         RefreshUI();
     }
 
-    private void Update()
-    {
-        for (int i = 1; i <= 5; i++)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
-            {
-                int slotIndex = i - 1;
-                int clueIndex = currentPage * cluesPerPage + slotIndex;
-
-                if (InventoryExpandViewer.Instance.IsShowing())
-                {
-                    InventoryExpandViewer.Instance.HideClue();
-                }
-                else if (clueIndex < collectedClues.Count)
-                {
-                    InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
-                }
-            }
-        }
-    }
-
     // private void Update()
     // {
-    //     for (int i = 0; i < 5; i++)
+    //     for (int i = 1; i <= 5; i++)
     //     {
-    //         KeyCode key = keybindConfig.GetKeyForSlot(i);
-
-    //         if (Input.GetKeyDown(key))
+    //         if (Input.GetKeyDown(KeyCode.Alpha0 + i))
     //         {
-    //             int clueIndex = currentPage * cluesPerPage + i;
+    //             int slotIndex = i - 1;
+    //             int clueIndex = currentPage * cluesPerPage + slotIndex;
 
     //             if (InventoryExpandViewer.Instance.IsShowing())
     //             {
@@ -127,6 +105,28 @@ public class Inventory_Player : MonoBehaviour
     //         }
     //     }
     // }
+
+    private void Update()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            KeyCode key = keybindConfig.GetKeyForSlot(i);
+
+            if (Input.GetKeyDown(key))
+            {
+                int clueIndex = currentPage * cluesPerPage + i;
+
+                if (InventoryExpandViewer.Instance.IsShowing())
+                {
+                    InventoryExpandViewer.Instance.HideClue();
+                }
+                else if (clueIndex < collectedClues.Count)
+                {
+                    InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
+                }
+            }
+        }
+    }
 }
 
 
