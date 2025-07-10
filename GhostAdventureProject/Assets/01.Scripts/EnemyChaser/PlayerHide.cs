@@ -48,6 +48,10 @@ public class PlayerHide : MonoBehaviour
 
         if ((Input.GetKeyDown(hideKey) || Input.GetKeyDown(KeyCode.E)) && canHide)
         {
+            if (currentHideArea.areaID != null)
+            {
+                Ch1_HideAreaEvent.Instance.RegisterArea(currentHideArea.areaID);
+            }
             HidePlayer();
         }
     }

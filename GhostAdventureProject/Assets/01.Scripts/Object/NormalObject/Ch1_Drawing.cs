@@ -17,10 +17,6 @@ public class Ch1_Drawing : MonoBehaviour
     {
         cluePickup = GetComponent<CluePickup>();
 
-        drawingZoom = GameObject.Find("Ch1_DrawingZoom");
-        drawingPos = drawingZoom.GetComponent<RectTransform>();
-        zoomPanel = GameObject.Find("ZoomPanel").GetComponent<Image>();
-
         // UI 초기화
         drawingZoom.SetActive(false);
         drawingPos.anchoredPosition = new Vector2(0, -Screen.height);
