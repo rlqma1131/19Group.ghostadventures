@@ -66,12 +66,15 @@ public class UIManager : Singleton<UIManager>
     // ===========================================================================================    
 
 
-    private void Start()
-    {
-        // gameover.SetActive(false);
-    }
+    // private void Start()
+    // {
+    //     playModeUI.SetActive(false);
+    //     startEndingUI.SetActive(true);
+    //     gameover.SetActive(false);
+    //     // gameover.SetActive(false);
+    // }
 
-    // 게임시작시 UI 셋팅
+    // // 게임시작시 UI 셋팅
     // private void Start()
     // {
     //     foreach(GameObject ui in allUIs)

@@ -7,7 +7,9 @@ public class PlayButton_test : MonoBehaviour
 {
     public void PlayButton()
     {
-        SceneManager.LoadScene("TestScene");
-        UIManager.Instance.ShowAll();
+        // SceneManager.LoadScene("TestScene");
+        // UIManager.Instance.ShowAll();
+        SceneManager.LoadScene("IntroScene_Real");
     }
+
 }
