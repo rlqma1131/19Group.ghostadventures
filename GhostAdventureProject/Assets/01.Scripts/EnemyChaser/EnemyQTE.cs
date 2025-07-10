@@ -36,6 +36,30 @@ public class EnemyQTE : MonoBehaviour
     {
         if (isQTERunning) return;
 
+        int currentLives = PlayerLifeManager.Instance.GetCurrentLives();
+
+        if (currentLives <= 1)
+        {
+            Debug.Log("라이프 1 → QTE 없이 Enemy_QTEFail 애니메이션 강제 재생 후 게임오버");
+
+            enemyAI.ChangeState(EnemyAI.AIState.QTEAnimation);
+
+            var anim = enemyAI.enemyAnimator;
+
+            anim.ResetTrigger("QTEIn");
+            anim.ResetTrigger("QTESuccess");
+            anim.ResetTrigger("QTEFail");
+
+            anim.Play("Enemy_QTEFail", 0, 0f);  // 애니메이션 상태 직접 재생
+
+            GetComponent<EnemyMovement>().StopMoving();
+            StartCoroutine(DelayedGameOverAfterAnimation());
+
+            isQTERunning = true;
+            return;
+        }
+
+        // 일반 QTE 시작
         isQTERunning = true;
         enemyAI.enemyAnimator?.SetTrigger("QTEIn");
         enemyAI.ChangeState(EnemyAI.AIState.CaughtPlayer);
@@ -66,6 +90,17 @@ public class EnemyQTE : MonoBehaviour
         Debug.Log("QTE 성공! 플레이어가 탈출했습니다.");
         QTEEffectManager.Instance.EndQTEEffects();
 
+        int currentLives = PlayerLifeManager.Instance.GetCurrentLives();
+
+        if (currentLives <= 1)
+        {
+            Debug.Log("QTE 성공이지만 남은 목숨이 1 → 즉시 게임오버 처리");
+            PlayerLifeManager.Instance.HandleGameOver();
+            isQTERunning = false;
+            return;
+        }
+
+        // 정상 QTE 성공 처리
         enemyAI.ChangeState(EnemyAI.AIState.QTEAnimation);
         enemyAI.enemyAnimator?.SetTrigger("QTESuccess");
 
