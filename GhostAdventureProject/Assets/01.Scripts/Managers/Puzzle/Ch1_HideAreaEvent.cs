@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
+public class Ch1_HideAreaEvent : MonoBehaviour
 {
+    // 싱글톤
+    public static Ch1_HideAreaEvent Instance { get; private set; }
+
     [SerializeField] private AudioClip UnlockCloset;
 
     [SerializeField] private List<string> correctOrder = new() { "침대", "인형", "의자" };
@@ -33,7 +36,7 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
                 closet.Unlock();
 
                 // 쥐 빙의 가능
-                mouse.MouseCanObssessed();
+                //mouse.MouseCanObssessed();
 
                 // 옷장열리는 효과음
                  SoundManager.Instance.PlaySFX(UnlockCloset);

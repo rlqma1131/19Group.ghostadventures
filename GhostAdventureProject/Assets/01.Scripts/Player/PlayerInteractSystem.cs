@@ -4,8 +4,11 @@ using UnityEngine;
 /// 가까운 하나의 오브젝트만 상호작용가능하게(상호작용키 팝업되도록) 하는 클래스
 /// 상호작용 팝업은 BaseInteractable.cs
 /// </summary>
-public class PlayerInteractSystem : Singleton<PlayerInteractSystem>
+public class PlayerInteractSystem : MonoBehaviour
 {
+    // 싱글톤
+    public static PlayerInteractSystem Instance { get; private set; }
+
     private List<GameObject> nearbyInteractables = new();
     [SerializeField] private GameObject currentClosest; 
     public GameObject CurrentClosest => currentClosest;// 디버깅용

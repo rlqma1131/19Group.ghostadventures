@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class SoulEnergySystem : Singleton<SoulEnergySystem>
+public class SoulEnergySystem : MonoBehaviour
 {
+    // 싱글톤
+    public static SoulEnergySystem Instance { get; private set; }
+
     public int maxEnergy;
     public int currentEnergy;
     

@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class PlayerLifeManager : MonoBehaviour
 {
+    // 싱글톤
+    public static PlayerLifeManager Instance {  get; private set; }
+
     [Header("생명 시스템 설정")]
     public int maxPlayerLives = 2; // 챕터당 목숨 2개
     private int currentPlayerLives;
@@ -14,7 +17,6 @@ public class PlayerLifeManager : MonoBehaviour
     private Animator playerAnimator;
     private void Start()
     {
-
         currentPlayerLives = maxPlayerLives; // 생명 초기화
         OnLifeChanged?.Invoke(currentPlayerLives); // UI 업데이트용
     }
@@ -25,8 +27,7 @@ public class PlayerLifeManager : MonoBehaviour
 
     public void LosePlayerLife()
     {
-        currentPlayerLives--;
-        Debug.Log($"생명 감소! 남은 생명: {currentPlayerLives}");
+        SubtractionLife();
 
         OnLifeChanged?.Invoke(currentPlayerLives);
 
@@ -81,6 +82,14 @@ public class PlayerLifeManager : MonoBehaviour
         Debug.Log($"생명 회복! 현재 생명: {currentPlayerLives}");
     }
 
+    // 생명 감소
+    public void SubtractionLife()
+    {
+        currentPlayerLives--;
+        Debug.Log($"생명 감소! 남은 생명: {currentPlayerLives}");
+    }
+
+
     // 최대 생명 설정 (난이도별로 다를 때)
     public void SetMaxLives(int newMaxLives)
     {
@@ -89,8 +98,6 @@ public class PlayerLifeManager : MonoBehaviour
         OnLifeChanged?.Invoke(currentPlayerLives);
     }
 
-    // 싱글톤 패턴 (Player 프리팹에 붙을 때)
-    public static PlayerLifeManager Instance { get; private set; }
 
     private void Awake()
     {

@@ -12,7 +12,6 @@ public class Ch1_Mouse : MoveBasePossessable
     [SerializeField] private Transform point3Transform;
 
     public bool canEnter = false;
-
     protected override void Start()
     {
         base.Start();
@@ -47,11 +46,6 @@ public class Ch1_Mouse : MoveBasePossessable
         transform.DOMove(point1Transform.position, 2.5f).SetEase(Ease.OutQuad);
     }
 
-    public void MouseCanObssessed()
-    {
-        hasActivated = true;
-    }
-
     //[이벤트함수] Escape 애니메이션의 마지막 프레임에 이벤트로 연결
     public void OnEscapeEnd()
     {
@@ -60,19 +54,23 @@ public class Ch1_Mouse : MoveBasePossessable
         // 2. 아이방으로 순간이동
         transform.position = point2Transform.position;
         anim.SetBool("Move", false);
+        hasActivated = true;
     }
 
     private IEnumerator MouseAct()
     {
-        // 쥐구멍 이동
-        // 아이방 - 다용도실
+        // 쥐구멍 이동 (다용도실로)
         transform.position = point3Transform.position;
 
-        //2초 후 빙의 해제
+        // 1초 대기 후 빙의 해제
         yield return new WaitForSeconds(1f);
 
         hasActivated = false;
         Unpossess();
         zoomCamera.Priority = 5;
+
+        // 스르륵 사라지기
+        spriteRenderer.DOFade(0f, 0.5f);
     }
 }
+

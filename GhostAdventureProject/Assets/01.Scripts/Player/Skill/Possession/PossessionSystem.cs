@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class PossessionSystem : Singleton<PossessionSystem>
+public class PossessionSystem : MonoBehaviour
 {
+    // 싱글톤
+    public static PossessionSystem Instance { get; private set; }
+
     [SerializeField] private GameObject scanPanel;
     [SerializeField] private BasePossessable currentTarget; // 디버깅용
     private BasePossessable obssessingTarget;

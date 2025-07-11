@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 
-public class PossessionQTESystem : Singleton<PossessionQTESystem>
+public class PossessionQTESystem : MonoBehaviour
 {
+    // 싱글톤
+    public static PossessionQTESystem Instance { get; private set; }
+
     [SerializeField] private QTEUI QTEUI;
     public bool isRunning { get; private set; } = false;
 
