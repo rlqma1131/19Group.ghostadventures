@@ -7,6 +7,7 @@ public class SettingMenu : MonoBehaviour, IUIClosable
 {
     [Header("Settings Panels")]
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject keybindingPanel;
     [SerializeField] private GameObject escMenuPanel;
 
     [Header("Sound")]
@@ -21,7 +22,6 @@ public class SettingMenu : MonoBehaviour, IUIClosable
     [SerializeField] private Button rebindJumpButton;
 
 
-    [SerializeField] private KeybindConfig keybindConfig;
 
     // 필요 시 더 많은 키 바인딩 버튼들...
 
@@ -117,16 +117,5 @@ public class SettingMenu : MonoBehaviour, IUIClosable
     //     }
     // }
 
-    private void LoadClueKeyBindings()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            string saved = PlayerPrefs.GetString($"ClueKey{i}", $"Alpha{i + 1}");
-            if (System.Enum.TryParse(saved, out KeyCode key))
-            {
-                keybindConfig.SetKeyForSlot(i, key);
-            }
-        }
-    }
 
 }

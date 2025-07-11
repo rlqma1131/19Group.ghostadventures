@@ -28,8 +28,6 @@ public class Inventory_Player : MonoBehaviour
     private int cluesPerPage = 4;
     // [SerializeField] TextMeshProUGUI currentPageText; // 현재 페이지 표시
 
-    [SerializeField] private KeybindConfig keybindConfig;
-
     public void AddClue(ClueData clue)
     {
         
@@ -85,14 +83,36 @@ public class Inventory_Player : MonoBehaviour
         RefreshUI();
     }
 
+    // private void Update()
+    // {
+    //     for (int i = 1; i <= 5; i++)
+    //     {
+    //         if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+    //         {
+    //             int slotIndex = i - 1;
+    //             int clueIndex = currentPage * cluesPerPage + slotIndex;
+
+    //             if (InventoryExpandViewer.Instance.IsShowing())
+    //             {
+    //                 InventoryExpandViewer.Instance.HideClue();
+    //             }
+    //             else if (clueIndex < collectedClues.Count)
+    //             {
+    //                 InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
+    //             }
+    //         }
+    //     }
+    // }
+
+
     private void Update()
     {
-        for (int i = 1; i <= 5; i++)
+        for (int i = 0; i < 5; i++)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+            KeyCode key = KeyBindingManager.Instance.GetKey(i);
+            if (Input.GetKeyDown(key))
             {
-                int slotIndex = i - 1;
-                int clueIndex = currentPage * cluesPerPage + slotIndex;
+                int clueIndex = currentPage * cluesPerPage + i;
 
                 if (InventoryExpandViewer.Instance.IsShowing())
                 {
@@ -105,29 +125,6 @@ public class Inventory_Player : MonoBehaviour
             }
         }
     }
-
-
-    //private void Update()
-    //{
-    //    for (int i = 0; i < 5; i++)
-    //    {
-    //        KeyCode key = keybindConfig.GetKeyForSlot(i);
-
-    //        if (Input.GetKeyDown(key))
-    //        {
-    //            int clueIndex = currentPage * cluesPerPage + i;
-
-    //            if (InventoryExpandViewer.Instance.IsShowing())
-    //            {
-    //                InventoryExpandViewer.Instance.HideClue();
-    //            }
-    //            else if (clueIndex < collectedClues.Count)
-    //            {
-    //                InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
-    //            }
-    //        }
-    //    }
-    //}
 }
 
 
