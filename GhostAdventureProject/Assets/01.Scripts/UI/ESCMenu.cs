@@ -72,6 +72,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // 타이틀로
     public void GoToMainMenu()
     {
+        UIManager.Instance.PlayModeUI_CloseAll();
         escMenuUI.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;   

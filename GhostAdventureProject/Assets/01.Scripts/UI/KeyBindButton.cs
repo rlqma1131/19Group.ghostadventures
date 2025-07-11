@@ -27,18 +27,35 @@ public class KeyBindButton : MonoBehaviour
     {
         if (isWaitingForKey && Input.anyKeyDown)
         {
-            foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
+        foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
+        {
+            if (Input.GetKeyDown(key))
             {
-                if (Input.GetKeyDown(key))
+                // 숫자 키 (Alpha1 ~ Alpha9) 또는 F키 (F1 ~ F9)만 허용
+                bool isAlphaKey = key >= KeyCode.Alpha1 && key <= KeyCode.Alpha9;
+                bool isFKey = key >= KeyCode.F1 && key <= KeyCode.F9;
+
+                if (isAlphaKey || isFKey)
                 {
                     KeyBindingManager.Instance.SetKey(clueIndex, key);
                     isWaitingForKey = false;
                     UpdateKeyText();
                     NotifyInventoryToUpdateKey();
-                    break;
                 }
+                else
+                {
+                    Debug.Log("숫자 키 또는 F1~F9 키만 사용할 수 있습니다.");
+                }
+
+                break;
             }
+                
         }
+        }
+
+
+
+
     }
 
     void UpdateKeyText()

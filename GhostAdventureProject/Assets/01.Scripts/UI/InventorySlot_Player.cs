@@ -10,7 +10,7 @@ public class InventorySlot_Player : MonoBehaviour
     public Image icon;
     public int clueIndex;
     public TMP_Text keyText;
-    
+
     // public TextMeshProUGUI clueName;
 
     public void Setup(ClueData clue)
@@ -35,6 +35,7 @@ public class InventorySlot_Player : MonoBehaviour
     public void UpdateKeyText()
     {
         if (keyText == null || KeyBindingManager.Instance == null) return;
-        keyText.text = KeyBindingManager.Instance.GetKey(clueIndex).ToString();
+        KeyCode key = KeyBindingManager.Instance.GetKey(clueIndex);
+        keyText.text = KeyBindingManager.KeyNameHelper.GetDisplayName(key);
     }
 }
