@@ -27,6 +27,7 @@ public class KeyBoard_Enter : MonoBehaviour
         if (input == correctAnswer)
         {
             correct = true;
+            textSlot.Close(); // 키보드 닫기
             PossessionSystem.Instance.CanMove = true;
             Debug.Log("정답!");
         }
