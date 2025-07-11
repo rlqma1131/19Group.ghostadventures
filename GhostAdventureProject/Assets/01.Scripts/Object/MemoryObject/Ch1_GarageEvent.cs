@@ -41,7 +41,7 @@ public class Ch1_GarageEvent : BaseInteractable
                 {
 
 
-                PossessionSystem.Instance.canMove = false;
+                PossessionSystem.Instance.CanMove = false;
                 UIManager.Instance.PlayModeUI_CloseAll();
                 cutsceneDirector.Play();
                 }
@@ -66,7 +66,7 @@ public class Ch1_GarageEvent : BaseInteractable
 
         UIManager.Instance.PlayModeUI_CloseAll();
         cutsceneDirector_correct.Play();
-        PossessionSystem.Instance.canMove = false;
+        PossessionSystem.Instance.CanMove = false;
         bear.ActivateTeddyBear();
 
         }
@@ -91,7 +91,7 @@ public class Ch1_GarageEvent : BaseInteractable
     void OnTimelineFinished(PlayableDirector pd)
     {
         keyboard.OpenKeyBoard();
-        PossessionSystem.Instance.canMove = true;
+        PossessionSystem.Instance.CanMove = true;
         UIManager.Instance.PlayModeUI_OpenAll();
         isCutscenePlaying = true;
 
@@ -100,7 +100,7 @@ public class Ch1_GarageEvent : BaseInteractable
     {
 
         keyboard.Close();
-        PossessionSystem.Instance.canMove = true;
+        PossessionSystem.Instance.CanMove = true;
         isCutscenePlaying2 = true;
         UIManager.Instance.PlayModeUI_OpenAll();
 
