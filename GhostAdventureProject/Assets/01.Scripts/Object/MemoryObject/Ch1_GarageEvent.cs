@@ -4,6 +4,7 @@ public class Ch1_GarageEvent : BaseInteractable
 {
     [SerializeField] private KeyBoard keyboard;
     [SerializeField] private KeyBoard_Enter answer;
+
     private Ch1_MemoryPositive_01_TeddyBear bear;
 
     private bool playerNearby = false;
