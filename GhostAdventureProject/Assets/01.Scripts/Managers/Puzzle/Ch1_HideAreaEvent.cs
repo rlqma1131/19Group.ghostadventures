@@ -35,9 +35,6 @@ public class Ch1_HideAreaEvent : MonoBehaviour
                 // 기억조각 드러남
                 closet.Unlock();
 
-                // 쥐 빙의 가능
-                //mouse.MouseCanObssessed();
-
                 // 옷장열리는 효과음
                  SoundManager.Instance.PlaySFX(UnlockCloset);
 

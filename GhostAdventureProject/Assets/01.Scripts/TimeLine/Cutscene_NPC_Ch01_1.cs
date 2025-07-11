@@ -31,7 +31,7 @@ public class Cutscene_NPC : MonoBehaviour
         {
             director.Play();
             isCutscenePlaying = true;
-            PossessionSystem.Instance.canMove = false;
+            PossessionSystem.Instance.CanMove = false;
             UIManager.Instance.PlayModeUI_CloseAll();
         }
         else
@@ -52,7 +52,7 @@ public class Cutscene_NPC : MonoBehaviour
     {
 
         GarageDoor.SetActive(false);
-        PossessionSystem.Instance.canMove = true;
+        PossessionSystem.Instance.CanMove = true;
         UIManager.Instance.PlayModeUI_OpenAll();
     }
 }

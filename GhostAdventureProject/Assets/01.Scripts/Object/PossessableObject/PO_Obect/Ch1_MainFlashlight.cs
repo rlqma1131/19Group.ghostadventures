@@ -51,7 +51,7 @@ public class Ch1_MainFlashlight : BasePossessable
 
                 // 타임오버 이벤트 발생 지점
                 // 플레이어 조작 멈춤 & Lives 1 로 만듦
-                PossessionSystem.Instance.canMove = false;
+                PossessionSystem.Instance.CanMove = false;
                 PlayerLifeManager.Instance.SubtractionLife();
 
                 // 적 호출
