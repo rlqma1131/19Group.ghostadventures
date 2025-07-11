@@ -1,5 +1,4 @@
-﻿// 6. EnemyAI.cs (메인 클래스)
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -393,7 +392,7 @@ public class EnemyAI : MonoBehaviour
 
         currentHideArea = nearest;
     }
-    
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1f, 0f, 0f, 0.5f); // 반투명 빨간색

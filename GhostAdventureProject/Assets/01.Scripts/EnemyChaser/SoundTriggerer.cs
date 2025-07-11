@@ -8,18 +8,18 @@ public static class SoundTriggerer
         GameObject soundMarker = new GameObject("SoundMarker");
         soundMarker.transform.position = soundPosition;
 
-        // 2. 모든 EnemyAI에게 전달
+        // 2. 모든 EnemyAI에게 전달 (거리 체크 제거)
         EnemyAI[] enemies = GameObject.FindObjectsOfType<EnemyAI>();
         foreach (var enemy in enemies)
         {
-            float distance = Vector3.Distance(enemy.transform.position, soundPosition);
-            if (distance <= enemy.distractionRange)
-            {
-                enemy.GetDistractedBy(soundMarker.transform);  // 핵심 변경!
-            }
+            // 거리 체크 없이 모든 Enemy가 소리에 반응하도록 변경
+         
+            enemy.GetDistractedBy(soundMarker.transform);
         }
 
         // 3. 6초 후 자동 제거
         GameObject.Destroy(soundMarker, 6f);
+
+        
     }
 }
