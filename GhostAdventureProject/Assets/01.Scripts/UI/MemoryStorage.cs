@@ -11,7 +11,7 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
 
     // private List<Transform> nodePositions = new();
     private List<RectTransform> nodeRects = new();
-    [SerializeField] private float spacing = 500f;
+    [SerializeField] private float spacing = 600;
     public Button closeButton;
 
     private void OnEnable()

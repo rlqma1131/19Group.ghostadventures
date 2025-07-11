@@ -1,4 +1,28 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+#endif
+using UnityEngine;
+
+public class ExampleSceneLink : MonoBehaviour
+{
+#if UNITY_EDITOR
+    public SceneAsset memoryConnectScene;
+#endif
+
+    [HideInInspector] public string memoryConnectSceneName;
+
+#if UNITY_EDITOR
+    void OnValidate()
+    {
+        if (memoryConnectScene != null)
+        {
+            memoryConnectSceneName = memoryConnectScene.name;
+        }
+    }
+#endif
+}
+// using UnityEditor.SearchService;
+// using UnityEngine;
 
 [CreateAssetMenu(menuName = "Memory/MemoryData")]
 public class MemoryData : ScriptableObject
@@ -10,6 +34,27 @@ public class MemoryData : ScriptableObject
 
     // 스캔오브젝트 스프라이트
     public Sprite MemoryObjectSprite;
+    
+    // 기억저장소 컷씬이미지
+    public Sprite MemoryCutSceneImage;
+
+    // 연결 씬
+#if UNITY_EDITOR
+    public SceneAsset memoryConnectScene;
+#endif
+
+    [HideInInspector] public string memoryConnectSceneName;
+
+    #if UNITY_EDITOR
+    void OnValidate()
+    {
+        if (memoryConnectScene != null)
+        {
+            memoryConnectSceneName = memoryConnectScene.name;
+        }
+    }
+#endif
+
 
     // 스캔 후 드랍하는 조각 스프라이트
     public Sprite PositiveFragmentSprite;
