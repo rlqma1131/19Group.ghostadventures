@@ -240,8 +240,10 @@ public class EnemyAI : MonoBehaviour
                 {
                     Debug.Log("[EnemyAI] 플레이어가 숨었습니다 → 숨은 위치까지 접근 후 복귀");
 
-                    movement.SetTarget(Player.position);   // 숨은 위치까지 이동
-                    ChangeState(AIState.SearchWaiting);    // SearchWaiting으로 전환
+                    movement.StopMoving();                    // 추적 중단
+                    movement.SetTargetAwayFromPlayer(4f);     // ← 여기!
+                    FindCurrentHideArea();                    // 숨은 장소 파악
+                    ChangeState(AIState.SearchWaiting);       // 수색 대기
                 }
                 else if (!inRange)
                 {

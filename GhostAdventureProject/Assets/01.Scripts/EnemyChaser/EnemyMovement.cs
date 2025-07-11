@@ -23,6 +23,7 @@ public class EnemyMovement : MonoBehaviour
     private Transform currentTarget;
     private Rigidbody2D rb;
     private bool isFacingRight = true;
+    private Transform Player => GameObject.FindGameObjectWithTag("Player")?.transform;
 
     public bool isMoving { get; set; }
 
@@ -190,5 +191,14 @@ public class EnemyMovement : MonoBehaviour
         }
 
         Destroy(target);
+    }
+    public void SetTargetAwayFromPlayer(float retreatDistance)
+    {
+        if (Player == null) return;
+
+        Vector3 retreatDirection = (transform.position - Player.position).normalized;
+        Vector3 retreatTarget = transform.position + retreatDirection * retreatDistance;
+
+        SetTarget(retreatTarget);
     }
 }
