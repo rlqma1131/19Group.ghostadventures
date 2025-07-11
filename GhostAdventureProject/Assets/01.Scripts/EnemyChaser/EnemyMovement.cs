@@ -49,16 +49,17 @@ public class EnemyMovement : MonoBehaviour
             Flip();
     }
 
+ 
+
     public void SetTarget(Vector3 position)
     {
         GameObject dummy = new GameObject("TargetDummy");
         dummy.transform.position = position;
-        currentTarget = dummy.transform;
-    }
 
-    public void SetTarget(Transform target)
-    {
-        currentTarget = target;
+        currentTarget = dummy.transform;
+
+        // 타겟이 사라지면 currentTarget 초기화
+        StartCoroutine(ClearTargetAfterDelay(dummy, 3f));
     }
 
     public void ClearTarget()
@@ -124,5 +125,17 @@ public class EnemyMovement : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, GetTargetPosition());
         Gizmos.DrawSphere(GetTargetPosition(), 0.2f);
+    }
+    private System.Collections.IEnumerator ClearTargetAfterDelay(GameObject target, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (currentTarget == target.transform)
+        {
+            currentTarget = null;
+            isMoving = false;
+        }
+
+        Destroy(target);
     }
 }
