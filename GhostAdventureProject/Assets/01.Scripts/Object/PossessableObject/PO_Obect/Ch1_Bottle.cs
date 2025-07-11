@@ -40,7 +40,7 @@ public class Ch1_Bottle : BasePossessable
         // 애니메이션 시퀀스 생성
         Sequence panSequence = DOTween.Sequence();
 
-        // 1. 팬이 기울이며 아래로 떨어짐 (0.3초)
+        // 1. 병이 기울이며 아래로 떨어짐 (0.3초)
         panSequence.Append(transform.DOLocalRotate(new Vector3(0f, 0f, -30f), 0.5f).SetEase(Ease.InQuad));
         panSequence.Join(transform.DOLocalMoveY(dropYPos, 0.5f).SetEase(Ease.InQuad));
 
@@ -49,7 +49,17 @@ public class Ch1_Bottle : BasePossessable
         {
             anim.SetTrigger("Fall"); // 깨짐
             SoundManager.Instance.PlaySFX(isFall);
-            SoundTriggerer.TriggerSound(transform.position);
+
+            // SoundTriggerObject 컴포넌트 찾아서 호출
+            var soundTrigger = GetComponent<SoundTriggerObject>();
+            if (soundTrigger != null)
+            {
+                soundTrigger.TriggerSound();
+            }
+            else
+            {
+                Debug.LogWarning($"[{gameObject.name}] SoundTriggerObject 컴포넌트가 없습니다!");
+            }
         });
 
         // 3. 회전 원래대로 복귀 (0.2초)

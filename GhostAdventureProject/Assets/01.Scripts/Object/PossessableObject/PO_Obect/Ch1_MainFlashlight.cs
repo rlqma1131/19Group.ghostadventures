@@ -54,10 +54,16 @@ public class Ch1_MainFlashlight : BasePossessable
                 PossessionSystem.Instance.CanMove = false;
                 PlayerLifeManager.Instance.SubtractionLife();
 
-                // 적 호출
-                SoundTriggerer.TriggerSound(transform.position);
-                
-                // 잡혀서 게임 오버
+                // 적 호출 - SoundTriggerObject 사용
+                var soundTrigger = GetComponent<SoundTriggerObject>();
+                if (soundTrigger != null)
+                {
+                    soundTrigger.TriggerSound();
+                }
+                else
+                {
+                    Debug.LogWarning($"[{gameObject.name}] SoundTriggerObject 컴포넌트가 없습니다!");
+                }
             }
 
             UpdateTimerText();
@@ -98,7 +104,7 @@ public class Ch1_MainFlashlight : BasePossessable
             mirrorBeamVisuals[i].SetActive(isOn);
         }
     }
-    
+
     public override void OnQTESuccess()
     {
         base.OnQTESuccess();
@@ -176,7 +182,6 @@ public class Ch1_MainFlashlight : BasePossessable
             }
         }
     }
-
 
     // 빙의 하고 바로 줌
     public override void OnPossessionEnterComplete()

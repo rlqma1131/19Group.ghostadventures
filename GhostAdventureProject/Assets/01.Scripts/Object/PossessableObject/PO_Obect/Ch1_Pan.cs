@@ -48,7 +48,17 @@ public class Ch1_Pan : BasePossessable
         panSequence.AppendCallback(() =>
         {
             SoundManager.Instance.PlaySFX(isFall);
-            SoundTriggerer.TriggerSound(transform.position);
+
+            // SoundTriggerObject 컴포넌트 찾아서 호출
+            var soundTrigger = GetComponent<SoundTriggerObject>();
+            if (soundTrigger != null)
+            {
+                soundTrigger.TriggerSound();
+            }
+            else
+            {
+                Debug.LogWarning($"[{gameObject.name}] SoundTriggerObject 컴포넌트가 없습니다!");
+            }
         });
 
         // 3. 회전 원래대로 복귀 (0.2초)
