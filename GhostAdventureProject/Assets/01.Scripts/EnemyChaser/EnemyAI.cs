@@ -1,5 +1,4 @@
-﻿// 6. EnemyAI.cs (메인 클래스)
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -35,10 +34,12 @@ public class EnemyAI : MonoBehaviour
     private float stateTimer = 0f;
     private Transform currentHideArea;
     private Transform currentDistraction;
+    private Transform currentTarget;
     private float distractionTimer = 0f;
 
     private PlayerHide playerHide;
     public AIState CurrentState => currentState;
+   
 
     // Y축 고정 (다른 컴포넌트에서 접근 가능하도록 public)
     public bool lockYPosition => movement.lockYPosition;
@@ -195,14 +196,23 @@ public class EnemyAI : MonoBehaviour
     private void UpdateDistractedState()
     {
         distractionTimer += Time.deltaTime;
+
         if (currentDistraction != null)
         {
+            movement.lockYPosition = false;
+            
             movement.SetTarget(currentDistraction.position);
             movement.MoveToTarget(movement.distractionSpeed);
-        }
 
-        if (distractionTimer >= distractionDuration)
-            EndDistraction();
+           
+
+            // 도착하면 종료
+            if (movement.HasReachedTarget())
+            {
+                Debug.Log("[Distracted] 목표 지점 도착! 유인 상태 종료");
+                EndDistraction();
+            }
+        }
     }
 
     private void CheckStateTransitions()
@@ -339,10 +349,17 @@ public class EnemyAI : MonoBehaviour
         if (currentState == AIState.CaughtPlayer || currentState == AIState.StunnedAfterQTE)
             return;
 
-        Debug.Log("소리를 감지했습니다! 해당 위치로 이동합니다.");
-        currentDistraction = null;
+        Debug.Log("[EnemyAI] 소리를 감지했습니다! 해당 위치로 이동합니다.");
+
+        //  soundPosition을 따라갈 수 있게 dummy 오브젝트 생성
+        GameObject tempTarget = new GameObject("TempDistractionTarget");
+        tempTarget.transform.position = soundPosition;
+        GameObject.Destroy(tempTarget, 6f); // 6초 후 제거
+
+        currentDistraction = tempTarget.transform;
         movement.SetTarget(soundPosition);
         distractionTimer = 0f;
+
         ChangeState(AIState.DistractedByDecoy);
     }
 
@@ -393,7 +410,7 @@ public class EnemyAI : MonoBehaviour
 
         currentHideArea = nearest;
     }
-    
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1f, 0f, 0f, 0.5f); // 반투명 빨간색

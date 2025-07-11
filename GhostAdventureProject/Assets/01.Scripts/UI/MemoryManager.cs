@@ -57,7 +57,7 @@ public class MemoryManager : MonoBehaviour
         }
         return result;    }
 
-    public bool IsScanned(MemoryData data) => scannedMemoryList.Contains(data);
+    public bool IsCanStore(MemoryData data) => scannedMemoryList.Contains(data);
 
     public void OpenMemoryStorage()
     {

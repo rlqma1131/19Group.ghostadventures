@@ -53,10 +53,8 @@ public class Ch1_MainFlashlight : BasePossessable
                 // 플레이어 조작 멈춤 & Lives 1 로 만듦
                 PossessionSystem.Instance.CanMove = false;
 
-                // 적 호출
+                // 적 호출 - SoundTriggerObject 사용
                 SoundTriggerer.TriggerSound(transform.position);
-                
-                // 잡혀서 게임 오버
             }
 
             UpdateTimerText();
@@ -97,7 +95,7 @@ public class Ch1_MainFlashlight : BasePossessable
             mirrorBeamVisuals[i].SetActive(isOn);
         }
     }
-    
+
     public override void OnQTESuccess()
     {
         base.OnQTESuccess();
