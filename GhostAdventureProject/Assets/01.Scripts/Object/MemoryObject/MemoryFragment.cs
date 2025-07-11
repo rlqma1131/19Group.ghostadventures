@@ -10,6 +10,9 @@ public class MemoryFragment : BaseInteractable
     [SerializeField] protected bool isScannable = false; // 디버깅용
     public bool IsScannable => isScannable;
 
+    [SerializeField] private bool canStore = false;
+    public bool CanStore => canStore;
+
     [Header("드랍 조각 프리팹")]
     [SerializeField] private GameObject fragmentDropPrefab;
 
@@ -63,6 +66,8 @@ public class MemoryFragment : BaseInteractable
     {
         if (!isScannable) return;
         isScannable = false;
+        canStore = true;
+
         MemoryManager.Instance.TryCollect(data);
 
         Sprite dropSprite = GetFragmentSpriteByType(data.type);
