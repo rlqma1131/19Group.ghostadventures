@@ -54,15 +54,7 @@ public class Ch1_MainFlashlight : BasePossessable
                 PossessionSystem.Instance.CanMove = false;
 
                 // 적 호출 - SoundTriggerObject 사용
-                var soundTrigger = GetComponent<SoundTriggerObject>();
-                if (soundTrigger != null)
-                {
-                    soundTrigger.TriggerSound();
-                }
-                else
-                {
-                    Debug.LogWarning($"[{gameObject.name}] SoundTriggerObject 컴포넌트가 없습니다!");
-                }
+                SoundTriggerer.TriggerSound(transform.position);
             }
 
             UpdateTimerText();

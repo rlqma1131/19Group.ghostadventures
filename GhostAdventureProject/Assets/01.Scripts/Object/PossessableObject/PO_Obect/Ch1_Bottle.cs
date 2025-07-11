@@ -50,16 +50,7 @@ public class Ch1_Bottle : BasePossessable
             anim.SetTrigger("Fall"); // 깨짐
             SoundManager.Instance.PlaySFX(isFall);
 
-            // SoundTriggerObject 컴포넌트 찾아서 호출
-            var soundTrigger = GetComponent<SoundTriggerObject>();
-            if (soundTrigger != null)
-            {
-                soundTrigger.TriggerSound();
-            }
-            else
-            {
-                Debug.LogWarning($"[{gameObject.name}] SoundTriggerObject 컴포넌트가 없습니다!");
-            }
+            SoundTriggerer.TriggerSound(transform.position);
         });
 
         // 3. 회전 원래대로 복귀 (0.2초)
