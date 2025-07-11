@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
 {
-    [SerializeField] private LockedDoor door;
+
+    public bool Completed_TeddyBear = false;
     void Start()
     {
         isScannable = false;
@@ -16,7 +17,8 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     }
 
     public override void AfterScan() 
-    { 
-        door.SolvePuzzle();
+    {
+
+        Completed_TeddyBear = true;
     }
 }
