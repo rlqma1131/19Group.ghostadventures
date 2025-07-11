@@ -38,15 +38,15 @@ public class MoveBasePossessable : BasePossessable
     void Move()
     {
         float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        Vector3 move = new Vector3(h, v, 0);
+
+        Vector3 move = new Vector3(h, 0, 0);
 
         // 이동 여부 판단
         bool isMoving = move.sqrMagnitude > 0.01f;
 
         if (anim != null)
         {
-            anim.SetBool("Move", isMoving); // "Move"가 false일 땐 Idle
+            anim.SetBool("Move", isMoving);
         }
 
         if (isMoving)

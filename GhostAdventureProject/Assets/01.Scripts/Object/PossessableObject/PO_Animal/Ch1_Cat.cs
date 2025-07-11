@@ -90,7 +90,7 @@ public class Ch1_Cat : MoveBasePossessable
 
         zoomCamera.Priority = 5;
         Unpossess();
-        anim.SetTrigger("Sleep");
+        anim.Play("Cat_Sleeping");
         hasActivated = false;
     }
 }
