@@ -18,7 +18,7 @@ public class MoveBasePossessable : BasePossessable
     {
         base.Update();
 
-        if (!isPossessed || !PossessionSystem.Instance.canMove)
+        if (!isPossessed || !PossessionSystem.Instance.CanMove)
             return;
 
         if (Input.GetKeyDown(KeyCode.E))

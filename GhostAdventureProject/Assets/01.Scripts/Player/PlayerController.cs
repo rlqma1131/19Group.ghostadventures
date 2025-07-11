@@ -14,7 +14,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (!PossessionSystem.Instance.canMove || PossessionQTESystem.Instance.isRunning)
+        if (PossessionSystem.Instance == null||
+            PossessionQTESystem.Instance == null ||
+            !PossessionSystem.Instance.CanMove ||
+            PossessionQTESystem.Instance.isRunning)
             return;
 
         HandleMovement();

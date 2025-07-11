@@ -27,7 +27,7 @@ public class Ch1_GarageEvent : BaseInteractable
             else
             {
                 // 1장 단서 모두 모이고 충돌 시 이벤트 발생
-                PossessionSystem.Instance.canMove = false;
+                PossessionSystem.Instance.CanMove = false;
 
                 // [컷씬 재생]
                 // 꼬마유령 등장
