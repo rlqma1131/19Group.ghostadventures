@@ -17,7 +17,6 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
 
     public override void AfterScan()
     {
-        // 코루틴
         anim.SetTrigger("Show");
         ChapterEndingManager.Instance.CollectCh1Clue("H");
     }

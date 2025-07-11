@@ -35,6 +35,7 @@ public class Ch1_Mirror : MonoBehaviour
         if (!revealed && fogTime >= fogDuration)
         {
             revealed = true;
+            ChapterEndingManager.Instance.CollectCh1Clue("W");
         }
     }
 

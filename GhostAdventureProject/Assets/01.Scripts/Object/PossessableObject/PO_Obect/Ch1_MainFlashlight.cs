@@ -154,6 +154,7 @@ public class Ch1_MainFlashlight : BasePossessable
             {
                 puzzleCompleted = true;
                 inputLocked = true;
+                ChapterEndingManager.Instance.CollectCh1Clue("N");
 
                 // 퍼즐 성공 후 3초 대기
                 yield return new WaitForSeconds(3f);
