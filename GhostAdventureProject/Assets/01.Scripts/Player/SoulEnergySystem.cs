@@ -16,7 +16,14 @@ public class SoulEnergySystem : MonoBehaviour
     [HideInInspector] public int currentRestoreAmount;
     
     private Coroutine passiveRestoreCoroutine;
-    
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
     private void Start()
     {
         currentEnergy = maxEnergy;

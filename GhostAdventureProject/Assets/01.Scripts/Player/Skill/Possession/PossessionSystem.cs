@@ -14,6 +14,14 @@ public class PossessionSystem : MonoBehaviour
     private PlayerController Player => GameManager.Instance.PlayerController;
     public bool CanMove { get; set; } = true;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         // HideArea는 무시하고 빙의 가능 오브젝트만 처리

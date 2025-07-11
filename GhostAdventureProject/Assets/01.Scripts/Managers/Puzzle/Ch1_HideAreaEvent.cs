@@ -18,6 +18,14 @@ public class Ch1_HideAreaEvent : MonoBehaviour
 
     public bool Solved { get; private set; } = false;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
+
     public void RegisterArea(string id)
     {
         if (currentOrder.Count >= correctOrder.Count)
