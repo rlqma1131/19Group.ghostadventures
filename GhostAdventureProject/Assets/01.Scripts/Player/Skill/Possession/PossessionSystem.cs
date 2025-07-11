@@ -12,7 +12,7 @@ public class PossessionSystem : MonoBehaviour
     public BasePossessable CurrentTarget => currentTarget;
 
     private PlayerController Player => GameManager.Instance.PlayerController;
-    public bool canMove { get; set; } = true;
+    public bool CanMove { get; set; } = true;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -109,13 +109,13 @@ public class PossessionSystem : MonoBehaviour
     public void PlayPossessionInAnimation() // 빙의 시작 애니메이션
     {
         Debug.Log("빙의 시작 애니메이션 재생");
-        canMove = false;
+        CanMove = false;
         Player.animator.SetTrigger("PossessIn");
     }
 
     public void StartPossessionOutSequence() // 빙의 해제 애니메이션
     {
-        canMove = false;
+        CanMove = false;
         StartCoroutine(DelayedPossessionOutPlay());
     }
 

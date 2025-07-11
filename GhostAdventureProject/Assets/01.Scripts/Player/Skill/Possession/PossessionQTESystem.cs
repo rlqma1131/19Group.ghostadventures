@@ -27,7 +27,7 @@ public class PossessionQTESystem : MonoBehaviour
         isRunning = false;
         Time.timeScale = 1f;
         // UIManager연동되면 스캔 때 까만 배경 비활성화
-        PossessionSystem.Instance.canMove = true;
+        PossessionSystem.Instance.CanMove = true;
         if (success)
         {
             Debug.Log("QTE succeeded");

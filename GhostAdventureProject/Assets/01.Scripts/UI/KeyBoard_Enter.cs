@@ -27,13 +27,13 @@ public class KeyBoard_Enter : MonoBehaviour
         if (input == correctAnswer)
         {
             correct = true;
-            PossessionSystem.Instance.canMove = true;
+            PossessionSystem.Instance.CanMove = true;
             Debug.Log("정답!");
         }
         else
         {
             correct = false;
-            PossessionSystem.Instance.canMove = true;
+            PossessionSystem.Instance.CanMove = true;
             Debug.Log("오답!");
         }
         textSlot.ClearAll();

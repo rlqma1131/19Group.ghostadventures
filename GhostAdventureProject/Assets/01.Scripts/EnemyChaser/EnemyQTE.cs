@@ -65,7 +65,7 @@ public class EnemyQTE : MonoBehaviour
         enemyAI.ChangeState(EnemyAI.AIState.CaughtPlayer);
         GetComponent<EnemyMovement>().StopMoving();
         StartCoroutine(HandleQTEFlow());
-        PossessionSystem.Instance.canMove = false; // 플레이어 이동 비활성화
+        PossessionSystem.Instance.CanMove = false; // 플레이어 이동 비활성화
     }
 
     private IEnumerator HandleQTEFlow()
@@ -108,7 +108,7 @@ public class EnemyQTE : MonoBehaviour
         PlayerLifeManager.Instance.LosePlayerLife();
         StartCoroutine(DelayedStunAfterQTE());
 
-        PossessionSystem.Instance.canMove = true; // 플레이어 이동 활성화
+        PossessionSystem.Instance.CanMove = true; // 플레이어 이동 활성화
     }
 
     private void OnQTEFailure()

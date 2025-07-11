@@ -28,7 +28,7 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
     public void PossessionInAnimationComplete() // 빙의 애니메이션 종료 후 빙의 전환 완료 처리
     {
         Player.SetActive(false);
-        PossessionSystem.Instance.canMove = true;
+        PossessionSystem.Instance.CanMove = true;
         /// 추가적인 연출이나 효과
         /// 빙의오브젝트 강조효과, 사운드 등
         currentState = State.Possessing;
@@ -46,7 +46,7 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
     
     public void PossessionOutAnimationComplete() // 빙의 해제 애니메이션 종료 후 상태 복귀
     {
-        PossessionSystem.Instance.canMove = true;
+        PossessionSystem.Instance.CanMove = true;
         currentState = State.Ghost;
     }
 }
