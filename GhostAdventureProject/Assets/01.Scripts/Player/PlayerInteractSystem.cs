@@ -13,6 +13,14 @@ public class PlayerInteractSystem : MonoBehaviour
     [SerializeField] private GameObject currentClosest; 
     public GameObject CurrentClosest => currentClosest;// 디버깅용
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
+
     private void Update()
     {
         if (nearbyInteractables.Count == 0)

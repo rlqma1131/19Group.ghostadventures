@@ -8,6 +8,14 @@ public class PossessionQTESystem : MonoBehaviour
     [SerializeField] private QTEUI QTEUI;
     public bool isRunning { get; private set; } = false;
 
+    void Awake() 
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
+
     private void Start()
     {
         QTEUI.gameObject.SetActive(false);
