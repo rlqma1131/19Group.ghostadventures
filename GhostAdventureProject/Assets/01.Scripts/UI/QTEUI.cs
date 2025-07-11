@@ -97,7 +97,7 @@ public class QTEUI : MonoBehaviour
     void ShowSuccessArc()
     {
         minAngle = Random.Range(20, 160);
-        maxAngle = minAngle + 15;
+        maxAngle = minAngle + 20;
         float fill = (maxAngle - minAngle) / 360f;
         successArc.fillAmount = fill;
         successArc.rectTransform.localEulerAngles = new Vector3(0, 0, -minAngle);

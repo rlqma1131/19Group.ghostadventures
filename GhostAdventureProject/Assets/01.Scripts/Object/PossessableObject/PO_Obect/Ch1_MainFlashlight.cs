@@ -50,6 +50,9 @@ public class Ch1_MainFlashlight : BasePossessable
                     timerPanel.SetActive(false);
 
                 // 타임오버 이벤트 발생 지점
+                // 플레이어 조작 멈춤 & Lives 1 로 만듦
+                // 적 호출
+                // 게임 오버
             }
 
             UpdateTimerText();
