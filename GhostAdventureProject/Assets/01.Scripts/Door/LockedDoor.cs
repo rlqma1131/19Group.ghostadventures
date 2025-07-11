@@ -36,7 +36,6 @@ public class LockedDoor : BaseDoor
         }
         else
         {
-            // 문이 열려있다면 텔레포트
             TeleportPlayer();
         }
     }
@@ -100,10 +99,14 @@ public class LockedDoor : BaseDoor
 
     private void PlaySound(AudioClip clip)
     {
+      
+
         if (audioSource != null && clip != null)
         {
+         
             audioSource.PlayOneShot(clip);
         }
+        
     }
 
     // TODO: 테스트 완료 후 삭제 필요 - 테스트용 메서드 오버라이드
@@ -120,8 +123,7 @@ public class LockedDoor : BaseDoor
             LockPair();
         }
 
-        string status = isLocked ? "잠김" : "열림";
-        Debug.Log($"[테스트] 페어 문 상태 변경: {status}");
+     
     }
 
     // 테스트용 메서드들
@@ -139,4 +141,7 @@ public class LockedDoor : BaseDoor
 
     // 퍼즐 매니저에서 사용할 수 있는 프로퍼티
     public string PuzzleId => puzzleId;
+
+
+
 }

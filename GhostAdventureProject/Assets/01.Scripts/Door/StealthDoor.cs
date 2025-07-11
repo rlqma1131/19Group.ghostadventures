@@ -29,14 +29,9 @@ public class StealthDoor : MonoBehaviour
     {
         GameObject target = FindClosestTarget();
 
-        if (target == null)
-        {
-            Debug.Log("타겟을 찾을 수 없습니다");
-            return;
-        }
+        if (target == null) return;
 
         float distance = Vector2.Distance(transform.position, target.transform.position);
-        
 
         if (distance <= detectionRange)
             targetAlpha = maxAlpha;

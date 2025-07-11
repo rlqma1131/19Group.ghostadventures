@@ -67,10 +67,15 @@ public class InventorySlot_PossessableObject : MonoBehaviour
     /// ✅ 아이템 수량 감소
     public void UseItem(int amount)
     {
-        quantity -= amount;
-        if (quantity < 0) quantity = 0;
-        UpdateUI();
+    quantity -= amount;
+    if (quantity < 0) quantity = 0;
+
+    if (IsEmpty())
+    {
+        SetEmpty(); // 슬롯을 비우는 처리
     }
+
+    UpdateUI();    }
 
     /// ✅ 수량 0인지 확인
     public bool IsEmpty()
@@ -81,10 +86,10 @@ public class InventorySlot_PossessableObject : MonoBehaviour
     /// ✅ 슬롯 UI 제거
     public void DestroySlotUI()
     {
-        // if (slotUI != null)
-        // {
-        //     GameObject.Destroy(slotUI);
-        // }
+        if (slotUI != null)
+        {
+            GameObject.Destroy(slotUI);
+        }
         item = null;
         iconImage = null;
     }
@@ -97,5 +102,19 @@ public class InventorySlot_PossessableObject : MonoBehaviour
             countText.text = quantity.ToString();
         }
     }
+
+    public void SetEmpty()
+{
+    item = null;
+    quantity = 0;
+
+    // 아이콘 제거
+    if (iconImage != null)
+        iconImage.sprite = null;
+
+    // 수량 텍스트 제거
+    if (quantityText != null)
+        quantityText.text = "";
+}
 }
 

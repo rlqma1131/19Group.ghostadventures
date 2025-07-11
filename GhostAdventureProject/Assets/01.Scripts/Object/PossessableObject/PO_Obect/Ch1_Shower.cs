@@ -36,14 +36,14 @@ public class Ch1_Shower : BasePossessable
             UpdateNeedleRotation();
             Debug.Log("온도 조절: " + temperature);
         }
-        else if (Input.GetKeyDown(KeyCode.Space))
+        else if (Input.GetKeyDown(KeyCode.A))
         {
             temperature = Mathf.Min(3, temperature + 1);
             UpdateNeedleRotation();
             Debug.Log("온도 조절: " + temperature);
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             isWater = !isWater;
             water.SetActive(isWater);

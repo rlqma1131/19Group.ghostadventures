@@ -88,6 +88,7 @@ public class Ch1_Cat : MoveBasePossessable
 
         yield return new WaitForSeconds(2f); // 2초 기다림
 
+        zoomCamera.Priority = 5;
         Unpossess();
         anim.SetTrigger("Sleep");
         hasActivated = false;
