@@ -9,6 +9,7 @@ public static class SoundTriggerer
         soundMarker.name = "SoundMarker";
         soundMarker.transform.position = soundPosition;
 
+
         // 2. 모든 EnemyAI에게 전달
         EnemyAI[] enemies = GameObject.FindObjectsOfType<EnemyAI>();
         foreach (var enemy in enemies)
