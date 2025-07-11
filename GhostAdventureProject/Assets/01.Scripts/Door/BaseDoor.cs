@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class BaseDoor : MonoBehaviour
+public abstract class BaseDoor : BaseInteractable
 {
     [Header("문 세팅")]
     protected bool isLocked = false;
@@ -37,8 +37,10 @@ public abstract class BaseDoor : MonoBehaviour
 
     protected abstract void TryInteract();
 
-    protected virtual void OnTriggerEnter2D(Collider2D other)
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
+        base.OnTriggerEnter2D (other);
+
         if (other.CompareTag("Player"))
         {
             playerNearby = true;
@@ -46,8 +48,10 @@ public abstract class BaseDoor : MonoBehaviour
         }
     }
 
-    protected virtual void OnTriggerExit2D(Collider2D other)
+    protected override void OnTriggerExit2D(Collider2D other)
     {
+        base.OnTriggerExit2D (other);
+
         if (other.CompareTag("Player"))
         {
             playerNearby = false;

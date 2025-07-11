@@ -52,7 +52,6 @@ public class Ch1_MainFlashlight : BasePossessable
                 // 타임오버 이벤트 발생 지점
                 // 플레이어 조작 멈춤 & Lives 1 로 만듦
                 PossessionSystem.Instance.CanMove = false;
-                PlayerLifeManager.Instance.SubtractionLife();
 
                 // 적 호출
                 SoundTriggerer.TriggerSound(transform.position);
@@ -176,7 +175,6 @@ public class Ch1_MainFlashlight : BasePossessable
             }
         }
     }
-
 
     // 빙의 하고 바로 줌
     public override void OnPossessionEnterComplete()

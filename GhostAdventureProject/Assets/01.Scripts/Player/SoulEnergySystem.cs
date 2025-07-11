@@ -24,6 +24,7 @@ public class SoulEnergySystem : MonoBehaviour
             Instance = this;
         }
     }
+
     private void Start()
     {
         currentEnergy = maxEnergy;
