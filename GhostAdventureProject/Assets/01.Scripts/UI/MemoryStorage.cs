@@ -14,16 +14,16 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
     [SerializeField] private float spacing = 600;
     public Button closeButton;
 
-    //private void OnEnable()
-    //{
-    //    MemoryManager.Instance.OnMemoryCollected += AddMemoryNode;
-    //    RedrawStorage(); // 초기화 시
-    //}
+    private void OnEnable()
+    {
+       MemoryManager.Instance.OnMemoryCollected += AddMemoryNode;
+       RedrawStorage(); // 초기화 시
+    }
 
-    //private void OnDisable()
-    //{
-    //    MemoryManager.Instance.OnMemoryCollected -= AddMemoryNode;
-    //}
+    private void OnDisable()
+    {
+       MemoryManager.Instance.OnMemoryCollected -= AddMemoryNode;
+    }
 
     private void RedrawStorage()
     {
