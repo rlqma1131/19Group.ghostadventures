@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 4021909710416709265}
   - component: {fileID: 6950903684035425170}
   - component: {fileID: 616106383034378099}
+  - component: {fileID: 4580879313637397603}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -244,6 +245,7 @@ MonoBehaviour:
   distractionSpeed: 1
   lockYPosition: 1
   fixedYPosition: 0
+  unlockYDuringChase: 1
   useFlipX: 1
   useScale: 0
   isMoving: 0
@@ -289,3 +291,19 @@ MonoBehaviour:
   searchEndWaitTime: 2
   searchDistance: 1.5
   searchLaps: 2
+--- !u!114 &4580879313637397603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575559655872409034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f11f9885094ad1e4c82de606bf3b4809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doorDetectionRange: 1.5
+  doorUseCooldown: 2
+  canUseDoors: 1
+  playerTrackingRange: 10

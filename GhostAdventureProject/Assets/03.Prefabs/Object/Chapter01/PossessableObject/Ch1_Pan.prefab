@@ -53,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a8349211e4a72d04abd797c5f29d70b4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2059531157
   m_SortingLayer: 4
-  m_SortingOrder: 1
+  m_SortingOrder: 50
   m_Sprite: {fileID: -1754545327, guid: 379d3ba0d7a594e5abb24f485a36df7d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -139,7 +139,10 @@ MonoBehaviour:
   isFall: {fileID: 8300000, guid: ba48f3939907ec342aaf26cd682735a6, type: 3}
   startLocalPosition: {x: 2.493, y: 1.348, z: 0}
   startLocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  dropYPos: -3.2
+  dropYPos: -3.3
+  cat: {fileID: 0}
+  cake: {fileID: 0}
+  mouse: {fileID: 0}
 --- !u!61 &109427476392736326
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -269,7 +272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_LocalPosition.x

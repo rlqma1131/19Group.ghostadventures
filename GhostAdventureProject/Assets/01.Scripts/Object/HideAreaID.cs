@@ -3,5 +3,4 @@
 public class HideAreaID : MonoBehaviour
 {
     public string areaID;
-
 }

@@ -56,7 +56,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2559906320894238739}
-  - component: {fileID: 3772415248653427086}
   - component: {fileID: 7978475181466858523}
   - component: {fileID: 458013222782774413}
   m_Layer: 10
@@ -75,8 +74,8 @@ Transform:
   m_GameObject: {fileID: 1727160261382674069}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.45, y: -0.13, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.89, y: -2.67, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4545415248446873150}
@@ -84,19 +83,6 @@ Transform:
   - {fileID: 1298488826860867035}
   m_Father: {fileID: 4134046223844422119}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3772415248653427086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1727160261382674069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 499cb42b5a18ebe44866759087d5f962, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 6563901382293355788}
 --- !u!114 &7978475181466858523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,7 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6ebd91cba714c645b13a57b4c7992d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: c9500486131ffbb4aacd45c92979a630, type: 2}
+  interactionInfo: {fileID: 6563901382293355788}
+  data: {fileID: 11400000, guid: 198d980b61e6bfe489f4dd8504399664, type: 2}
   isScannable: 0
   fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
   dropOffset: {x: 0, y: 0, z: 0}
@@ -309,9 +296,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingLayerID: -2059531157
+  m_SortingLayer: 4
+  m_SortingOrder: 100
   m_Sprite: {fileID: 2028251557, guid: 1cc40b75998c94dfcba22e64a4805011, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -336,7 +323,7 @@ GameObject:
   - component: {fileID: 913885525440178717}
   m_Layer: 0
   m_Name: MainSprite
-  m_TagString: HideArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

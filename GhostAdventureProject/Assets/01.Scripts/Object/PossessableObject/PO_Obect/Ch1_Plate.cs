@@ -45,7 +45,6 @@ public class Ch1_Plate : BasePossessable
         }
 
         shakeSeq.Append(transform.DOLocalRotate(Vector3.zero, 0.03f));
-        shakeSeq.OnComplete(() => hasActivated = false);
 
         // 고양이는 눈 깜빡이기만
         cat.Blink();

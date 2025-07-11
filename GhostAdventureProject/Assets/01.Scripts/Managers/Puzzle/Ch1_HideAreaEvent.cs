@@ -6,11 +6,14 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
     [SerializeField] private AudioClip UnlockCloset;
 
     [SerializeField] private List<string> correctOrder = new() { "침대", "인형", "의자" };
-    private List<string> currentOrder = new();
+    [SerializeField] private List<string> currentOrder = new();
 
     private Ch1_Closet closet => FindObjectOfType<Ch1_Closet>();
     private PlayerHide PlayerHide => FindObjectOfType<PlayerHide>();
     private Ch1_Mouse mouse => FindObjectOfType<Ch1_Mouse>();
+    private PlayerHide playerHide => GameManager.Instance.Player.GetComponent<PlayerHide>();
+
+    public bool Solved { get; private set; } = false;
 
     public void RegisterArea(string id)
     {
@@ -24,6 +27,8 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
         {
             if (IsCorrectOrder())
             {
+                Solved = true;
+
                 // 기억조각 드러남
                 closet.Unlock();
 
@@ -38,6 +43,7 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
 
                 // 퍼즐 풀면 아이방 HideArea에 못숨도록
                 UnTagAllHideAreas();
+                playerHide.canHide = false;
             }
             else
             {

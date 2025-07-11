@@ -17,6 +17,9 @@ public class LockedDoor : BaseDoor
         isLocked = true; // 기본적으로 잠김
         audioSource = GetComponent<AudioSource>();
 
+        // 부모 클래스의 Start 호출
+        base.Start();
+
         // 페어 문 자동 연결 (둘 다 서로를 참조하도록)
         if (pairedDoor != null && pairedDoor.pairedDoor != this)
         {
@@ -86,6 +89,7 @@ public class LockedDoor : BaseDoor
         {
             pairedDoor.isLocked = true;
             Debug.Log($"{pairedDoor.gameObject.name} 페어 문이 잠겼습니다!");
+            pairedDoor.UpdateDoorVisual();
         }
     }
 
@@ -100,6 +104,24 @@ public class LockedDoor : BaseDoor
         {
             audioSource.PlayOneShot(clip);
         }
+    }
+
+    // TODO: 테스트 완료 후 삭제 필요 - 테스트용 메서드 오버라이드
+    protected override void TestToggleDoor()
+    {
+        if (isLocked)
+        {
+            // 잠겨있으면 페어와 함께 열기
+            UnlockPair();
+        }
+        else
+        {
+            // 열려있으면 페어와 함께 잠그기
+            LockPair();
+        }
+
+        string status = isLocked ? "잠김" : "열림";
+        Debug.Log($"[테스트] 페어 문 상태 변경: {status}");
     }
 
     // 테스트용 메서드들

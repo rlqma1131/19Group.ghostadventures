@@ -1,7 +1,9 @@
 ﻿using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Ch1_Pan : BasePossessable
+public class Ch1_Bottle : BasePossessable
 {
     [SerializeField] private AudioClip isFall;
 
@@ -10,43 +12,42 @@ public class Ch1_Pan : BasePossessable
     [SerializeField] private Quaternion startLocalRotation = Quaternion.identity;
     [SerializeField] private float dropYPos = -1.5f;
 
-    [SerializeField] private Ch1_Cat cat;
-    [SerializeField] private Ch1_MemoryFake_02_Cake cake;
-    [SerializeField] private Ch1_Mouse mouse;
-
     protected override void Start()
     {
         base.Start();
         // 시작 시 위치와 회전 적용
         transform.localPosition = startLocalPosition;
         transform.localRotation = startLocalRotation;
+
+        anim = GetComponentInChildren<Animator>();
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (!isPossessed || !hasActivated)
+        if (!isPossessed)
             return;
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            TriggerPanEvent();
+            TriggerBottleEvent();
         }
     }
 
-    private void TriggerPanEvent()
+    private void TriggerBottleEvent()
     {
         // 애니메이션 시퀀스 생성
         Sequence panSequence = DOTween.Sequence();
 
         // 1. 팬이 기울이며 아래로 떨어짐 (0.3초)
-        panSequence.Append(transform.DOLocalRotate(new Vector3(0f, 0f, -60f), 0.5f).SetEase(Ease.InQuad));
+        panSequence.Append(transform.DOLocalRotate(new Vector3(0f, 0f, -30f), 0.5f).SetEase(Ease.InQuad));
         panSequence.Join(transform.DOLocalMoveY(dropYPos, 0.5f).SetEase(Ease.InQuad));
 
         // 2. 낙하 후 사운드 재생 및 AI 유인
         panSequence.AppendCallback(() =>
         {
+            anim.SetTrigger("Fall"); // 깨짐
             SoundManager.Instance.PlaySFX(isFall);
             SoundTriggerer.TriggerSound(transform.position);
         });
@@ -55,13 +56,9 @@ public class Ch1_Pan : BasePossessable
         panSequence.Append(transform.DOLocalRotateQuaternion(startLocalRotation, 0.2f).SetEase(Ease.OutBounce));
 
         // 4. 0.05초 후 관련 이벤트 실행
-        panSequence.AppendInterval(0.05f);
+        panSequence.AppendInterval(0.5f);
         panSequence.AppendCallback(() =>
         {
-            mouse.ActivateMouse();
-            cat.ActivateCat();
-            cake.ActivateCake();
-
             hasActivated = false;
             Unpossess();
         });

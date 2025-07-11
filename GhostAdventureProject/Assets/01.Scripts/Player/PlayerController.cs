@@ -20,7 +20,9 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
 
         if (Input.GetKeyDown(KeyCode.E) && CurrentTargetIsPossessable())
+        {
             PossessionSystem.Instance.TryPossess();
+        }
     }
 
     private void HandleMovement() // 기본 이동 처리

@@ -1,11 +1,11 @@
-﻿using DG.Tweening;
+﻿using Cinemachine;
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
 public class Ch1_Cat : MoveBasePossessable
 {
     [SerializeField] private LockedDoor door;
-
     private bool isNearDoor = false;
 
     protected override void Start()
@@ -29,16 +29,20 @@ public class Ch1_Cat : MoveBasePossessable
     }
 
     // 문 근처에 있는지 확인
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
+        base.OnTriggerEnter2D(collision);
+
         if (collision.GetComponent<LockedDoor>() == door)
         {
             isNearDoor = true;
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected override void OnTriggerExit2D(Collider2D collision)
     {
+        base.OnTriggerExit2D (collision);
+
         if (collision.GetComponent<LockedDoor>() == door)
         {
             isNearDoor = false;
@@ -85,6 +89,7 @@ public class Ch1_Cat : MoveBasePossessable
         yield return new WaitForSeconds(2f); // 2초 기다림
 
         Unpossess();
+        anim.SetTrigger("Sleep");
         hasActivated = false;
     }
 }
