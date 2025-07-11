@@ -48,6 +48,7 @@ public class Ch1_Pan : BasePossessable
         panSequence.AppendCallback(() =>
         {
             SoundManager.Instance.PlaySFX(isFall);
+
             SoundTriggerer.TriggerSound(transform.position);
         });
 

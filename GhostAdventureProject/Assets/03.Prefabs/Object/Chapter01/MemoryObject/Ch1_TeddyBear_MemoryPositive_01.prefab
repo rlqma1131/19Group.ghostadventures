@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8064986636356807289}
   - component: {fileID: 4395888077430418194}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MainSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6607376444613216211}
   - component: {fileID: 3402829423375287405}
   - component: {fileID: 2891215509360032032}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ch1_TeddyBear_MemoryPositive_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -187,6 +187,7 @@ MonoBehaviour:
   interactionInfo: {fileID: 2304230181505776420}
   data: {fileID: 11400000, guid: eb7473f7e18f2dc449a1de566593ec1b, type: 2}
   isScannable: 0
+  canStore: 0
   fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
   dropOffset: {x: 0, y: 0, z: 0}
   bounceHeight: 0.3
@@ -204,9 +205,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7856109896694109157}
     m_Modifications:
+    - target: {fileID: 4399529086182020137, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_Name
       value: InteractionInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
