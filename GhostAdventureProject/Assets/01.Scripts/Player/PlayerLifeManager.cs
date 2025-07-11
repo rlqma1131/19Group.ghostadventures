@@ -15,6 +15,21 @@ public class PlayerLifeManager : MonoBehaviour
     public static event Action OnGameOver; // 게임오버 시
     public static event Action OnLifeLost; // 생명을 잃었을 때 (스턴 처리용)
     private Animator playerAnimator;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            // Player는 이미 GameManager에서 DontDestroyOnLoad 처리됨
+        }
+        else
+        {
+            Destroy(this); // 컴포넌트만 제거
+        }
+        playerAnimator = GetComponentInChildren<Animator>();
+    }
+
     private void Start()
     {
         currentPlayerLives = maxPlayerLives; // 생명 초기화
@@ -43,7 +58,6 @@ public class PlayerLifeManager : MonoBehaviour
             OnLifeLost?.Invoke(); // AI에게 알림
         }
     }
-
 
     public void HandleGameOver()
     {
@@ -89,7 +103,6 @@ public class PlayerLifeManager : MonoBehaviour
         Debug.Log($"생명 감소! 남은 생명: {currentPlayerLives}");
     }
 
-
     // 최대 생명 설정 (난이도별로 다를 때)
     public void SetMaxLives(int newMaxLives)
     {
@@ -98,20 +111,6 @@ public class PlayerLifeManager : MonoBehaviour
         OnLifeChanged?.Invoke(currentPlayerLives);
     }
 
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            // Player는 이미 GameManager에서 DontDestroyOnLoad 처리됨
-        }
-        else
-        {
-            Destroy(this); // 컴포넌트만 제거
-        }
-        playerAnimator = GetComponentInChildren<Animator>();
-    }
     public void StartStruggleAnimation()
     {
         playerAnimator?.SetTrigger("StruggleIn");
