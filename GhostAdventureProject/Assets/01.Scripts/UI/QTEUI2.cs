@@ -1,8 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-using UnityEditor.AnimatedValues;
+//using UnityEditor.AnimatedValues;
 
 public class QTEUI2 : MonoBehaviour
 {
