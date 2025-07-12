@@ -7,7 +7,6 @@ public class EnemyMovement : MonoBehaviour
     public float patrolSpeed = 2f;
     public float chaseSpeed = 4f;
     public float distractionSpeed = 4f;
- 
 
     [Header("이동 제어")]
     public bool lockYPosition = true;
@@ -16,16 +15,26 @@ public class EnemyMovement : MonoBehaviour
     [Header("디버그")]
     public bool drawDebug = false;
 
+    [Header("벽 감지")]
+    [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private float wallCheckDistance = 0.5f;
+    [SerializeField] private float stuckCheckTime = 1f;
+
     private Transform currentTarget;
     private Rigidbody2D rb;
     private bool isFacingRight = true;
+    private Transform Player => GameObject.FindGameObjectWithTag("Player")?.transform;
 
-    //  수정: 외부에서 접근 가능한 isMoving (getter & setter 모두 public)
     public bool isMoving { get; set; }
+
+    // 벽 막힘 판정용
+    private float stuckTimer = 0f;
+    private Vector3 lastPosition;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        lastPosition = transform.position;
     }
 
     private void FixedUpdate()
@@ -33,6 +42,31 @@ public class EnemyMovement : MonoBehaviour
         if (currentTarget == null)
         {
             isMoving = false;
+            return;
+        }
+
+        // 벽 충돌 판정 + 방향 전환
+        if (IsHittingWall())
+        {
+            stuckTimer += Time.fixedDeltaTime;
+
+            if (Vector3.Distance(transform.position, lastPosition) < 0.01f)
+            {
+                if (stuckTimer >= stuckCheckTime)
+                {
+                    Debug.Log("[EnemyMovement] 벽에 막힘 → 타겟 방향 반전");
+                    ReverseTargetDirection();
+                    stuckTimer = 0f;
+                }
+            }
+            else
+            {
+                stuckTimer = 0f;
+                lastPosition = transform.position;
+            }
+
+            isMoving = false;
+            rb.velocity = Vector2.zero;
             return;
         }
 
@@ -49,7 +83,28 @@ public class EnemyMovement : MonoBehaviour
             Flip();
     }
 
- 
+    private bool IsHittingWall()
+    {
+        Vector2 origin = transform.position;
+        Vector2 direction = isFacingRight ? Vector2.right : Vector2.left;
+
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, wallCheckDistance, wallLayer);
+
+        if (drawDebug)
+            Debug.DrawRay(origin, direction * wallCheckDistance, Color.red);
+
+        return hit.collider != null;
+    }
+
+    private void ReverseTargetDirection()
+    {
+        if (currentTarget == null) return;
+
+        Vector3 offset = transform.position - currentTarget.position;
+        Vector3 newTarget = transform.position + offset;
+
+        SetTarget(newTarget);
+    }
 
     public void SetTarget(Vector3 position)
     {
@@ -58,7 +113,6 @@ public class EnemyMovement : MonoBehaviour
 
         currentTarget = dummy.transform;
 
-        // 타겟이 사라지면 currentTarget 초기화
         StartCoroutine(ClearTargetAfterDelay(dummy, 3f));
     }
 
@@ -90,7 +144,7 @@ public class EnemyMovement : MonoBehaviour
     {
         if (currentTarget == null) return;
 
-        moveSpeed = speed;  // 이 줄은 없어도 되긴 합니다 (단, 디버깅 용도로는 좋습니다)
+        moveSpeed = speed;
         Vector3 targetPos = GetTargetPosition();
         Vector3 direction = (targetPos - transform.position).normalized;
 
@@ -103,7 +157,6 @@ public class EnemyMovement : MonoBehaviour
         if ((direction.x > 0 && !isFacingRight) || (direction.x < 0 && isFacingRight))
             Flip();
     }
-
 
     public void StopMoving()
     {
@@ -126,6 +179,7 @@ public class EnemyMovement : MonoBehaviour
         Gizmos.DrawLine(transform.position, GetTargetPosition());
         Gizmos.DrawSphere(GetTargetPosition(), 0.2f);
     }
+
     private System.Collections.IEnumerator ClearTargetAfterDelay(GameObject target, float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -137,5 +191,14 @@ public class EnemyMovement : MonoBehaviour
         }
 
         Destroy(target);
+    }
+    public void SetTargetAwayFromPlayer(float retreatDistance)
+    {
+        if (Player == null) return;
+
+        Vector3 retreatDirection = (transform.position - Player.position).normalized;
+        Vector3 retreatTarget = transform.position + retreatDirection * retreatDistance;
+
+        SetTarget(retreatTarget);
     }
 }

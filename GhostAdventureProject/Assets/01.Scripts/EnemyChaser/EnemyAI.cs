@@ -231,20 +231,19 @@ public class EnemyAI : MonoBehaviour
         switch (currentState)
         {
             case AIState.Patrolling:
-                if (hiding)
-                {
-                    FindCurrentHideArea();
-                    ChangeState(AIState.SearchWaiting);
-                }
-                else if (inRange)
+                if (!hiding && inRange)
                     ChangeState(AIState.Chasing);
                 break;
 
             case AIState.Chasing:
                 if (hiding)
                 {
-                    FindCurrentHideArea();
-                    ChangeState(AIState.SearchWaiting);
+                    Debug.Log("[EnemyAI] 플레이어가 숨었습니다 → 숨은 위치까지 접근 후 복귀");
+
+                    movement.StopMoving();                    // 추적 중단
+                    movement.SetTargetAwayFromPlayer(4f);     // ← 여기!
+                    FindCurrentHideArea();                    // 숨은 장소 파악
+                    ChangeState(AIState.SearchWaiting);       // 수색 대기
                 }
                 else if (!inRange)
                 {
@@ -256,10 +255,26 @@ public class EnemyAI : MonoBehaviour
                 break;
 
             case AIState.SearchWaiting:
+                if (movement.HasReachedTarget()) // 숨은 위치에 도착했는지 확인
+                {
+                    Debug.Log("[EnemyAI] 숨은 위치 도착 → 복귀 시작");
+                    movement.SetTarget(patrol.GetStartPosition()); // 순찰 시작 위치로 복귀
+                    ChangeState(AIState.Returning);
+                }
+                break;
+
+            case AIState.Returning:
                 if (!hiding && inRange)
                     ChangeState(AIState.Chasing);
-                else if (stateTimer >= search.GetSearchWaitTime())
-                    ChangeState(AIState.Searching);
+                else if (movement.HasReachedTarget(0.5f))
+                    ChangeState(AIState.Waiting); // 도착 후 대기
+                break;
+
+            case AIState.Waiting:
+                if (!hiding && inRange)
+                    ChangeState(AIState.Chasing);
+                else if (stateTimer >= returnedWaitTime)
+                    ChangeState(AIState.Patrolling); // 다시 순찰 시작
                 break;
 
             case AIState.Searching:
@@ -282,22 +297,8 @@ public class EnemyAI : MonoBehaviour
                     if (returnToOriginalPosition)
                         ChangeState(AIState.Returning);
                     else
-                        StartRandomPatrol();  // 랜덤 순찰 시작
+                        StartRandomPatrol();
                 }
-                break;
-
-            case AIState.Returning:
-                if (!hiding && inRange)
-                    ChangeState(AIState.Chasing);
-                else if (movement.HasReachedTarget(0.5f))
-                    ChangeState(AIState.Waiting);
-                break;
-
-            case AIState.Waiting:
-                if (!hiding && inRange)
-                    ChangeState(AIState.Chasing);
-                else if (stateTimer >= returnedWaitTime)
-                    ChangeState(AIState.Patrolling);
                 break;
 
             case AIState.DistractedByDecoy:
@@ -309,6 +310,7 @@ public class EnemyAI : MonoBehaviour
                 break;
         }
     }
+
 
     private IEnumerator RunChaseResidual(Vector3 targetPos)
     {

@@ -116,13 +116,13 @@ public class UIManager : Singleton<UIManager>
         startEndingUI.SetActive(false);
     }
 
-    // 플레이모드UI 모두 끄기
+    // 플레이모드UI 모두 켜기
     public void PlayModeUI_OpenAll()
     {
         playModeUI.SetActive(true);
     }
 
-    // 스타트엔딩UI 모두 끄기
+    // 스타트엔딩UI 모두 켜기
     public void startEndingUI_OpenAll()
     {
         startEndingUI.SetActive(true);
