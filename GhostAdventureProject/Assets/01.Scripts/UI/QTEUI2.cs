@@ -17,7 +17,6 @@ public class QTEUI2 : MonoBehaviour
     [Header("QTE Settings")]
     public int requiredPresses = 15;
     public float timeLimit = 3f;
-
     private int currentPressCount = 0;
     private float currentTime = 0f;
     private bool isRunning = false;
@@ -34,8 +33,6 @@ public class QTEUI2 : MonoBehaviour
     {
         // if(!canStartQTE || isRunning)
         //     return;
-
-        
         qteUI.SetActive(true);
         currentPressCount = 0;
         currentTime = 0f;
@@ -43,6 +40,7 @@ public class QTEUI2 : MonoBehaviour
         // resultText.text = "";
         isRunning = true;
         StartCoroutine(RunQTE());
+        UIManager.Instance.SpaceBar.SetActive(true);
     }
 
     private IEnumerator RunQTE()
@@ -69,7 +67,7 @@ public class QTEUI2 : MonoBehaviour
         }
 
         
-
+        // 탈출 성공시
         if (currentPressCount >= requiredPresses)
         {
             // resultText.text = "탈출 성공!";
@@ -81,6 +79,7 @@ public class QTEUI2 : MonoBehaviour
             // StartCoroutine(QTECooldown(2f));
 
         }
+        // 탈출 실패시
         else
         {
             // resultText.text = "탈출 실패!";
@@ -93,6 +92,7 @@ public class QTEUI2 : MonoBehaviour
         isRunning = false;
         yield return new WaitForSeconds(1.5f);
         qteUI.SetActive(false);
+        UIManager.Instance.SpaceBar.SetActive(false);
 
         // resultText.gameObject.SetActive(true);
     }
