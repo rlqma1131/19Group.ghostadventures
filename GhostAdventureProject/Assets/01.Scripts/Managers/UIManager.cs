@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public interface IUIClosable
@@ -48,15 +46,22 @@ public class UIManager : Singleton<UIManager>
     // -------------------------------------------------------------------------------------------
 
     // 2. 게임 시작/엔딩 UI
-    public PlayButton_test playbutton; // 플레이버튼
     public GameObject gameover; // 게임오버(텍스트)
 
     // -------------------------------------------------------------------------------------------
+
+    // 3. 상호작용 UI
+    public GameObject SpaceBar;
+    public GameObject Q_Key;
+    public GameObject interactInfo;
+    
+    // --------------------------------------------------------------------------------------------
 
 
     [Header("UICanvas 전체 키고 끌때 사용")]
     [SerializeField] private GameObject playModeUI; // 플레이모드 모든 UI(Canvas)
     [SerializeField] private GameObject startEndingUI; // 게임 시작/엔딩 모든 UI(Canvas)
+    [SerializeField] private GameObject interactUI; // 상호작용 모든 UI(Canvas)
 
 
     [Header("ESC 닫기용 UI List")]
@@ -75,15 +80,6 @@ public class UIManager : Singleton<UIManager>
     //     // gameover.SetActive(false);
     // }
 
-    // // 게임시작시 UI 셋팅
-    // private void Start()
-    // {
-    //     foreach(GameObject ui in allUIs)
-    //     {
-    //         ui.SetActive(false);
-    //     }
-    //     playbutton.gameObject.SetActive(true);
-    // }
 
     // targetUI 하나만 보이게 하기
     public void ShowOnly(GameObject targetUI)
@@ -95,14 +91,14 @@ public class UIManager : Singleton<UIManager>
     }
 
     // 모든 UI 보이게 하기(play버튼 제외)
-    public void ShowAll()
-    {
-        foreach (GameObject ui in allUIs)
-        {
-            ui.SetActive(true);
-        }
-        playbutton.gameObject.SetActive(false);
-    }
+    // public void ShowAll()
+    // {
+    //     foreach (GameObject ui in allUIs)
+    //     {
+    //         ui.SetActive(true);
+    //     }
+    //     playbutton.gameObject.SetActive(false);
+    // }
 
     // 플레이모드UI Canvas 끄기
     public void PlayModeUI_CloseAll()
@@ -156,9 +152,7 @@ public class UIManager : Singleton<UIManager>
      private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
-        {
             TryCloseTopUI();
-        }
     }
 
     // 가장 위에 있는 UI를 닫음
@@ -172,7 +166,6 @@ public class UIManager : Singleton<UIManager>
                 return;
             }
         }
-
         // 아무 UI도 안 켜져 있으면 ESC 메뉴 토글
         escMenu.ESCMenuToggle();
     }
