@@ -11,7 +11,8 @@ public class Ch1_Bottle : BasePossessable
     [SerializeField] private Vector3 startLocalPosition;
     [SerializeField] private Quaternion startLocalRotation = Quaternion.identity;
     [SerializeField] private float dropYPos = -1.5f;
-
+    [SerializeField] private GameObject q_Key;
+    
     protected override void Start()
     {
         base.Start();
@@ -20,6 +21,7 @@ public class Ch1_Bottle : BasePossessable
         transform.localRotation = startLocalRotation;
 
         anim = GetComponentInChildren<Animator>();
+        q_Key = UIManager.Instance.q_Key;
     }
 
     protected override void Update()
@@ -28,16 +30,15 @@ public class Ch1_Bottle : BasePossessable
 
         if (!isPossessed)
         {
-            // UIManager.Instance.Hide_Q_Key();
+            // q_Key.SetActive(false);
             return;
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            UIManager.Instance.Hide_Q_Key();
+            // q_Key.SetActive(false);
             TriggerBottleEvent();
         }
-        
-        UIManager.Instance.Show_Q_Key(transform.position);
+        // q_Key.SetActive(true);
     }
 
     private void TriggerBottleEvent()

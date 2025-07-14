@@ -223,8 +223,28 @@ public class UIManager : Singleton<UIManager>
         spacebar_Key.SetActive(false);
     }
 
+    // public Vector3 SetPosition_Q_Key(Vector3 target, float amount)
+    // {
+    //     Vector2 targetPos = Camera.main.WorldToScreenPoint(target);
+    //     targetPos.y += amount;
+    //     return targetPos;
+    // }
 
+    public Vector3 SetPosition_Q_Key(Vector3 target)
+    {
+        Vector3 worldPos;
+        Vector2 screenPos = Camera.main.WorldToScreenPoint(target);
 
+        RectTransform canvasRect = q_Key.GetComponent<RectTransform>();
+
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(
+            canvasRect,
+            screenPos,
+            Camera.main,
+            out worldPos
+        );
+        return worldPos;
+    }
 
     
 }
