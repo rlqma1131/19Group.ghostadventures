@@ -14,6 +14,7 @@ public class Ch1_Pan : BasePossessable
     [SerializeField] private Ch1_MemoryFake_02_Cake cake;
     [SerializeField] private Ch1_Mouse mouse;
 
+    [SerializeField] private GameObject q_Key;
     private bool isFalling = false;
 
     protected override void Start()
@@ -28,12 +29,16 @@ public class Ch1_Pan : BasePossessable
         base.Update();
 
         if (!isPossessed || !hasActivated || isFalling)
+        {
+            q_Key.SetActive(false);
             return;
-
+        }
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            q_Key.SetActive(false);
             TriggerPanEvent();
         }
+        q_Key.SetActive(true);
     }
 
     private void TriggerPanEvent()

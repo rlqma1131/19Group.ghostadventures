@@ -13,6 +13,7 @@ public class Ch1_TV : BasePossessable
     [SerializeField] private TextMeshProUGUI channelTxt;
     [SerializeField] private LockedDoor Door;
     [SerializeField] private GameObject spaceBar;
+    [SerializeField] private GameObject W_Key;
 
     private Ch1_MemoryFake_01_BirthdayHat birthdayHat;
 
