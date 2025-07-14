@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 4021909710416709265}
   - component: {fileID: 6950903684035425170}
   - component: {fileID: 616106383034378099}
-  - component: {fileID: 4580879313637397603}
+  - component: {fileID: 850786765730579637}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -296,7 +296,7 @@ MonoBehaviour:
   drawDebug: 0
   wallLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 262144
   wallCheckDistance: 0.5
   stuckCheckTime: 1
 --- !u!114 &4021909710416709265
@@ -324,7 +324,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   patrolWaitTime: 2
-  patrolRadius: 10
+  patrolRadius: 4
+  mapCenter: {x: 82, y: -1.27, z: 0}
+  maxDistanceFromCenter: 15
+  centerReturnForce: 0.7
+  doorEscapeTime: 10
+  doorSearchRadius: 13
+  doorCooldownTime: 20
+  nearDoorCandidates: 2
 --- !u!114 &616106383034378099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,7 +348,7 @@ MonoBehaviour:
   searchEndWaitTime: 2
   searchDistance: 1.5
   searchLaps: 2
---- !u!114 &4580879313637397603
+--- !u!114 &850786765730579637
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -353,7 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f11f9885094ad1e4c82de606bf3b4809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorDetectionRange: 1.5
+  doorDetectionRange: 2
   doorUseCooldown: 2
   canUseDoors: 1
   playerTrackingRange: 10

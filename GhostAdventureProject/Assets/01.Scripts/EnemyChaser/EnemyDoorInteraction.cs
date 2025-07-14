@@ -46,9 +46,8 @@ public class EnemyDoorInteraction : MonoBehaviour
         // 문 사용 쿨다운 체크
         if (Time.time - lastDoorUseTime < doorUseCooldown) return;
 
-        // 현재 추격 중이거나 순찰 중일 때만 문 사용
+        // ===== 수정: 추격 중이거나 유인 중일 때만 문 사용 (순찰 제외) =====
         if (enemyAI.CurrentState == EnemyAI.AIState.Chasing ||
-            enemyAI.CurrentState == EnemyAI.AIState.Patrolling ||
             enemyAI.CurrentState == EnemyAI.AIState.DistractedByDecoy)
         {
             CheckForNearbyDoors();
@@ -86,7 +85,7 @@ public class EnemyDoorInteraction : MonoBehaviour
             return ShouldUseDoordDuringChase(doorTransform);
         }
 
-        // 순찰이나 기타 상태에서는 기존 로직 사용
+        // 유인 상태에서는 기존 로직 사용
         Vector3 toDoor = (doorTransform.position - transform.position).normalized;
         Vector3 movementDirection = (movement.GetTargetPosition() - transform.position).normalized;
 
@@ -125,7 +124,7 @@ public class EnemyDoorInteraction : MonoBehaviour
 
             if (distLastPosToTarget < distLastPosToDoor)
             {
-                Debug.Log("[Enemy] 플레이어가 문을 통과한 것 같습니다. 따라갑니다!");
+                Debug.Log("[EnemyDoorInteraction] 플레이어가 문을 통과한 것 같습니다. 따라갑니다!");
                 return true;
             }
         }
@@ -153,7 +152,7 @@ public class EnemyDoorInteraction : MonoBehaviour
         isUsingDoor = true;
         lastDoorUseTime = Time.time;
 
-        Debug.Log($"[Enemy] {gameObject.name}이 문 {door.name}을 사용합니다!");
+        Debug.Log($"[EnemyDoorInteraction] {gameObject.name}이 문 {door.name}을 사용합니다! (추격/유인 중)");
 
         // 잠시 멈춤
         Vector3 originalTarget = movement.GetTargetPosition();
@@ -171,10 +170,11 @@ public class EnemyDoorInteraction : MonoBehaviour
         {
             movement.SetTarget(enemyAI.Player.position);
             movement.isMoving = true;
+            Debug.Log("[EnemyDoorInteraction] 추격 계속 - 플레이어 위치로 이동");
         }
-        else
+        else if (enemyAI.CurrentState == EnemyAI.AIState.DistractedByDecoy)
         {
-            // 텔레포트 후 목표 위치 재조정
+            // 유인 상태라면 원래 유인 목표로 복귀
             Vector3 newTarget = originalTarget;
             if (door.GetTargetDoor() != null)
             {
@@ -186,6 +186,7 @@ public class EnemyDoorInteraction : MonoBehaviour
 
             movement.SetTarget(newTarget);
             movement.isMoving = true;
+            Debug.Log("[EnemyDoorInteraction] 유인 계속 - 목표 위치로 이동");
         }
 
         isUsingDoor = false;
@@ -199,19 +200,19 @@ public class EnemyDoorInteraction : MonoBehaviour
         if (door.GetTargetDoor() != null)
         {
             teleportPosition = door.GetTargetDoor().position;
-            Debug.Log($"[Enemy] {door.GetTargetDoor().name}로 텔레포트!");
+            Debug.Log($"[EnemyDoorInteraction] {door.GetTargetDoor().name}로 텔레포트!");
         }
         else
         {
             teleportPosition = door.GetTargetPos();
-            Debug.Log($"[Enemy] {door.GetTargetPos()}로 텔레포트!");
+            Debug.Log($"[EnemyDoorInteraction] {door.GetTargetPos()}로 텔레포트!");
         }
 
-        // Y축 고정 적용
-        if (enemyAI.lockYPosition)
-        {
-            teleportPosition.y = enemyAI.fixedYPosition;
-        }
+        // ===== Y축 고정 기능 - 팀원들과 상담 후 사용 안하기로 결정하여 주석 처리 =====
+        // if (movement.lockYPosition)
+        // {
+        //     teleportPosition.y = movement.fixedYPosition;
+        // }
 
         transform.position = teleportPosition;
     }

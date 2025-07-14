@@ -794,7 +794,7 @@ GameObject:
   - component: {fileID: 79430430}
   m_Layer: 0
   m_Name: Door_Kidroom
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2714,9 +2714,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door_LaundryRoom
       objectReference: {fileID: 0}
-    - target: {fileID: 543965698476303186, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
-      propertyPath: m_Color.a
-      value: 0.3137255
+    - target: {fileID: 287484063097877411, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
+      propertyPath: m_TagString
+      value: Door
       objectReference: {fileID: 0}
     - target: {fileID: 889849109110203430, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
       propertyPath: pairedDoor
@@ -2726,26 +2726,6 @@ PrefabInstance:
       propertyPath: targetDoor
       value: 
       objectReference: {fileID: 967567251}
-    - target: {fileID: 889849109110203430, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
-      propertyPath: lockedSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 912654f847fdc504cb38e6cdd6b76a64, type: 3}
-    - target: {fileID: 889849109110203430, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
-      propertyPath: unlockSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 1c242e13499b0164ca6a43e40b69e973, type: 3}
-    - target: {fileID: 889849109110203430, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
-      propertyPath: interactionInfo
-      value: 
-      objectReference: {fileID: 1079262955}
-    - target: {fileID: 2110895719621414701, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6152466334426299614, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
-      propertyPath: m_Color.a
-      value: 0.3137255
-      objectReference: {fileID: 0}
     - target: {fileID: 7947344726167987595, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 77.36916
@@ -2789,25 +2769,14 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 287484063097877411, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 208684733}
-    - targetCorrespondingSourceObject: {fileID: 287484063097877411, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 208684736}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
---- !u!1 &208684730 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 287484063097877411, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
-  m_PrefabInstance: {fileID: 208684729}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &208684731 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 889849109110203430, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
   m_PrefabInstance: {fileID: 208684729}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 208684730}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
@@ -2818,117 +2787,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7947344726167987595, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
   m_PrefabInstance: {fileID: 208684729}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &208684733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 208684730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62b73e3403024594f940f3d8f8e5f454, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detectionRange: 3
-  fadeSpeed: 2
-  maxAlpha: 1
---- !u!82 &208684736
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 208684730}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1001 &217814972
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4970,6 +4828,10 @@ PrefabInstance:
     - target: {fileID: 287484063097877411, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
       propertyPath: m_Name
       value: Door_Kitchen2
+      objectReference: {fileID: 0}
+    - target: {fileID: 287484063097877411, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
+      propertyPath: m_TagString
+      value: Door
       objectReference: {fileID: 0}
     - target: {fileID: 543965698476303186, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
       propertyPath: m_Color.a
@@ -8764,8 +8626,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.6402497, y: 1.22795, z: 0}
-    m_Extent: {x: 9.35465, y: 5.22565, z: 0}
+    m_Center: {x: 5.6401997, y: 1.22855, z: 0}
+    m_Extent: {x: 9.354, y: 5.22545, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -8910,8 +8772,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.4863005, y: -5.4953, z: 0}
-    m_Extent: {x: 23.820301, y: 17.3338, z: 0}
+    m_Center: {x: 5.4866, y: -5.4947495, z: 0}
+    m_Extent: {x: 23.82, y: 17.33395, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -10079,13 +9941,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 522405038322158573, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
+      propertyPath: wallLayer.m_Bits
+      value: 262144
+      objectReference: {fileID: 0}
     - target: {fileID: 575559655872409034, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 7588674267399368957, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 74.67
+      value: 72
       objectReference: {fileID: 0}
     - target: {fileID: 7588674267399368957, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10226,6 +10092,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vcam: {fileID: 1574818359}
+  uITweenAnimator: {fileID: 0}
+  text: {fileID: 0}
 --- !u!114 &640850543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10439,6 +10307,10 @@ PrefabInstance:
     - target: {fileID: 3001986394547182505, guid: 226ea0457c7742a449ab00fb82bf204a, type: 3}
       propertyPath: m_Name
       value: Door_Hallway
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001986394547182505, guid: 226ea0457c7742a449ab00fb82bf204a, type: 3}
+      propertyPath: m_TagString
+      value: Door
       objectReference: {fileID: 0}
     - target: {fileID: 8078885673424868969, guid: 226ea0457c7742a449ab00fb82bf204a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10686,7 +10558,7 @@ GameObject:
   - component: {fileID: 677210676}
   m_Layer: 0
   m_Name: Door_Garage
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11315,7 +11187,7 @@ GameObject:
   - component: {fileID: 717152223}
   m_Layer: 0
   m_Name: Door_Kidroom
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12642,8 +12514,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.48635, y: -5.49465, z: 0}
-    m_Extent: {x: 24.31115, y: 17.82305, z: 0}
+    m_Center: {x: 5.48695, y: -5.4951005, z: 0}
+    m_Extent: {x: 24.31025, y: 17.8227, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -18348,8 +18220,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 9.28455, y: 2.2976499, z: 0}
-    m_Extent: {x: 2.6617498, y: 2.58435, z: 0}
+    m_Center: {x: 9.28405, y: 2.2981, z: 0}
+    m_Extent: {x: 2.66185, y: 2.5846, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -18433,8 +18305,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 6.85985, y: 2.29755, z: 0}
-    m_Extent: {x: 0.8921499, y: 0.39884996, z: 0}
+    m_Center: {x: 6.8604, y: 2.2971, z: 0}
+    m_Extent: {x: 0.8924, y: 0.39999998, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -18709,8 +18581,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 10.58945, y: -0.3979001, z: 0}
-    m_Extent: {x: 5.05365, y: 4.3041, z: 0}
+    m_Center: {x: 10.5896, y: -0.39709997, z: 0}
+    m_Extent: {x: 5.0536003, y: 4.304, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -18975,6 +18847,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vcam: {fileID: 330598439}
+  uITweenAnimator: {fileID: 0}
+  text: {fileID: 0}
 --- !u!114 &916490153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19759,6 +19633,10 @@ PrefabInstance:
     - target: {fileID: 3001986394547182505, guid: 226ea0457c7742a449ab00fb82bf204a, type: 3}
       propertyPath: m_Name
       value: Door_LaundryRoom2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001986394547182505, guid: 226ea0457c7742a449ab00fb82bf204a, type: 3}
+      propertyPath: m_TagString
+      value: Door
       objectReference: {fileID: 0}
     - target: {fileID: 8078885673424868969, guid: 226ea0457c7742a449ab00fb82bf204a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -23285,11 +23163,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1079262955 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 346575638245108299, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
-  m_PrefabInstance: {fileID: 208684729}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1083740150
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24270,6 +24143,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vcam: {fileID: 377419391}
+  uITweenAnimator: {fileID: 0}
+  text: {fileID: 0}
 --- !u!114 &1172800218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25393,7 +25268,7 @@ GameObject:
   - component: {fileID: 1238913638}
   m_Layer: 0
   m_Name: Door_Hallway
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27650,6 +27525,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vcam: {fileID: 377076569}
+  uITweenAnimator: {fileID: 0}
+  text: {fileID: 0}
 --- !u!114 &1401484782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27730,8 +27607,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 1.52775, y: 0.44655013, z: 0}
-    m_Extent: {x: 13.46835, y: 6.04305, z: 0}
+    m_Center: {x: 1.5277, y: 0.4468999, z: 0}
+    m_Extent: {x: 13.4683, y: 6.0435, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -27977,8 +27854,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 1.5285001, y: 0.44764996, z: 0}
-    m_Extent: {x: 13.4683, y: 6.04375, z: 0}
+    m_Center: {x: 1.5284, y: 0.44735003, z: 0}
+    m_Extent: {x: 13.4683, y: 6.04305, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -33383,8 +33260,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 12.088295, y: 0.24510002, z: 0}
-    m_Extent: {x: 4.247978, y: 3.3234, z: 0}
+    m_Center: {x: 12.087836, y: 0.2452501, z: 0}
+    m_Extent: {x: 4.248437, y: 3.32365, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -33826,6 +33703,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vcam: {fileID: 1381666222}
+  uITweenAnimator: {fileID: 0}
+  text: {fileID: 0}
 --- !u!114 &1735845574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34504,7 +34383,7 @@ GameObject:
   - component: {fileID: 1767503157}
   m_Layer: 0
   m_Name: Door_bathroom
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37630,6 +37509,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vcam: {fileID: 1623621088}
+  uITweenAnimator: {fileID: 0}
+  text: {fileID: 0}
 --- !u!114 &1805112535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39116,6 +38997,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door_living_room
       objectReference: {fileID: 0}
+    - target: {fileID: 287484063097877411, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
+      propertyPath: m_TagString
+      value: Door
+      objectReference: {fileID: 0}
     - target: {fileID: 889849109110203430, guid: 8f9d01543763e7844b30163eb3d9f89e, type: 3}
       propertyPath: pairedDoor
       value: 
@@ -39575,7 +39460,7 @@ GameObject:
   - component: {fileID: 1947928856}
   m_Layer: 0
   m_Name: Door_Garage
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -40147,6 +40032,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vcam: {fileID: 1300034121}
+  uITweenAnimator: {fileID: 0}
+  text: {fileID: 0}
 --- !u!114 &1962918375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45630,8 +45517,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.00009995699, y: -0.00025004148, z: 0}
-    m_Extent: {x: 1.3503001, y: 1.3505499, z: 0}
+    m_Center: {x: 0.000050008297, y: 0.00014996529, z: 0}
+    m_Extent: {x: 1.3499501, y: 1.35025, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -46571,6 +46458,10 @@ PrefabInstance:
     - target: {fileID: 3001986394547182505, guid: 226ea0457c7742a449ab00fb82bf204a, type: 3}
       propertyPath: m_Name
       value: Door_Kitchen
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001986394547182505, guid: 226ea0457c7742a449ab00fb82bf204a, type: 3}
+      propertyPath: m_TagString
+      value: Door
       objectReference: {fileID: 0}
     - target: {fileID: 4118422064276820114, guid: 226ea0457c7742a449ab00fb82bf204a, type: 3}
       propertyPath: m_Color.a
