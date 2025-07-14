@@ -6,6 +6,7 @@ using UnityEngine;
 public class Ch1_Cat : MoveBasePossessable
 {
     [SerializeField] private LockedDoor door;
+    [SerializeField] private GameObject q_Key;
     private bool isNearDoor = false;
 
     protected override void Start()
@@ -17,12 +18,27 @@ public class Ch1_Cat : MoveBasePossessable
     protected override void Update()
     {
         if (!hasActivated)
+        {
+            q_Key.SetActive(false);
             return;
+        }
+        if(isNearDoor)
+        {
+            Vector2 catPos = this.transform.position;
+            catPos.y += 10;
+            q_Key.transform.position = catPos;
+            q_Key.SetActive(true);
+        }
+        else if(!isNearDoor)
+        {
+            q_Key.SetActive(false);
+        }
 
         base.Update();
 
         if (Input.GetKeyDown(KeyCode.Q) && isNearDoor)
         {
+            q_Key.SetActive(false);
             // 문 열기
             StartCoroutine(CatAct());
         }

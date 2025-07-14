@@ -13,7 +13,7 @@ public class Ch1_TV : BasePossessable
     [SerializeField] private TextMeshProUGUI channelTxt;
     [SerializeField] private LockedDoor Door;
     [SerializeField] private GameObject spaceBar;
-    [SerializeField] private GameObject W_Key;
+    [SerializeField] private GameObject UI;
 
     private Ch1_MemoryFake_01_BirthdayHat birthdayHat;
 
@@ -27,6 +27,7 @@ public class Ch1_TV : BasePossessable
         memoryObject.SetActive(false);
         hasActivated = false;
         spaceBar = UIManager.Instance.spacebar_Key;
+        UI.SetActive(false);
     }
 
     public void ActivateTV()
@@ -41,13 +42,14 @@ public class Ch1_TV : BasePossessable
     protected override void Update()
     {
         if (!isPossessed || !hasActivated)
-            return;
-        
-        if(isPossessed || hasActivated)
         {
-            spaceBar.SetActive(true);
+            UI.SetActive(false);
+            spaceBar.SetActive(false);
+            return;
         }
-
+        
+            UI.SetActive(true);
+            spaceBar.SetActive(true);
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -58,6 +60,7 @@ public class Ch1_TV : BasePossessable
                 isPossessed = false;
                 UIManager.Instance.PlayModeUI_OpenAll();
                 spaceBar.SetActive(false);
+                UI.SetActive(false);
 
                 zoomCamera.Priority = 5;
                 Unpossess();
@@ -86,6 +89,7 @@ public class Ch1_TV : BasePossessable
         {
             // 정답 효과음 추가
             spaceBar.SetActive(false);
+            UI.SetActive(false);
             ShowMemoryandDoorOpen();
 
         }
@@ -128,6 +132,7 @@ public class Ch1_TV : BasePossessable
         isControlMode = false;
         UIManager.Instance.PlayModeUI_OpenAll();
         spaceBar.SetActive(false);
+        UI.SetActive(false);
         zoomCamera.Priority = 5;
         Unpossess();
     }
