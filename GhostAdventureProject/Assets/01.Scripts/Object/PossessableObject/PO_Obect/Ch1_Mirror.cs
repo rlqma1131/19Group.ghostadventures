@@ -8,6 +8,7 @@ public class Ch1_Mirror : MonoBehaviour
 
     private float fogTime = 0f;
     private bool revealed = false;
+
     private void Start()
     {
         SetAlpha(0f);
@@ -32,7 +33,7 @@ public class Ch1_Mirror : MonoBehaviour
         float alpha = Mathf.Clamp01(fogTime / fogDuration);
         SetAlpha(alpha);
 
-        if (!revealed && fogTime >= fogDuration)
+        if (!revealed && alpha >= 0.5f)
         {
             revealed = true;
             ChapterEndingManager.Instance.CollectCh1Clue("W");
