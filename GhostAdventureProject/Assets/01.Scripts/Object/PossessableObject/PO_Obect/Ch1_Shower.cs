@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 
 public class Ch1_Shower : BasePossessable
 {
@@ -35,8 +36,17 @@ public class Ch1_Shower : BasePossessable
             q_key.SetActive(false);
             return;
         }
+        // if(isPossessed || !isWater)
+        //     q_key.SetActive(true);
 
-        q_key.SetActive(true);
+        if(isPossessed || isWater == false)
+      
+            q_key.SetActive(true);
+
+        if(isWater == true)
+        {
+            q_key.SetActive(false);
+        }
 
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -53,12 +63,12 @@ public class Ch1_Shower : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            UI.SetActive(true);
+            q_key.SetActive(false);
             isWater = !isWater;
             water.SetActive(isWater);
             temperatureArch.SetActive(isWater);
             Needle.SetActive(isWater);
-            UI.SetActive(true);
-            q_key.SetActive(false);
             Debug.Log($"물 상태: {(isWater ? "ON" : "OFF")}, 온도: {temperature}");
         }
 
@@ -77,7 +87,9 @@ public class Ch1_Shower : BasePossessable
             UpdateNeedleRotation();
             UI.SetActive(false);
             q_key.SetActive(false);
+            return;
         }
+
     }
     private void UpdateNeedleRotation()
     {
