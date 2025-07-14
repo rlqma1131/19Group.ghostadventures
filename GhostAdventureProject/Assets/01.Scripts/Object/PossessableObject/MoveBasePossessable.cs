@@ -21,13 +21,13 @@ public class MoveBasePossessable : BasePossessable
         if (!isPossessed || !PossessionSystem.Instance.CanMove)
             return;
 
+        Move();
+
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Unpossess();
             zoomCamera.Priority = 5;
+            Unpossess();
         }
-
-        Move();
     }
 
     public override void OnPossessionEnterComplete()
