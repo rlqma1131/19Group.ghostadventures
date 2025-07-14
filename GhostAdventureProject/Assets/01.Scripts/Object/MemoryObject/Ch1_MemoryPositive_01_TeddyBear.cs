@@ -18,7 +18,7 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
 
     public override void AfterScan() 
     {
-
+        isScannable = false;
         Completed_TeddyBear = true;
     }
 }

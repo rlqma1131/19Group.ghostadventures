@@ -18,6 +18,7 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
     public override void AfterScan()
     {
         anim.SetTrigger("Show");
+        isScannable = false;
         ChapterEndingManager.Instance.CollectCh1Clue("H");
     }
 }

@@ -18,10 +18,16 @@ public class Ch1_Plate : BasePossessable
         base.Update();
 
         if (!isPossessed)
+        {
+            UIManager.Instance.Hide_Q_Key(); 
             return;
+        }
+
+        UIManager.Instance.Show_Q_Key(this.transform.position);
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            UIManager.Instance.Hide_Q_Key(); 
             TriggerPlateEvent();
         }
     }
