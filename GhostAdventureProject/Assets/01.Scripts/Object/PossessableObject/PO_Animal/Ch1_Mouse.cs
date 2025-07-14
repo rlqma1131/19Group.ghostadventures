@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Ch1_Mouse : MoveBasePossessable
@@ -10,6 +11,8 @@ public class Ch1_Mouse : MoveBasePossessable
 
     [Header("다용도실 쥐구멍")]
     [SerializeField] private Transform point3Transform;
+
+    [SerializeField] private GameObject q_Key;
 
     public bool canEnter = false;
     protected override void Start()
@@ -27,14 +30,22 @@ public class Ch1_Mouse : MoveBasePossessable
     protected override void Update()
     {
         if(!hasActivated)
+        {
+            q_Key.SetActive(false);
             return;
+        }
 
         base.Update();
 
+        if(canEnter)
+            q_Key.SetActive(true);
+
         if (Input.GetKeyDown(KeyCode.Q) && canEnter)
         {
+            q_Key.SetActive(false);
             StartCoroutine(MouseAct());
         }
+        
     }
 
     public void ActivateMouse()

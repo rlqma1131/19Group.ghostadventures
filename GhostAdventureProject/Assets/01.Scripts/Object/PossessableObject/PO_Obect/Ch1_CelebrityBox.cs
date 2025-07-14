@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Ch1_CelebrityBox : BasePossessable
@@ -6,6 +7,7 @@ public class Ch1_CelebrityBox : BasePossessable
     // [SerializeField] private GameObject effect;
     [SerializeField] private GameObject birthdayLetter;
     [SerializeField] private Animator animator;
+    [SerializeField] private GameObject q_Key;
     
 
     protected override void Update()
@@ -13,13 +15,16 @@ public class Ch1_CelebrityBox : BasePossessable
         base.Update();
         
         if (!isPossessed || !hasActivated)
+        {
+            q_Key.SetActive(false);
             return;
-        else if(isPossessed || !hasActivated)
-            UIManager.Instance.Show_Q_Key(transform.position);
+        }
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            q_Key.SetActive(false);
             TriggerBoxEvent();
         }
+        q_Key.SetActive(true);
     }
 
     private void TriggerBoxEvent()

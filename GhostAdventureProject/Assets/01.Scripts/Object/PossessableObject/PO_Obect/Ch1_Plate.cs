@@ -5,6 +5,7 @@ public class Ch1_Plate : BasePossessable
 {
     [SerializeField] private AudioClip isShaking;
     [SerializeField] private GameObject q_Key;
+    
 
     private Ch1_Cat cat;
 
@@ -12,8 +13,6 @@ public class Ch1_Plate : BasePossessable
     {
         base.Start();
         cat = FindObjectOfType<Ch1_Cat>();
-        q_Key = UIManager.Instance.q_Key;
-        q_Key.transform.position = UIManager.Instance.SetPosition_Q_Key(this.transform.position);
     }
 
     protected override void Update()
