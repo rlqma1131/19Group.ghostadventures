@@ -1,10 +1,13 @@
-﻿using TMPro;
+﻿using DG.Tweening;
+using TMPro;
 using UnityEngine;
 
 public class PlayerRoomTracker : MonoBehaviour
 {
     [SerializeField] private UITweenAnimator uITweenAnimator; // UI 애니메이션 컴포넌트
     [SerializeField] private TextMeshProUGUI text; // 프롬프트 컴포넌트
+
+    
 
     private void Awake()
     {
@@ -27,7 +30,8 @@ public class PlayerRoomTracker : MonoBehaviour
 
                 //맵이름 두두둥장
                 text.text = $"{room.roomName}";
-                uITweenAnimator.SlideInAndOut();
+                //uITweenAnimator.SlideInAndOut();
+                uITweenAnimator.FadeInAndOut();
         }
 
         }
@@ -35,5 +39,6 @@ public class PlayerRoomTracker : MonoBehaviour
        
 
     }
+
 }
  
