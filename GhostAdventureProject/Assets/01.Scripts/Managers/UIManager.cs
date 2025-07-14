@@ -246,6 +246,24 @@ public class UIManager : Singleton<UIManager>
         return worldPos;
     }
 
+    // public void Show_Q_Key(Vector3 worldPosition)
+    // {
+    //     q_Key.SetActive(true);
+    //     Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
+    //     screenPos.y += 40f;
+    //     q_Key.transform.position = screenPos;
+    // }
+    public void Update_Q_Key(BasePossessable current)
+    {
+        if (current != null && current.IsPossessed() && !current.HasActivated())
+        {
+            Show_Q_Key(current.transform.position);
+        }
+        else
+        {
+            Hide_Q_Key();
+        }
+    }
     
 }
 
