@@ -24,13 +24,13 @@ public class PixelExploder : MonoBehaviour
     private Transform playerTransform;
 
     // 테스트용 Update 함수
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Explode();
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        Explode();
+    //    }
+    //}
 
     public void Explode()
     {
