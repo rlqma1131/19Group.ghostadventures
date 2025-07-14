@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -75,7 +75,13 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         UIManager.Instance.PlayModeUI_CloseAll();
         escMenuUI.SetActive(false);
         Time.timeScale = 1f;
-        isPaused = false;   
+        isPaused = false;
+
+        if (PlayerLifeManager.Instance != null) // 플레이어 생명 불러오기 
+        {
+            PlayerLifeManager.Instance.ResetLives();
+        }
+
         SceneManager.LoadScene("StartScene");
     }
 
