@@ -8,9 +8,9 @@ public class EnemyMovement : MonoBehaviour
     public float chaseSpeed = 4f;
     public float distractionSpeed = 4f;
 
-    //[Header("이동 제어")]
-    //public bool lockYPosition = true;
-    //public float fixedYPosition = -1.27f;
+    [Header("이동 제어")]
+    public bool lockYPosition = true;
+    public float fixedYPosition = -1.27f;
 
     [Header("디버그")]
     public bool drawDebug = false;
@@ -133,10 +133,10 @@ public class EnemyMovement : MonoBehaviour
         if (currentTarget == null) return transform.position;
 
         Vector3 pos = currentTarget.position;
-        //if (lockYPosition)
-        //{
-        //    pos.y = fixedYPosition;
-        //}
+        // if (lockYPosition)  Y값 고정 변수들. 주석 해제하면 다시 사용 가능 
+        // {
+        //     pos.y = fixedYPosition;
+        // }
         return pos;
     }
 
