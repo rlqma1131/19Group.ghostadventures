@@ -14,4 +14,10 @@ public class Ch1_MemoryFake_01_BirthdayHat : MemoryFragment
     {
         isScannable = true;
     }
+
+    public override void AfterScan()
+    {
+        isScannable = false;
+    }
+
 }
