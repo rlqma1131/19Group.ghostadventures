@@ -19,7 +19,7 @@ public class Ch1_Plate : BasePossessable
 
         if (!isPossessed)
         {
-            UIManager.Instance.Hide_Q_Key(); 
+            // UIManager.Instance.Hide_Q_Key(); 
             return;
         }
 
