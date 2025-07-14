@@ -21,7 +21,6 @@ public class Ch1_Bottle : BasePossessable
         transform.localRotation = startLocalRotation;
 
         anim = GetComponentInChildren<Animator>();
-        q_Key = UIManager.Instance.q_Key;
     }
 
     protected override void Update()
@@ -30,15 +29,15 @@ public class Ch1_Bottle : BasePossessable
 
         if (!isPossessed)
         {
-            // q_Key.SetActive(false);
+            q_Key.SetActive(false);
             return;
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            // q_Key.SetActive(false);
+            q_Key.SetActive(false);
             TriggerBottleEvent();
         }
-        // q_Key.SetActive(true);
+        q_Key.SetActive(true);
     }
 
     private void TriggerBottleEvent()
