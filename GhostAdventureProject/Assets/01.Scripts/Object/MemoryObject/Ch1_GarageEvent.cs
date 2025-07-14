@@ -1,7 +1,6 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
-
 public class Ch1_GarageEvent : BaseInteractable
 {
     private Ch1_MemoryPositive_01_TeddyBear bear;
@@ -9,30 +8,27 @@ public class Ch1_GarageEvent : BaseInteractable
     [SerializeField] private KeyBoard_Enter answer;
     [SerializeField] private PlayableDirector cutsceneDirector;
     [SerializeField] private PlayableDirector cutsceneDirector_correct;
-
     private bool playerNearby = false;
     private bool isCutscenePlaying = false;
     private bool isCutscenePlaying2 = false;
-
-
     void Start()
     {
         bear = GetComponent<Ch1_MemoryPositive_01_TeddyBear>();
-
         cutsceneDirector.stopped += OnTimelineFinished;
         cutsceneDirector_correct.stopped += OnTimelineFinished2;
     }
-
     void Update()
     {
         if (!playerNearby)
             return;
-
         if (Input.GetKeyDown(KeyCode.E))
         {
-
+            if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
+            {
+                UIManager.Instance.PromptUI.ShowPrompt("...아무 일도 일어나지 않았다.", 2f);
+            }
             // 1장 단서 모두 모이고 상호작용 시 이벤트 발생
-            
+            else
             {
                 if (!isCutscenePlaying)
                 {
@@ -43,23 +39,18 @@ public class Ch1_GarageEvent : BaseInteractable
                 }
             }
         }
-
         if (!answer.correct)
             return;
-
         if (!isCutscenePlaying2 && answer.correct)
         {
             // [컷씬] 정답 이벤트
             UIManager.Instance.PlayModeUI_CloseAll();
             cutsceneDirector_correct.Play();
             PossessionSystem.Instance.CanMove = false;
-
             // 기억조각 스캔 가능하도록 활성화
             bear.ActivateTeddyBear();
-
         }
     }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -67,7 +58,6 @@ public class Ch1_GarageEvent : BaseInteractable
             playerNearby = true;
         }
     }
-
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -75,23 +65,18 @@ public class Ch1_GarageEvent : BaseInteractable
             playerNearby = false;
         }
     }
-
     void OnTimelineFinished(PlayableDirector pd)
     {
         keyboard.OpenKeyBoard();
         PossessionSystem.Instance.CanMove = true;
         UIManager.Instance.PlayModeUI_OpenAll();
         isCutscenePlaying = true;
-
-    }    
+    }
     void OnTimelineFinished2(PlayableDirector pd)
     {
-
         keyboard.Close();
         PossessionSystem.Instance.CanMove = true;
         isCutscenePlaying2 = true;
         UIManager.Instance.PlayModeUI_OpenAll();
-
     }
 }
-
