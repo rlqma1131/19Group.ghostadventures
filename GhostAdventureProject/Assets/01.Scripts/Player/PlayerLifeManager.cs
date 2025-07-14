@@ -7,7 +7,7 @@ public class PlayerLifeManager : MonoBehaviour
     public static PlayerLifeManager Instance {  get; private set; }
 
     [Header("생명 시스템 설정")]
-    public int maxPlayerLives = 2; // 챕터당 목숨 2개
+    public int maxPlayerLives = 2; //  이것만 바꿔주면 , 판당 목숨도 알아서 조절되고 QTE 시스템도 알아서 작동할것입니다. 
     private int currentPlayerLives;
 
     // 이벤트 시스템 - 다른 스크립트들이 구독할 수 있음

@@ -91,6 +91,8 @@ public class QTEUI2 : MonoBehaviour
         isRunning = false;
         yield return new WaitForSeconds(1.5f);
         qteUI.SetActive(false);
+        success.gameObject.SetActive(false);
+        fail.gameObject.SetActive(false);
 
         // resultText.gameObject.SetActive(true);
     }

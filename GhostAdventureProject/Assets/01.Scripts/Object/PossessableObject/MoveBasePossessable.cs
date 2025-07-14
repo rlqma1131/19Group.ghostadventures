@@ -16,15 +16,13 @@ public class MoveBasePossessable : BasePossessable
 
     protected override void Update()
     {
-        base.Update();
-
         if (!isPossessed || !PossessionSystem.Instance.CanMove)
             return;
-
+        
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Unpossess();
             zoomCamera.Priority = 5;
+            Unpossess();
         }
 
         Move();

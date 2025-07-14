@@ -167,6 +167,7 @@ public class Ch1_MainFlashlight : BasePossessable
 
                 UIManager.Instance.PlayModeUI_OpenAll();
                 zoomCamera.Priority = 5;
+                hasActivated = false;
                 Unpossess();
 
                 Door.SolvePuzzle();
