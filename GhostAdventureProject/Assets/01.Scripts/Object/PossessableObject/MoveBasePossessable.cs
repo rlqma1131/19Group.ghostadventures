@@ -16,7 +16,6 @@ public class MoveBasePossessable : BasePossessable
 
     protected override void Update()
     {
-        Debug.Log($"isPossessed: {isPossessed}, CanMove: {PossessionSystem.Instance.CanMove}");
         if (!isPossessed || !PossessionSystem.Instance.CanMove)
             return;
         
