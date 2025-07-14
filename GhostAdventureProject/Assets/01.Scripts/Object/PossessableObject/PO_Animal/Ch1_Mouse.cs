@@ -27,7 +27,7 @@ public class Ch1_Mouse : MoveBasePossessable
             relay.mouse = this;
 
         Vector2 mousePos = this.transform.position;
-        mousePos.y += 5f;
+        mousePos.y += 0.5f;
         q_Key.transform.position = mousePos;
     }
 
@@ -43,6 +43,9 @@ public class Ch1_Mouse : MoveBasePossessable
 
         if(canEnter)
             q_Key.SetActive(true);
+
+        else if(!canEnter)
+            q_Key.SetActive(false);
 
         if (Input.GetKeyDown(KeyCode.Q) && canEnter)
         {
