@@ -12,6 +12,7 @@ public class Ch1_TV : BasePossessable
     [SerializeField] private GameObject show;
     [SerializeField] private TextMeshProUGUI channelTxt;
     [SerializeField] private LockedDoor Door;
+    [SerializeField] private GameObject spaceBar;
 
     private Ch1_MemoryFake_01_BirthdayHat birthdayHat;
 
@@ -24,6 +25,7 @@ public class Ch1_TV : BasePossessable
         birthdayHat = memoryObject.GetComponent<Ch1_MemoryFake_01_BirthdayHat>();
         memoryObject.SetActive(false);
         hasActivated = false;
+        spaceBar = UIManager.Instance.spacebar_Key;
     }
 
     public void ActivateTV()
@@ -39,8 +41,13 @@ public class Ch1_TV : BasePossessable
     {
         if (!isPossessed || !hasActivated)
             return;
+        
+        if(isPossessed || hasActivated)
+        {
+            spaceBar.SetActive(true);
+        }
 
-        UIManager.Instance.Show_SpaceBar_Key();
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (isControlMode)
@@ -49,7 +56,7 @@ public class Ch1_TV : BasePossessable
                 isControlMode = false;
                 isPossessed = false;
                 UIManager.Instance.PlayModeUI_OpenAll();
-                UIManager.Instance.Hide_SpaceBar_Key();
+                spaceBar.SetActive(false);
 
                 zoomCamera.Priority = 5;
                 Unpossess();
@@ -77,7 +84,7 @@ public class Ch1_TV : BasePossessable
         if (channel == 9 && Input.GetKeyDown(KeyCode.Space))
         {
             // 정답 효과음 추가
-            UIManager.Instance.Hide_SpaceBar_Key();
+            spaceBar.SetActive(false);
             ShowMemoryandDoorOpen();
 
         }
@@ -91,13 +98,12 @@ public class Ch1_TV : BasePossessable
 
     private void ShowMemoryandDoorOpen()
     {
+
         // 1. TV 줌 애니메이션 재생
         show.SetActive(true);
         anim.SetTrigger("Solved");
         zoomAnim.SetTrigger("Show");
         StartCoroutine(WaitZoomEnding(3f));
-        UIManager.Instance.Hide_SpaceBar_Key();
-
     }
 
     private IEnumerator WaitZoomEnding(float delay)
@@ -120,6 +126,7 @@ public class Ch1_TV : BasePossessable
         isPossessed = false;
         isControlMode = false;
         UIManager.Instance.PlayModeUI_OpenAll();
+        spaceBar.SetActive(false);
         zoomCamera.Priority = 5;
         Unpossess();
     }
