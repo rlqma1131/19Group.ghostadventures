@@ -40,6 +40,7 @@ public class Ch1_TV : BasePossessable
         if (!isPossessed || !hasActivated)
             return;
 
+        UIManager.Instance.Show_SpaceBar_Key();
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (isControlMode)
@@ -48,8 +49,11 @@ public class Ch1_TV : BasePossessable
                 isControlMode = false;
                 isPossessed = false;
                 UIManager.Instance.PlayModeUI_OpenAll();
+                UIManager.Instance.Hide_SpaceBar_Key();
+
                 zoomCamera.Priority = 5;
                 Unpossess();
+
             }
         }
         
@@ -73,7 +77,9 @@ public class Ch1_TV : BasePossessable
         if (channel == 9 && Input.GetKeyDown(KeyCode.Space))
         {
             // 정답 효과음 추가
+            UIManager.Instance.Hide_SpaceBar_Key();
             ShowMemoryandDoorOpen();
+
         }
     }
 
@@ -90,6 +96,8 @@ public class Ch1_TV : BasePossessable
         anim.SetTrigger("Solved");
         zoomAnim.SetTrigger("Show");
         StartCoroutine(WaitZoomEnding(3f));
+        UIManager.Instance.Hide_SpaceBar_Key();
+
     }
 
     private IEnumerator WaitZoomEnding(float delay)

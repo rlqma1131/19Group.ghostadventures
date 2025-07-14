@@ -14,7 +14,8 @@ public class Ch1_CelebrityBox : BasePossessable
         
         if (!isPossessed || !hasActivated)
             return;
-
+        else if(isPossessed || !hasActivated)
+            UIManager.Instance.Show_Q_Key(transform.position);
         if (Input.GetKeyDown(KeyCode.Q))
         {
             TriggerBoxEvent();
@@ -24,6 +25,7 @@ public class Ch1_CelebrityBox : BasePossessable
     private void TriggerBoxEvent()
     {
         hasActivated = true;
+        UIManager.Instance.Hide_Q_Key();
         
         // 박스 애니메이션 트리거
         if(animator != null)
