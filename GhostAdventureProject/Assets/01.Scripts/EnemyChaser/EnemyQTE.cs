@@ -124,7 +124,7 @@ public class EnemyQTE : MonoBehaviour
 
     private IEnumerator DelayedStunAfterQTE()
     {
-        // QTESuccess 애니메이션이 4초 정도 재생되도록 대기
+        // QTESuccess 애니메이션이 5초 정도 재생되도록 대기
         yield return new WaitForSeconds(5f);
         enemyAI.ChangeState(EnemyAI.AIState.StunnedAfterQTE);
         enemyAI.enemyAnimator?.SetBool("IsIdle", true);
