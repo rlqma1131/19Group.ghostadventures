@@ -38,6 +38,9 @@ public class Ch1_Clock : BasePossessable
     {
         if (!isPossessed) return;
 
+        // UIManager.Instance.Show_A_Key(hourHand.transform.position);
+        // UIManager.Instance.Show_D_Key(minuteHand.transform.position);
+
         // 최초 상호작용
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -45,6 +48,8 @@ public class Ch1_Clock : BasePossessable
             isControlMode = false;
             HideClockUI();
             Unpossess();
+            // UIManager.Instance.Hide_A_Key();
+            // UIManager.Instance.Hide_A_Key();
         }
 
         if (!isControlMode) return;

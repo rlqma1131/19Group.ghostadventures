@@ -27,12 +27,17 @@ public class Ch1_Bottle : BasePossessable
         base.Update();
 
         if (!isPossessed)
+        {
+            UIManager.Instance.Hide_Q_Key();
             return;
-
+        }
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            UIManager.Instance.Hide_Q_Key();
             TriggerBottleEvent();
         }
+        
+        UIManager.Instance.Show_Q_Key(transform.position);
     }
 
     private void TriggerBottleEvent()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor.Build;
 using UnityEngine;
 
 public interface IUIClosable
@@ -51,8 +52,10 @@ public class UIManager : Singleton<UIManager>
     // -------------------------------------------------------------------------------------------
 
     // 3. 상호작용 UI
-    public GameObject SpaceBar;
-    public GameObject Q_Key;
+    public GameObject q_Key;
+    public GameObject a_Key;
+    public GameObject d_Key;
+    public GameObject spacebar_Key;
     public GameObject interactInfo;
     
     // --------------------------------------------------------------------------------------------
@@ -169,6 +172,58 @@ public class UIManager : Singleton<UIManager>
         // 아무 UI도 안 켜져 있으면 ESC 메뉴 토글
         escMenu.ESCMenuToggle();
     }
+
+
+    // Q_Key 보이기 / 숨기기
+    public void Show_Q_Key(Vector3 worldPosition)
+    {
+        Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
+        screenPos.y += 40f;
+        q_Key.transform.position = screenPos;
+        q_Key.SetActive(true);
+    }
+    public void Hide_Q_Key()
+    {
+        q_Key.SetActive(false);
+    }
+
+    // A_Key 보이기 / 숨기기
+    public void Show_A_Key(Vector3 worldPosition)
+    {
+        Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
+        screenPos.y += 360f;
+        a_Key.transform.position = screenPos;
+        a_Key.SetActive(true);
+    }
+    public void Hide_A_Key()
+    {
+        a_Key.SetActive(false);
+    }
+
+    // D_Key 보이기 / 숨기기
+    public void Show_D_Key(Vector3 worldPosition)
+    {
+        Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
+        screenPos.y += 360f;
+        d_Key.transform.position = screenPos;
+        d_Key.SetActive(true);
+    }
+    public void Hide_D_Key()
+    {
+        a_Key.SetActive(false);
+    }
+
+    // SpaceBar_Key 보이기 / 숨기기
+    public void Show_SpaceBar_Key()
+    {
+        spacebar_Key.SetActive(true);
+    }
+    public void Hide_SpaceBar_Key()
+    {
+        spacebar_Key.SetActive(false);
+    }
+
+
 
 
     

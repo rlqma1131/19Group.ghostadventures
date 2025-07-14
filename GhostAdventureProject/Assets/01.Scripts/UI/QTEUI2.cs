@@ -40,7 +40,6 @@ public class QTEUI2 : MonoBehaviour
         // resultText.text = "";
         isRunning = true;
         StartCoroutine(RunQTE());
-        UIManager.Instance.SpaceBar.SetActive(true);
     }
 
     private IEnumerator RunQTE()
@@ -92,7 +91,6 @@ public class QTEUI2 : MonoBehaviour
         isRunning = false;
         yield return new WaitForSeconds(1.5f);
         qteUI.SetActive(false);
-        UIManager.Instance.SpaceBar.SetActive(false);
 
         // resultText.gameObject.SetActive(true);
     }
