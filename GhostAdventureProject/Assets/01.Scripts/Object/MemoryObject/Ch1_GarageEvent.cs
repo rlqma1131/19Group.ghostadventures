@@ -30,12 +30,9 @@ public class Ch1_GarageEvent : BaseInteractable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
-            {
-                UIManager.Instance.PromptUI.ShowPrompt("...아무 일도 일어나지 않았다.", 2f);
-            }
+
             // 1장 단서 모두 모이고 상호작용 시 이벤트 발생
-            else
+            
             {
                 if (!isCutscenePlaying)
                 {
