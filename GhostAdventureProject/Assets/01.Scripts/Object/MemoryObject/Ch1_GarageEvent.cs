@@ -30,31 +30,20 @@ public class Ch1_GarageEvent : BaseInteractable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            //if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
-            //{
-            //    UIManager.Instance.PromptUI.ShowPrompt("...아무 일도 일어나지 않았다.", 2f);
-            //}
-            //else
+            if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
             {
-
+                UIManager.Instance.PromptUI.ShowPrompt("...아무 일도 일어나지 않았다.", 2f);
+            }
+            // 1장 단서 모두 모이고 상호작용 시 이벤트 발생
+            else
+            {
                 if (!isCutscenePlaying)
                 {
-
-
-                PossessionSystem.Instance.CanMove = false;
-                UIManager.Instance.PlayModeUI_CloseAll();
-                cutsceneDirector.Play();
+                    // [컷씬] 꼬마유령 이벤트
+                    PossessionSystem.Instance.CanMove = false;
+                    UIManager.Instance.PlayModeUI_CloseAll();
+                    cutsceneDirector.Play();
                 }
-                // 1장 단서 모두 모이고 충돌 시 이벤트 발생
-
-
-
-                // [컷씬 재생]
-                // 꼬마유령 등장
-                // 깜짝놀래키기
-
-                // 컷씬 끝나면
-                // 이름 입력 창 띄우기
             }
         }
 
@@ -63,11 +52,13 @@ public class Ch1_GarageEvent : BaseInteractable
 
         if (!isCutscenePlaying2 && answer.correct)
         {
+            // [컷씬] 정답 이벤트
+            UIManager.Instance.PlayModeUI_CloseAll();
+            cutsceneDirector_correct.Play();
+            PossessionSystem.Instance.CanMove = false;
 
-        UIManager.Instance.PlayModeUI_CloseAll();
-        cutsceneDirector_correct.Play();
-        PossessionSystem.Instance.CanMove = false;
-        bear.ActivateTeddyBear();
+            // 기억조각 스캔 가능하도록 활성화
+            bear.ActivateTeddyBear();
 
         }
     }
