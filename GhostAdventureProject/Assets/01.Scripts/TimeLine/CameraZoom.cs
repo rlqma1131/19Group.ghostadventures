@@ -20,18 +20,18 @@ public class CameraZoom : MonoBehaviour
 
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            ZoomIn();
-        }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Z))
+    //    {
+    //        ZoomIn();
+    //    }
 
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            ZoomOut();
-        }
-    }
+    //    if (Input.GetKeyDown(KeyCode.X))
+    //    {
+    //        ZoomOut();
+    //    }
+    //}
 
     public void ZoomIn()
     {
