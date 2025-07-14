@@ -4,6 +4,7 @@ using UnityEngine;
 public class Ch1_Plate : BasePossessable
 {
     [SerializeField] private AudioClip isShaking;
+    [SerializeField] private GameObject q_Key;
 
     private Ch1_Cat cat;
 
@@ -11,6 +12,8 @@ public class Ch1_Plate : BasePossessable
     {
         base.Start();
         cat = FindObjectOfType<Ch1_Cat>();
+        q_Key = UIManager.Instance.q_Key;
+        q_Key.transform.position = UIManager.Instance.SetPosition_Q_Key(this.transform.position);
     }
 
     protected override void Update()
@@ -19,17 +22,16 @@ public class Ch1_Plate : BasePossessable
 
         if (!isPossessed)
         {
-            // UIManager.Instance.Hide_Q_Key(); 
+            q_Key.SetActive(false);
             return;
         }
 
-        UIManager.Instance.Show_Q_Key(this.transform.position);
-
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            UIManager.Instance.Hide_Q_Key(); 
+            q_Key.SetActive(false);
             TriggerPlateEvent();
         }
+        q_Key.SetActive(true);
     }
 
     private void TriggerPlateEvent()
@@ -55,4 +57,6 @@ public class Ch1_Plate : BasePossessable
         // 고양이는 눈 깜빡이기만
         cat.Blink();
     }
+    
+
 }
