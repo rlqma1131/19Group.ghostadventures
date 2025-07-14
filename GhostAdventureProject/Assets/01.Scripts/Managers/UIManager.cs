@@ -253,17 +253,17 @@ public class UIManager : Singleton<UIManager>
     //     screenPos.y += 40f;
     //     q_Key.transform.position = screenPos;
     // }
-    public void Update_Q_Key(BasePossessable current)
-    {
-        if (current != null && current.IsPossessed() && !current.HasActivated())
-        {
-            Show_Q_Key(current.transform.position);
-        }
-        else
-        {
-            Hide_Q_Key();
-        }
-    }
+    // public void Update_Q_Key(BasePossessable current)
+    // {
+    //     if (current != null && current.IsPossessed() && !current.HasActivated())
+    //     {
+    //         Show_Q_Key(current.transform.position);
+    //     }
+    //     else
+    //     {
+    //         Hide_Q_Key();
+    //     }
+    // }
     
 }
 
