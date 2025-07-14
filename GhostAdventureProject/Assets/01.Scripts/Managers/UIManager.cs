@@ -177,10 +177,10 @@ public class UIManager : Singleton<UIManager>
     // Q_Key 보이기 / 숨기기
     public void Show_Q_Key(Vector3 worldPosition)
     {
+        q_Key.SetActive(true);
         Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
         screenPos.y += 40f;
         q_Key.transform.position = screenPos;
-        q_Key.SetActive(true);
     }
     public void Hide_Q_Key()
     {

@@ -28,7 +28,7 @@ public class Ch1_Bottle : BasePossessable
 
         if (!isPossessed)
         {
-            UIManager.Instance.Hide_Q_Key();
+            // UIManager.Instance.Hide_Q_Key();
             return;
         }
         if (Input.GetKeyDown(KeyCode.Q))
