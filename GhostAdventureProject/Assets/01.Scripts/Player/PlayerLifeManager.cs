@@ -47,7 +47,7 @@ public class PlayerLifeManager : MonoBehaviour
         OnLifeChanged?.Invoke(currentPlayerLives);
 
         // TODO: 피격 애니메이션 재생
-        playerAnimator?.SetTrigger("StruggleIn");  // <- Animator에 "StruggleIn" 트리거 설정 필요
+       // playerAnimator?.SetTrigger("StruggleIn");  // <- Animator에 "StruggleIn" 트리거 설정 필요
 
         if (currentPlayerLives <= 0)
         {
