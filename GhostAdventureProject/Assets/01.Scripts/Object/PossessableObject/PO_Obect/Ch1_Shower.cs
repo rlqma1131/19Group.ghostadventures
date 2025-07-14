@@ -10,6 +10,8 @@ public class Ch1_Shower : BasePossessable
     [SerializeField] private GameObject Needle;
     [SerializeField] private AudioSource onWaterSound; // 물 켜는 소리 효과
     [SerializeField] private AudioSource offWaterSound; // 물 끄는 소리 효과
+    [SerializeField] private GameObject UI;
+    [SerializeField] private GameObject q_key;
 
     private bool isWater = false;
     private int temperature = 0;
@@ -28,7 +30,13 @@ public class Ch1_Shower : BasePossessable
     protected override void Update()
     {
         if (!isPossessed)
+        {   
+            UI.SetActive(false);
+            q_key.SetActive(false);
             return;
+        }
+
+        q_key.SetActive(true);
 
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -43,12 +51,14 @@ public class Ch1_Shower : BasePossessable
             Debug.Log("온도 조절: " + temperature);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             isWater = !isWater;
             water.SetActive(isWater);
             temperatureArch.SetActive(isWater);
             Needle.SetActive(isWater);
+            UI.SetActive(true);
+            q_key.SetActive(false);
             Debug.Log($"물 상태: {(isWater ? "ON" : "OFF")}, 온도: {temperature}");
         }
 
@@ -65,6 +75,8 @@ public class Ch1_Shower : BasePossessable
 
             temperature = 0;
             UpdateNeedleRotation();
+            UI.SetActive(false);
+            q_key.SetActive(false);
         }
     }
     private void UpdateNeedleRotation()
