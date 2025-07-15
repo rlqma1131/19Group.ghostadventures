@@ -95,8 +95,11 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // 게임종료
     public void QuitGame()
     {
-        // Application.Quit();
-        Debug.Log("게임종료");
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
 }

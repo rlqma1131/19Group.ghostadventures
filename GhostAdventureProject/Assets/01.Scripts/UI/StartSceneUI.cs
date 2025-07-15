@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class teststartScene : MonoBehaviour
+public class StartSceneUI : MonoBehaviour
 {
     // Start is called before the first frame update
     public void introScenestart()
@@ -21,8 +21,11 @@ public class teststartScene : MonoBehaviour
 
     public void ExitGameButton()
     {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
         Application.Quit();
-        Debug.Log("게임이 종료되었습니다");
+#endif
     }
 
 }
