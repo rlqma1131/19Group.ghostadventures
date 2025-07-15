@@ -29,7 +29,7 @@ public abstract class BaseDoor : BaseInteractable
             TryInteract();
         }
 
-        SetInteractionPopup(playerNearby);
+        SetHighlight(playerNearby);
     }
 
     protected abstract void TryInteract();
