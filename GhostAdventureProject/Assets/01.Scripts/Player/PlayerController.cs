@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleMovement() // 기본 이동 처리
+    private void HandleMovement()
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
@@ -49,12 +49,32 @@ public class PlayerController : MonoBehaviour
 
         // 회전
         if (h > 0.01f)
+        {
             transform.localScale = new Vector3(1, 1, 1);
+            FlipEKey(true);
+        }
         else if (h < -0.01f)
+        {
             transform.localScale = new Vector3(-1, 1, 1);
+            FlipEKey(false);
+        }
 
         bool isMoving = move.magnitude > 0.01f;
         animator.SetBool("Move", isMoving);
+    }
+
+    private void FlipEKey(bool facingRight)
+    {
+        if (PlayerInteractSystem.Instance != null && PlayerInteractSystem.Instance.CurrentClosest != null)
+        {
+            var eKey = PlayerInteractSystem.Instance.GetEKey();
+            if (eKey != null)
+            {
+                Vector3 scale = eKey.transform.localScale;
+                scale.x = facingRight ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+                eKey.transform.localScale = scale;
+            }
+        }
     }
 
     private bool CurrentTargetIsPossessable()

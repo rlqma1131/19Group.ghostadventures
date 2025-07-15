@@ -9,9 +9,11 @@ public class PlayerInteractSystem : MonoBehaviour
     // 싱글톤
     public static PlayerInteractSystem Instance { get; private set; }
 
-    private List<GameObject> nearbyInteractables = new();
+    [SerializeField] private GameObject eKey;
     [SerializeField] private GameObject currentClosest; 
     public GameObject CurrentClosest => currentClosest;// 디버깅용
+    
+    private List<GameObject> nearbyInteractables = new();
 
     private void Awake()
     {
@@ -54,7 +56,8 @@ public class PlayerInteractSystem : MonoBehaviour
             // 팝업 끄기
             if (currentClosest.TryGetComponent<BaseInteractable>(out var prevInteractable))
             {
-                prevInteractable.SetInteractionPopup(false);
+                eKey.SetActive(false);
+                prevInteractable.SetHighlight(false);
             }
         }
 
@@ -66,7 +69,8 @@ public class PlayerInteractSystem : MonoBehaviour
             // 팝업 켜기
             if (currentClosest.TryGetComponent<BaseInteractable>(out var nextInteractable))
             {
-                nextInteractable.SetInteractionPopup(true);
+                eKey.SetActive(true);
+                nextInteractable.SetHighlight(true);
             }
         }
     }
@@ -91,5 +95,10 @@ public class PlayerInteractSystem : MonoBehaviour
                 UpdateClosest(null);
             }
         }
+    }
+
+    public GameObject GetEKey()
+    {
+        return eKey;
     }
 }
