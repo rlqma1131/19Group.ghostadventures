@@ -6,19 +6,19 @@
 /// </summary>
 public class BaseInteractable : MonoBehaviour
 {
-    public GameObject interactionInfo;
+    public GameObject highlight;
 
     void Start()
     {
-        if (interactionInfo != null)
-            interactionInfo.SetActive(false);
+        if (highlight != null)
+            highlight.SetActive(false);
     }
     
-    public void SetInteractionPopup(bool pop)
+    public void SetHighlight(bool pop)
     {
-        if (interactionInfo != null)
+        if (highlight != null)
         {
-            interactionInfo.SetActive(pop);
+            highlight.SetActive(pop);
         }
     }
 
@@ -29,7 +29,8 @@ public class BaseInteractable : MonoBehaviour
         {
             if (collision.CompareTag("Player"))
             {
-                SetInteractionPopup(true);
+                //SetHighlight(true);
+                PlayerInteractSystem.Instance.AddInteractable(gameObject);
             }
         }
     }
@@ -38,7 +39,7 @@ public class BaseInteractable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            SetInteractionPopup(false);
+            SetHighlight(false);
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
         }
     }

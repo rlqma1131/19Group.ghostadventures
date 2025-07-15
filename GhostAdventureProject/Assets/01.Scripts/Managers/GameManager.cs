@@ -26,12 +26,18 @@ public class GameManager : Singleton<GameManager>
     {
         if (currentPlayer == null)
         {
-            GameObject go = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+            string sceneName = SceneManager.GetActiveScene().name;
+            string startPointName = $"StartPoint_{sceneName}";
+            Transform startPoint = GameObject.Find(startPointName)?.transform;
+
+            Vector3 spawnPosition = startPoint != null ? startPoint.position : Vector3.zero;
+
+            GameObject go = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
             currentPlayer = go;
             playerController = go.GetComponent<PlayerController>();
             DontDestroyOnLoad(go);
 
-            Debug.Log("[GameManager] Player 스폰 완료 - EnemyAI는 자동으로 GameManager에서 참조");
+            Debug.Log($"[GameManager] Player 스폰 완료 - {startPointName} 위치에서 시작: {spawnPosition}");
         }
     }
 
@@ -57,6 +63,21 @@ public class GameManager : Singleton<GameManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        string sceneName = scene.name;
+
+        if (sceneName == "StartScene")
+        {
+            // 타이틀 씬이면 자기 자신 포함 관련 매니저 제거
+            Destroy(currentPlayer);
+            currentPlayer = null;
+            playerController = null;
+
+            Destroy(gameObject); // GameManager 자기 자신 제거
+            // DestroyIfExists<UIManager>();
+            // DestroyIfExists<PossessionStateManager>();
+            return;
+        }
+        
         Debug.Log($"씬 로드됨: {scene.name}");
 
         EnsureManagerExists<ChapterEndingManager>(chapterEndingManager);
@@ -77,4 +98,14 @@ public class GameManager : Singleton<GameManager>
             Debug.Log($"[{typeof(T).Name}] 자동 생성됨");
         }
     }
+    
+    // private void DestroyIfExists<T>() where T : MonoBehaviour
+    // {
+    //     T instance = Singleton<T>.Instance;
+    //     if (instance != null)
+    //     {
+    //         Destroy(instance.gameObject);
+    //         Debug.Log($"[GameManager] {typeof(T).Name} 파괴됨");
+    //     }
+    // }
 }

@@ -27,6 +27,9 @@ public class PlayerHide : MonoBehaviour
 
     private void Update()
     {
+        if (PlayerInteractSystem.Instance.CurrentClosest != currentHideArea)
+            return;
+
         if (isHiding)
         {
             if (Input.GetKeyDown(hideKey) || Input.GetKeyDown(KeyCode.E))

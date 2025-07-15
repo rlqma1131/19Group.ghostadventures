@@ -43,11 +43,9 @@ public class LockedDoor : BaseDoor
     // 퍼즐 해결 시 호출하는 메서드
     public void SolvePuzzle()
     {
-        if (isLocked)
-        {
-            UnlockPair();
-            Debug.Log($"퍼즐 해결! {puzzleId} 페어 문들이 열렸습니다!");
-        }
+        if(!isLocked) return;
+        
+        UnlockPair();
     }
 
     // 페어 문 함께 열기
@@ -107,23 +105,6 @@ public class LockedDoor : BaseDoor
             audioSource.PlayOneShot(clip);
         }
         
-    }
-
-    // TODO: 테스트 완료 후 삭제 필요 - 테스트용 메서드 오버라이드
-    protected override void TestToggleDoor()
-    {
-        if (isLocked)
-        {
-            // 잠겨있으면 페어와 함께 열기
-            UnlockPair();
-        }
-        else
-        {
-            // 열려있으면 페어와 함께 잠그기
-            LockPair();
-        }
-
-     
     }
 
     // 테스트용 메서드들
