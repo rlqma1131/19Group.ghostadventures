@@ -9,6 +9,7 @@ public class Ch1_Clock : BasePossessable
     [SerializeField] private GameObject clockZoom; // 고해상도 시계 UI
     [SerializeField] private Transform hourHand;
     [SerializeField] private Transform minuteHand;
+    [SerializeField] private GameObject UI;
     [SerializeField] private Ch1_TV  tvObject;
     
     private bool isControlMode = false;
@@ -28,7 +29,8 @@ public class Ch1_Clock : BasePossessable
         //minuteHand = GameObject.Find("MinuteHand").transform;
 
         // UI 초기화
-        clockZoom.SetActive(false); 
+        clockZoom.SetActive(false);
+        UI.SetActive(false); 
 
         // 시곗바늘 위치 초기화
         UpdateHands();
@@ -38,6 +40,7 @@ public class Ch1_Clock : BasePossessable
     {
         if (!isPossessed) return;
 
+        UI.SetActive(true); 
         // UIManager.Instance.Show_A_Key(hourHand.transform.position);
         // UIManager.Instance.Show_D_Key(minuteHand.transform.position);
 
@@ -46,11 +49,13 @@ public class Ch1_Clock : BasePossessable
         {
             // 조작 종료
             isControlMode = false;
+            UI.SetActive(false); 
             HideClockUI();
             Unpossess();
             // UIManager.Instance.Hide_A_Key();
             // UIManager.Instance.Hide_A_Key();
         }
+        
 
         if (!isControlMode) return;
 
@@ -73,6 +78,7 @@ public class Ch1_Clock : BasePossessable
             HideClockUI();
             hasActivated = false;
             Unpossess();
+            UI.SetActive(false); 
         }
     }
 
