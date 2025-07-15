@@ -13,7 +13,6 @@ public class Ch1_HideAreaEvent : MonoBehaviour
 
     private Ch1_Closet closet => FindObjectOfType<Ch1_Closet>();
     private PlayerHide PlayerHide => FindObjectOfType<PlayerHide>();
-    private Ch1_Mouse mouse => FindObjectOfType<Ch1_Mouse>();
     private PlayerHide playerHide => GameManager.Instance.Player.GetComponent<PlayerHide>();
 
     public bool Solved { get; private set; } = false;

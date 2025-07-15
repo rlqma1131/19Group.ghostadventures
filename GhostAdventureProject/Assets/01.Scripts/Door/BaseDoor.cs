@@ -24,6 +24,9 @@ public abstract class BaseDoor : BaseInteractable
 
     protected virtual void Update()
     {
+        if (PlayerInteractSystem.Instance.CurrentClosest != gameObject)
+            return;
+
         if (playerNearby && Input.GetKeyDown(KeyCode.E))
         {
             TryInteract();
@@ -36,15 +39,20 @@ public abstract class BaseDoor : BaseInteractable
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player")) 
+        if (other.CompareTag("Player"))
+        {
             playerNearby = true;
-        
+            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+        }
     }
 
     protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
+        {
             playerNearby = false;
+            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        }
     }
 
     protected void TeleportPlayer()
