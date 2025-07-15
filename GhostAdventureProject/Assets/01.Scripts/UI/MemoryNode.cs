@@ -16,7 +16,7 @@ public class MemoryNode : MonoBehaviour
     public float fadeDuration = 0.5f;
     
     [SerializeField] private Image icon;
-    [SerializeField] private TextMeshProUGUI name;
+    [SerializeField] private TextMeshProUGUI memoryName;
     private string sceneName;
 
     public MemoryData memory;
@@ -27,7 +27,7 @@ public class MemoryNode : MonoBehaviour
     {
         memory = memoryData;
         icon.sprite = memory.MemoryCutSceneImage;
-        name.text = memory.memoryTitle;
+        memoryName.text = memory.memoryTitle;
         sceneName = memory.CutSceneName;
 
     //     switch (memory.type)
