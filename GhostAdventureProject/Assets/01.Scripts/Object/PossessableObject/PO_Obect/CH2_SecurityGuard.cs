@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class CH2_SecurityGuard : MonoBehaviour
+public class CH2_SecurityGuard : BasePossessable
 {
     public class Ch1_CelebrityBox : BasePossessable
     {
