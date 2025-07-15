@@ -11,12 +11,14 @@ public class Ch1_GarageEvent : BaseInteractable
     private bool playerNearby = false;
     private bool isCutscenePlaying = false;
     private bool isCutscenePlaying2 = false;
+
     void Start()
     {
         bear = GetComponent<Ch1_MemoryPositive_01_TeddyBear>();
         cutsceneDirector.stopped += OnTimelineFinished;
         cutsceneDirector_correct.stopped += OnTimelineFinished2;
     }
+
     void Update()
     {
         if (!playerNearby)
@@ -51,20 +53,23 @@ public class Ch1_GarageEvent : BaseInteractable
             bear.ActivateTeddyBear();
         }
     }
-    private void OnTriggerEnter2D(Collider2D other)
+
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             playerNearby = true;
         }
     }
-    private void OnTriggerExit2D(Collider2D other)
+
+    protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             playerNearby = false;
         }
     }
+
     void OnTimelineFinished(PlayableDirector pd)
     {
         keyboard.OpenKeyBoard();
@@ -72,6 +77,7 @@ public class Ch1_GarageEvent : BaseInteractable
         UIManager.Instance.PlayModeUI_OpenAll();
         isCutscenePlaying = true;
     }
+
     void OnTimelineFinished2(PlayableDirector pd)
     {
         keyboard.Close();
