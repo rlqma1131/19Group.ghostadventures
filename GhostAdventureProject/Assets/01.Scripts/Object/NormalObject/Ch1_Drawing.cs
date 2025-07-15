@@ -7,6 +7,7 @@ public class Ch1_Drawing : MonoBehaviour
     [SerializeField] private GameObject drawingZoom; // 확대용 드로잉 UI (Canvas 하위)
     [SerializeField] private RectTransform drawingPos; // 드로잉 UI의 시작 위치
     [SerializeField] private Image zoomPanel;        // 배경 패널 (알파 페이드용)
+    private CluePickup cluePickup;
 
     private bool isPlayerInside = false;
     private bool isZoomActive = false;
@@ -14,9 +15,7 @@ public class Ch1_Drawing : MonoBehaviour
 
     void Start()
     {
-        drawingZoom = GameObject.Find("Ch1_DrawingZoom");
-        drawingPos = drawingZoom.GetComponent<RectTransform>();
-        zoomPanel = GameObject.Find("ZoomPanel").GetComponent<Image>();
+        cluePickup = GetComponent<CluePickup>();
 
         // UI 초기화
         drawingZoom.SetActive(false);
@@ -78,6 +77,8 @@ public class Ch1_Drawing : MonoBehaviour
                 if (isPlayerInside)
                     PlayerInteractSystem.Instance.AddInteractable(gameObject);
             });
+        
+        cluePickup.PickupClue();
     }
 
     private void OnTriggerEnter2D(Collider2D other)

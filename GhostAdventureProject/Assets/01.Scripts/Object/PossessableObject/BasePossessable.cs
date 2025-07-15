@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public abstract class BasePossessable : MonoBehaviour
+public abstract class BasePossessable : BaseInteractable
 {
+    [SerializeField] protected Animator anim;
     [SerializeField] protected bool hasActivated;
     public bool isPossessed;
     public bool HasActivated => hasActivated;
     public bool IsPossessed => isPossessed;
     public bool IsPossessedState => isPossessed;
-
-    protected Animator anim;
-
 
     protected virtual void Start()
     {
@@ -31,7 +26,7 @@ public abstract class BasePossessable : MonoBehaviour
     }
 
     // 상호작용 메시지 표시 대상 설정
-    private void OnTriggerEnter2D(Collider2D other)
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
         if (!hasActivated)
             return;
@@ -40,7 +35,7 @@ public abstract class BasePossessable : MonoBehaviour
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
@@ -66,5 +61,6 @@ public abstract class BasePossessable : MonoBehaviour
         isPossessed = false;
         SoulEnergySystem.Instance.Consume(1);
     }
+
     public virtual void OnPossessionEnterComplete() { }
 }

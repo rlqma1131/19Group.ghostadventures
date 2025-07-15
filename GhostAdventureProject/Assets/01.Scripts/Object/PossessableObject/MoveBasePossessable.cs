@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Cinemachine;
 using UnityEngine;
 
 public class MoveBasePossessable : BasePossessable
 {
+    [SerializeField] protected CinemachineVirtualCamera zoomCamera;
     [SerializeField] private float moveSpeed = 3f;
-    private SpriteRenderer spriteRenderer;
+    protected SpriteRenderer spriteRenderer;
 
     protected override void Start()
     {
@@ -17,30 +16,46 @@ public class MoveBasePossessable : BasePossessable
 
     protected override void Update()
     {
-        base.Update();
-
-        if (!isPossessed || !PossessionSystem.Instance.canMove)
+        if (!isPossessed || !PossessionSystem.Instance.CanMove)
             return;
+        
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            zoomCamera.Priority = 5;
+            Unpossess();
+        }
 
         Move();
     }
 
+    public override void OnPossessionEnterComplete()
+    {
+        zoomCamera.Priority = 20;
+    }
+
     void Move()
     {
+        float h = Input.GetAxis("Horizontal");
+
+        Vector3 move = new Vector3(h, 0, 0);
+
+        // 이동 여부 판단
+        bool isMoving = move.sqrMagnitude > 0.01f;
+
         if (anim != null)
         {
-            anim.SetBool("Move", true);
+            anim.SetBool("Move", isMoving);
         }
 
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        Vector3 move = new Vector3(h, v, 0);
-        transform.position += move * moveSpeed * Time.deltaTime;
-
-        // 좌우 Flip
-        if (spriteRenderer != null && Mathf.Abs(h) > 0.01f)
+        if (isMoving)
         {
-            spriteRenderer.flipX = h < 0f;
+            transform.position += move * moveSpeed * Time.deltaTime;
+
+            // 좌우 Flip
+            if (spriteRenderer != null && Mathf.Abs(h) > 0.01f)
+            {
+                spriteRenderer.flipX = h < 0f;
+            }
         }
     }
 }

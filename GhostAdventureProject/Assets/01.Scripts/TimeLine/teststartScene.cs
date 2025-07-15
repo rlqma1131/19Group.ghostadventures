@@ -7,10 +7,22 @@ using UnityEngine.SceneManagement;
 public class teststartScene : MonoBehaviour
 {
     // Start is called before the first frame update
-   public void introScenestart()
+    public void introScenestart()
     {
-
-
+        Debug.Log("Play버튼 클릭");
         SceneManager.LoadScene("IntroScene_Real");
+        if(UIManager.Instance != null)
+        {
+            UIManager.Instance.PlayModeUI_CloseAll();
+            UIManager.Instance.startEndingUI_CloseAll();
+        }
+
     }
+
+    public void ExitGameButton()
+    {
+        Application.Quit();
+        Debug.Log("게임이 종료되었습니다");
+    }
+
 }

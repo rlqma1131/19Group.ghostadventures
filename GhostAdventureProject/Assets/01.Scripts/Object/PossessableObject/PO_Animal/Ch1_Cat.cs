@@ -1,10 +1,13 @@
 ﻿using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Ch1_Cat : MoveBasePossessable
 {
+    [SerializeField] private LockedDoor door;
+    [SerializeField] private GameObject q_Key;
+    private bool isNearDoor = false;
+
     protected override void Start()
     {
         base.Start();
@@ -14,18 +17,58 @@ public class Ch1_Cat : MoveBasePossessable
     protected override void Update()
     {
         if (!hasActivated)
+        {
+            q_Key.SetActive(false);
             return;
+        }
+        if(isNearDoor)
+        {
+            Vector2 catPos = this.transform.position;
+            catPos.y += 0.5f;
+            q_Key.transform.position = catPos;
+            q_Key.SetActive(true);
+        }
+        else if(!isNearDoor)
+        {
+            q_Key.SetActive(false);
+        }
 
         base.Update();
-        if (Input.GetKeyDown(KeyCode.Q))
+
+        if (Input.GetKeyDown(KeyCode.Q) && isNearDoor)
         {
-            CatAct();
+            q_Key.SetActive(false);
+            // 문 열기
+            StartCoroutine(CatAct());
         }
-        // 점프 추가
-        //else if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    Jump();
-        //}
+    }
+
+    public override void OnQTESuccess()
+    {
+        SoulEnergySystem.Instance.RestoreAll();
+
+        PossessionStateManager.Instance.StartPossessionTransition();
+    }
+
+    // 문 근처에 있는지 확인
+    protected override void OnTriggerEnter2D(Collider2D collision)
+    {
+        base.OnTriggerEnter2D(collision);
+
+        if (collision.GetComponent<LockedDoor>() == door)
+        {
+            isNearDoor = true;
+        }
+    }
+
+    protected override void OnTriggerExit2D(Collider2D collision)
+    {
+        base.OnTriggerExit2D (collision);
+
+        if (collision.GetComponent<LockedDoor>() == door)
+        {
+            isNearDoor = false;
+        }
     }
 
     public void Blink()
@@ -36,6 +79,7 @@ public class Ch1_Cat : MoveBasePossessable
     public void ActivateCat()
     {
         // 1. 점프 애니메이션
+        anim.SetTrigger("Surprise");
         float jumpHeight = 1.5f;
         float jumpDuration = 0.4f;
 
@@ -59,9 +103,16 @@ public class Ch1_Cat : MoveBasePossessable
         });
     }
 
-    void CatAct()
+    IEnumerator CatAct()
     {
-        // 문열기
         anim.SetTrigger("Open");
+        door.SolvePuzzle();
+
+        yield return new WaitForSeconds(2f); // 2초 기다림
+
+        zoomCamera.Priority = 5;
+        Unpossess();
+        anim.Play("Cat_Sleeping");
+        hasActivated = false;
     }
 }

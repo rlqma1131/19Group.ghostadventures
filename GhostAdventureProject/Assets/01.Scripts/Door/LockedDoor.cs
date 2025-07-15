@@ -17,6 +17,9 @@ public class LockedDoor : BaseDoor
         isLocked = true; // 기본적으로 잠김
         audioSource = GetComponent<AudioSource>();
 
+        // 부모 클래스의 Start 호출
+        base.Start();
+
         // 페어 문 자동 연결 (둘 다 서로를 참조하도록)
         if (pairedDoor != null && pairedDoor.pairedDoor != this)
         {
@@ -33,7 +36,6 @@ public class LockedDoor : BaseDoor
         }
         else
         {
-            // 문이 열려있다면 텔레포트
             TeleportPlayer();
         }
     }
@@ -78,6 +80,7 @@ public class LockedDoor : BaseDoor
         {
             isLocked = true;
             Debug.Log($"{gameObject.name} 문이 잠겼습니다!");
+            UpdateDoorVisual();
         }
 
         // 페어 문도 잠그기
@@ -85,21 +88,42 @@ public class LockedDoor : BaseDoor
         {
             pairedDoor.isLocked = true;
             Debug.Log($"{pairedDoor.gameObject.name} 페어 문이 잠겼습니다!");
+            pairedDoor.UpdateDoorVisual();
         }
     }
 
     private void OnDoorUnlocked()
     {
-        // 문이 열렸을 때의 추가 효과
-        // 나중에 파티클, 애니메이션 등 추가 가능
+        UpdateDoorVisual();
     }
 
     private void PlaySound(AudioClip clip)
     {
+      
+
         if (audioSource != null && clip != null)
         {
+         
             audioSource.PlayOneShot(clip);
         }
+        
+    }
+
+    // TODO: 테스트 완료 후 삭제 필요 - 테스트용 메서드 오버라이드
+    protected override void TestToggleDoor()
+    {
+        if (isLocked)
+        {
+            // 잠겨있으면 페어와 함께 열기
+            UnlockPair();
+        }
+        else
+        {
+            // 열려있으면 페어와 함께 잠그기
+            LockPair();
+        }
+
+     
     }
 
     // 테스트용 메서드들
@@ -117,4 +141,7 @@ public class LockedDoor : BaseDoor
 
     // 퍼즐 매니저에서 사용할 수 있는 프로퍼티
     public string PuzzleId => puzzleId;
+
+
+
 }

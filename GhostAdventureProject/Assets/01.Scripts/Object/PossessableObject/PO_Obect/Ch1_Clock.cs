@@ -1,17 +1,16 @@
 ﻿using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Ch1_Clock : BasePossessable
 {
-    private Image zoomPanel;
-    private RectTransform clockPos; // 두트윈 시작 위치
-    private GameObject clockZoom; // 고해상도 시계 UI
-    private Transform hourHand;
-    private Transform minuteHand;
-    private Ch1_TV  tvObject;
+    [SerializeField] private Image zoomPanel;
+    [SerializeField] private RectTransform clockPos; // 두트윈 시작 위치
+    [SerializeField] private GameObject clockZoom; // 고해상도 시계 UI
+    [SerializeField] private Transform hourHand;
+    [SerializeField] private Transform minuteHand;
+    [SerializeField] private GameObject UI;
+    [SerializeField] private Ch1_TV  tvObject;
     
     private bool isControlMode = false;
 
@@ -23,14 +22,15 @@ public class Ch1_Clock : BasePossessable
         base.Start();
 
         // 확대UI 초기화
-        zoomPanel = GameObject.Find("ZoomPanel").GetComponent<Image>();
-        clockZoom = GameObject.Find("Ch1_ClockZoom");
-        clockPos = GameObject.Find("Ch1_ClockZoom").GetComponent<RectTransform>();
-        hourHand = GameObject.Find("HourHand").transform;
-        minuteHand = GameObject.Find("MinuteHand").transform;
+        //zoomPanel = GameObject.Find("ZoomPanel").GetComponent<Image>();
+        //clockZoom = GameObject.Find("Ch1_ClockZoom");
+        //clockPos = clockZoom.GetComponent<RectTransform>();
+        //hourHand = GameObject.Find("HourHand").transform;
+        //minuteHand = GameObject.Find("MinuteHand").transform;
 
         // UI 초기화
-        clockZoom.SetActive(false); 
+        clockZoom.SetActive(false);
+        UI.SetActive(false); 
 
         // 시곗바늘 위치 초기화
         UpdateHands();
@@ -40,14 +40,22 @@ public class Ch1_Clock : BasePossessable
     {
         if (!isPossessed) return;
 
+        UI.SetActive(true); 
+        // UIManager.Instance.Show_A_Key(hourHand.transform.position);
+        // UIManager.Instance.Show_D_Key(minuteHand.transform.position);
+
         // 최초 상호작용
         if (Input.GetKeyDown(KeyCode.E))
         {
             // 조작 종료
             isControlMode = false;
+            UI.SetActive(false); 
             HideClockUI();
             Unpossess();
+            // UIManager.Instance.Hide_A_Key();
+            // UIManager.Instance.Hide_A_Key();
         }
+        
 
         if (!isControlMode) return;
 
@@ -70,6 +78,7 @@ public class Ch1_Clock : BasePossessable
             HideClockUI();
             hasActivated = false;
             Unpossess();
+            UI.SetActive(false); 
         }
     }
 

@@ -1,16 +1,30 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
+public class Ch1_HideAreaEvent : MonoBehaviour
 {
+    // 싱글톤
+    public static Ch1_HideAreaEvent Instance { get; private set; }
+
     [SerializeField] private AudioClip UnlockCloset;
 
     [SerializeField] private List<string> correctOrder = new() { "침대", "인형", "의자" };
-    private List<string> currentOrder = new();
+    [SerializeField] private List<string> currentOrder = new();
 
     private Ch1_Closet closet => FindObjectOfType<Ch1_Closet>();
     private PlayerHide PlayerHide => FindObjectOfType<PlayerHide>();
     private Ch1_Mouse mouse => FindObjectOfType<Ch1_Mouse>();
+    private PlayerHide playerHide => GameManager.Instance.Player.GetComponent<PlayerHide>();
+
+    public bool Solved { get; private set; } = false;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     public void RegisterArea(string id)
     {
@@ -24,11 +38,10 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
         {
             if (IsCorrectOrder())
             {
+                Solved = true;
+
                 // 기억조각 드러남
                 closet.Unlock();
-
-                // 쥐 빙의 가능
-                mouse.MouseCanObssessed();
 
                 // 옷장열리는 효과음
                  SoundManager.Instance.PlaySFX(UnlockCloset);
@@ -38,6 +51,7 @@ public class Ch1_HideAreaEvent : Singleton<Ch1_HideAreaEvent>
 
                 // 퍼즐 풀면 아이방 HideArea에 못숨도록
                 UnTagAllHideAreas();
+                playerHide.canHide = false;
             }
             else
             {

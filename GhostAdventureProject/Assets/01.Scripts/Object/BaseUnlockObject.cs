@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class BaseUnlockObject : MonoBehaviour
+public abstract class BaseUnlockObject : MonoBehaviour
 {
     protected Animator anim;
 
@@ -11,5 +9,20 @@ public class BaseUnlockObject : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
     }
 
-    public virtual void Unlock() { }
+    public abstract void Unlock();
+
+    // 상호작용키 UI 표시
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+
+        PlayerInteractSystem.Instance.AddInteractable(gameObject);
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+
+        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+    }
 }

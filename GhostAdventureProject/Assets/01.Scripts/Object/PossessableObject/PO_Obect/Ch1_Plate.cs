@@ -1,11 +1,11 @@
 ﻿using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Ch1_Plate : BasePossessable
 {
     [SerializeField] private AudioClip isShaking;
+    [SerializeField] private GameObject q_Key;
+    
 
     private Ch1_Cat cat;
 
@@ -20,12 +20,17 @@ public class Ch1_Plate : BasePossessable
         base.Update();
 
         if (!isPossessed)
+        {
+            q_Key.SetActive(false);
             return;
+        }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            q_Key.SetActive(false);
             TriggerPlateEvent();
         }
+        q_Key.SetActive(true);
     }
 
     private void TriggerPlateEvent()
@@ -47,9 +52,10 @@ public class Ch1_Plate : BasePossessable
         }
 
         shakeSeq.Append(transform.DOLocalRotate(Vector3.zero, 0.03f));
-        shakeSeq.OnComplete(() => hasActivated = false);
 
         // 고양이는 눈 깜빡이기만
         cat.Blink();
     }
+    
+
 }

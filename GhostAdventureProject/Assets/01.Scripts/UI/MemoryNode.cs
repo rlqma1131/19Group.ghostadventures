@@ -1,23 +1,34 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+//using UnityEditor.SearchService;
+using UnityEngine.SceneManagement;
 
 public class MemoryNode : MonoBehaviour
 {
-    // 컷씬 이미지를 가져와야 하는데 어디서 가져와야함?
-[SerializeField] private Image icon;
-[SerializeField] private TextMeshProUGUI name;
 
-    private MemoryData memory;
+    public RectTransform targetImage;
+    public CanvasGroup canvasGroup; // ⬅ 페이드 아웃용
+    public float zoomDuration = 0.5f;
+    public float fadeDuration = 0.5f;
+    
+    [SerializeField] private Image icon;
+    [SerializeField] private TextMeshProUGUI memoryName;
+    private string sceneName;
+
+    public MemoryData memory;
+
+    public object Data { get; internal set; }
 
     public void Initialize(MemoryData memoryData)
     {
         memory = memoryData;
-        icon.sprite = memory.MemoryObjectSprite;
-        name.text = memory.memoryTitle;
+        icon.sprite = memory.MemoryCutSceneImage;
+        memoryName.text = memory.memoryTitle;
+        sceneName = memory.CutSceneName;
 
     //     switch (memory.type)
     //     {
@@ -33,4 +44,69 @@ public class MemoryNode : MonoBehaviour
     //     }
     }
 
+    public void GoToCutScene()
+    {
+        Debug.Log("씬 다시보기 버튼클릭");
+        UIManager.Instance.PlayModeUI_CloseAll();
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+    }
+    
+// using UnityEngine;
+// using UnityEngine.UI;
+// using UnityEngine.SceneManagement;
+// using System.Collections;
+
+// public class ImageZoomTransition : MonoBehaviour
+// {
+//     public RectTransform targetImage;
+//     public CanvasGroup canvasGroup; // ⬅ 페이드 아웃용
+//     public float zoomDuration = 0.5f;
+//     public float fadeDuration = 0.5f;
+//     public string nextSceneName = "NextScene";
+
+//     private bool isZooming = false;
+//     private Vector3 originalScale;
+//     private Vector3 targetScale;
+
+//     private void Start()
+//     {
+//         originalScale = targetImage.localScale;
+//         targetScale = Vector3.one * 10f; // 확대 크기 조정
+//         if (canvasGroup != null)
+//             canvasGroup.alpha = 1f;
+//     }
+
+//     public void OnClickZoomAndLoad()
+//     {
+//         if (!isZooming)
+//             StartCoroutine(ZoomAndFadeOut());
+//     }
+
+//     private IEnumerator ZoomAndFadeOut()
+//     {
+//         isZooming = true;
+//         float elapsed = 0f;
+
+//         while (elapsed < zoomDuration)
+//         {
+//             elapsed += Time.deltaTime;
+//             float t = elapsed / zoomDuration;
+
+//             // 확대
+//             targetImage.localScale = Vector3.Lerp(originalScale, targetScale, t);
+
+//             // 페이드 아웃 (0.5초 동안 동시에 진행)
+//             if (canvasGroup != null)
+//                 canvasGroup.alpha = Mathf.Lerp(1f, 0f, t);
+
+//             yield return null;
+//         }
+
+//         targetImage.localScale = targetScale;
+//         if (canvasGroup != null) canvasGroup.alpha = 0f;
+
+//         // 씬 전환
+//         SceneManager.LoadScene(nextSceneName);
+//     }
+// }
 }

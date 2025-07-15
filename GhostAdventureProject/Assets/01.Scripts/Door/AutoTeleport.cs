@@ -1,67 +1,51 @@
 ﻿using UnityEngine;
-using Cinemachine;
 
 public class AutoTeleport : MonoBehaviour
 {
     [Header("Auto Teleport Settings")]
-    [SerializeField] private Transform targetTransform; // 목표 Transform (드래그 앤 드롭)
-    [SerializeField] private Vector2 targetPos; // 목표 좌표 (백업용)
+    [SerializeField] private Transform targetTransform;
+    [SerializeField] private Vector2 targetPos;
+    [SerializeField] private float ignoreDuration = 1f; // 같은 포탈 재진입 무시 시간
 
-    //[Header("Camera Settings")]
-    //[SerializeField] private CinemachineVirtualCamera[] virtualCameras; // 모든 가상 카메라 배열
-    //[SerializeField] private int targetCameraIndex = 0; // 이동할 맵에 맞는 카메라 인덱스
+    private GameObject lastTeleportedPlayer;
+    private float lastTeleportTime;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (GameManager.Instance != null && GameManager.Instance.Player != null)
+        if (GameManager.Instance == null || GameManager.Instance.Player == null) return;
+        if (other.gameObject != GameManager.Instance.Player) return;
+
+        // 최근 들어온 플레이어가 나 자신이라면 무시
+        if (other.gameObject == lastTeleportedPlayer && Time.time - lastTeleportTime < ignoreDuration)
         {
-            if (other.gameObject == GameManager.Instance.Player)
-            {
-                TeleportPlayer(other.gameObject);
-            }
+            Debug.Log("[AutoTeleport] 재진입 방지 쿨타임 작동 중");
+            return;
+        }
+
+        TeleportPlayer(other.gameObject);
+
+        // 대상 포탈에도 정보 전달
+        AutoTeleport targetPortal = targetTransform?.GetComponent<AutoTeleport>();
+        if (targetPortal != null)
+        {
+            targetPortal.MarkRecentlyTeleported(other.gameObject);
         }
     }
 
     private void TeleportPlayer(GameObject player)
     {
-        if (player == null) return;
+        Vector3 destination = targetTransform != null
+            ? targetTransform.position
+            : new Vector3(targetPos.x, targetPos.y, player.transform.position.z);
 
-        Vector3 oldPosition = player.transform.position;
-        Vector3 teleportPosition;
+        player.transform.position = destination;
 
-        if (targetTransform != null)
-        {
-            teleportPosition = targetTransform.position;
-        }
-        else
-        {
-            teleportPosition = new Vector3(targetPos.x, targetPos.y, player.transform.position.z);
-        }
+        Debug.Log($"[AutoTeleport] {player.name} 텔레포트 완료 → {destination}");
+    }
 
-        // 플레이어 위치 이동
-        player.transform.position = teleportPosition;
-
-        // 모든 가상 카메라 비활성화
-        //foreach (var cam in virtualCameras)
-        //{
-        //    cam.gameObject.SetActive(false);
-        //}
-
-        //// 타겟 카메라 활성화 및 Follow 설정
-
-        //if (targetCameraIndex >= 0 && targetCameraIndex < virtualCameras.Length)
-        //{
-        //    var targetCam = virtualCameras[targetCameraIndex];
-
-
-
-        //    targetCam.gameObject.SetActive(true);
-        //    targetCam.OnTargetObjectWarped(player.transform, teleportPosition - oldPosition); // 플레이어가 순간이동했을 때 카메라 위치 업데이트
-        //}
-
-        //else
-        //{
-        //    Debug.LogWarning("Target camera index is out of range!");
-        //}
+    public void MarkRecentlyTeleported(GameObject player)
+    {
+        lastTeleportedPlayer = player;
+        lastTeleportTime = Time.time;
     }
 }

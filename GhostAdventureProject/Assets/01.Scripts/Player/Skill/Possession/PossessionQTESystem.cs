@@ -1,11 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class PossessionQTESystem : Singleton<PossessionQTESystem>
+public class PossessionQTESystem : MonoBehaviour
 {
+    // 싱글톤
+    public static PossessionQTESystem Instance { get; private set; }
+
     [SerializeField] private QTEUI QTEUI;
     public bool isRunning { get; private set; } = false;
+
+    void Awake() 
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     private void Start()
     {
@@ -26,7 +35,7 @@ public class PossessionQTESystem : Singleton<PossessionQTESystem>
         isRunning = false;
         Time.timeScale = 1f;
         // UIManager연동되면 스캔 때 까만 배경 비활성화
-        PossessionSystem.Instance.canMove = true;
+        PossessionSystem.Instance.CanMove = true;
         if (success)
         {
             Debug.Log("QTE succeeded");

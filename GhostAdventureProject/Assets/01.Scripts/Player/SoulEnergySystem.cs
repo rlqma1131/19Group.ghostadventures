@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
-public class SoulEnergySystem : Singleton<SoulEnergySystem>
+public class SoulEnergySystem : MonoBehaviour
 {
+    // 싱글톤
+    public static SoulEnergySystem Instance { get; private set; }
+
     public int maxEnergy;
     public int currentEnergy;
     
@@ -15,7 +16,15 @@ public class SoulEnergySystem : Singleton<SoulEnergySystem>
     [HideInInspector] public int currentRestoreAmount;
     
     private Coroutine passiveRestoreCoroutine;
-    
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
+
     private void Start()
     {
         currentEnergy = maxEnergy;
@@ -26,14 +35,12 @@ public class SoulEnergySystem : Singleton<SoulEnergySystem>
     public void Consume(int amount) // 에너지 소모
     {
         currentEnergy = Mathf.Max(currentEnergy - amount, 0);
-        Debug.Log($"영혼 에너지 {amount} 소모, 현재: {currentEnergy}");
         UIManager.Instance.SoulGaugeUI.SetSoulGauge(currentEnergy);
     }
 
     public void Restore(int amount) // 에너지 회복
     {
         currentEnergy = Mathf.Min(currentEnergy + amount, maxEnergy);
-        Debug.Log($"영혼 에너지 {amount} 회복, 현재: {currentEnergy}");
         UIManager.Instance.SoulGaugeUI.SetSoulGauge(currentEnergy);
     }
 
@@ -55,6 +62,10 @@ public class SoulEnergySystem : Singleton<SoulEnergySystem>
         while (true)
         {
             yield return new WaitForSeconds(currentRestoreInterval);
+            
+            if (this == null || !gameObject.activeInHierarchy)
+                yield break;
+            
             Restore(currentRestoreAmount);
         }
     }

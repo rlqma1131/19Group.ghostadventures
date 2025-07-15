@@ -2,36 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 개별 거울 데이터 클래스
-//설정 가이드:
-//1.거울 목록(Mirrors)
+[System.Serializable]
+public class StageEffect
+{
+    [Header("사운드")]
+    public AudioClip[] sounds;           // 각 단계별 사운드 배열
 
-//Size: 스테이지에 있는 거울 개수만큼 설정
-//각 Element마다 개별 거울 설정
+    [Header("비주얼")]
+    public GameObject visual;            // 비주얼 이펙트 GameObject
 
-//2. 거울별 설정 (각 Element)
+    [Header("특수 효과 (4단계에서만 사용)")]
+    public bool triggerCameraShake = false;
+    public bool continuousShake = false;     // 지속적인 흔들림 여부
+    public float shakeDuration = 0.3f;       // 일회성 흔들림 지속시간
+    public float shakeMagnitude = 0.2f;
+}
 
-//Mirror: 실제 거울 Transform (필수)
-//Ghost Visual: 유령 모델/이펙트 오브젝트
-//Audio Source: 해당 거울의 오디오 소스
-//Stage Sounds: 1~5단계별 효과음(5개)
-//Stage Visuals: 1~5단계별 비주얼 오브젝트 (5개)
-
-//3. 기능 설정
-
-//Detection Range: 거울 감지 범위 (미터)
-//Stay Threshold: 감지 시작 시간 (초)
-//Stage Progress Time: 단계 진행 간격 (초)
-
-//4. 게임 설정
-
-//Player Camera: 플레이어 카메라(화면 효과용)
-
-//팁:
-
-//거울이 3개면 Size를 3으로 설정
-//Stage Sounds/Visuals는 항상 5개로 고정
-//상태 정보는 런타임에 자동으로 업데이트됨
 [System.Serializable]
 public class MirrorData
 {
@@ -39,8 +25,14 @@ public class MirrorData
     public Transform mirror;
     public GameObject ghostVisual;
     public AudioSource audioSource;
-    public AudioClip[] stageSounds;
-    public GameObject[] stageVisuals;
+
+    [Header("단계별 효과 (인덱스 1~7 사용)")]
+    public StageEffect[] stageEffects = new StageEffect[8];  // 인덱스 1~7 사용
+
+    [Header("특수 단계 설정")]
+    public float emergingDelay = 1f;        // 6단계 대기 시간
+    public float emergingDuration = 0.5f;   // 6단계 지속 시간
+    public float deathDelay = 3f;           // 7단계 대기 시간
 
     [Header("상태 정보")]
     public GhostState currentState = GhostState.Waiting;
@@ -48,6 +40,7 @@ public class MirrorData
     public float stayTimer = 0f;
     public float stageTimer = 0f;
     public bool isActive = false;
+    public float observingTimer = 0f;
 
     public void ResetMirror()
     {
@@ -56,14 +49,16 @@ public class MirrorData
         stayTimer = 0f;
         stageTimer = 0f;
         isActive = false;
+        observingTimer = 0f;
 
         if (ghostVisual != null)
             ghostVisual.SetActive(false);
 
-        foreach (var visual in stageVisuals)
+        // 모든 단계별 비주얼 비활성화
+        foreach (var stageEffect in stageEffects)
         {
-            if (visual != null)
-                visual.SetActive(false);
+            if (stageEffect != null && stageEffect.visual != null)
+                stageEffect.visual.SetActive(false);
         }
     }
 }
@@ -89,15 +84,26 @@ public class MirrorGhostManager : MonoBehaviour
 
     [Header("게임 설정")]
     public Camera playerCamera;
+    public Vector3 originalCameraPosition = new Vector3(0, 0, -10);  // 카메라 원래 위치
 
     private Transform player;
     private MirrorData currentActiveMirror = null;
     private bool isPlayerControlDisabled = false;
+    private Coroutine currentShakeCoroutine = null;  // 현재 진행 중인 흔들림 코루틴
+    private bool isEmergingInProgress = false;       // 6단계 진행 중 플래그
+    private bool isDeathInProgress = false;          // 7단계 진행 중 플래그
 
     void Start()
     {
         FindPlayer();
         InitializeAllMirrors();
+
+        // 카메라 원래 위치 저장
+        if (playerCamera != null)
+        {
+            originalCameraPosition = playerCamera.transform.localPosition;
+            Debug.Log($"카메라 원래 위치 저장: {originalCameraPosition}");
+        }
     }
 
     void Update()
@@ -153,24 +159,35 @@ public class MirrorGhostManager : MonoBehaviour
 
     void UpdateMirrorDetection()
     {
-        // 가장 가까운 거울 찾기
         MirrorData closestMirror = GetClosestMirror();
 
-        // 현재 활성 거울이 범위를 벗어났거나, 더 가까운 거울이 있으면 변경
         if (currentActiveMirror != closestMirror)
         {
             if (currentActiveMirror != null)
             {
-                // 이전 거울 비활성화
-                DeactivateMirror(currentActiveMirror);
+                currentActiveMirror.isActive = false;
+                Debug.Log($"거울 감지 범위 벗어남: {currentActiveMirror.mirror.name}");
             }
 
             currentActiveMirror = closestMirror;
 
             if (currentActiveMirror != null)
             {
-                // 새 거울 활성화
                 ActivateMirror(currentActiveMirror);
+            }
+        }
+
+        if (currentActiveMirror == null)
+        {
+            foreach (var mirror in mirrors)
+            {
+                if (mirror.isActive)
+                {
+                    mirror.isActive = false;
+                    mirror.stayTimer = 0f;
+                    mirror.stageTimer = 0f;
+                    Debug.Log($"거울 {mirror.mirror.name} - 감지 리셋만 수행 (단계는 유지)");
+                }
             }
         }
     }
@@ -205,6 +222,13 @@ public class MirrorGhostManager : MonoBehaviour
     void DeactivateMirror(MirrorData mirror)
     {
         mirror.isActive = false;
+
+        // 4단계 이상에서 거울이 비활성화되면 흔들림 중지
+        if (mirror.currentStage >= 4)
+        {
+            StopContinuousShake();
+        }
+
         mirror.ResetMirror();
         OnMirrorDeactivated(mirror);
     }
@@ -220,9 +244,16 @@ public class MirrorGhostManager : MonoBehaviour
 
     void UpdatePlayerDetection(MirrorData mirror)
     {
-        // 플레이어 시선 방향 계산
-        Vector3 playerForward = player.forward;
-        Vector3 toMirror = (mirror.mirror.position - player.position).normalized;
+        Vector3 playerForward = GameManager.Instance.PlayerController.transform.localScale.x > 0
+            ? Vector3.right
+            : Vector3.left;
+
+        Vector3 toMirror = new Vector3(
+            mirror.mirror.position.x - player.position.x,
+            0f,
+            0f
+        ).normalized;
+
         float dotProduct = Vector3.Dot(playerForward, toMirror);
 
         bool isLookingAtMirror = dotProduct > 0.5f;
@@ -233,16 +264,22 @@ public class MirrorGhostManager : MonoBehaviour
 
     void UpdateMirrorState(MirrorData mirror, bool isLookingAtMirror, bool isBackTurned)
     {
+        bool isHiding = false;
+        if (GameManager.Instance.PlayerController.TryGetComponent<PlayerHide>(out var hide))
+        {
+            isHiding = hide.IsHiding;
+        }
+
         switch (mirror.currentState)
         {
             case GhostState.Waiting:
-                HandleWaitingState(mirror);
+                HandleWaitingState(mirror, isHiding);
                 break;
             case GhostState.Observing:
-                HandleObservingState(mirror, isLookingAtMirror, isBackTurned);
+                HandleObservingState(mirror, isLookingAtMirror, isBackTurned, isHiding);
                 break;
             case GhostState.Preparing:
-                HandlePreparingState(mirror, isLookingAtMirror);
+                HandlePreparingState(mirror, isLookingAtMirror, isHiding);
                 break;
             case GhostState.Emerging:
                 HandleEmergingState(mirror);
@@ -258,30 +295,45 @@ public class MirrorGhostManager : MonoBehaviour
         // 이 메서드는 UpdateMirrorState에서 호출됨
     }
 
-    void HandleWaitingState(MirrorData mirror)
+    void HandleWaitingState(MirrorData mirror, bool isHiding)
     {
         mirror.stayTimer += Time.deltaTime;
 
         if (mirror.stayTimer >= stayThreshold)
         {
             ChangeMirrorState(mirror, GhostState.Observing);
+            mirror.observingTimer = 0f;
             StartStageProgression(mirror);
         }
     }
 
-    void HandleObservingState(MirrorData mirror, bool isLookingAtMirror, bool isBackTurned)
+    void HandleObservingState(MirrorData mirror, bool isLookingAtMirror, bool isBackTurned, bool isHiding)
     {
+        if (isHiding || isBackTurned)
+        {
+            if (mirror.currentState != GhostState.Preparing)
+            {
+                ChangeMirrorState(mirror, GhostState.Preparing);
+            }
+
+            mirror.stageTimer += Time.deltaTime;
+
+            if (mirror.stageTimer >= stageProgressTime)
+            {
+                ProgressToNextStage(mirror);
+                mirror.stageTimer = 0f;
+            }
+
+            return;
+        }
+
         if (isLookingAtMirror)
         {
             OnPlayerLookingAtMirror(mirror);
         }
-        else if (isBackTurned)
-        {
-            ChangeMirrorState(mirror, GhostState.Preparing);
-        }
     }
 
-    void HandlePreparingState(MirrorData mirror, bool isLookingAtMirror)
+    void HandlePreparingState(MirrorData mirror, bool isLookingAtMirror, bool isHiding)
     {
         mirror.stageTimer += Time.deltaTime;
 
@@ -291,7 +343,7 @@ public class MirrorGhostManager : MonoBehaviour
             mirror.stageTimer = 0f;
         }
 
-        if (isLookingAtMirror)
+        if (!isHiding && isLookingAtMirror)
         {
             ChangeMirrorState(mirror, GhostState.Observing);
         }
@@ -299,13 +351,21 @@ public class MirrorGhostManager : MonoBehaviour
 
     void HandleEmergingState(MirrorData mirror)
     {
-        StartCoroutine(EmergingSequence(mirror));
+        if (!isEmergingInProgress)
+        {
+            isEmergingInProgress = true;
+            StartCoroutine(EmergingSequence(mirror));
+        }
     }
 
     void HandleDeathCutscene(MirrorData mirror)
     {
-        DisablePlayerControl();
-        StartCoroutine(DeathSequence(mirror));
+        if (!isDeathInProgress)
+        {
+            isDeathInProgress = true;
+            DisablePlayerControl();
+            StartCoroutine(DeathSequence(mirror));
+        }
     }
 
     void StartStageProgression(MirrorData mirror)
@@ -318,52 +378,97 @@ public class MirrorGhostManager : MonoBehaviour
     {
         mirror.currentStage++;
 
-        if (mirror.currentStage <= 5)
+        if (mirror.currentStage <= 7)
         {
             PlayStageEffect(mirror, mirror.currentStage);
         }
-        else if (mirror.currentStage == 6)
+
+        if (mirror.currentStage == 6)
         {
             ChangeMirrorState(mirror, GhostState.Emerging);
+        }
+        else if (mirror.currentStage == 7)
+        {
+            ChangeMirrorState(mirror, GhostState.DeathCutscene);
         }
     }
 
     void PlayStageEffect(MirrorData mirror, int stage)
     {
-        // 사운드 재생
-        if (mirror.audioSource != null && mirror.stageSounds != null && stage <= mirror.stageSounds.Length)
-        {
-            mirror.audioSource.clip = mirror.stageSounds[stage - 1];
-            mirror.audioSource.Play();
-        }
+        // 배열 인덱스 검증 (stage는 1부터 시작하므로 그대로 사용)
+        if (stage < 1 || stage >= mirror.stageEffects.Length || mirror.stageEffects[stage] == null)
+            return;
 
-        // 비주얼 효과
-        if (mirror.stageVisuals != null && stage <= mirror.stageVisuals.Length)
+        StageEffect effect = mirror.stageEffects[stage];
+
+        // 사운드 재생
+        if (mirror.audioSource != null && effect.sounds != null)
         {
-            for (int i = 0; i < mirror.stageVisuals.Length; i++)
+            foreach (var sound in effect.sounds)
             {
-                if (mirror.stageVisuals[i] != null)
-                    mirror.stageVisuals[i].SetActive(i == stage - 1);
+                if (sound != null)
+                    mirror.audioSource.PlayOneShot(sound);
             }
         }
+
+        // 비주얼 효과 - 현재 단계만 활성화, 나머지는 비활성화
+        for (int i = 1; i < mirror.stageEffects.Length; i++)
+        {
+            if (mirror.stageEffects[i] != null && mirror.stageEffects[i].visual != null)
+            {
+                mirror.stageEffects[i].visual.SetActive(i == stage);
+            }
+        }
+
+        // 카메라 흔들림 효과 (4단계에서만)
+        if (stage == 4 && effect.triggerCameraShake)
+        {
+            if (effect.continuousShake)
+            {
+                StartContinuousShake(effect.shakeMagnitude);
+            }
+            else
+            {
+                TriggerCameraShake(effect.shakeDuration, effect.shakeMagnitude);
+            }
+        }
+
+        // 디버그 로그
+        Debug.Log($"[거울 유령] {mirror.mirror.name} - {stage}단계 연출 발동");
 
         // 단계별 특수 효과
         switch (stage)
         {
             case 1:
+                Debug.Log("[1단계] 또각또각 발소리");
                 OnStage1(mirror);
                 break;
             case 2:
+                Debug.Log("[2단계] 거울에 그림자 비침");
                 OnStage2(mirror);
+                // 2단계부터 거울에서만 F, E 키 차단
+                PlayerHide.mirrorKeysBlocked = true;
+                Debug.Log("거울에서만 F, E 키 차단 시작!");
                 break;
             case 3:
+                Debug.Log("[3단계] 연구원 형상 등장");
                 OnStage3(mirror);
                 break;
             case 4:
+                Debug.Log("[4단계] 유령 점점 가까이");
                 OnStage4(mirror);
                 break;
             case 5:
+                Debug.Log("[5단계] 얼굴 들이댐");
                 OnStage5(mirror);
+                break;
+            case 6:
+                Debug.Log("[6단계] 거울 깨짐 + 유령 튀어나옴");
+                OnStage6(mirror);
+                break;
+            case 7:
+                Debug.Log("[7단계] 사망 연출");
+                OnStage7(mirror);
                 break;
         }
     }
@@ -376,21 +481,114 @@ public class MirrorGhostManager : MonoBehaviour
 
     IEnumerator EmergingSequence(MirrorData mirror)
     {
+        Debug.Log("[6단계] 거울 깨짐 + 유령 튀어나옴");
         OnMirrorBreak(mirror);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(mirror.emergingDelay);
 
+        Debug.Log("[6단계-연장] 유령 등장 연출");
         OnGhostEmerge(mirror);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(mirror.emergingDuration);
 
+        Debug.Log("[6단계 완료] 7단계로 전환");
         ChangeMirrorState(mirror, GhostState.DeathCutscene);
     }
 
     IEnumerator DeathSequence(MirrorData mirror)
     {
+        Debug.Log("[7단계] 사망 연출 시작");
         OnPlayerDeath(mirror);
-        yield return new WaitForSeconds(3f);
 
-        ResetGame();
+        // 즉시 흔들림 중지하고 업데이트 정지
+        StopContinuousShake();
+        mirror.isActive = false;
+
+        yield return new WaitForSeconds(mirror.deathDelay);
+
+        Debug.Log("게임오버 처리 시작");
+
+        // 게임오버 전에 한 번 더 카메라 위치 확인
+        if (playerCamera != null)
+        {
+            playerCamera.transform.localPosition = originalCameraPosition;
+            playerCamera.transform.localRotation = Quaternion.identity;
+        }
+
+        // 게임오버
+        if (PlayerLifeManager.Instance != null)
+        {
+            PlayerLifeManager.Instance.HandleGameOver();
+        }
+        else
+        {
+            Debug.LogWarning("PlayerLifeManager 인스턴스를 찾을 수 없습니다.");
+        }
+    }
+
+    void TriggerCameraShake(float duration = 0.3f, float magnitude = 0.2f)
+    {
+        StartCoroutine(CameraShake(duration, magnitude));
+    }
+
+    void StartContinuousShake(float magnitude)
+    {
+        // 이미 진행 중인 흔들림이 있으면 중지
+        if (currentShakeCoroutine != null)
+        {
+            StopCoroutine(currentShakeCoroutine);
+        }
+
+        currentShakeCoroutine = StartCoroutine(ContinuousShake(magnitude));
+    }
+
+    void StopContinuousShake()
+    {
+        if (currentShakeCoroutine != null)
+        {
+            StopCoroutine(currentShakeCoroutine);
+            currentShakeCoroutine = null;
+        }
+
+        // 카메라를 원래 위치로 복구
+        if (playerCamera != null)
+        {
+            playerCamera.transform.localPosition = originalCameraPosition;
+            playerCamera.transform.localRotation = Quaternion.identity;
+            Debug.Log($"카메라 위치 원복: {originalCameraPosition}");
+        }
+    }
+
+    IEnumerator ContinuousShake(float magnitude)
+    {
+        while (true)
+        {
+            float x = Random.Range(-1f, 1f) * magnitude;
+            float y = Random.Range(-1f, 1f) * magnitude;
+
+            // 원래 위치에서 흔들림 적용
+            playerCamera.transform.localPosition = originalCameraPosition + new Vector3(x, y, 0);
+
+            yield return new WaitForSeconds(0.05f); // 초당 20번 흔들림
+        }
+    }
+
+    IEnumerator CameraShake(float duration, float magnitude)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float x = Random.Range(-1f, 1f) * magnitude;
+            float y = Random.Range(-1f, 1f) * magnitude;
+
+            // 원래 위치에서 흔들림 적용
+            playerCamera.transform.localPosition = originalCameraPosition + new Vector3(x, y, 0);
+            elapsed += Time.deltaTime;
+
+            yield return null;
+        }
+
+        // 원래 위치로 복구
+        playerCamera.transform.localPosition = originalCameraPosition;
     }
 
     void DisablePlayerControl()
@@ -399,19 +597,8 @@ public class MirrorGhostManager : MonoBehaviour
         OnPlayerControlDisabled();
     }
 
-    void EnablePlayerControl()
-    {
-        isPlayerControlDisabled = false;
-        OnPlayerControlEnabled();
-    }
-
-    void ResetGame()
-    {
-        InitializeAllMirrors();
-        currentActiveMirror = null;
-        EnablePlayerControl();
-        OnGameReset();
-    }
+ 
+ 
 
     // ===========================================
     // 연출팀에서 구현할 이벤트 메서드들
@@ -419,13 +606,11 @@ public class MirrorGhostManager : MonoBehaviour
 
     void OnMirrorActivated(MirrorData mirror)
     {
-        // 거울 활성화 시 연출
         Debug.Log($"거울 활성화: {mirror.mirror.name}");
     }
 
     void OnMirrorDeactivated(MirrorData mirror)
     {
-        // 거울 비활성화 시 연출
         Debug.Log($"거울 비활성화: {mirror.mirror.name}");
     }
 
@@ -436,7 +621,6 @@ public class MirrorGhostManager : MonoBehaviour
 
     void OnStateChanged(MirrorData mirror, GhostState newState)
     {
-        // 상태 변경 시 연출
         Debug.Log($"거울 {mirror.mirror.name} 상태 변경: {newState}");
     }
 
@@ -445,6 +629,8 @@ public class MirrorGhostManager : MonoBehaviour
     void OnStage3(MirrorData mirror) { }
     void OnStage4(MirrorData mirror) { }
     void OnStage5(MirrorData mirror) { }
+    void OnStage6(MirrorData mirror) { }  // 새로 추가
+    void OnStage7(MirrorData mirror) { }  // 새로 추가
 
     void OnMirrorBreak(MirrorData mirror) { }
     void OnGhostEmerge(MirrorData mirror) { }

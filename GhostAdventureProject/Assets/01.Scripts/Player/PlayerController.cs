@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,21 +6,31 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public BasePossessable currentTarget;
     
     public Animator animator { get; private set; }
+    private PlayerHide playerHide;
     
     private void Start()
     {
         animator = GetComponent<Animator>();
+        playerHide = GetComponent<PlayerHide>();
     }
 
     void Update()
     {
-        if (!PossessionSystem.Instance.canMove || PossessionQTESystem.Instance.isRunning)
+        if (PossessionSystem.Instance == null||
+            PossessionQTESystem.Instance == null ||
+            !PossessionSystem.Instance.CanMove ||
+            PossessionQTESystem.Instance.isRunning)
+            return;
+
+        if (playerHide.IsHiding)
             return;
 
         HandleMovement();
 
         if (Input.GetKeyDown(KeyCode.E) && CurrentTargetIsPossessable())
+        {
             PossessionSystem.Instance.TryPossess();
+        }
     }
 
     private void HandleMovement() // 기본 이동 처리

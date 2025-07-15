@@ -10,6 +10,10 @@ public class MemoryManager : MonoBehaviour
 
    public List<string> collectedMemoryIDs = new List<string>();
    private Dictionary<string, MemoryData> memoryDataDict = new();
+
+   private List<MemoryData> scannedMemoryList = new();
+    public IReadOnlyList<MemoryData> ScannedMemories => scannedMemoryList;
+
    public event Action<MemoryData> OnMemoryCollected;
    public Button closeMemoryStorage;
 
@@ -20,7 +24,6 @@ public class MemoryManager : MonoBehaviour
        LoadAllMemoryData();
        closeMemoryStorage.gameObject.SetActive(false);
    }
-
 
     private void LoadAllMemoryData()
     {
@@ -34,11 +37,14 @@ public class MemoryManager : MonoBehaviour
 
    public void TryCollect(MemoryData memoryData)
    {
-       // scan 여부는 MemoryFragment에서 이미 체크한 상태라고 가정
-       if (collectedMemoryIDs.Contains(memoryData.memoryTitle)) return;
+        // scan 여부는 MemoryFragment에서 이미 체크한 상태라고 가정
+        if (collectedMemoryIDs.Contains(memoryData.memoryTitle)) return;
 
-       collectedMemoryIDs.Add(memoryData.memoryTitle);
-       OnMemoryCollected?.Invoke(memoryData);
+        collectedMemoryIDs.Add(memoryData.memoryTitle);
+        if (!scannedMemoryList.Contains(memoryData))
+            scannedMemoryList.Add(memoryData);
+
+        OnMemoryCollected?.Invoke(memoryData);
    }
 
     public List<MemoryData> GetCollectedMemories()
@@ -51,6 +57,8 @@ public class MemoryManager : MonoBehaviour
         }
         return result;    }
 
+    public bool IsCanStore(MemoryData data) => scannedMemoryList.Contains(data);
+
     public void OpenMemoryStorage()
     {
         UIManager.Instance.MemoryStorageUI.gameObject.SetActive(true);
@@ -61,5 +69,23 @@ public class MemoryManager : MonoBehaviour
     {
         UIManager.Instance.MemoryStorageUI.gameObject.SetActive(false);
         closeMemoryStorage.gameObject.SetActive(false);
+    }
+
+    // ✅ 디버깅용 출력
+    public void PrintScannedDebugLog()
+    {
+        Debug.Log("== [MemoryManager] 스캔된 기억 목록 ==");
+        foreach (var memory in scannedMemoryList)
+        {
+            Debug.Log($"- {memory.memoryID}: {memory.memoryTitle}");
+        }
+    }
+
+    // ✅ 디버깅용 초기화
+    public void ClearScannedDebug()
+    {
+        scannedMemoryList.Clear();
+        collectedMemoryIDs.Clear();
+        Debug.Log("[MemoryManager] 스캔 기록 초기화됨");
     }
 }

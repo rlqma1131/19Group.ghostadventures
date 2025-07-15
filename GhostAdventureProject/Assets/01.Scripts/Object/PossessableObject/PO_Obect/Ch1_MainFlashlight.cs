@@ -1,33 +1,30 @@
+﻿using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Ch1_MainFlashlight : BasePossessable
 {
-    [SerializeField] private Camera controlCamera;
+    [SerializeField] private CinemachineVirtualCamera zoomCamera;
     [SerializeField] private List<Ch1_FlashlightBeam> flashlightBeams;
-    // [SerializeField] private SpriteRenderer wallLetterRenderer;
-    [SerializeField] private Animator clearDoorAnimator;
     [SerializeField] private List<GameObject> mirrorBeamVisuals; // 맵에서 보여질 빛 시각화용
-    
+    [SerializeField] private LockedDoor Door; // 퍼즐 성공 시 열릴 문
+
     private bool isControlMode = false;
     private bool puzzleCompleted = false;
+    private bool inputLocked = false;
 
-    // [SerializeField] private Slider timerSlider;
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private GameObject timerPanel;
-    [SerializeField] private float timeLimit = 15f;
+    [SerializeField] private float timeLimit = 60f;
     private float timeRemaining;
     private bool timerActive = false;
     private bool timerExpired = false;
-    // private bool timerStarted = false;
 
     protected override void Update()
     {
-        //  타이머 실행
+        // 타이머 실행
         if (timerActive && !puzzleCompleted && !timerExpired)
         {
             timeRemaining -= Time.deltaTime;
@@ -43,51 +40,41 @@ public class Ch1_MainFlashlight : BasePossessable
                 if (isControlMode)
                 {
                     isControlMode = false;
-                    controlCamera.gameObject.SetActive(false);
+                    UIManager.Instance.PlayModeUI_CloseAll();
+                    zoomCamera.Priority = 20;
                 }
 
                 Unpossess();
 
-                // 타이머 UI 끄기
                 if (timerPanel != null)
                     timerPanel.SetActive(false);
 
                 // 타임오버 이벤트 발생 지점
+                // 플레이어 조작 멈춤 & Lives 1 로 만듦
+                PossessionSystem.Instance.CanMove = false;
+
+                // 적 호출 - SoundTriggerObject 사용
+                SoundTriggerer.TriggerSound(transform.position);
             }
 
             UpdateTimerText();
         }
-        
-        if(!isPossessed)
+
+        if (!isPossessed || inputLocked)
             return;
-        
-        if (Input.GetKeyDown(KeyCode.Q))
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
             if (isControlMode)
             {
-                // 조작 중이면 조작 종료
                 isControlMode = false;
-                controlCamera.gameObject.SetActive(false);
-                
-                if (puzzleCompleted)
-                {
-                    hasActivated = false;
-                    Unpossess();
-                }
-                else
-                {
-                    Unpossess(); // 퍼즐 미완료 상태여도 해제 가능
-                }
-            }
-            else if (!puzzleCompleted)
-            {
-                // 조작 시작
-                isControlMode = true;
-                controlCamera.gameObject.SetActive(true);
+                UIManager.Instance.PlayModeUI_OpenAll();
+                zoomCamera.Priority = 5;
+                Unpossess();
             }
         }
-        
-        if(!isControlMode) return;
+
+        if (!isControlMode) return;
 
         for (int i = 0; i < flashlightBeams.Count; i++)
         {
@@ -95,11 +82,11 @@ public class Ch1_MainFlashlight : BasePossessable
             {
                 flashlightBeams[i].ToggleBeam();
                 SyncMirrorVisuals();
-                CheckColorPuzzle();
+                StartCoroutine(CheckColorPuzzle()); // ← 코루틴으로 호출
             }
         }
     }
-    
+
     private void SyncMirrorVisuals()
     {
         for (int i = 0; i < flashlightBeams.Count; i++)
@@ -108,7 +95,7 @@ public class Ch1_MainFlashlight : BasePossessable
             mirrorBeamVisuals[i].SetActive(isOn);
         }
     }
-    
+
     public override void OnQTESuccess()
     {
         base.OnQTESuccess();
@@ -124,33 +111,28 @@ public class Ch1_MainFlashlight : BasePossessable
             timeRemaining = timeLimit;
             timerActive = true;
             timerExpired = false;
-            // timerStarted = true;
 
             if (timerPanel != null)
                 timerPanel.SetActive(true);
 
-            // if (timerSlider != null)
-            // {
-            //     timerSlider.maxValue = timeLimit;
-            //     timerSlider.value = timeRemaining;
-            // }
-
             UpdateTimerText();
-
-            Debug.Log("타이머 재시작 (재도전)");
         }
     }
-    
+
     private void UpdateTimerText()
     {
         if (timerText != null)
         {
             int seconds = Mathf.CeilToInt(timeRemaining);
-            timerText.text = $"남은 시간: {seconds}s";
+            timerText.text = seconds.ToString();
+
+            // 색상 변화 (15초 → 흰색, 5초 → 빨간색)
+            float t = Mathf.InverseLerp(5f, 15f, timeRemaining); // 15일 때 1, 5일 때 0
+            timerText.color = Color.Lerp(Color.red, Color.white, t);
         }
     }
 
-    private void CheckColorPuzzle()
+    private IEnumerator CheckColorPuzzle()
     {
         // 정답: 2, 4, 5번 (index 기준으로 1, 3, 4)
         bool light2 = flashlightBeams[1].isOn;
@@ -173,43 +155,31 @@ public class Ch1_MainFlashlight : BasePossessable
             if (!puzzleCompleted)
             {
                 puzzleCompleted = true;
+                inputLocked = true;
+                ChapterEndingManager.Instance.CollectCh1Clue("N");
+
+                // 퍼즐 성공 후 3초 대기
+                yield return new WaitForSeconds(3f);
 
                 timerActive = false;
                 if (timerPanel != null)
                     timerPanel.SetActive(false);
 
-                Debug.Log("퍼즐 성공!");
-                
-                // 문 열기
-                if (clearDoorAnimator != null)
-                    clearDoorAnimator.SetTrigger("DoorOpen");
-                Debug.Log("문 열림 완료");
+                UIManager.Instance.PlayModeUI_OpenAll();
+                zoomCamera.Priority = 5;
+                hasActivated = false;
+                Unpossess();
+
+                Door.SolvePuzzle();
             }
         }
-        // else
-        // {
-        //     if (!puzzleCompleted)
-        //         HideLetter();
-        // }
     }
 
-    // private void RevealLetter()
-    // {
-    //     if (wallLetterRenderer != null)
-    //     {
-    //         var c = wallLetterRenderer.color;
-    //         c.a = 1f;
-    //         wallLetterRenderer.color = c;
-    //     }
-    // }
-    //
-    // private void HideLetter()
-    // {
-    //     if (wallLetterRenderer != null)
-    //     {
-    //         var c = wallLetterRenderer.color;
-    //         c.a = 0f;
-    //         wallLetterRenderer.color = c;
-    //     }
-    // }
+    // 빙의 하고 바로 줌
+    public override void OnPossessionEnterComplete()
+    {
+        isControlMode = true;
+        UIManager.Instance.PlayModeUI_CloseAll();
+        zoomCamera.Priority = 20;
+    }
 }

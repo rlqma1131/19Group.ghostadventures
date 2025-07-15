@@ -167,9 +167,12 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
         isPlacing = false;
     }
 
-    public void UseItem(ItemData item, int amount = 1)
+    public void UseItem(ItemData item, int amount)
     {
-        InventorySlot_PossessableObject slot = HaveItem.Instance.inventorySlots.Find(s => s.item == item);
+        InventorySlot_PossessableObject slot = spawnedSlots
+        .ConvertAll(s => s.GetComponent<InventorySlot_PossessableObject>())
+        .Find(s => s.item == item);        
+        
         if (slot != null)
         {
             slot.UseItem(amount);

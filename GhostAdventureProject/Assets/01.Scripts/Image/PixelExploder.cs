@@ -4,44 +4,60 @@ using System.Collections.Generic;
 
 public class PixelExploder : MonoBehaviour
 {
-    [Header("💥 Pixel Explosion Settings")]
-    public float minPixelSize = 0.03f;
-    public float maxPixelSize = 0.06f;
+    [Header("Pixel Explosion Settings")]
+    public Shader pixelParticleShader; // 셰이더를 직접 할당받을 변수
+
+    public float minPixelSize = 0.04f;
+    public float maxPixelSize = 0.21f;
 
     public float explosionMin = 0.6f;
     public float explosionMax = 1.4f;
     public float explodeDuration = 1.0f;
     public float absorbDuration = 1.0f;
     public float delayBeforeAbsorb = 0.8f;
-    public int pixelStep = 2;
+    public int pixelStep = 26;
 
-    [Header("🌈 Glow Brightness")]
+    [Header("Glow Brightness")]
     public float ColorValue = 5f;
 
     private List<GameObject> pixelPieces = new List<GameObject>();
     private Transform playerTransform;
 
-    private void Update()
+    // 테스트용 Update 함수
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        Explode();
+    //    }
+    //}
+
+    public void Explode()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        // 셰이더가 할당되었는지 확인하는 안전장치
+        if (pixelParticleShader == null)
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-                playerTransform = player.transform;
-
-            Explode();
+            Debug.LogError("Pixel Particle Shader가 할당되지 않았습니다! Inspector에서 할당해주세요.");
+            return;
         }
-    }
 
-    void Explode()
-    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+            playerTransform = player.transform;
+
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr == null || sr.sprite == null)
+        {
+            Debug.LogError("SpriteRenderer 또는 Sprite가 없습니다.");
+            return;
+        }
+
         Sprite sprite = sr.sprite;
         Texture2D tex = sprite.texture;
 
         if (!tex.isReadable)
         {
-            Debug.LogError("⚠️ Sprite 텍스처의 Read/Write Enable이 꺼져있습니다!");
+            Debug.LogError("Sprite 텍스처의 Read/Write Enable이 꺼져있습니다! 텍스처 임포트 설정에서 켜주세요.");
             return;
         }
 
@@ -59,54 +75,42 @@ public class PixelExploder : MonoBehaviour
                 if (color.a < 0.1f) continue;
 
                 GameObject pixelObj = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                Destroy(pixelObj.GetComponent<Collider>());
 
-                // 픽셀 크기를 랜덤으로 지정
                 float randomSize = Random.Range(minPixelSize, maxPixelSize);
                 pixelObj.transform.localScale = Vector3.one * randomSize;
 
                 Vector3 localPos = new Vector3(x, y, 0f) / sprite.pixelsPerUnit - (Vector3)pivotOffset;
-                pixelObj.transform.position = transform.position + localPos;
+                pixelObj.transform.position = transform.position + transform.TransformDirection(localPos);
+                pixelObj.transform.rotation = transform.rotation;
 
-                // 머티리얼 생성 (Particles/Unlit Shader 사용)
-                Material mat = new Material(Shader.Find("Universal Render Pipeline/Particles/Unlit"));
+                // 할당된 셰이더로 새 머티리얼 생성
+                Material mat = new Material(pixelParticleShader);
 
-                // Emission Glow 밝기 일정하게 맞추기
+                var renderer = pixelObj.GetComponent<MeshRenderer>();
+                renderer.material = mat;
+
+                renderer.sortingLayerName = sr.sortingLayerName;
+                renderer.sortingOrder = sr.sortingOrder;
+
+                // URP 셰이더 프로퍼티 설정
                 Color emissionColor = color.linear;
                 float luminance = emissionColor.r * 0.2126f + emissionColor.g * 0.7152f + emissionColor.b * 0.0722f;
                 float correction = ColorValue / Mathf.Max(luminance, 0.001f);
                 emissionColor *= correction;
 
+                mat.SetColor("_BaseColor", color);
                 mat.SetColor("_EmissionColor", emissionColor);
                 mat.EnableKeyword("_EMISSION");
 
-                // Transparent 블렌딩
-                mat.SetFloat("_Surface", 1); // Transparent
-                mat.SetFloat("_Blend", 0);
-                mat.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                mat.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                mat.renderQueue = 3000;
-
-                // 머티리얼 적용
-                var renderer = pixelObj.GetComponent<MeshRenderer>();
-                var filter = pixelObj.GetComponent<MeshFilter>();
-                renderer.material = mat;
-
-                // 버텍스 컬러로 색상 표현
-                Mesh mesh = filter.mesh;
-                Color[] colors = new Color[mesh.vertexCount];
-                for (int i = 0; i < colors.Length; i++)
-                    colors[i] = color;
-                mesh.colors = colors;
 
                 pixelPieces.Add(pixelObj);
 
-                // 폭발 방향 설정
                 Vector2 randomDir = Random.insideUnitCircle.normalized;
                 float explosionDist = Random.Range(explosionMin, explosionMax);
                 Vector3 explodeTarget = pixelObj.transform.position + (Vector3)(randomDir * explosionDist);
                 float delay = Random.Range(0f, 0.2f);
 
-                // 애니메이션 설정
                 pixelObj.transform.DOMove(explodeTarget, explodeDuration)
                     .SetDelay(delay)
                     .SetEase(Ease.OutExpo)
@@ -120,17 +124,26 @@ public class PixelExploder : MonoBehaviour
                                     .SetEase(Ease.InCubic)
                                     .OnComplete(() =>
                                     {
-                                        mat.DOFade(0f, 0.3f).OnComplete(() =>
-                                        {
-                                            Destroy(pixelObj);
-                                        });
+                                        // BaseColor와 EmissionColor를 동시에 Fade Out
+                                        mat.DOColor(new Color(color.r, color.g, color.b, 0), "_BaseColor", 0.3f);
+                                        mat.DOColor(new Color(emissionColor.r, emissionColor.g, emissionColor.b, 0), "_EmissionColor", 0.3f)
+                                           .OnComplete(() => Destroy(pixelObj));
                                     });
                             });
+                        }
+                        else
+                        {
+                            // 플레이어가 없으면 그냥 사라지도록 처리
+                            mat.DOColor(new Color(color.r, color.g, color.b, 0), "_BaseColor", 0.3f)
+                               .SetDelay(delayBeforeAbsorb);
+                            mat.DOColor(new Color(emissionColor.r, emissionColor.g, emissionColor.b, 0), "_EmissionColor", 0.3f)
+                               .SetDelay(delayBeforeAbsorb)
+                               .OnComplete(() => Destroy(pixelObj));
                         }
                     });
             }
         }
 
-        // Destroy(gameObject); // 원본 제거 여부는 상황에 따라
+        sr.enabled = false;
     }
 }

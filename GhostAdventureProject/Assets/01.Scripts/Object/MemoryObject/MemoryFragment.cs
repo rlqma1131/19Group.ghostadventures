@@ -3,12 +3,15 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MemoryFragment : MonoBehaviour
+public class MemoryFragment : BaseInteractable
 {
     public MemoryData data;
     
     [SerializeField] protected bool isScannable = false; // 디버깅용
     public bool IsScannable => isScannable;
+
+    [SerializeField] private bool canStore = false;
+    public bool CanStore => canStore;
 
     [Header("드랍 조각 프리팹")]
     [SerializeField] private GameObject fragmentDropPrefab;
@@ -19,27 +22,37 @@ public class MemoryFragment : MonoBehaviour
     [SerializeField] private float bounceDuration = 0.5f;
 
     [Header("회전 연출 설정")]
-    [SerializeField] private float rotateTime = 1.2f;
+    [SerializeField] private float rotateTime = 2f;
     [SerializeField] private float ellipseRadiusX = 0.8f;
     [SerializeField] private float ellipseRadiusZ = 1.5f;
 
-    [Header("흡수 연출 설정")]
-    [SerializeField] private float absorbTime = 0.6f;
+    #if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (!Application.isPlaying) return;
 
-    //private void Start()
-    //{
-    //    // 디버깅용
-    //    isScannable = true;
-    //}
+        if (CanStore)
+        {
+            // 실행 중에 isScannable을 수동으로 true로 바꾼 경우 처리
+            Debug.Log($"[DEBUG] 인스펙터에서 isScannable 체크됨: {data.memoryID}");
+
+            // 등록되지 않았으면 등록
+            if (!MemoryManager.Instance.IsCanStore(data))
+            {
+                MemoryManager.Instance.TryCollect(data);
+            }
+        }
+    }
+#endif
 
     // 상호작용 메시지 대상
-    private void OnTriggerEnter2D(Collider2D other)
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && isScannable)
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
@@ -49,6 +62,8 @@ public class MemoryFragment : MonoBehaviour
     {
         if (!isScannable) return;
         isScannable = false;
+        canStore = true;
+
         MemoryManager.Instance.TryCollect(data);
 
         Sprite dropSprite = GetFragmentSpriteByType(data.type);
@@ -58,6 +73,7 @@ public class MemoryFragment : MonoBehaviour
 
         if (drop.TryGetComponent(out SpriteRenderer sr))
             sr.sprite = dropSprite;
+            sr.sortingOrder = 150; // 드랍 조각의 정렬 순서 설정
 
         StartCoroutine(PlayDropSequence(drop));
     }
@@ -70,7 +86,8 @@ public class MemoryFragment : MonoBehaviour
         if (player == null) yield break;
 
         Vector3 startPos = drop.transform.position;
-
+        PossessionSystem.Instance.CanMove = false; // 플레이어 이동 비활성화
+        UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
         // === 1. 튕기기 애니메이션 ===
         yield return DOTween.Sequence()
             .Append(drop.transform.DOMoveY(startPos.y + bounceHeight, bounceDuration / 2f).SetEase(Ease.OutQuad))
@@ -78,53 +95,73 @@ public class MemoryFragment : MonoBehaviour
             .Join(drop.transform.DOPunchScale(Vector3.one * 0.1f, bounceDuration, 5, 1))
             .WaitForCompletion();
 
-        // === 2. 타원 궤도로 회전 ===
+        // === 2. 회전 궤도 진입 및 상승 ===
         Vector3 center = startPos;
         Vector3 local = drop.transform.position - center;
 
-        // 시작 각도 계산
         float startAngleRad = Mathf.Atan2(local.z / ellipseRadiusZ, local.x / ellipseRadiusX);
         float startAngleDeg = startAngleRad * Mathf.Rad2Deg;
         float currentAngle = startAngleDeg;
+        float targetAngle = startAngleDeg - 720f; // 2바퀴 회전
 
-        // 시작 위치 계산
         float rad = startAngleDeg * Mathf.Deg2Rad;
-        Vector3 initialOffset = new Vector3(Mathf.Cos(rad) * ellipseRadiusX, 0f, Mathf.Sin(rad) * ellipseRadiusZ);
-        Vector3 initialPos = center + new Vector3(initialOffset.x, 0f, 0f);
+        Vector3 initialOffset = new Vector3(
+            Mathf.Cos(rad) * ellipseRadiusX,
+            0f,
+            Mathf.Sin(rad) * ellipseRadiusZ
+        );
 
-        // 현재 위치에서 회전 궤도 시작점으로 부드럽게 이동
+        // 튕겨진 현재 y 위치 그대로 유지
+        Vector3 initialPos = new Vector3(
+            center.x + initialOffset.x,
+            drop.transform.position.y,
+            center.z + initialOffset.z
+        );
+
         yield return drop.transform.DOMove(initialPos, 0.1f).SetEase(Ease.InOutSine).WaitForCompletion();
 
-        // 반시계 방향 회전: angle 감소
+        float startY = drop.transform.position.y;
+        float targetY = startY + 4f;
+
         Tween rotate = DOTween.To(() => currentAngle, x =>
         {
             currentAngle = x;
-            float r = currentAngle * Mathf.Deg2Rad;
-            Vector3 offset = new Vector3(Mathf.Cos(r) * ellipseRadiusX, 0f, Mathf.Sin(r) * ellipseRadiusZ);
 
-            drop.transform.position = center + new Vector3(offset.x, 0f, 0f);
+            float progress = Mathf.InverseLerp(startAngleDeg, targetAngle, currentAngle);
+            float y = Mathf.Lerp(startY, targetY, progress);
+
+            float r = currentAngle * Mathf.Deg2Rad;
+            Vector3 offset = new Vector3(
+                Mathf.Cos(r) * ellipseRadiusX,
+                0f,
+                Mathf.Sin(r) * ellipseRadiusZ
+            );
+
+            // X 좌표를 원래 center.x로 점점 보정
+            float correctedX = Mathf.Lerp(center.x + offset.x, center.x, progress);
+
+            drop.transform.position = new Vector3(
+                correctedX,
+                y,
+                center.z + offset.z
+            );
 
             if (drop.TryGetComponent(out SpriteRenderer sr))
-                sr.sortingOrder = (offset.z > 0) ? 1 : -1;
+                sr.sortingOrder = 100;
 
-        }, startAngleDeg - 360f, rotateTime).SetEase(Ease.InOutSine);
+        }, targetAngle, rotateTime).SetEase(Ease.InOutSine);
         yield return rotate.WaitForCompletion();
 
-        // === 3. 플레이어에게 흡수 ===
-        Vector3 target = player.transform.position;
-        var absorb = DOTween.Sequence()
-            .Append(drop.transform.DOMove(target, absorbTime).SetEase(Ease.InCubic))
-            .Join(drop.transform.DOScale(Vector3.zero, absorbTime).SetEase(Ease.InBack));
-
-        if (drop.TryGetComponent(out SpriteRenderer finalSR))
-            absorb.Join(finalSR.DOFade(0f, absorbTime));
-        yield return absorb.WaitForCompletion();
-        //yield return CutsceneManager.Instance.PlayCutscene(); // 컷신 재생
+        drop.GetComponent<PixelExploder>()?.Explode(); // 픽셀 폭발 효과 적용
 
         Destroy(drop);
+        StartCoroutine(CutsceneManager.Instance.PlayCutscene()); // 페이드인 줌인
+        yield return new WaitForSeconds(5f); // 흡수 될때까지 기다림
+        UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
         SceneManager.LoadScene(data.CutSceneName, LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
         Time.timeScale = 0;
         ApplyMemoryEffect(); // 메모리 효과 적용
+
     }
 
     private Sprite GetFragmentSpriteByType(MemoryData.MemoryType type)

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class MemoryScan : MonoBehaviour
@@ -76,7 +72,7 @@ public class MemoryScan : MonoBehaviour
         // 영혼 에너지가 있는지 확인
         if (SoulEnergySystem.Instance.currentEnergy <= 0)
         {
-            Debug.Log("영혼 에너지가 부족하여 스캔을 시작할 수 없습니다.");
+            UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
             // 여기에 부족 알림 UI나 사운드를 재생하는 로직
             return;
         }
@@ -92,6 +88,8 @@ public class MemoryScan : MonoBehaviour
             isScanning = true;
             scanTime = 0f;
 
+            UIManager.Instance.PromptUI.ShowPrompt($"스캔 진행 중...", 2f);
+
             scanPanel?.SetActive(true);
             if (scanCircleUI != null)
             {
@@ -101,7 +99,6 @@ public class MemoryScan : MonoBehaviour
 
             else
             {
-
                 Debug.LogWarning("Scan Circle UI가 설정되지 않았습니다. UI를 확인해주세요.");
                 return;
             }
@@ -167,6 +164,7 @@ public class MemoryScan : MonoBehaviour
         //Time.timeScale = 0f; // 시간 흐름을 원래대로 복구
 
         //각 오브젝트 별로 기억 재생 이후 구현할 메서드
+
         currentMemoryFragment.AfterScan();
     }
 

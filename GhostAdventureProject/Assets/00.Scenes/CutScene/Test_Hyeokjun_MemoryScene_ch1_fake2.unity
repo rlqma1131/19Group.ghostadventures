@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 70326374}
   - component: {fileID: 70326373}
   - component: {fileID: 70326375}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: adult
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220,7 +220,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 146127800}
   - component: {fileID: 146127799}
   - component: {fileID: 146127798}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -335,6 +335,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &264489037
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 264489039}
+  - component: {fileID: 264489038}
+  m_Layer: 17
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &264489038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264489037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0.21
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 18a1b14c1d791da429a6b3026adb03a6, type: 2}
+--- !u!4 &264489039
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264489037}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 97.112564, y: 2.830068, z: -0.10456663}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &276491603
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,13 +395,13 @@ GameObject:
   - component: {fileID: 276491606}
   - component: {fileID: 276491605}
   - component: {fileID: 276491604}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Light 2D (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!95 &276491604
 Animator:
   serializedVersion: 5
@@ -365,7 +414,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c3e7bc9c8f7480c4aa82377857b7d7a5, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -433,7 +482,7 @@ Transform:
   m_GameObject: {fileID: 276491603}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.9058629, w: -0.423571}
-  m_LocalPosition: {x: 5.9, y: -3.8, z: 0}
+  m_LocalPosition: {x: 6.15, y: -3.96, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -451,7 +500,7 @@ GameObject:
   - component: {fileID: 328561242}
   - component: {fileID: 328561245}
   - component: {fileID: 328561244}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -573,7 +622,7 @@ GameObject:
   - component: {fileID: 346018273}
   - component: {fileID: 346018272}
   - component: {fileID: 346018274}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: boy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -641,7 +690,7 @@ Transform:
   m_GameObject: {fileID: 346018271}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.2, y: -4.7, z: 0}
+  m_LocalPosition: {x: -0.044758335, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -659,7 +708,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: eb008c127f058334b988d4de82a69a6d, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -679,13 +728,13 @@ GameObject:
   - component: {fileID: 351692510}
   - component: {fileID: 351692509}
   - component: {fileID: 351692508}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &351692508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -748,7 +797,7 @@ GameObject:
   - component: {fileID: 360752822}
   - component: {fileID: 360752821}
   - component: {fileID: 360752820}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: RedPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -786,7 +835,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -844,7 +893,7 @@ GameObject:
   - component: {fileID: 659434668}
   - component: {fileID: 659434667}
   - component: {fileID: 659434666}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -863,7 +912,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c3e7bc9c8f7480c4aa82377857b7d7a5, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -888,7 +937,7 @@ MonoBehaviour:
   m_LightType: 2
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0
-  m_Color: {r: 0.9716981, g: 0.9716981, b: 0.9716981, a: 1}
+  m_Color: {r: 1, g: 0.32126835, b: 0, a: 1}
   m_Intensity: 0
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
@@ -931,7 +980,7 @@ Transform:
   m_GameObject: {fileID: 659434665}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.99038917, w: -0.13830875}
-  m_LocalPosition: {x: 5.9, y: -3.79, z: 0}
+  m_LocalPosition: {x: 5.9, y: -2.98, z: 0}
   m_LocalScale: {x: 9.3, y: -7.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -948,13 +997,13 @@ GameObject:
   - component: {fileID: 786821122}
   - component: {fileID: 786821121}
   - component: {fileID: 786821123}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Light 2D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &786821121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1014,7 +1063,7 @@ Transform:
   m_GameObject: {fileID: 786821120}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.9058629, w: -0.423571}
-  m_LocalPosition: {x: 5.9, y: -3.8, z: 0}
+  m_LocalPosition: {x: 6.15, y: -3.96, z: 0}
   m_LocalScale: {x: 1.3, y: 1.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1033,7 +1082,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c3e7bc9c8f7480c4aa82377857b7d7a5, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -1054,7 +1103,7 @@ GameObject:
   - component: {fileID: 898301999}
   - component: {fileID: 898301998}
   - component: {fileID: 898301997}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1161,7 +1210,7 @@ GameObject:
   - component: {fileID: 906245956}
   - component: {fileID: 906245955}
   - component: {fileID: 906245957}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1304,7 +1353,7 @@ GameObject:
   - component: {fileID: 1125950626}
   - component: {fileID: 1125950625}
   - component: {fileID: 1125950624}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: TimelineManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1381,7 +1430,7 @@ GameObject:
   - component: {fileID: 1183918780}
   - component: {fileID: 1183918779}
   - component: {fileID: 1183918778}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1404,7 +1453,7 @@ RectTransform:
   - {fileID: 1533273078}
   - {fileID: 360752819}
   - {fileID: 1666991485}
-  m_Father: {fileID: 2026610133}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1472,7 +1521,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 762
   m_TargetDisplay: 0
 --- !u!1 &1222471715
 GameObject:
@@ -1485,7 +1534,7 @@ GameObject:
   - component: {fileID: 1222471717}
   - component: {fileID: 1222471716}
   - component: {fileID: 1222471718}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Light 2D (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1508,7 +1557,7 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
-  m_Color: {r: 0.8773585, g: 0.7527497, b: 0, a: 1}
+  m_Color: {r: 0.6320754, g: 0.59246427, b: 0.35479707, a: 1}
   m_Intensity: 8.65
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
@@ -1530,7 +1579,7 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 58.859314
   m_PointLightOuterAngle: 58.859314
-  m_PointLightInnerRadius: 1
+  m_PointLightInnerRadius: 0
   m_PointLightOuterRadius: 8.09
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
@@ -1551,7 +1600,7 @@ Transform:
   m_GameObject: {fileID: 1222471715}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.70296043, w: 0.71122897}
-  m_LocalPosition: {x: 8.03, y: -0.35000002, z: 0}
+  m_LocalPosition: {x: 8.03, y: -0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1589,13 +1638,13 @@ GameObject:
   - component: {fileID: 1230462274}
   - component: {fileID: 1230462273}
   - component: {fileID: 1230462272}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1230462272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1676,7 +1725,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1295323320}
   - component: {fileID: 1295323319}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1763,7 +1812,7 @@ GameObject:
   - component: {fileID: 1296768741}
   - component: {fileID: 1296768740}
   - component: {fileID: 1296768739}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1873,7 +1922,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1299843367}
   - component: {fileID: 1299843366}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1956,7 +2005,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326019127}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: v2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1990,7 +2039,7 @@ GameObject:
   - component: {fileID: 1349965397}
   - component: {fileID: 1349965396}
   - component: {fileID: 1349965395}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: girl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2009,7 +2058,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 41326ff043d9f554ca93b872ad04828a, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -2079,7 +2128,7 @@ Transform:
   m_GameObject: {fileID: 1349965394}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.55, y: -5.7, z: 0}
+  m_LocalPosition: {x: 0.059999943, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2100,7 +2149,7 @@ GameObject:
   - component: {fileID: 1360799519}
   - component: {fileID: 1360799521}
   - component: {fileID: 1360799525}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Main Camera (1)
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -2177,10 +2226,10 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 5.4
-  m_Depth: -1
+  m_Depth: 44.39
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 131072
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2212,7 +2261,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 131072
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
@@ -2317,7 +2366,7 @@ GameObject:
   - component: {fileID: 1362668321}
   - component: {fileID: 1362668319}
   - component: {fileID: 1362668320}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: WhitePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2355,7 +2404,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -2429,7 +2478,7 @@ GameObject:
   - component: {fileID: 1533273077}
   - component: {fileID: 1533273076}
   - component: {fileID: 1533273079}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BlackPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2505,7 +2554,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -2523,7 +2572,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1543330328}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: v3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2556,7 +2605,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1580379487}
   - component: {fileID: 1580379486}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: cake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2624,8 +2673,8 @@ Transform:
   m_GameObject: {fileID: 1580379485}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.99, y: -5.52, z: 0}
-  m_LocalScale: {x: 1, y: 1.3333334, z: 0.6666667}
+  m_LocalPosition: {x: 6.28, y: -7.16, z: 0}
+  m_LocalScale: {x: 1.74, y: 2.3200002, z: 1.1600001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -2640,7 +2689,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1596778580}
   - component: {fileID: 1596778581}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: v1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2696,8 +2745,8 @@ GameObject:
   - component: {fileID: 1666991487}
   - component: {fileID: 1666991486}
   - component: {fileID: 1666991488}
-  m_Layer: 0
-  m_Name: Text (TMP)
+  m_Layer: 5
+  m_Name: BGM Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2742,10 +2791,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u266B - HaPpyBiRtHdAy..?"
+  m_text: "\u266B - HaPpyBiRtHdAy..? "
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 14534f88127334789b52e6aec9af0937, type: 2}
-  m_sharedMaterial: {fileID: 4804673219077872049, guid: 14534f88127334789b52e6aec9af0937, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ee7700285109d084584047c3d27b1b83, type: 2}
+  m_sharedMaterial: {fileID: -307856169427781242, guid: ee7700285109d084584047c3d27b1b83, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2775,7 +2824,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -2831,7 +2880,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -2851,7 +2900,7 @@ GameObject:
   - component: {fileID: 1708859645}
   - component: {fileID: 1708859644}
   - component: {fileID: 1708859646}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: global
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2881,7 +2930,7 @@ MonoBehaviour:
   m_ApplyToSortingLayers: 11c5bdcd
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
-  m_LightOrder: 0
+  m_LightOrder: 1
   m_AlphaBlendOnOverlap: 0
   m_OverlapOperation: 0
   m_NormalMapDistance: 3
@@ -2956,7 +3005,7 @@ GameObject:
   - component: {fileID: 1830213508}
   - component: {fileID: 1830213507}
   - component: {fileID: 1830213506}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2990,7 +3039,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -3091,7 +3140,7 @@ ParticleSystem:
   looping: 1
   prewarm: 0
   playOnAwake: 1
-  useUnscaledTime: 0
+  useUnscaledTime: 1
   autoRandomSeed: 1
   startDelay:
     serializedVersion: 2
@@ -7807,13 +7856,13 @@ GameObject:
   - component: {fileID: 1964837230}
   - component: {fileID: 1964837229}
   - component: {fileID: 1964837228}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: TyperManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1964837228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8538,7 +8587,7 @@ GameObject:
   - component: {fileID: 2026610133}
   - component: {fileID: 2026610132}
   - component: {fileID: 2026610134}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: TimeLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8557,7 +8606,7 @@ PlayableDirector:
   m_PlayableAsset: {fileID: 11400000, guid: 5e553db3c0049b046bbdf68fb750ea3b, type: 2}
   m_InitialState: 1
   m_WrapMode: 2
-  m_DirectorUpdateMode: 1
+  m_DirectorUpdateMode: 2
   m_InitialTime: 0
   m_SceneBindings:
   - key: {fileID: -3675196260047919139, guid: 18b519f238c735249bd5334bc0253033, type: 2}
@@ -8654,6 +8703,8 @@ PlayableDirector:
     value: {fileID: 1666991488}
   - key: {fileID: -4437057872757814564, guid: 5e553db3c0049b046bbdf68fb750ea3b, type: 2}
     value: {fileID: 1125950624}
+  - key: {fileID: -1757229064305374210, guid: 5e553db3c0049b046bbdf68fb750ea3b, type: 2}
+    value: {fileID: 1666991484}
   m_ExposedReferences:
     m_References:
     - 75cdf65f294adcf40badae31ce841314: {fileID: 1360799518}
@@ -8681,8 +8732,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1183918777}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &2026610134
@@ -8697,7 +8747,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -8718,7 +8768,7 @@ GameObject:
   - component: {fileID: 2123891425}
   - component: {fileID: 2123891428}
   - component: {fileID: 2123891427}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8841,7 +8891,7 @@ GameObject:
   - component: {fileID: 2138872067}
   - component: {fileID: 2138872066}
   - component: {fileID: 2138872065}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8959,3 +9009,5 @@ SceneRoots:
   - {fileID: 1349965397}
   - {fileID: 346018273}
   - {fileID: 1222471717}
+  - {fileID: 1183918777}
+  - {fileID: 264489039}

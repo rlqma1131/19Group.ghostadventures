@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
@@ -6,21 +6,12 @@ using UnityEngine;
 
 public class Inventory_Player : MonoBehaviour
 {
-    // 인벤토리 = 단서수집함
-    // <완료>
-    // 위치 - 화면 하단 좌측
-    // 단서 습득시 인벤토리에 저장됨
-
-    // 인벤토리에 저장된 단서 UI에 표시
-    // 인벤토리 키를 누르면 단서를 다시 볼 수 있음.
-    // next, prev 버튼을 통해 인벤토리 슬롯 변경가능
+    //관리인 ( 직원증 ( 관리실 문 해금 ) , 포스트잇 ( 메모판에서의 조합 ) , 열쇠 ( 금고 열쇠 ) )
+    // 라디오가 켜져서 관리실에서 나와 라디오를 끄러 옴 ( 켠디션 하 )
+    //라디오를 끄고 벤치에 앉으러 갈때까지 ( 컨디션 중 )
+    //벤치에 앉음 ( 컨디션 상 )
 
 
-    // 위치2 - 플레이어가 잡고 편한곳으로 옮길 수 있음
-    
-
-    // public GameObject clueSlotPrefab;
-    // public Transform clueSlotParent;
 
     public List<ClueData> collectedClues = new List<ClueData>(); // 단서데이터를 모아놓은 리스트
     public List<InventorySlot_Player> inventorySlots; // 슬롯 4개
@@ -31,12 +22,12 @@ public class Inventory_Player : MonoBehaviour
     public void AddClue(ClueData clue)
     {
         
-        // if (!collectedClues.Contains(clue)) //같은 clue 중복획득 방지 
-        // {
+        if (!collectedClues.Contains(clue)) //같은 clue 중복획득 방지 
+        {
             collectedClues.Add(clue);
-            // UI 갱신 이벤트 호출
+            //UI 갱신 이벤트 호출
             RefreshUI();
-        // }
+        }
     }
 
     public void RefreshUI()
@@ -83,14 +74,36 @@ public class Inventory_Player : MonoBehaviour
         RefreshUI();
     }
 
+    // private void Update()
+    // {
+    //     for (int i = 1; i <= 5; i++)
+    //     {
+    //         if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+    //         {
+    //             int slotIndex = i - 1;
+    //             int clueIndex = currentPage * cluesPerPage + slotIndex;
+
+    //             if (InventoryExpandViewer.Instance.IsShowing())
+    //             {
+    //                 InventoryExpandViewer.Instance.HideClue();
+    //             }
+    //             else if (clueIndex < collectedClues.Count)
+    //             {
+    //                 InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
+    //             }
+    //         }
+    //     }
+    // }
+
+
     private void Update()
     {
-        for (int i = 1; i <= 5; i++)
+        for (int i = 0; i < 5; i++)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+            KeyCode key = KeyBindingManager.Instance.GetKey(i);
+            if (Input.GetKeyDown(key))
             {
-                int slotIndex = i - 1;
-                int clueIndex = currentPage * cluesPerPage + slotIndex;
+                int clueIndex = currentPage * cluesPerPage + i;
 
                 if (InventoryExpandViewer.Instance.IsShowing())
                 {

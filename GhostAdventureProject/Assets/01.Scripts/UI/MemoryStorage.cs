@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MemoryStorage : MonoBehaviour
+public class MemoryStorage : MonoBehaviour, IUIClosable
 {
     [SerializeField] private RectTransform nodeContainer;
     [SerializeField] private GameObject memoryNodePrefab;
@@ -11,17 +11,18 @@ public class MemoryStorage : MonoBehaviour
 
     // private List<Transform> nodePositions = new();
     private List<RectTransform> nodeRects = new();
-    [SerializeField] private float spacing = 500f;
+    [SerializeField] private float spacing = 600;
+    public Button closeButton;
 
     private void OnEnable()
     {
-        MemoryManager.Instance.OnMemoryCollected += AddMemoryNode;
-        RedrawStorage(); // 초기화 시
+       MemoryManager.Instance.OnMemoryCollected += AddMemoryNode;
+       RedrawStorage(); // 초기화 시
     }
 
     private void OnDisable()
     {
-        MemoryManager.Instance.OnMemoryCollected -= AddMemoryNode;
+       MemoryManager.Instance.OnMemoryCollected -= AddMemoryNode;
     }
 
     private void RedrawStorage()
@@ -71,5 +72,16 @@ public class MemoryStorage : MonoBehaviour
         // {
         //     lineRenderer.SetPosition(i, nodePositions[i].position);
         // }
+    }
+
+    public void Close()
+    {
+        UIManager.Instance.MemoryStorageUI.gameObject.SetActive(false);
+        closeButton.gameObject.SetActive(false);
+    }
+
+    public bool IsOpen()
+    {
+        return UIManager.Instance.MemoryStorageUI.gameObject.activeInHierarchy;
     }
 }
