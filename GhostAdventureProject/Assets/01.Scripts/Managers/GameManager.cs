@@ -26,12 +26,18 @@ public class GameManager : Singleton<GameManager>
     {
         if (currentPlayer == null)
         {
-            GameObject go = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+            string sceneName = SceneManager.GetActiveScene().name;
+            string startPointName = $"StartPoint_{sceneName}";
+            Transform startPoint = GameObject.Find(startPointName)?.transform;
+
+            Vector3 spawnPosition = startPoint != null ? startPoint.position : Vector3.zero;
+
+            GameObject go = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
             currentPlayer = go;
             playerController = go.GetComponent<PlayerController>();
             DontDestroyOnLoad(go);
 
-            Debug.Log("[GameManager] Player 스폰 완료 - EnemyAI는 자동으로 GameManager에서 참조");
+            Debug.Log($"[GameManager] Player 스폰 완료 - {startPointName} 위치에서 시작: {spawnPosition}");
         }
     }
 
