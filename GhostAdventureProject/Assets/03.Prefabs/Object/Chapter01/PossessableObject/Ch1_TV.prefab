@@ -1049,7 +1049,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2059531157
   m_SortingLayer: 4
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 5774d4ec72d972b418a47c7b6faf779b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1127,8 +1127,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.86004996, y: 0.43404996, z: 0}
-    m_Extent: {x: 4.3821497, y: 2.95685, z: 0}
+    m_Center: {x: -0.86039996, y: 0.4339, z: 0}
+    m_Extent: {x: 4.3817997, y: 2.9575, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -1344,7 +1344,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8500962481414910757}
   - component: {fileID: 8149273678448401252}
-  - component: {fileID: 7205292476955095444}
   - component: {fileID: 3506323030872883332}
   m_Layer: 0
   m_Name: Ch1_TV
@@ -1386,7 +1385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc9872c5f704d384789e878e80c751b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 8796272798889200924}
+  highlight: {fileID: 8796272798889200924}
   anim: {fileID: 4022127790421527683}
   hasActivated: 0
   isPossessed: 0
@@ -1398,19 +1397,6 @@ MonoBehaviour:
   Door: {fileID: 0}
   spaceBar: {fileID: 0}
   UI: {fileID: 3755627620214457048}
---- !u!114 &7205292476955095444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8491455659268840351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 499cb42b5a18ebe44866759087d5f962, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 0}
 --- !u!61 &3506323030872883332
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1567,7 +1553,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.01, y: 1.02, z: 1}
+  m_LocalScale: {x: 1.01, y: 1.03, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8403781235797189619}
@@ -1658,8 +1644,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8f6d3c6e4250e84192f5b34ce9e71bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  glowColor: {r: 1, g: 1, b: 1, a: 1}
-  glowBrightness: 4.2
+  glowColor: {r: 0.34901962, g: 0.5372549, b: 1, a: 1}
+  glowBrightness: 5.1
   outlineWidth: 1
   alphaThreshold: 0.01
   drawOutside: 0
@@ -1672,10 +1658,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8500962481414910757}
     m_Modifications:
+    - target: {fileID: 1000161982295496144, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1269987656506964404, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
       propertyPath: data
       value: 
       objectReference: {fileID: 11400000, guid: 83b166952315fcb479fe57b20f983ce4, type: 2}
+    - target: {fileID: 1269987656506964404, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
+      propertyPath: highlight
+      value: 
+      objectReference: {fileID: 6396335725109560979}
     - target: {fileID: 1269987656506964404, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
       propertyPath: interactionInfo
       value: 
@@ -1689,16 +1683,32 @@ PrefabInstance:
       value: Ch1_MemoryFake_01_BirthdayHat
       objectReference: {fileID: 0}
     - target: {fileID: 4550495789049230347, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
+      propertyPath: glowColor.b
+      value: 0.76862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 4550495789049230347, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
+      propertyPath: outlineWidth
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4550495789049230347, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
       propertyPath: alphaThreshold
       value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4550495789049230347, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
       propertyPath: glowBrightness
-      value: 3.42
+      value: 4.2
       objectReference: {fileID: 0}
     - target: {fileID: 5601138170063719656, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
       propertyPath: m_SortingOrder
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7672997842026072314, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 7672997842026072314, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.02
       objectReference: {fileID: 0}
     - target: {fileID: 8258144638893270685, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
       propertyPath: m_LocalPosition.x

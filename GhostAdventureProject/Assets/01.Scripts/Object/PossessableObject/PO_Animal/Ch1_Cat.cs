@@ -6,14 +6,14 @@ public class Ch1_Cat : MoveBasePossessable
 {
     [SerializeField] private LockedDoor door;
     [SerializeField] private GameObject q_Key;
+    [SerializeField] private Animator highlightAnim;
+
     private bool isNearDoor = false;
 
     protected override void Start()
     {
         base.Start();
         hasActivated = false;
-
-        Debug.Log($"[Ch1_Cat] Cat 초기화 완료: {gameObject.name}");
     }
 
     protected override void Update()
@@ -81,7 +81,6 @@ public class Ch1_Cat : MoveBasePossessable
     public void ActivateCat()
     {
         // 1. 점프 애니메이션
-        anim.SetTrigger("Surprise");
         float jumpHeight = 1.5f;
         float jumpDuration = 0.4f;
 
