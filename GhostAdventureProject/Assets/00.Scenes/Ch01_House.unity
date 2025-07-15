@@ -1376,6 +1376,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door_LaundryRoom_Locked
       objectReference: {fileID: 0}
+    - target: {fileID: 3601722222336363726, guid: 8c50a80554259164e8ad90e25d8d22dc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3881372133133109662, guid: 8c50a80554259164e8ad90e25d8d22dc, type: 3}
+      propertyPath: pairedDoor
+      value: 
+      objectReference: {fileID: 1677250810}
     - target: {fileID: 3881372133133109662, guid: 8c50a80554259164e8ad90e25d8d22dc, type: 3}
       propertyPath: targetDoor
       value: 
@@ -1961,7 +1969,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6972345227815071065, guid: a84aba365cb3b774e87c86d227bf2f41, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7589659446836276489, guid: a84aba365cb3b774e87c86d227bf2f41, type: 3}
       propertyPath: maxAlpha
@@ -1975,6 +1983,10 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8404483439078872085, guid: a84aba365cb3b774e87c86d227bf2f41, type: 3}
+      propertyPath: pairedDoor
+      value: 
+      objectReference: {fileID: 1814821390}
     - target: {fileID: 8404483439078872085, guid: a84aba365cb3b774e87c86d227bf2f41, type: 3}
       propertyPath: targetDoor
       value: 
@@ -4021,7 +4033,7 @@ Transform:
   m_GameObject: {fileID: 350230319}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.870003, y: -2.61, z: 0}
+  m_LocalPosition: {x: -10.870003, y: -2.64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8330,8 +8342,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.6408997, y: 1.2287999, z: 0}
-    m_Extent: {x: 9.3548, y: 5.2261, z: 0}
+    m_Center: {x: 5.64045, y: 1.22845, z: 0}
+    m_Extent: {x: 9.35475, y: 5.22645, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -8476,8 +8488,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.4860506, y: -5.49535, z: 0}
-    m_Extent: {x: 23.819649, y: 17.33345, z: 0}
+    m_Center: {x: 5.48705, y: -5.495, z: 0}
+    m_Extent: {x: 23.819752, y: 17.333199, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -10489,7 +10501,7 @@ Transform:
   m_GameObject: {fileID: 707871115}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.870007, y: -1.594, z: 0}
+  m_LocalPosition: {x: -11.870007, y: -1.6240002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11802,8 +11814,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.4870996, y: -5.4952, z: 0}
-    m_Extent: {x: 24.3101, y: 17.8238, z: 0}
+    m_Center: {x: 5.4867, y: -5.4953995, z: 0}
+    m_Extent: {x: 24.3107, y: 17.8221, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -17342,8 +17354,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 9.2837, y: 2.2975998, z: 0}
-    m_Extent: {x: 2.6625001, y: 2.5846, z: 0}
+    m_Center: {x: 9.28365, y: 2.29725, z: 0}
+    m_Extent: {x: 2.6625502, y: 2.58485, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -17427,8 +17439,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 6.8599997, y: 2.29675, z: 0}
-    m_Extent: {x: 0.89339995, y: 0.39984995, z: 0}
+    m_Center: {x: 6.8596497, y: 2.29735, z: 0}
+    m_Extent: {x: 0.8926499, y: 0.39965004, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -17703,8 +17715,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 10.588799, y: -0.39769995, z: 0}
-    m_Extent: {x: 5.0535, y: 4.3034, z: 0}
+    m_Center: {x: 10.59, y: -0.39779997, z: 0}
+    m_Extent: {x: 5.0536003, y: 4.3041, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -18037,6 +18049,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door_Hallways_Locked
       objectReference: {fileID: 0}
+    - target: {fileID: 8934585864163841674, guid: c2986616ce0b0554ead14ac451f6d0b8, type: 3}
+      propertyPath: pairedDoor
+      value: 
+      objectReference: {fileID: 1597362894}
     - target: {fileID: 8934585864163841674, guid: c2986616ce0b0554ead14ac451f6d0b8, type: 3}
       propertyPath: targetDoor
       value: 
@@ -22697,6 +22713,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1115114192 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8934585864163841674, guid: c2986616ce0b0554ead14ac451f6d0b8, type: 3}
+  m_PrefabInstance: {fileID: 918273950}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1121361503
 GameObject:
   m_ObjectHideFlags: 0
@@ -23758,7 +23785,7 @@ PrefabInstance:
     - target: {fileID: 2484193677213414913, guid: 94d12e359c68e2840a533c93ffe9ee47, type: 3}
       propertyPath: door
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1597362894}
     - target: {fileID: 4267392166166845283, guid: 94d12e359c68e2840a533c93ffe9ee47, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -25805,6 +25832,10 @@ PrefabInstance:
       value: Door_Kitchen_Stealth
       objectReference: {fileID: 0}
     - target: {fileID: 5113723469062210187, guid: 0a5754d2cb4ddcc4aad84ec39d53aba3, type: 3}
+      propertyPath: pairedDoor
+      value: 
+      objectReference: {fileID: 1115114192}
+    - target: {fileID: 5113723469062210187, guid: 0a5754d2cb4ddcc4aad84ec39d53aba3, type: 3}
       propertyPath: targetDoor
       value: 
       objectReference: {fileID: 918273951}
@@ -26515,8 +26546,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 1.52775, y: 0.44650006, z: 0}
-    m_Extent: {x: 13.46775, y: 6.0431004, z: 0}
+    m_Center: {x: 1.5282001, y: 0.44744992, z: 0}
+    m_Extent: {x: 13.4685, y: 6.04405, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -26588,6 +26619,10 @@ PrefabInstance:
       value: Door_LivingRoom
       objectReference: {fileID: 0}
     - target: {fileID: 8934585864163841674, guid: c2986616ce0b0554ead14ac451f6d0b8, type: 3}
+      propertyPath: pairedDoor
+      value: 
+      objectReference: {fileID: 1819024537}
+    - target: {fileID: 8934585864163841674, guid: c2986616ce0b0554ead14ac451f6d0b8, type: 3}
       propertyPath: targetDoor
       value: 
       objectReference: {fileID: 1819024534}
@@ -26601,6 +26636,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2030788445862740239, guid: c2986616ce0b0554ead14ac451f6d0b8, type: 3}
   m_PrefabInstance: {fileID: 1421362338}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1421362341 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8934585864163841674, guid: c2986616ce0b0554ead14ac451f6d0b8, type: 3}
+  m_PrefabInstance: {fileID: 1421362338}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1430834784
 GameObject:
   m_ObjectHideFlags: 0
@@ -26730,8 +26776,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 1.5281501, y: 0.44744992, z: 0}
-    m_Extent: {x: 13.469049, y: 6.0429497, z: 0}
+    m_Center: {x: 1.5289998, y: 0.44710016, z: 0}
+    m_Extent: {x: 13.468201, y: 6.0425, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -30490,6 +30536,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1597362894 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5113723469062210187, guid: 0a5754d2cb4ddcc4aad84ec39d53aba3, type: 3}
+  m_PrefabInstance: {fileID: 1378396168}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1599753705
 GameObject:
   m_ObjectHideFlags: 0
@@ -31497,6 +31554,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1677250810 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8404483439078872085, guid: a84aba365cb3b774e87c86d227bf2f41, type: 3}
+  m_PrefabInstance: {fileID: 159381698}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1684165252
 GameObject:
   m_ObjectHideFlags: 0
@@ -31949,8 +32017,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 12.088137, y: 0.24535, z: 0}
-    m_Extent: {x: 4.2481365, y: 3.3235502, z: 0}
+    m_Center: {x: 12.087787, y: 0.24519455, z: 0}
+    m_Extent: {x: 4.2484865, y: 3.3229947, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -32232,7 +32300,7 @@ PrefabInstance:
     - target: {fileID: 8149273678448401252, guid: 10f9562b9026ecf4bbe7a3235e0faf93, type: 3}
       propertyPath: Door
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1421362341}
     - target: {fileID: 8491455659268840351, guid: 10f9562b9026ecf4bbe7a3235e0faf93, type: 3}
       propertyPath: m_Name
       value: Ch1_TV
@@ -36270,6 +36338,17 @@ Transform:
   - {fileID: 722998316}
   m_Father: {fileID: 79956588}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1814821390 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3881372133133109662, guid: 8c50a80554259164e8ad90e25d8d22dc, type: 3}
+  m_PrefabInstance: {fileID: 114928705}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1814995619
 GameObject:
   m_ObjectHideFlags: 0
@@ -36473,7 +36552,7 @@ PrefabInstance:
     - target: {fileID: 5113723469062210187, guid: 0a5754d2cb4ddcc4aad84ec39d53aba3, type: 3}
       propertyPath: pairedDoor
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1421362341}
     - target: {fileID: 5113723469062210187, guid: 0a5754d2cb4ddcc4aad84ec39d53aba3, type: 3}
       propertyPath: targetDoor
       value: 
@@ -36496,6 +36575,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2291450242189988043, guid: 0a5754d2cb4ddcc4aad84ec39d53aba3, type: 3}
   m_PrefabInstance: {fileID: 1819024533}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1819024537 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5113723469062210187, guid: 0a5754d2cb4ddcc4aad84ec39d53aba3, type: 3}
+  m_PrefabInstance: {fileID: 1819024533}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1822819443 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3273760995806975385, guid: 1703e448a5ca7a342967e350eb3f4102, type: 3}
@@ -38574,7 +38664,7 @@ Transform:
   m_GameObject: {fileID: 1982667544}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.37, y: -1.544, z: 0}
+  m_LocalPosition: {x: -10.37, y: -1.5740002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -43856,8 +43946,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0, y: -0.000100016594, z: 0}
-    m_Extent: {x: 1.3499, y: 1.3508, z: 0}
+    m_Center: {x: -0.00020003319, y: 0.00015002489, z: 0}
+    m_Extent: {x: 1.3505, y: 1.3505499, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
