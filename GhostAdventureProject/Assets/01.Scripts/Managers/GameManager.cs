@@ -63,6 +63,21 @@ public class GameManager : Singleton<GameManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        string sceneName = scene.name;
+
+        if (sceneName == "StartScene")
+        {
+            // 타이틀 씬이면 자기 자신 포함 관련 매니저 제거
+            Destroy(currentPlayer);
+            currentPlayer = null;
+            playerController = null;
+
+            Destroy(gameObject); // GameManager 자기 자신 제거
+            // DestroyIfExists<UIManager>();
+            // DestroyIfExists<PossessionStateManager>();
+            return;
+        }
+        
         Debug.Log($"씬 로드됨: {scene.name}");
 
         EnsureManagerExists<ChapterEndingManager>(chapterEndingManager);
@@ -83,4 +98,14 @@ public class GameManager : Singleton<GameManager>
             Debug.Log($"[{typeof(T).Name}] 자동 생성됨");
         }
     }
+    
+    // private void DestroyIfExists<T>() where T : MonoBehaviour
+    // {
+    //     T instance = Singleton<T>.Instance;
+    //     if (instance != null)
+    //     {
+    //         Destroy(instance.gameObject);
+    //         Debug.Log($"[GameManager] {typeof(T).Name} 파괴됨");
+    //     }
+    // }
 }
