@@ -29,7 +29,8 @@ public class BaseInteractable : MonoBehaviour
         {
             if (collision.CompareTag("Player"))
             {
-                SetHighlight(true);
+                //SetHighlight(true);
+                PlayerInteractSystem.Instance.AddInteractable(gameObject);
             }
         }
     }
