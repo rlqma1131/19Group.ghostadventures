@@ -16,7 +16,7 @@ public class MoveScene : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.S))
         {
-            GoScene("TestScene"); //S키를 누르거나 마우스 클릭시 메인 씬으로 이동
+            GoScene("Ch01_House"); //S키를 누르거나 마우스 클릭시 메인 씬으로 이동
             if(UIManager.Instance != null)
             {
                 UIManager.Instance.PlayModeUI_OpenAll();

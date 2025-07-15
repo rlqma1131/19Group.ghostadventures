@@ -26,6 +26,7 @@ public class ShowPrompt : MonoBehaviour
         PromptText.text = line;
         StartCoroutine(HideAfterDelay(2));
     }
+
     private IEnumerator HideAfterDelay(float dlaytime)
     {
         yield return new WaitForSeconds(dlaytime);

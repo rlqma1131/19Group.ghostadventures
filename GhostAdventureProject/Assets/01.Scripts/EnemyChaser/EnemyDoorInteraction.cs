@@ -7,7 +7,7 @@ public class EnemyDoorInteraction : MonoBehaviour
     [SerializeField] private float doorDetectionRange = 1.5f;
     [SerializeField] private float doorUseCooldown = 2f; // 문 사용 후 쿨다운
     [SerializeField] private bool canUseDoors = true;
-    [SerializeField] private float playerTrackingRange = 10f; // 플레이어 추적 범위
+    //[SerializeField] private float playerTrackingRange = 10f; // 플레이어 추적 범위
     [SerializeField] private float playerLostCheckTime = 3f; // 플레이어를 놓쳤을 때 문 체크 시간
 
     private EnemyAI enemyAI;
