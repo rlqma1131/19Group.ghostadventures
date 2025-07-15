@@ -35,14 +35,12 @@ public class SoulEnergySystem : MonoBehaviour
     public void Consume(int amount) // 에너지 소모
     {
         currentEnergy = Mathf.Max(currentEnergy - amount, 0);
-        Debug.Log($"영혼 에너지 {amount} 소모, 현재: {currentEnergy}");
         UIManager.Instance.SoulGaugeUI.SetSoulGauge(currentEnergy);
     }
 
     public void Restore(int amount) // 에너지 회복
     {
         currentEnergy = Mathf.Min(currentEnergy + amount, maxEnergy);
-        Debug.Log($"영혼 에너지 {amount} 회복, 현재: {currentEnergy}");
         UIManager.Instance.SoulGaugeUI.SetSoulGauge(currentEnergy);
     }
 
