@@ -55,18 +55,20 @@ public class PossessionSystem : MonoBehaviour
 
     public bool TryPossess()
     {
-        if (!SoulEnergySystem.Instance.HasEnoughEnergy(3))
-        {
-            UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
-            return false;
-        }
-
         obssessingTarget = currentTarget;
 
         switch (obssessingTarget.tag)
         {
             case "Animal":
-                SoulEnergySystem.Instance.Consume(2);
+                if (!SoulEnergySystem.Instance.HasEnoughEnergy(2))
+                {
+                    UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
+                    return false;
+                }
+                else
+                {
+                    SoulEnergySystem.Instance.Consume(2);
+                }
                 break;
             case "Cat":
                 // 고양이는 풀 충전
@@ -74,14 +76,30 @@ public class PossessionSystem : MonoBehaviour
                 break;
             case "Person":
                 // 사람 구현되면 피로도에 따라 소모량 조정
-                SoulEnergySystem.Instance.Consume(3);
+                if (!SoulEnergySystem.Instance.HasEnoughEnergy(3))
+                {
+                    UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
+                    return false;
+                }
+                else
+                {
+                    SoulEnergySystem.Instance.Consume(3);
+                }
                 break;
             default:
-                SoulEnergySystem.Instance.Consume(3);
+                if (!SoulEnergySystem.Instance.HasEnoughEnergy(3))
+                {
+                    UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
+                    return false;
+                }
+                else
+                {
+                    SoulEnergySystem.Instance.Consume(3);
+                }
                 break;
         }
 
-        UIManager.Instance.PromptUI.ShowPrompt($"{obssessingTarget}에게 빙의 시도 중...", 2f);
+        UIManager.Instance.PromptUI.ShowPrompt($"빙의 시도 중...", 2f);
 
         RequestPossession();
         return true;

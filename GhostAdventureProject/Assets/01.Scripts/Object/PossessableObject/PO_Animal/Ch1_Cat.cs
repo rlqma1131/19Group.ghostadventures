@@ -1,5 +1,4 @@
-﻿using Cinemachine;
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
@@ -42,6 +41,13 @@ public class Ch1_Cat : MoveBasePossessable
             // 문 열기
             StartCoroutine(CatAct());
         }
+    }
+
+    public override void OnQTESuccess()
+    {
+        SoulEnergySystem.Instance.RestoreAll();
+
+        PossessionStateManager.Instance.StartPossessionTransition();
     }
 
     // 문 근처에 있는지 확인
