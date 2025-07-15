@@ -11,5 +11,6 @@ public class OpenDoor : BaseDoor
     protected override void TryInteract()
     {
         TeleportPlayer();
+
     }
 }
