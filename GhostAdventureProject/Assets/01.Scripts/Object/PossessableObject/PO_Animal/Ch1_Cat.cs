@@ -25,7 +25,7 @@ public class Ch1_Cat : MoveBasePossessable
         if(isNearDoor)
         {
             Vector2 catPos = this.transform.position;
-            catPos.y += 10;
+            catPos.y += 0.5f;
             q_Key.transform.position = catPos;
             q_Key.SetActive(true);
         }
