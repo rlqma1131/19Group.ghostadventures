@@ -13,8 +13,8 @@ public class EnemyAI : MonoBehaviour
     [Header("추적 종료 설정")]
     public float lostTargetWaitTime = 2f;
     public float returnedWaitTime = 1f;
-    public bool returnToOriginalPosition = false;  // 원래 위치로 돌아갈지 여부
-    public float randomPatrolRadius = 5f;  // 랜덤 순찰 반경
+    public bool returnToOriginalPosition = false;
+    public float randomPatrolRadius = 5f;
 
     [Header("유인 설정")]
     public float distractionDuration = 5f;
@@ -38,8 +38,16 @@ public class EnemyAI : MonoBehaviour
     private float distractionTimer = 0f;
 
     private PlayerHide playerHide;
+
+    // 최적화: Player 찾기 관련
+    private static Transform cachedPlayer; // 모든 Enemy가 공유
+    private static PlayerHide cachedPlayerHide;
+    private float lastPlayerCheckTime = 0f;
+    private const float PLAYER_CHECK_INTERVAL = 2f; // 2초마다만 체크
+
+
+
     public AIState CurrentState => currentState;
-   
 
     // Y축 고정 (다른 컴포넌트에서 접근 가능하도록 public)
     public bool lockYPosition => movement.lockYPosition;
@@ -84,38 +92,115 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
-        if (Player == null)
-            Player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        // 캐시된 Player가 있으면 사용, 없으면 찾기
+        if (cachedPlayer != null)
+        {
+            Player = cachedPlayer;
+            playerHide = cachedPlayerHide;
+        }
+        else
+        {
+            FindAndCachePlayer();
+        }
 
         if (Player != null)
-        {
-            playerHide = Player.GetComponent<PlayerHide>();
             qteSystem.SetPlayer(Player);
-        }
 
         ChangeState(AIState.Patrolling);
     }
 
     private void Update()
     {
-        if (Player == null)
-        {
-            Player = GameObject.FindGameObjectWithTag("Player")?.transform;
-            if (Player != null)
-            {
-                playerHide = Player.GetComponent<PlayerHide>();
-                qteSystem.SetPlayer(Player);
-            }
-            else
-                return;
-        }
+        // Player 유효성 검사 및 재검색 로직
+        if (!ValidatePlayer())
+            return;
 
         stateTimer += Time.deltaTime;
-
-
         UpdateCurrentState();
         CheckStateTransitions();
         UpdateAnimations();
+    }
+
+    /// <summary>
+    /// Player 유효성 검사 및 필요시 재검색
+    /// </summary>
+    private bool ValidatePlayer()
+    {
+        // Player 객체가 파괴되었는지 체크
+        if (Player != null && Player.gameObject == null)
+        {
+            Player = null;
+            playerHide = null;
+            cachedPlayer = null;
+            cachedPlayerHide = null;
+        }
+
+        // Player가 null이고 충분한 시간이 지났을 때만 재검색
+        if (Player == null && Time.time - lastPlayerCheckTime > PLAYER_CHECK_INTERVAL)
+        {
+            FindAndCachePlayer();
+            lastPlayerCheckTime = Time.time;
+        }
+
+        return Player != null;
+    }
+
+    /// <summary>
+    /// Player를 찾고 캐싱하는 메서드
+    /// </summary>
+    private void FindAndCachePlayer()
+    {
+        var playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            cachedPlayer = playerObj.transform;
+            cachedPlayerHide = playerObj.GetComponent<PlayerHide>();
+
+            Player = cachedPlayer;
+            playerHide = cachedPlayerHide;
+
+            if (qteSystem != null)
+                qteSystem.SetPlayer(Player);
+
+            Debug.Log($"[EnemyAI] Player 찾음: {playerObj.name}");
+        }
+    }
+
+    /// <summary>
+    /// 외부에서 Player 참조를 업데이트할 때 사용
+    /// </summary>
+    public static void UpdatePlayerReference(Transform newPlayer)
+    {
+        if (newPlayer != null)
+        {
+            cachedPlayer = newPlayer;
+            cachedPlayerHide = newPlayer.GetComponent<PlayerHide>();
+        }
+        else
+        {
+            cachedPlayer = null;
+            cachedPlayerHide = null;
+        }
+    }
+
+    /// <summary>
+    /// 씬 전환 시 모든 캐시 초기화
+    /// </summary>
+    public static void ClearAllCaches()
+    {
+        cachedPlayer = null;
+        cachedPlayerHide = null;
+        cachedHideAreas = null;
+        lastHideAreaCacheTime = 0f;
+    }
+
+    private void OnDestroy()
+    {
+        // 이 인스턴스가 마지막 EnemyAI라면 캐시 정리
+        if (FindObjectsOfType<EnemyAI>().Length <= 1)
+        {
+            ClearAllCaches();
+        }
     }
 
     public void ChangeState(AIState newState)
@@ -189,7 +274,10 @@ public class EnemyAI : MonoBehaviour
         {
             movement.SetTarget(Player.position);
             movement.MoveToTarget(movement.chaseSpeed);
-            Ch1_HideAreaEvent.Instance.UnTagAllHideAreas();
+
+            // null 체크 추가
+            if (Ch1_HideAreaEvent.Instance != null)
+                Ch1_HideAreaEvent.Instance.UnTagAllHideAreas();
         }
     }
 
@@ -200,11 +288,9 @@ public class EnemyAI : MonoBehaviour
         if (currentDistraction != null)
         {
             movement.lockYPosition = false;
-            
+
             movement.SetTarget(currentDistraction.position);
             movement.MoveToTarget(movement.distractionSpeed);
-
-           
 
             // 도착하면 종료
             if (movement.HasReachedTarget())
@@ -240,10 +326,10 @@ public class EnemyAI : MonoBehaviour
                 {
                     Debug.Log("[EnemyAI] 플레이어가 숨었습니다 → 숨은 위치까지 접근 후 복귀");
 
-                    movement.StopMoving();                    // 추적 중단
-                    movement.SetTargetAwayFromPlayer(4f);     // ← 여기!
-                    FindCurrentHideArea();                    // 숨은 장소 파악
-                    ChangeState(AIState.SearchWaiting);       // 수색 대기
+                    movement.StopMoving();
+                    movement.SetTargetAwayFromPlayer(4f);
+                    FindCurrentHideArea();
+                    ChangeState(AIState.SearchWaiting);
                 }
                 else if (!inRange)
                 {
@@ -255,10 +341,10 @@ public class EnemyAI : MonoBehaviour
                 break;
 
             case AIState.SearchWaiting:
-                if (movement.HasReachedTarget()) // 숨은 위치에 도착했는지 확인
+                if (movement.HasReachedTarget())
                 {
                     Debug.Log("[EnemyAI] 숨은 위치 도착 → 복귀 시작");
-                    movement.SetTarget(patrol.GetStartPosition()); // 순찰 시작 위치로 복귀
+                    movement.SetTarget(patrol.GetStartPosition());
                     ChangeState(AIState.Returning);
                 }
                 break;
@@ -267,14 +353,14 @@ public class EnemyAI : MonoBehaviour
                 if (!hiding && inRange)
                     ChangeState(AIState.Chasing);
                 else if (movement.HasReachedTarget(0.5f))
-                    ChangeState(AIState.Waiting); // 도착 후 대기
+                    ChangeState(AIState.Waiting);
                 break;
 
             case AIState.Waiting:
                 if (!hiding && inRange)
                     ChangeState(AIState.Chasing);
                 else if (stateTimer >= returnedWaitTime)
-                    ChangeState(AIState.Patrolling); // 다시 순찰 시작
+                    ChangeState(AIState.Patrolling);
                 break;
 
             case AIState.Searching:
@@ -311,7 +397,6 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-
     private IEnumerator RunChaseResidual(Vector3 targetPos)
     {
         ChangeState(AIState.ChaseResidual);
@@ -325,7 +410,7 @@ public class EnemyAI : MonoBehaviour
             yield return null;
         }
 
-        Ch1_HideAreaEvent.Instance.RestoreHideAreaTags();
+        Ch1_HideAreaEvent.Instance?.RestoreHideAreaTags(); // null 체크 추가
         ChangeState(AIState.LostTarget);
     }
 
@@ -353,10 +438,9 @@ public class EnemyAI : MonoBehaviour
 
         Debug.Log("[EnemyAI] 소리를 감지했습니다! 해당 위치로 이동합니다.");
 
-        //  soundPosition을 따라갈 수 있게 dummy 오브젝트 생성
         GameObject tempTarget = new GameObject("TempDistractionTarget");
         tempTarget.transform.position = soundPosition;
-        GameObject.Destroy(tempTarget, 6f); // 6초 후 제거
+        GameObject.Destroy(tempTarget, 6f);
 
         currentDistraction = tempTarget.transform;
         movement.SetTarget(soundPosition);
@@ -388,20 +472,38 @@ public class EnemyAI : MonoBehaviour
 
     private void StartRandomPatrol()
     {
-        // 현재 위치를 새로운 순찰 시작점으로 설정
         patrol.SetNewPatrolCenter(transform.position, randomPatrolRadius);
         ChangeState(AIState.Patrolling);
         Debug.Log("플레이어를 놓쳐서 현재 위치에서 랜덤 순찰 시작!");
     }
 
+    // HideArea 캐싱
+    private static GameObject[] cachedHideAreas;
+    private static float lastHideAreaCacheTime = 0f;
+    private const float HIDE_AREA_CACHE_INTERVAL = 5f; // 5초마다 갱신
+
     private void FindCurrentHideArea()
     {
-        GameObject[] areas = GameObject.FindGameObjectsWithTag("HideArea");
+        // HideArea 캐시 업데이트
+        if (cachedHideAreas == null || Time.time - lastHideAreaCacheTime > HIDE_AREA_CACHE_INTERVAL)
+        {
+            cachedHideAreas = GameObject.FindGameObjectsWithTag("HideArea");
+            lastHideAreaCacheTime = Time.time;
+        }
+
+        if (cachedHideAreas == null || cachedHideAreas.Length == 0 || Player == null)
+        {
+            currentHideArea = null;
+            return;
+        }
+
         float closest = float.MaxValue;
         Transform nearest = null;
 
-        foreach (GameObject obj in areas)
+        foreach (GameObject obj in cachedHideAreas)
         {
+            if (obj == null) continue; // null 체크
+
             float d = Vector3.Distance(Player.position, obj.transform.position);
             if (d < closest)
             {
@@ -415,7 +517,7 @@ public class EnemyAI : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = new Color(1f, 0f, 0f, 0.5f); // 반투명 빨간색
+        Gizmos.color = new Color(1f, 0f, 0f, 0.5f);
         Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
 }
