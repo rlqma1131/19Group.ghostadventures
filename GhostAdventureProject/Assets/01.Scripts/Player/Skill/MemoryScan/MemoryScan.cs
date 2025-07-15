@@ -72,7 +72,7 @@ public class MemoryScan : MonoBehaviour
         // 영혼 에너지가 있는지 확인
         if (SoulEnergySystem.Instance.currentEnergy <= 0)
         {
-            Debug.Log("영혼 에너지가 부족하여 스캔을 시작할 수 없습니다.");
+            UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
             // 여기에 부족 알림 UI나 사운드를 재생하는 로직
             return;
         }
@@ -97,7 +97,6 @@ public class MemoryScan : MonoBehaviour
 
             else
             {
-
                 Debug.LogWarning("Scan Circle UI가 설정되지 않았습니다. UI를 확인해주세요.");
                 return;
             }

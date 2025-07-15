@@ -17,6 +17,7 @@ public class Ch1_TV : BasePossessable
 
     private Ch1_MemoryFake_01_BirthdayHat birthdayHat;
 
+    private Collider2D collider;
     private bool isControlMode = false;
     private int channel = 1;
 
@@ -25,7 +26,10 @@ public class Ch1_TV : BasePossessable
         show.SetActive(false);
         birthdayHat = memoryObject.GetComponent<Ch1_MemoryFake_01_BirthdayHat>();
         memoryObject.SetActive(false);
+
         hasActivated = false;
+
+        collider = GetComponent<Collider2D>();
         spaceBar = UIManager.Instance.spacebar_Key;
         UI.SetActive(false);
     }
@@ -90,7 +94,10 @@ public class Ch1_TV : BasePossessable
             // 정답 효과음 추가
             spaceBar.SetActive(false);
             UI.SetActive(false);
+
             ShowMemoryandDoorOpen();
+            hasActivated = false;
+            collider.enabled = false;
 
         }
     }
@@ -103,7 +110,6 @@ public class Ch1_TV : BasePossessable
 
     private void ShowMemoryandDoorOpen()
     {
-
         // 1. TV 줌 애니메이션 재생
         show.SetActive(true);
         anim.SetTrigger("Solved");
@@ -127,7 +133,6 @@ public class Ch1_TV : BasePossessable
         Door.SolvePuzzle();
 
         // 4. 빙의 해제
-        hasActivated = false;
         isPossessed = false;
         isControlMode = false;
         UIManager.Instance.PlayModeUI_OpenAll();

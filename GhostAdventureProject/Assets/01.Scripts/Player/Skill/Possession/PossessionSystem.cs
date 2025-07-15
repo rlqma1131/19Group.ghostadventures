@@ -57,7 +57,7 @@ public class PossessionSystem : MonoBehaviour
     {
         if (!SoulEnergySystem.Instance.HasEnoughEnergy(3))
         {
-            Debug.Log("Not enough energy");
+            UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
             return false;
         }
 
@@ -71,7 +71,6 @@ public class PossessionSystem : MonoBehaviour
             case "Cat":
                 // 고양이는 풀 충전
                 Debug.Log("고양이덕에 풀충전입니다옹");
-                SoulEnergySystem.Instance.RestoreAll();
                 break;
             case "Person":
                 // 사람 구현되면 피로도에 따라 소모량 조정
@@ -82,14 +81,14 @@ public class PossessionSystem : MonoBehaviour
                 break;
         }
 
-        Debug.Log($"{obssessingTarget}에게 빙의 시도");
+        UIManager.Instance.PromptUI.ShowPrompt($"{obssessingTarget}에게 빙의 시도 중...", 2f);
+
         RequestPossession();
         return true;
     }
 
     public void RequestPossession()
     {
-        Debug.Log($"{name} 빙의 시도 - QTE 호출");
         PossessionQTESystem.Instance.StartQTE();
     }
 
@@ -116,7 +115,6 @@ public class PossessionSystem : MonoBehaviour
 
     public void PlayPossessionInAnimation() // 빙의 시작 애니메이션
     {
-        Debug.Log("빙의 시작 애니메이션 재생");
         CanMove = false;
         Player.animator.SetTrigger("PossessIn");
     }
@@ -142,7 +140,6 @@ public class PossessionSystem : MonoBehaviour
             // ex) 애니메이션 끝나고 확대
             obssessingTarget.isPossessed = true;
             obssessingTarget.OnPossessionEnterComplete();
-            Debug.Log($"빙의 애니메이션 종료 / 대상: {obssessingTarget.name}");
         }
         else
         {
