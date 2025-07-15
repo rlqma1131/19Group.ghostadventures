@@ -76,6 +76,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         escMenuUI.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
+        PossessionSystem.Instance.CanMove = true; // 임시완
 
         if (PlayerLifeManager.Instance != null) // 플레이어 생명 불러오기 
         {
