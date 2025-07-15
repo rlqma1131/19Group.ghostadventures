@@ -62,7 +62,6 @@ public class MemoryScan : MonoBehaviour
         if (scanCircleUI != null && scanCircleUI.gameObject.activeInHierarchy)
         {
             // 플레이어의 월드 위치를 스크린 위치로 변환하여 UI 위치를 갱신
-
             scanCircleUI.transform.position = mainCamera.WorldToScreenPoint(playerTransform.position) + new Vector3(-40, 50, 0);
         }
     }
@@ -84,11 +83,10 @@ public class MemoryScan : MonoBehaviour
     {
         if (currentMemoryFragment.IsScannable)
         {
+            UIManager.Instance.PromptUI.ShowPrompt($"스캔 진행 중...", 2f);
 
             isScanning = true;
             scanTime = 0f;
-
-            UIManager.Instance.PromptUI.ShowPrompt($"스캔 진행 중...", 2f);
 
             scanPanel?.SetActive(true);
             if (scanCircleUI != null)
