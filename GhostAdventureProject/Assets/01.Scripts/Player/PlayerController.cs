@@ -4,19 +4,26 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] public BasePossessable currentTarget;
-    
+
     public Animator animator { get; private set; }
     private PlayerHide playerHide;
-    
+
     private void Start()
     {
         animator = GetComponent<Animator>();
         playerHide = GetComponent<PlayerHide>();
+
+        // GameManager에 Player 등록
+        if (GameManager.Instance != null)
+        {
+            // GameManager의 SpawnPlayer에서 이미 처리되므로 여기서는 추가 확인만
+            Debug.Log("[PlayerController] Player 초기화 완료");
+        }
     }
 
     void Update()
     {
-        if (PossessionSystem.Instance == null||
+        if (PossessionSystem.Instance == null ||
             PossessionQTESystem.Instance == null ||
             !PossessionSystem.Instance.CanMove ||
             PossessionQTESystem.Instance.isRunning)
@@ -39,13 +46,13 @@ public class PlayerController : MonoBehaviour
         float v = Input.GetAxis("Vertical");
         Vector3 move = new Vector3(h, v, 0);
         transform.position += move * moveSpeed * Time.deltaTime;
-        
+
         // 회전
         if (h > 0.01f)
             transform.localScale = new Vector3(1, 1, 1);
         else if (h < -0.01f)
             transform.localScale = new Vector3(-1, 1, 1);
-        
+
         bool isMoving = move.magnitude > 0.01f;
         animator.SetBool("Move", isMoving);
     }
@@ -57,5 +64,16 @@ public class PlayerController : MonoBehaviour
             && PlayerInteractSystem.Instance.CurrentClosest == currentTarget.gameObject
             && currentTarget.HasActivated
             && !currentTarget.IsPossessedState;
+    }
+
+    private void OnDestroy()
+    {
+        // GameManager에 Player 파괴 알림
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnPlayerDestroyed();
+        }
+
+        Debug.Log("[PlayerController] Player 파괴됨 - GameManager에 알림 전송");
     }
 }
