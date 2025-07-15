@@ -20,7 +20,10 @@ public class EnergyRestoreZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            SoulEnergySystem.Instance.ResetRestoreBoost();
+            if (SoulEnergySystem.Instance != null && SoulEnergySystem.Instance.gameObject.activeInHierarchy)
+            {
+                SoulEnergySystem.Instance.ResetRestoreBoost();
+            }
         }
     }
 
