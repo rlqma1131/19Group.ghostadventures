@@ -17,10 +17,22 @@ public class EnemyPatrol : MonoBehaviour
     public float doorCooldownTime = 30f; // 사용한 문 쿨다운 시간
     public int nearDoorCandidates = 3; // 가까운 문 후보 개수
 
+    [Header("🎯 EnemyMovement 연동 최적화")]
+    public bool forceOptimizedMovement = true; // EnemyMovement 최적화 모드 강제 활성화
+
+    [Header("🎯 TargetDummy 최적화")]
+    public float targetUpdateInterval = 2f; // 타겟 업데이트 간격 (초)
+    public float targetReachThreshold = 0.5f; // 타겟 도달 판정 거리
+
     private Vector3 startPos;
     private Vector3 currentTarget;
     private bool isPatrolWaiting = false;
     private float waitTimer = 0f;
+
+    // 🎯 TargetDummy 생성 최소화
+    private float lastTargetUpdateTime = 0f;
+    private bool hasValidTarget = false;
+    private Vector3 lastSetTarget = Vector3.zero;
 
     // 문 탈출 관련
     private float patrolTimer = 0f; // 순찰 상태 지속 시간
@@ -44,6 +56,21 @@ public class EnemyPatrol : MonoBehaviour
     {
         startPos = transform.position;
         patrolTimer = 0f; // 타이머 초기화
+        lastTargetUpdateTime = Time.time;
+
+        // 🎯 EnemyMovement 최적화 모드 강제 활성화
+        if (forceOptimizedMovement && movement != null)
+        {
+            // EnemyMovement의 useOptimizedTarget을 true로 설정
+            var optimizedField = movement.GetType().GetField("useOptimizedTarget",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (optimizedField != null)
+            {
+                optimizedField.SetValue(movement, true);
+                Debug.Log($"[EnemyPatrol] EnemyMovement 최적화 모드 강제 활성화!");
+            }
+        }
+
         GeneratePatrolTarget();
     }
 
@@ -54,6 +81,8 @@ public class EnemyPatrol : MonoBehaviour
         patrolTimer = 0f; // 타이머 리셋
         isEscapingToDoor = false;
         targetDoor = null;
+        lastTargetUpdateTime = Time.time; // 🎯 타겟 업데이트 시간 리셋
+        hasValidTarget = false;
         Debug.Log($"[EnemyPatrol] 새로운 순찰 중심점: {newCenter}");
         GeneratePatrolTarget();
     }
@@ -81,20 +110,40 @@ public class EnemyPatrol : MonoBehaviour
             return;
         }
 
-        // 기존 순찰 로직
+        // 🎯 최적화된 순찰 로직
         if (isPatrolWaiting)
         {
             waitTimer += Time.deltaTime;
             if (waitTimer >= patrolWaitTime)
             {
                 isPatrolWaiting = false;
-                GeneratePatrolTarget(); // 새로운 순찰 타겟 생성
+                // 🎯 타겟 업데이트 간격 체크
+                if (Time.time - lastTargetUpdateTime >= targetUpdateInterval)
+                {
+                    GeneratePatrolTarget(); // 새로운 순찰 타겟 생성
+                    lastTargetUpdateTime = Time.time;
+                }
+                else
+                {
+                    // 기존 타겟이 유효하면 재사용
+                    if (hasValidTarget && Vector3.Distance(transform.position, currentTarget) > targetReachThreshold)
+                    {
+                        Debug.Log($"[EnemyPatrol] 기존 타겟 재사용: {currentTarget}");
+                        // SetTarget 호출 없이 기존 타겟 사용
+                    }
+                    else
+                    {
+                        GeneratePatrolTarget();
+                        lastTargetUpdateTime = Time.time;
+                    }
+                }
                 waitTimer = 0f;
             }
             return;
         }
 
-        if (movement.HasReachedTarget())
+        // 🎯 도달 판정 최적화
+        if (movement.HasReachedTarget(targetReachThreshold))
         {
             movement.StopMoving();
             isPatrolWaiting = true;
@@ -115,9 +164,10 @@ public class EnemyPatrol : MonoBehaviour
             Debug.Log($"[EnemyPatrol] {gameObject.name} - 가장 가까운 문 발견: {nearestDoor.name}");
             targetDoor = nearestDoor;
             isEscapingToDoor = true;
+            hasValidTarget = false; // 🎯 기존 타겟 무효화
 
-            // 문으로 이동 시작
-            movement.SetTarget(targetDoor.transform.position);
+            // 🎯 최적화된 문 이동
+            SetTargetSafely(targetDoor.transform.position);
         }
         else
         {
@@ -134,6 +184,8 @@ public class EnemyPatrol : MonoBehaviour
             Debug.Log("[EnemyPatrol] 타겟 문이 사라짐. 순찰 재개");
             isEscapingToDoor = false;
             patrolTimer = 0f;
+            hasValidTarget = false;
+            lastTargetUpdateTime = Time.time;
             GeneratePatrolTarget();
             return;
         }
@@ -161,6 +213,7 @@ public class EnemyPatrol : MonoBehaviour
             Debug.LogWarning($"[EnemyPatrol] {targetDoor.name}에 BaseDoor 스크립트가 없음!");
             isEscapingToDoor = false;
             patrolTimer = 0f;
+            hasValidTarget = false;
             GeneratePatrolTarget();
             return;
         }
@@ -187,6 +240,7 @@ public class EnemyPatrol : MonoBehaviour
             Debug.LogWarning($"[EnemyPatrol] {targetDoor.name} 문의 목적지가 설정되지 않음!");
             isEscapingToDoor = false;
             patrolTimer = 0f;
+            hasValidTarget = false;
             GeneratePatrolTarget();
             return;
         }
@@ -293,11 +347,41 @@ public class EnemyPatrol : MonoBehaviour
 
     public void SetNextPatrolTarget()
     {
-        GeneratePatrolTarget();
+        // 🎯 간격 체크 후 타겟 생성
+        if (Time.time - lastTargetUpdateTime >= targetUpdateInterval)
+        {
+            GeneratePatrolTarget();
+            lastTargetUpdateTime = Time.time;
+        }
+    }
+
+    /// <summary>
+    /// 🎯 안전한 타겟 설정 (중복 호출 방지)
+    /// </summary>
+    private void SetTargetSafely(Vector3 newTarget)
+    {
+        // 이전 타겟과 너무 가까우면 SetTarget 호출 생략
+        if (Vector3.Distance(lastSetTarget, newTarget) < 0.1f)
+        {
+            Debug.Log($"[EnemyPatrol] 타겟 중복 방지: {newTarget}");
+            return;
+        }
+
+        lastSetTarget = newTarget;
+        movement.SetTarget(newTarget);
+        hasValidTarget = true;
+        Debug.Log($"[EnemyPatrol] 🎯 최적화된 타겟 설정: {newTarget} (TargetDummy 생성 최소화)");
     }
 
     private void GeneratePatrolTarget()
     {
+        // 🎯 타겟 생성 빈도 제한
+        if (Time.time - lastTargetUpdateTime < targetUpdateInterval)
+        {
+            Debug.Log($"[EnemyPatrol] 타겟 업데이트 간격 미충족 ({Time.time - lastTargetUpdateTime:F1}초 < {targetUpdateInterval}초)");
+            return;
+        }
+
         // 현재 위치를 기준으로 순찰 (startPos 대신 현재 위치 사용)
         Vector3 basePos = transform.position;
 
@@ -367,10 +451,11 @@ public class EnemyPatrol : MonoBehaviour
         }
 
         currentTarget = newTarget;
-        movement.SetTarget(currentTarget);
+        // 🎯 최적화된 EnemyMovement와 연동
+        SetTargetSafely(currentTarget);
 
         float distance = Vector3.Distance(transform.position, currentTarget);
-        Debug.Log($"[EnemyPatrol] {gameObject.name} 순찰 타겟: {currentTarget} (거리: {distance:F1}) [기준위치: {basePos}, 중심거리: {distanceFromCenter:F1}]");
+        Debug.Log($"[EnemyPatrol] {gameObject.name} 🎯 최적화 순찰 타겟: {currentTarget} (거리: {distance:F1}) [기준위치: {basePos}, 중심거리: {distanceFromCenter:F1}]");
 
         // 거리가 비정상적으로 크면 경고
         if (distance > patrolRadius + 1f)
@@ -459,6 +544,16 @@ public class EnemyPatrol : MonoBehaviour
             float timerRatio = patrolTimer / doorEscapeTime;
             Gizmos.color = Color.Lerp(Color.green, Color.red, timerRatio);
             Gizmos.DrawWireSphere(transform.position + Vector3.up * 2f, 0.5f + timerRatio * 0.5f);
+        }
+
+        // 🎯 TargetDummy 최적화 상태 표시
+        if (Application.isPlaying)
+        {
+            float timeSinceLastUpdate = Time.time - lastTargetUpdateTime;
+            float updateProgress = timeSinceLastUpdate / targetUpdateInterval;
+
+            Gizmos.color = hasValidTarget ? Color.green : Color.red;
+            Gizmos.DrawWireCube(transform.position + Vector3.up * 3f, Vector3.one * (0.5f + updateProgress * 0.5f));
         }
     }
 }

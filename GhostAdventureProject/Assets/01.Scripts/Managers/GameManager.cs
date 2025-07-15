@@ -31,23 +31,8 @@ public class GameManager : Singleton<GameManager>
             playerController = go.GetComponent<PlayerController>();
             DontDestroyOnLoad(go);
 
-            // Player 생성 시 EnemyAI와 StealthDoor에 알림
-            NotifyPlayerSpawned(go);
+            Debug.Log("[GameManager] Player 스폰 완료 - EnemyAI는 자동으로 GameManager에서 참조");
         }
-    }
-
-    /// <summary>
-    /// Player가 생성되었을 때 모든 관련 컴포넌트에 알림
-    /// </summary>
-    private void NotifyPlayerSpawned(GameObject player)
-    {
-        // EnemyAI 캐시 업데이트
-        EnemyAI.UpdatePlayerReference(player.transform);
-
-        // StealthDoor 캐시에 Player 추가
-        StealthDoor.AddNewTarget(player, "Player");
-
-        Debug.Log("[GameManager] Player 스폰 완료 - 모든 시스템에 알림 전송됨");
     }
 
     /// <summary>
@@ -57,14 +42,10 @@ public class GameManager : Singleton<GameManager>
     {
         if (currentPlayer != null)
         {
-            // 캐시에서 Player 제거
-            EnemyAI.UpdatePlayerReference(null);
-            StealthDoor.RemoveTarget(currentPlayer);
-
             currentPlayer = null;
             playerController = null;
 
-            Debug.Log("[GameManager] Player 파괴됨 - 모든 시스템에 알림 전송됨");
+            Debug.Log("[GameManager] Player 파괴됨");
         }
     }
 
@@ -78,9 +59,6 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log($"씬 로드됨: {scene.name}");
 
-        // 씬 전환 시 모든 캐시 초기화
-        ClearAllCaches();
-
         EnsureManagerExists<ChapterEndingManager>(chapterEndingManager);
         EnsureManagerExists<UIManager>(uiManager);
         EnsureManagerExists<PossessionStateManager>(possessionStateManager);
@@ -88,27 +66,7 @@ public class GameManager : Singleton<GameManager>
         EnsureManagerExists<CutsceneManager>(cutSceneManager);
         EnsureManagerExists<QTEEffectManager>(qteEffectManager);
 
-        // Player가 이미 존재한다면 새 씬에서도 인식하도록 알림
-        if (currentPlayer != null)
-        {
-            NotifyPlayerSpawned(currentPlayer);
-        }
-
-        Debug.Log("[GameManager] 씬 로드 완료 - 모든 캐시 초기화됨");
-    }
-
-    /// <summary>
-    /// 모든 최적화 캐시 초기화
-    /// </summary>
-    private void ClearAllCaches()
-    {
-        // EnemyAI 캐시 초기화
-        EnemyAI.ClearAllCaches();
-
-        // StealthDoor 캐시 초기화
-        StealthDoor.ForceUpdateCache();
-
-        Debug.Log("[GameManager] 모든 성능 최적화 캐시가 초기화되었습니다");
+        Debug.Log("[GameManager] 씬 로드 완료 - EnemyAI는 자동으로 Player 찾음");
     }
 
     private void EnsureManagerExists<T>(GameObject prefab) where T : MonoBehaviour
@@ -118,31 +76,5 @@ public class GameManager : Singleton<GameManager>
             Instantiate(prefab);
             Debug.Log($"[{typeof(T).Name}] 자동 생성됨");
         }
-    }
-
-    /// <summary>
-    /// 게임 종료 시 정리
-    /// </summary>
-    private void OnApplicationQuit()
-    {
-        ClearAllCaches();
-    }
-
-    /// <summary>
-    /// Cat 오브젝트가 생성되었을 때 호출하는 메서드
-    /// </summary>
-    public void RegisterCat(GameObject cat)
-    {
-        StealthDoor.AddNewTarget(cat, "Cat");
-        Debug.Log($"[GameManager] Cat 등록됨: {cat.name}");
-    }
-
-    /// <summary>
-    /// Cat 오브젝트가 파괴되었을 때 호출하는 메서드
-    /// </summary>
-    public void UnregisterCat(GameObject cat)
-    {
-        StealthDoor.RemoveTarget(cat);
-        Debug.Log($"[GameManager] Cat 등록 해제됨: {cat.name}");
     }
 }

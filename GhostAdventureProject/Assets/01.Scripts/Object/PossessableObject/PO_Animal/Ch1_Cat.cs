@@ -13,12 +13,6 @@ public class Ch1_Cat : MoveBasePossessable
         base.Start();
         hasActivated = false;
 
-        // GameManager에 Cat 등록
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.RegisterCat(gameObject);
-        }
-
         Debug.Log($"[Ch1_Cat] Cat 초기화 완료: {gameObject.name}");
     }
 
@@ -122,16 +116,5 @@ public class Ch1_Cat : MoveBasePossessable
         Unpossess();
         anim.Play("Cat_Sleeping");
         hasActivated = false;
-    }
-
-    void OnDestroy()
-    {
-        // GameManager에 Cat 등록 해제
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.UnregisterCat(gameObject);
-        }
-
-        Debug.Log($"[Ch1_Cat] Cat 파괴됨: {gameObject.name} - GameManager에 알림 전송");
     }
 }

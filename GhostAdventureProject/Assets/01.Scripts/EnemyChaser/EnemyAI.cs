@@ -37,16 +37,11 @@ public class EnemyAI : MonoBehaviour
     private Transform currentTarget;
     private float distractionTimer = 0f;
 
+    // 최적화된 소리 감지 시스템
+    private float lastSoundDetectionTime = 0f;
+    private const float SOUND_DETECTION_COOLDOWN = 1f;
+
     private PlayerHide playerHide;
-
-    // 최적화: Player 찾기 관련
-    private static Transform cachedPlayer; // 모든 Enemy가 공유
-    private static PlayerHide cachedPlayerHide;
-    private float lastPlayerCheckTime = 0f;
-    private const float PLAYER_CHECK_INTERVAL = 2f; // 2초마다만 체크
-
-
-
     public AIState CurrentState => currentState;
 
     // Y축 고정 (다른 컴포넌트에서 접근 가능하도록 public)
@@ -92,26 +87,20 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
-        // 캐시된 Player가 있으면 사용, 없으면 찾기
-        if (cachedPlayer != null)
+        // GameManager에서 직접 Player 가져오기
+        if (GameManager.Instance?.Player != null)
         {
-            Player = cachedPlayer;
-            playerHide = cachedPlayerHide;
+            Player = GameManager.Instance.Player.transform;
+            playerHide = GameManager.Instance.Player.GetComponent<PlayerHide>();
+            qteSystem?.SetPlayer(Player);
         }
-        else
-        {
-            FindAndCachePlayer();
-        }
-
-        if (Player != null)
-            qteSystem.SetPlayer(Player);
 
         ChangeState(AIState.Patrolling);
     }
 
     private void Update()
     {
-        // Player 유효성 검사 및 재검색 로직
+        // Find 없이 GameManager에서 Player 확인
         if (!ValidatePlayer())
             return;
 
@@ -122,85 +111,20 @@ public class EnemyAI : MonoBehaviour
     }
 
     /// <summary>
-    /// Player 유효성 검사 및 필요시 재검색
+    /// Find 없이 GameManager에서 Player 확인
     /// </summary>
     private bool ValidatePlayer()
     {
-        // Player 객체가 파괴되었는지 체크
-        if (Player != null && Player.gameObject == null)
+        // Player가 null이면 GameManager에서 다시 가져오기
+        if (Player == null && GameManager.Instance?.Player != null)
         {
-            Player = null;
-            playerHide = null;
-            cachedPlayer = null;
-            cachedPlayerHide = null;
-        }
-
-        // Player가 null이고 충분한 시간이 지났을 때만 재검색
-        if (Player == null && Time.time - lastPlayerCheckTime > PLAYER_CHECK_INTERVAL)
-        {
-            FindAndCachePlayer();
-            lastPlayerCheckTime = Time.time;
+            Player = GameManager.Instance.Player.transform;
+            playerHide = GameManager.Instance.Player.GetComponent<PlayerHide>();
+            qteSystem?.SetPlayer(Player);
+            Debug.Log("[EnemyAI] GameManager에서 Player 참조 복구");
         }
 
         return Player != null;
-    }
-
-    /// <summary>
-    /// Player를 찾고 캐싱하는 메서드
-    /// </summary>
-    private void FindAndCachePlayer()
-    {
-        var playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            cachedPlayer = playerObj.transform;
-            cachedPlayerHide = playerObj.GetComponent<PlayerHide>();
-
-            Player = cachedPlayer;
-            playerHide = cachedPlayerHide;
-
-            if (qteSystem != null)
-                qteSystem.SetPlayer(Player);
-
-            Debug.Log($"[EnemyAI] Player 찾음: {playerObj.name}");
-        }
-    }
-
-    /// <summary>
-    /// 외부에서 Player 참조를 업데이트할 때 사용
-    /// </summary>
-    public static void UpdatePlayerReference(Transform newPlayer)
-    {
-        if (newPlayer != null)
-        {
-            cachedPlayer = newPlayer;
-            cachedPlayerHide = newPlayer.GetComponent<PlayerHide>();
-        }
-        else
-        {
-            cachedPlayer = null;
-            cachedPlayerHide = null;
-        }
-    }
-
-    /// <summary>
-    /// 씬 전환 시 모든 캐시 초기화
-    /// </summary>
-    public static void ClearAllCaches()
-    {
-        cachedPlayer = null;
-        cachedPlayerHide = null;
-        cachedHideAreas = null;
-        lastHideAreaCacheTime = 0f;
-    }
-
-    private void OnDestroy()
-    {
-        // 이 인스턴스가 마지막 EnemyAI라면 캐시 정리
-        if (FindObjectsOfType<EnemyAI>().Length <= 1)
-        {
-            ClearAllCaches();
-        }
     }
 
     public void ChangeState(AIState newState)
@@ -410,7 +334,7 @@ public class EnemyAI : MonoBehaviour
             yield return null;
         }
 
-        Ch1_HideAreaEvent.Instance?.RestoreHideAreaTags(); // null 체크 추가
+        Ch1_HideAreaEvent.Instance?.RestoreHideAreaTags();
         ChangeState(AIState.LostTarget);
     }
 
@@ -431,28 +355,43 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    ///  최적화된 소리 감지 시스템 (TargetDummy 생성 없음)
+    /// </summary>
     public void OnSoundDetected(Vector3 soundPosition)
     {
         if (currentState == AIState.CaughtPlayer || currentState == AIState.StunnedAfterQTE)
             return;
 
-        Debug.Log("[EnemyAI] 소리를 감지했습니다! 해당 위치로 이동합니다.");
+        // 쿨다운 체크: 1초 내에 이미 소리를 감지했다면 무시
+        if (Time.time - lastSoundDetectionTime < SOUND_DETECTION_COOLDOWN)
+        {
+            Debug.Log("[EnemyAI] 소리 감지 쿨다운 중... 무시");
+            return;
+        }
 
-        GameObject tempTarget = new GameObject("TempDistractionTarget");
-        tempTarget.transform.position = soundPosition;
-        GameObject.Destroy(tempTarget, 6f);
+        Debug.Log($"[EnemyAI]  최적화된 소리 감지: {soundPosition}");
 
-        currentDistraction = tempTarget.transform;
+        // 마지막 감지 시간 업데이트
+        lastSoundDetectionTime = Time.time;
+
+        //  TargetDummy 생성 없이 직접 위치 설정
+        currentDistraction = null; // Transform 기반이 아닌 위치 기반으로 변경
         movement.SetTarget(soundPosition);
         distractionTimer = 0f;
 
         ChangeState(AIState.DistractedByDecoy);
     }
 
+    /// <summary>
+    /// Transform 기반 유인 (기존 호환성 유지)
+    /// </summary>
     public void GetDistractedBy(Transform distractionObject)
     {
         if (currentState == AIState.CaughtPlayer || currentState == AIState.StunnedAfterQTE)
             return;
+
+        Debug.Log($"[EnemyAI] Transform 기반 유인: {distractionObject.name}");
 
         currentDistraction = distractionObject;
         distractionTimer = 0f;
@@ -477,21 +416,12 @@ public class EnemyAI : MonoBehaviour
         Debug.Log("플레이어를 놓쳐서 현재 위치에서 랜덤 순찰 시작!");
     }
 
-    // HideArea 캐싱
-    private static GameObject[] cachedHideAreas;
-    private static float lastHideAreaCacheTime = 0f;
-    private const float HIDE_AREA_CACHE_INTERVAL = 5f; // 5초마다 갱신
-
     private void FindCurrentHideArea()
     {
-        // HideArea 캐시 업데이트
-        if (cachedHideAreas == null || Time.time - lastHideAreaCacheTime > HIDE_AREA_CACHE_INTERVAL)
-        {
-            cachedHideAreas = GameObject.FindGameObjectsWithTag("HideArea");
-            lastHideAreaCacheTime = Time.time;
-        }
+        // HideArea는 정적이므로 Find를 한 번만 사용
+        GameObject[] hideAreas = GameObject.FindGameObjectsWithTag("HideArea");
 
-        if (cachedHideAreas == null || cachedHideAreas.Length == 0 || Player == null)
+        if (hideAreas == null || hideAreas.Length == 0 || Player == null)
         {
             currentHideArea = null;
             return;
@@ -500,9 +430,9 @@ public class EnemyAI : MonoBehaviour
         float closest = float.MaxValue;
         Transform nearest = null;
 
-        foreach (GameObject obj in cachedHideAreas)
+        foreach (GameObject obj in hideAreas)
         {
-            if (obj == null) continue; // null 체크
+            if (obj == null) continue;
 
             float d = Vector3.Distance(Player.position, obj.transform.position);
             if (d < closest)
