@@ -13,6 +13,7 @@ public class EnergyRestoreZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             SoulEnergySystem.Instance.SetRestoreBoost(reduceInterval, SoulEnergySystem.Instance.baseRestoreAmount + bonusRestoreAmount);
+            SoulEnergySystem.Instance.EnableHealingEffect();
         }
     }
 
@@ -23,6 +24,7 @@ public class EnergyRestoreZone : MonoBehaviour
             if (SoulEnergySystem.Instance != null && SoulEnergySystem.Instance.gameObject.activeInHierarchy)
             {
                 SoulEnergySystem.Instance.ResetRestoreBoost();
+                SoulEnergySystem.Instance.DisableHealingEffect();
             }
         }
     }

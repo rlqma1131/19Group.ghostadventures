@@ -11,6 +11,8 @@ public class SoulEnergySystem : MonoBehaviour
     
     public float baseRestoreInterval; // n초마다 자연 회복
     public int baseRestoreAmount;
+
+    [SerializeField] private GameObject healingEffectParticle;
     
     [HideInInspector] public float currentRestoreInterval;
     [HideInInspector] public int currentRestoreAmount;
@@ -88,5 +90,17 @@ public class SoulEnergySystem : MonoBehaviour
         if(passiveRestoreCoroutine != null)
             StopCoroutine(passiveRestoreCoroutine);
         passiveRestoreCoroutine = StartCoroutine(PassiveRestoreRoutine());
+    }
+
+    public void EnableHealingEffect()
+    {
+        if(healingEffectParticle != null)
+            healingEffectParticle.gameObject.SetActive(true);
+    }
+
+    public void DisableHealingEffect()
+    {
+        if(healingEffectParticle != null)
+            healingEffectParticle.gameObject.SetActive(false);
     }
 }
