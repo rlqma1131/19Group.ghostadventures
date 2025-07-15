@@ -64,6 +64,10 @@ public class SoulEnergySystem : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(currentRestoreInterval);
+            
+            if (this == null || !gameObject.activeInHierarchy)
+                yield break;
+            
             Restore(currentRestoreAmount);
         }
     }
