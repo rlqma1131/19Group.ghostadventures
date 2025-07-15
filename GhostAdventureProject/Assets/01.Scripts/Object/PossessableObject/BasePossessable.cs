@@ -26,7 +26,7 @@ public abstract class BasePossessable : BaseInteractable
     }
 
     // 상호작용 메시지 표시 대상 설정
-    protected virtual void OnTriggerEnter2D(Collider2D other)
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
         if (!hasActivated)
             return;
@@ -35,7 +35,7 @@ public abstract class BasePossessable : BaseInteractable
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }
 
-    protected virtual void OnTriggerExit2D(Collider2D other)
+    protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
@@ -61,5 +61,6 @@ public abstract class BasePossessable : BaseInteractable
         isPossessed = false;
         SoulEnergySystem.Instance.Consume(1);
     }
+
     public virtual void OnPossessionEnterComplete() { }
 }

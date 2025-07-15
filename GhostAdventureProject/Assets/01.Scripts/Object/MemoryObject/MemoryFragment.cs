@@ -26,10 +26,6 @@ public class MemoryFragment : BaseInteractable
     [SerializeField] private float ellipseRadiusX = 0.8f;
     [SerializeField] private float ellipseRadiusZ = 1.5f;
 
-    [Header("흡수 연출 설정")]
-    [SerializeField] private float absorbTime = 0.6f;
-
-
     #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -50,13 +46,13 @@ public class MemoryFragment : BaseInteractable
 #endif
 
     // 상호작용 메시지 대상
-    private void OnTriggerEnter2D(Collider2D other)
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && isScannable)
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
@@ -157,18 +153,6 @@ public class MemoryFragment : BaseInteractable
         yield return rotate.WaitForCompletion();
 
         drop.GetComponent<PixelExploder>()?.Explode(); // 픽셀 폭발 효과 적용
-
-
-        // === 3. 플레이어에게 흡수 ===
-        //Vector3 target = player.transform.position;
-        //var absorb = DOTween.Sequence()
-        //    .Append(drop.transform.DOMove(target, absorbTime).SetEase(Ease.InCubic))
-        //    .Join(drop.transform.DOScale(Vector3.zero, absorbTime).SetEase(Ease.InBack));
-
-        //if (drop.TryGetComponent(out SpriteRenderer finalSR))
-        //    absorb.Join(finalSR.DOFade(0f, absorbTime));
-        //yield return absorb.WaitForCompletion();
-        ////yield return CutsceneManager.Instance.PlayCutscene(); // 컷신 재생
 
         Destroy(drop);
         StartCoroutine(CutsceneManager.Instance.PlayCutscene()); // 페이드인 줌인
