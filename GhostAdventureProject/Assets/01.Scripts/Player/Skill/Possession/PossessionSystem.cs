@@ -24,12 +24,6 @@ public class PossessionSystem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // HideArea는 무시하고 빙의 가능 오브젝트만 처리
-        if (other.CompareTag("HideArea"))
-        {
-            return; // HideArea는 PlayerHide.cs에서 처리하도록 무시
-        }
-
         Debug.Log($"트리거 충돌: {other.name}");
         var possessionObject = other.GetComponent<BasePossessable>();
         if (possessionObject != null)
@@ -40,12 +34,6 @@ public class PossessionSystem : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        // HideArea는 무시하고 빙의 가능 오브젝트만 처리
-        if (other.CompareTag("HideArea"))
-        {
-            return; // HideArea는 PlayerHide.cs에서 처리하도록 무시
-        }
-
         var possessionObject = other.GetComponent<BasePossessable>();
         if (possessionObject != null)
         {
@@ -113,9 +101,10 @@ public class PossessionSystem : MonoBehaviour
     {
         switch (obssessingTarget.tag)
         {
-            // 사람, 유인 오브젝트만 QTE 요청 (은신처는 PlayerHide에서 요청)
+            // 사람, 유인 오브젝트, 은신처만 QTE 요청
             case "Person":
             case "SoundTrigger":
+            case "HideArea":
                 PossessionQTESystem.Instance.StartQTE();
                 break;
 

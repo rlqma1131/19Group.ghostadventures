@@ -70,7 +70,7 @@ public class Ch1_Drawing : MonoBehaviour
 
                 if (!zoomActivatedOnce)
                 {
-                    Ch1_HideAreaEvent.Instance.RestoreHideAreaTags();
+                    Ch1_HideAreaEvent.Instance.AddHideAreaComponent();
                     zoomActivatedOnce = true;
                 }
 

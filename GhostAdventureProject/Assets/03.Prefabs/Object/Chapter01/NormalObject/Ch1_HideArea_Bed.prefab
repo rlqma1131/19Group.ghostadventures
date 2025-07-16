@@ -197,11 +197,11 @@ GameObject:
   m_Component:
   - component: {fileID: 5823998917436100244}
   - component: {fileID: 1654588161507532979}
-  - component: {fileID: 1471962464264970377}
   - component: {fileID: 3196334592780893999}
+  - component: {fileID: 7191062871352369922}
   m_Layer: 0
   m_Name: Ch1_HideArea_Bed
-  m_TagString: Untagged
+  m_TagString: HideArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -236,19 +236,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   areaID: "\uCE68\uB300"
---- !u!114 &1471962464264970377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9016131806530884811}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 499cb42b5a18ebe44866759087d5f962, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlight: {fileID: 202562283873539668}
 --- !u!61 &3196334592780893999
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -294,3 +281,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.69, y: 1.93}
   m_EdgeRadius: 0
+--- !u!114 &7191062871352369922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9016131806530884811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e47825f7985b2044a8c6868d38b369f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlight: {fileID: 202562283873539668}
+  anim: {fileID: 0}
+  hasActivated: 0
+  possessionSFX: {fileID: 0}
+  isPossessed: 0
+  hideAreaEnterSFX: {fileID: 0}

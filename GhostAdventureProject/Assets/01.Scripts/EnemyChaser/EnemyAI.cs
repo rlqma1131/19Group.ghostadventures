@@ -41,7 +41,6 @@ public class EnemyAI : MonoBehaviour
     private float lastSoundDetectionTime = 0f;
     private const float SOUND_DETECTION_COOLDOWN = 1f;
 
-    private PlayerHide playerHide;
     public AIState CurrentState => currentState;
 
     // Y축 고정 (다른 컴포넌트에서 접근 가능하도록 public)
@@ -91,7 +90,6 @@ public class EnemyAI : MonoBehaviour
         if (GameManager.Instance?.Player != null)
         {
             Player = GameManager.Instance.Player.transform;
-            playerHide = GameManager.Instance.Player.GetComponent<PlayerHide>();
             qteSystem?.SetPlayer(Player);
         }
 
@@ -119,7 +117,6 @@ public class EnemyAI : MonoBehaviour
         if (Player == null && GameManager.Instance?.Player != null)
         {
             Player = GameManager.Instance.Player.transform;
-            playerHide = GameManager.Instance.Player.GetComponent<PlayerHide>();
             qteSystem?.SetPlayer(Player);
             Debug.Log("[EnemyAI] GameManager에서 Player 참조 복구");
         }
@@ -201,7 +198,7 @@ public class EnemyAI : MonoBehaviour
 
             // null 체크 추가
             if (Ch1_HideAreaEvent.Instance != null)
-                Ch1_HideAreaEvent.Instance.UnTagAllHideAreas();
+                Ch1_HideAreaEvent.Instance.RemoveHideAreaComponent();
         }
     }
 
@@ -234,7 +231,7 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
-        bool hiding = playerHide != null && playerHide.IsHiding;
+        bool hiding = PossessionStateManager.Instance.IsPossessing();
         float dist = Vector3.Distance(transform.position, Player.position);
         bool inRange = dist < detectionRange;
 
@@ -334,7 +331,7 @@ public class EnemyAI : MonoBehaviour
             yield return null;
         }
 
-        Ch1_HideAreaEvent.Instance?.RestoreHideAreaTags();
+        Ch1_HideAreaEvent.Instance?.AddHideAreaComponent();
         ChangeState(AIState.LostTarget);
     }
 
