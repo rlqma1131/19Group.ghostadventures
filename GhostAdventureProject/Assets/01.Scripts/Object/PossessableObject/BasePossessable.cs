@@ -4,6 +4,8 @@ public abstract class BasePossessable : BaseInteractable
 {
     [SerializeField] protected Animator anim;
     [SerializeField] protected bool hasActivated;
+
+    public AudioClip possessionSFX;
     public bool isPossessed;
     public bool HasActivated => hasActivated;
     public bool IsPossessed => isPossessed;
@@ -51,6 +53,9 @@ public abstract class BasePossessable : BaseInteractable
     public virtual void OnQTESuccess()
     {
         Debug.Log("QTE 성공 - 빙의 완료");
+
+        // 빙의 효과음
+        //SoundManager.Instance.PlaySFX(possessionSFX);
 
         PossessionStateManager.Instance.StartPossessionTransition();
     }
