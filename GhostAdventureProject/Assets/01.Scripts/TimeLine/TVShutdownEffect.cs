@@ -8,98 +8,72 @@ public class TVShutdownEffect : MonoBehaviour
     [SerializeField] private SpriteRenderer tvScreen;
 
     [Header("속도 설정 (값이 작을수록 빨라짐)")]
-    [SerializeField] private float turnOnDuration = 0.3f;
-    [SerializeField] private float shutdownDurationY = 0.2f;
-    [SerializeField] private float shutdownDurationX = 0.15f;
-    [SerializeField] private float shutdownDurationFade = 0.1f;
+    [SerializeField] private float turnOnDuration = 1.1f;
 
-    [Header("루프 설정")]
-    [Tooltip("켜지고 꺼지는 동작 사이의 대기 시간 (초)")]
-    [SerializeField] private float delayBetweenLoops = 1f;
-    [Tooltip("체크하면 게임 시작 시 자동으로 루프를 시작합니다.")]
-    [SerializeField] private bool startLoopOnPlay = true;
-    [Tooltip("자동 시작 시 초기 랜덤 딜레이의 최대 시간")]
-    [SerializeField] private float maxInitialDelay = 1.0f; // 초기 딜레이 시간 설정
-
+    [Tooltip("TV가 켜지기 전, 0초부터 이 시간(초)까지 무작위로 기다립니다.")]
+    //[SerializeField] private float randomTime = 3f;
+    [SerializeField] private float waitTime;
     private Vector3 originalScale;
-    private Coroutine loopingCoroutine;
 
     private void Awake()
     {
         if (tvScreen != null)
         {
             originalScale = tvScreen.transform.localScale;
+
+            // 초기에는 완전히 꺼진 상태(스케일 0, 알파 0)로 시작
+            tvScreen.transform.localScale = Vector3.zero;
+            tvScreen.color = new Color(1f, 1f, 1f, 0f);
         }
     }
 
-    // [수정] Start를 코루틴으로 변경하여 초기 딜레이를 줌
-    private IEnumerator Start()
+    /// <summary>
+    /// [추가된 부분] 게임이 시작되면 자동으로 랜덤 딜레이 코루틴을 실행합니다.
+    /// </summary>
+    private void Start()
     {
-        // 자동 시작 옵션이 켜져 있을 때만 실행
-        if (startLoopOnPlay)
-        {
-            // 0초에서 maxInitialDelay초 사이의 무작위 시간만큼 기다림
-            float randomDelay = Random.Range(0f, maxInitialDelay);
-            yield return new WaitForSeconds(randomDelay);
-
-            // 랜덤 딜레이 이후에 메인 루프를 시작
-            StartLooping();
-        }
+        StartCoroutine(RandomTurnOnCoroutine());
     }
 
-    private float TotalShutdownDuration => shutdownDurationY + shutdownDurationX + shutdownDurationFade;
-
-    [ContextMenu("Start Looping Effects")]
-    public void StartLooping()
+    /// <summary>
+    /// [추가된 부분] 랜덤 시간만큼 기다린 후, TV 켜는 함수를 호출하는 코루틴입니다.
+    /// </summary>
+    private IEnumerator RandomTurnOnCoroutine()
     {
-        if (loopingCoroutine != null) StopCoroutine(loopingCoroutine);
-        loopingCoroutine = StartCoroutine(EffectLoopCoroutine());
-        Debug.Log($"{gameObject.name} TV 효과 반복을 시작합니다.");
+        // 1. 0초부터 randomTime(3초) 사이의 무작위 대기 시간 생성
+        //float waitTime = Random.Range(0f, randomTime);
+
+        // 2. 생성된 시간만큼 대기
+        yield return new WaitForSeconds(waitTime);
+
+        // 3. 대기 후 TV 켜는 애니메이션 실행
+        PlayTurnOn();
     }
 
-    [ContextMenu("Stop Looping Effects")]
-    public void StopLooping()
-    {
-        if (loopingCoroutine != null)
-        {
-            StopCoroutine(loopingCoroutine);
-            loopingCoroutine = null;
-            Debug.Log($"{gameObject.name} TV 효과 반복을 중지합니다.");
-        }
-    }
-
-    private IEnumerator EffectLoopCoroutine()
-    {
-        while (true)
-        {
-            PlayTurnOn();
-            yield return new WaitForSeconds(turnOnDuration + delayBetweenLoops);
-
-            PlayShutdown();
-            yield return new WaitForSeconds(TotalShutdownDuration + delayBetweenLoops);
-        }
-    }
-
-    public void PlayShutdown()
-    {
-        DOTween.Kill(this);
-        Sequence shutdownSequence = DOTween.Sequence().SetId(this);
-        shutdownSequence.Append(tvScreen.transform.DOScaleY(0.1f, shutdownDurationY).SetEase(Ease.InQuad));
-        shutdownSequence.Append(tvScreen.transform.DOScaleX(0.05f, shutdownDurationX).SetEase(Ease.InQuad));
-        shutdownSequence.Append(tvScreen.DOFade(0f, shutdownDurationFade));
-        shutdownSequence.AppendCallback(() =>
-        {
-            if (tvScreen != null) tvScreen.enabled = false;
-        });
-    }
-
+    /// <summary>
+    /// TV가 켜지는 효과를 연출합니다.
+    /// </summary>
+    [ContextMenu("Start TurnOn")]
     public void PlayTurnOn()
     {
+        // 이전 애니메이션이 실행 중이라면 중지
         DOTween.Kill(this);
-        if (tvScreen != null) tvScreen.enabled = true;
+        if (tvScreen == null) return;
+
+        tvScreen.enabled = true;
+
+        // 애니메이션 시작 전 초기 상태 설정: 투명하고 스케일이 0
+        tvScreen.color = new Color(1f, 1f, 1f, 0f);
+        tvScreen.transform.localScale = Vector3.zero;
 
         Sequence turnOnSequence = DOTween.Sequence().SetId(this);
-        turnOnSequence.Join(tvScreen.DOFade(1f, turnOnDuration));
-        turnOnSequence.Join(tvScreen.transform.DOScale(originalScale, turnOnDuration).SetEase(Ease.OutQuad));
+
+        // 1단계: 중앙에 밝은 점이 나타나면서 가로로 빠르게 확장 (가는 선 생성)
+        turnOnSequence.Append(tvScreen.transform.DOScaleX(originalScale.x, turnOnDuration * 0.3f).SetEase(Ease.OutExpo));
+        // 동시에 선이 나타날 때 밝아짐
+        turnOnSequence.Join(tvScreen.DOFade(1f, turnOnDuration * 0.2f));
+
+        // 2단계: 생성된 선이 세로로 확장되면서 전체 화면을 채움 (통통 튀는 효과)
+        turnOnSequence.Append(tvScreen.transform.DOScaleY(originalScale.y, turnOnDuration * 0.7f).SetEase(Ease.OutBounce));
     }
 }
