@@ -4,11 +4,10 @@ public abstract class BasePossessable : BaseInteractable
 {
     [SerializeField] protected Animator anim;
     [SerializeField] protected bool hasActivated; // 빙의가 가능한 상태인지 여부
-
-    public AudioClip possessionSFX;
+    [SerializeField] private AudioClip possessionSFX;
+    
     public bool isPossessed;
     public bool HasActivated => hasActivated;
-    public bool IsPossessed => isPossessed;
     public bool IsPossessedState => isPossessed;
 
     protected virtual void Start()
