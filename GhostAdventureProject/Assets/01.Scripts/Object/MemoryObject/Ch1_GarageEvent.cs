@@ -12,6 +12,8 @@ public class Ch1_GarageEvent : BaseInteractable
     private bool isCutscenePlaying = false;
     private bool isCutscenePlaying2 = false;
 
+    public KeyBoard_Enter Answer => answer;
+
     void Start()
     {
         bear = GetComponent<Ch1_MemoryPositive_01_TeddyBear>();
@@ -41,8 +43,10 @@ public class Ch1_GarageEvent : BaseInteractable
                 }
             }
         }
+
         if (!answer.correct)
             return;
+
         if (!isCutscenePlaying2 && answer.correct)
         {
             // [컷씬] 정답 이벤트

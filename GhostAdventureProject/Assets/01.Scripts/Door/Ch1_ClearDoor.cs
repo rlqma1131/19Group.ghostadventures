@@ -1,30 +1,31 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class Ch1_ClearDoor : MonoBehaviour
 {
-    [SerializeField] private GameObject TeddyBear;
-    public Ch1_MemoryPositive_01_TeddyBear teddyBearScript;
-    private bool canOpenDoor = false;
+    [SerializeField] private Ch1_MemoryPositive_01_TeddyBear TeddyBear;
+    [SerializeField] private Ch1_GarageEvent garageEvent;
 
-    void Start()
-    {
-        teddyBearScript = TeddyBear.GetComponent<Ch1_MemoryPositive_01_TeddyBear>();
-    }
+    private bool canOpenDoor = false;
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (teddyBearScript.Completed_TeddyBear)
+            // 이름 안맞췄을 때
+            if (!garageEvent.Answer.correct)
             {
-                // 플레이어가 문에 접근했을 때, 문을 열고 다음 씬으로 이동
-                Debug.Log("문이 열렸습니다. 다음 씬으로 이동합니다.");
-                // 다음 씬으로 이동하는 코드 작성
-                SceneManager.LoadScene("Ch02");
+                UIManager.Instance.PromptUI.ShowPrompt("...잠겨 있다.", 2f);
             }
-            else
+            // 이름 맞췄는데, 기억조각을 안 모았을 때
+            else if (!TeddyBear.Completed_TeddyBear)
             {
-                Debug.Log("테디베어를 먼저 수집해야 합니다.");
+                UIManager.Instance.PromptUI.ShowPrompt("곰인형을 살펴봐야 해..", 2f);
+            }
+            // 이름 맞추고, 기억조각도 모았을 때
+            else if (TeddyBear.Completed_TeddyBear)
+            {
+                SceneManager.LoadScene("Ch02");
             }
         }
     }
