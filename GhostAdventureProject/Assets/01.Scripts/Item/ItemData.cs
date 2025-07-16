@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum ItemType {Consumable, Placeable}
+public enum ItemType {Consumable, Placeable, Clue}
 
 [CreateAssetMenu(fileName = "NewItem", menuName = "Item/ItemData")]
 
@@ -12,6 +12,7 @@ public class ItemData : ScriptableObject
     public ItemType Item_Type; // 타입
     public string Item_Description; // 설명
     public GameObject placeablePrefab; // 설치 미리보기용 프리팹
+    public ClueData clue;
 
     // [Header("Stacking")]
     // public bool canStack;

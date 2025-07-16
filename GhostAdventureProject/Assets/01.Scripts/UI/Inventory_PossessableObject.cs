@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Unity.VisualScripting;
+using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,9 +12,14 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
     private bool isPlacing = false;
     private GameObject previewInstance;
     private List<GameObject> spawnedSlots = new List<GameObject>();
-    private InventorySlot_PossessableObject selectedSlot = null; // 선택된 아이템
+    public InventorySlot_PossessableObject selectedSlot = null; // 선택된 아이템
+    [SerializeField] private Inventory_Player inventory_Player;
     private int selectedSlotIndex = -1;
 
+    void Start()
+    {
+        inventory_Player = FindObjectOfType<Inventory_Player>();
+    }
 
     // 미사용(보류)
     BasePossessable FindPossessed()
@@ -87,7 +93,7 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
         {
             // 아이템 사용 로직
             Debug.Log($"사용: {item.Item_Name}");
-            UseItem(item, 1);
+            UseItem(item, 0);
         }
 
         else if (item.Item_Type == ItemType.Placeable)
@@ -95,6 +101,12 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
             // 설치 모드 진입
             Debug.Log($"설치 시작: {item.Item_Name}");
             StartPlacingItem(item);
+        }
+        if(item.Item_Type == ItemType.Clue)
+        {
+            inventory_Player.AddClue(item.clue);
+            UseItem(item, 0);
+            UIManager.Instance.PromptUI.ShowPrompt("단서를 획득했습니다. 인벤토리를 확인하세요", 2f);
         }
     }
     
@@ -157,8 +169,8 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
         if (Input.GetKeyDown(KeyCode.Alpha6))
             SelectSlot(1);
 
-        if (Input.GetKeyDown(KeyCode.Q))
-            TryUseSelectedItem();
+        // if (Input.GetKeyDown(KeyCode.Q))
+        //     TryUseSelectedItem();
     }
 
     private void CancelPlacement()
@@ -171,19 +183,43 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
 
     private void SelectSlot(int index)
     {
+        if (selectedSlotIndex == index)
+        {
+            selectedSlotIndex = -1;
+            selectedSlot = null;
+            HighlightSlot(-1); // 전체 선택 해제
+            Debug.Log("슬롯 선택 해제됨");
+            return;
+        }
+
         if (index >= 0 && index < spawnedSlots.Count)
         {
             selectedSlotIndex = index;
             selectedSlot = spawnedSlots[index].GetComponent<InventorySlot_PossessableObject>();
 
-            Debug.Log("선택된 슬롯: " + selectedSlot.item.Item_Name);
-
             // 선택된 슬롯 시각적 강조 (옵션)
             HighlightSlot(index);
         }
+        if(selectedSlot.item.Item_Type == ItemType.Clue)
+        {
+            UseOrPlaceItem(selectedSlot.item);
+        }
     }
 
-    private void TryUseSelectedItem()
+    private void HighlightSlot(int index)
+    {
+        for (int i = 0; i < spawnedSlots.Count; i++)
+        {
+            GameObject slotObj = spawnedSlots[i];
+            Outline outline = slotObj.GetComponent<Outline>();
+
+            if (outline != null)
+            {
+                outline.enabled = (i == index);
+            }
+        }
+    }
+    public void TryUseSelectedItem()
     {
         if (selectedSlot == null || selectedSlot.item == null) return;
 
@@ -202,35 +238,22 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
     {
         if (item == null) return false;
 
-        // // 예: 플레이어가 근처에 상호작용 대상이 있는가?
-        // if (item.Item_Type == ItemType.Consumable)
-        // {
-        //     return IsNearUsableTarget(); // 예: 문, 상자, 장치 등
-        // }
+        // 예: 플레이어가 근처에 상호작용 대상이 있는가?
+        if (item.Item_Type == ItemType.Consumable)
+        {
+            // return IsNearUsableTarget(); // 예: 문, 상자, 장치 등
+        }
 
-        // // 예: 설치형 아이템은 설치 가능한 위치인지?
-        // if (item.Item_Type == ItemType.Placeable)
-        // {
-        //     return IsPlaceableHere(); // 예: 빈 공간인지, 겹치지 않는지
-        // }
+        // 예: 설치형 아이템은 설치 가능한 위치인지?
+        if (item.Item_Type == ItemType.Placeable)
+        {
+            // return IsPlaceableHere(); // 예: 빈 공간인지, 겹치지 않는지
+        }
 
         return true;
     }
 
 
-    private void HighlightSlot(int index)
-    {
-        for (int i = 0; i < spawnedSlots.Count; i++)
-        {
-            GameObject slotObj = spawnedSlots[i];
-            Outline outline = slotObj.GetComponent<Outline>();
-
-            if (outline != null)
-            {
-                outline.enabled = (i == index);
-            }
-        }
-    }
 
     
     public void UseItem(ItemData item, int amount)
@@ -252,4 +275,6 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
             // UpdateUI(); // UI 새로고침 (선택사항: 자동 갱신되면 생략 가능)
         }
     }
+
+    public ItemData selectedItem() => selectedSlot != null ? selectedSlot.item : null;
 }
