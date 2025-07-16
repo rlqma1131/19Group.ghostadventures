@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,8 +17,14 @@ public class QTEUI : MonoBehaviour
     private bool isRunning = false;
     private bool goingBack = false; // 회전 방향
     private bool wasSuccess = false;
+    
+    private Action<bool> resultCallback;
 
     public void ShowQTEUI()
+    {
+        ShowQTEUI(null);
+    }
+    public void ShowQTEUI(Action<bool> callback)
     {
         currentAngle = 0f;
         needle.localEulerAngles = Vector3.zero;
@@ -25,6 +32,7 @@ public class QTEUI : MonoBehaviour
         isRunning = true;
         goingBack = false;
         wasSuccess = false;
+        resultCallback = callback;
         ShowSuccessArc();
     }
 
@@ -66,23 +74,26 @@ public class QTEUI : MonoBehaviour
 
         if (Input.GetKeyDown(inputKey))
         {
-
-            if (currentAngle >= minAngle && currentAngle <= maxAngle)
-            {
-                wasSuccess = true;
-                isRunning = false;
-                gameObject.SetActive(false);
-                PossessionQTESystem.Instance.HandleQTEResult(true);
-            }
-            else
-            {
-                wasSuccess = false;
-                isRunning = false;
-                gameObject.SetActive(false);
-                PossessionQTESystem.Instance.HandleQTEResult(false);
-
-
-            }
+            wasSuccess = currentAngle >= minAngle && currentAngle <= maxAngle;
+            isRunning = false;
+            gameObject.SetActive(false);
+            InvokeResult(wasSuccess);
+            // if (currentAngle >= minAngle && currentAngle <= maxAngle)
+            // {
+            //     wasSuccess = true;
+            //     isRunning = false;
+            //     gameObject.SetActive(false);
+            //     PossessionQTESystem.Instance.HandleQTEResult(true);
+            // }
+            // else
+            // {
+            //     wasSuccess = false;
+            //     isRunning = false;
+            //     gameObject.SetActive(false);
+            //     PossessionQTESystem.Instance.HandleQTEResult(false);
+            //
+            //
+            // }
             // isRunning = false;
             // gameObject.SetActive(false);
             // bool success = (currentAngle >= minAngle && currentAngle <= maxAngle);
@@ -90,9 +101,17 @@ public class QTEUI : MonoBehaviour
         }
     }
 
+    private void InvokeResult(bool result)
+    {
+        if(resultCallback != null)
+            resultCallback.Invoke(result);
+        else
+            PossessionQTESystem.Instance.HandleQTEResult(result);
+    }
+
     void ShowSuccessArc()
     {
-        minAngle = Random.Range(20, 160);
+        minAngle = UnityEngine.Random.Range(20, 160);
         maxAngle = minAngle + 20;
         float fill = (maxAngle - minAngle) / 360f;
         successArc.fillAmount = fill;
