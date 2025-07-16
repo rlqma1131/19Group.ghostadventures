@@ -10,6 +10,9 @@ public class Ch1_ClearDoor : MonoBehaviour
 
     private void Update()
     {
+        if(!canOpenDoor)
+            return;
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             // 이름 안맞췄을 때
