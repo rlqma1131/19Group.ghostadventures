@@ -19,8 +19,7 @@ public class Ch2_RightSwing : BasePossessable
         if (Input.GetKeyDown(KeyCode.Q))
         {
             q_Key.SetActive(false);
-            Debug.Log("그네 애니메이션 실행");
-            // anim.SetTrigger("RightSwing");
+            anim.SetTrigger("RightSwing");
         }
         q_Key.SetActive(true);
     }
