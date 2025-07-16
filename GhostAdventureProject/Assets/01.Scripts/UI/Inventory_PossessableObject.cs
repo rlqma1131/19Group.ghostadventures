@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +21,7 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
         BasePossessable[] all = FindObjectsOfType<BasePossessable>();
         foreach (var obj in all)
         {
-            if (obj.IsPossessed)
+            if (obj.isPossessed)
                 Debug.Log("obj:" + obj);
                 return obj;
         }
