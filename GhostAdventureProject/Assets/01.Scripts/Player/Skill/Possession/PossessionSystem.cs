@@ -47,6 +47,11 @@ public class PossessionSystem : MonoBehaviour
 
         switch (obssessingTarget.tag)
         {
+            case "Cat":
+                // 고양이는 풀 충전
+                Debug.Log("고양이덕에 풀충전입니다옹");
+                break;
+            
             case "Animal":
                 if (!SoulEnergySystem.Instance.HasEnoughEnergy(2))
                 {
@@ -57,11 +62,6 @@ public class PossessionSystem : MonoBehaviour
                 {
                     SoulEnergySystem.Instance.Consume(2);
                 }
-                break;
-
-            case "Cat":
-                // 고양이는 풀 충전
-                Debug.Log("고양이덕에 풀충전입니다옹");
                 break;
 
             case "Person":
@@ -91,13 +91,20 @@ public class PossessionSystem : MonoBehaviour
                 break;
         }
 
-        UIManager.Instance.PromptUI.ShowPrompt($"빙의 시도 중...", 2f);
+        if (obssessingTarget.tag == "HideArea")
+        {
+            UIManager.Instance.PromptUI.ShowPrompt($"은신 시도 중...", 2f);
+        }
+        else
+        {
+            UIManager.Instance.PromptUI.ShowPrompt($"빙의 시도 중...", 2f);
+        }
 
-        RequestQTE();
+        RequestObssession();
         return true;
     }
 
-    public void RequestQTE()
+    public void RequestObssession()
     {
         switch (obssessingTarget.tag)
         {

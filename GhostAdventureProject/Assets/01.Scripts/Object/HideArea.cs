@@ -4,7 +4,25 @@ using UnityEngine;
 
 public class HideArea : BasePossessable
 {
-    public AudioClip hideAreaEnterSFX;
+    [SerializeField] private AudioClip hideAreaEnterSFX;
+    [SerializeField] private float energyConsumeCycle = 2f;
+    [SerializeField] private int energyCost = 1;
+
+    private Coroutine consumeCoroutine;
+    private bool isHiding = false;
+
+    protected override void Update()
+    {
+        if (!isPossessed)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            isHiding = false;
+            Unpossess();
+        }
+
+    }
 
     public override void OnQTESuccess()
     {
@@ -13,6 +31,29 @@ public class HideArea : BasePossessable
         // 은신 효과음 (바스락)
         //SoundManager.Instance.PlaySFX(hideAreaEnterSFX);
 
+        isHiding = true;
+
         PossessionStateManager.Instance.StartPossessionTransition();
+        consumeCoroutine = StartCoroutine(ConsumeEnergyRoutine());
+    }
+    private IEnumerator ConsumeEnergyRoutine()
+    {
+        while (isHiding)
+        {
+            SoulEnergySystem.Instance.Consume(energyCost);
+            yield return new WaitForSeconds(energyConsumeCycle);
+        }
+    }
+
+    public override void Unpossess()
+    {
+        if (consumeCoroutine != null)
+        {
+            StopCoroutine(consumeCoroutine);
+            consumeCoroutine = null;
+        }
+
+        isHiding = false;
+        base.Unpossess();
     }
 }

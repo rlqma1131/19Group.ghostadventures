@@ -17,7 +17,7 @@ public class Ch1_TV : BasePossessable
 
     private Ch1_MemoryFake_01_BirthdayHat birthdayHat;
 
-    private Collider2D collider;
+    private Collider2D col;
     private bool isControlMode = false;
     private int channel = 1;
 
@@ -29,7 +29,7 @@ public class Ch1_TV : BasePossessable
 
         hasActivated = false;
 
-        collider = GetComponent<Collider2D>();
+        col = GetComponent<Collider2D>();
         spaceBar = UIManager.Instance.spacebar_Key;
         UI.SetActive(false);
     }
@@ -51,9 +51,9 @@ public class Ch1_TV : BasePossessable
             spaceBar.SetActive(false);
             return;
         }
-        
-            UI.SetActive(true);
-            spaceBar.SetActive(true);
+
+        UI.SetActive(true);
+        spaceBar.SetActive(true);
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -97,7 +97,7 @@ public class Ch1_TV : BasePossessable
 
             ShowMemoryandDoorOpen();
             hasActivated = false;
-            collider.enabled = false;
+            col.enabled = false;
 
         }
     }
