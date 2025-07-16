@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class Ch1_ClearDoor : MonoBehaviour
 {
     [SerializeField] private Ch1_MemoryPositive_01_TeddyBear TeddyBear;
-    [SerializeField] private Ch1_GarageEvent garageEvent;
+    [SerializeField] private Ch1_GarageEventManager garageEvent;
 
     private bool canOpenDoor = false;
 

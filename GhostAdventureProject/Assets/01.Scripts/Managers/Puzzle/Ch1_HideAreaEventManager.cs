@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Ch1_HideAreaEvent : MonoBehaviour
+public class Ch1_HideAreaEventManager : MonoBehaviour
 {
     // 싱글톤
-    public static Ch1_HideAreaEvent Instance { get; private set; }
+    public static Ch1_HideAreaEventManager Instance { get; private set; }
 
     [SerializeField] private AudioClip UnlockCloset;
 
