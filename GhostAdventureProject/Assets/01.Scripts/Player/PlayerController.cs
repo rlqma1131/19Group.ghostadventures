@@ -6,12 +6,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public BasePossessable currentTarget;
 
     public Animator animator { get; private set; }
-    private PlayerHide playerHide;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        playerHide = GetComponent<PlayerHide>();
 
         // GameManager에 Player 등록
         if (GameManager.Instance != null)
@@ -27,9 +25,6 @@ public class PlayerController : MonoBehaviour
             PossessionQTESystem.Instance == null ||
             !PossessionSystem.Instance.CanMove ||
             PossessionQTESystem.Instance.isRunning)
-            return;
-
-        if (playerHide.IsHiding)
             return;
 
         HandleMovement();

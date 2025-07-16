@@ -264,11 +264,7 @@ public class MirrorGhostManager : MonoBehaviour
 
     void UpdateMirrorState(MirrorData mirror, bool isLookingAtMirror, bool isBackTurned)
     {
-        bool isHiding = false;
-        if (GameManager.Instance.PlayerController.TryGetComponent<PlayerHide>(out var hide))
-        {
-            isHiding = hide.IsHiding;
-        }
+        bool isHiding = PossessionStateManager.Instance.IsPossessing();
 
         switch (mirror.currentState)
         {
@@ -447,7 +443,7 @@ public class MirrorGhostManager : MonoBehaviour
                 Debug.Log("[2단계] 거울에 그림자 비침");
                 OnStage2(mirror);
                 // 2단계부터 거울에서만 F, E 키 차단
-                PlayerHide.mirrorKeysBlocked = true;
+                //PlayerHide.mirrorKeysBlocked = true;
                 Debug.Log("거울에서만 F, E 키 차단 시작!");
                 break;
             case 3:
