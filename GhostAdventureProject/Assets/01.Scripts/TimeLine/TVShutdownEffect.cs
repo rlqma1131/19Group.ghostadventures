@@ -15,6 +15,8 @@ public class TVShutdownEffect : MonoBehaviour
     [SerializeField] private float waitTime;
     private Vector3 originalScale;
 
+    public AudioSource CCTVSound;
+
     private void Awake()
     {
         if (tvScreen != null)
@@ -67,7 +69,7 @@ public class TVShutdownEffect : MonoBehaviour
         tvScreen.transform.localScale = Vector3.zero;
 
         Sequence turnOnSequence = DOTween.Sequence().SetId(this);
-
+        CCTVSound.PlayOneShot(CCTVSound.clip);
         // 1단계: 중앙에 밝은 점이 나타나면서 가로로 빠르게 확장 (가는 선 생성)
         turnOnSequence.Append(tvScreen.transform.DOScaleX(originalScale.x, turnOnDuration * 0.3f).SetEase(Ease.OutExpo));
         // 동시에 선이 나타날 때 밝아짐
