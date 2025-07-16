@@ -2,19 +2,19 @@ using UnityEngine;
 using DG.Tweening;
 
 public class DoorLock : MonoBehaviour
-{
+{   
+    [SerializeField] LockedDoor door;
     [SerializeField] private ItemData wantItem;
     private bool doorOpen = false;
     [SerializeField] private GameObject q_Key;
 
-    void Start()
-    {
-    }
+
     void Update()
     {   
         if (Input.GetKeyDown(KeyCode.Q))
         {   
             Inventory_PossessableObject inventory = Inventory_PossessableObject.Instance;
+
             if(wantItem == inventory.selectedItem() && wantItem != null)
             {
                 OpenDoorLock();
@@ -22,8 +22,11 @@ public class DoorLock : MonoBehaviour
                 q_Key.SetActive(false);
                 inventory.TryUseSelectedItem();
                 UIManager.Instance.PromptUI.ShowPrompt("문이 열렸습니다.", 1.5f);
+                door.SolvePuzzle();
+                Destroy(this.gameObject);
                 return;
             }
+    
             UIManager.Instance.PromptUI.ShowPrompt("문을 열 수 없습니다", 1.5f);
         }
         if(doorOpen == false)

@@ -106,6 +106,7 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
         {
             inventory_Player.AddClue(item.clue);
             UseItem(item, 0);
+            UIManager.Instance.PromptUI.ShowPrompt("단서를 획득했습니다. 인벤토리를 확인하세요", 2f);
         }
     }
     
@@ -201,8 +202,7 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
         }
         if(selectedSlot.item.Item_Type == ItemType.Clue)
         {
-            inventory_Player.AddClue(selectedSlot.item.clue);
-            UseItem(selectedSlot.item, 0);
+            UseOrPlaceItem(selectedSlot.item);
         }
     }
 
@@ -276,5 +276,5 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
         }
     }
 
-    public ItemData selectedItem() => selectedSlot.item; 
+    public ItemData selectedItem() => selectedSlot != null ? selectedSlot.item : null;
 }
