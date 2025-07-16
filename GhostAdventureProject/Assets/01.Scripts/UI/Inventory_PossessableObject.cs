@@ -1,23 +1,19 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject>
 {
     public Transform slotParent; // 슬롯이 생성될 부모 위치
     public GameObject slotPrefab; // 슬롯 프리팹
-
     private ItemData itemToPlace;
     private bool isPlacing = false;
     private GameObject previewInstance;
-
     private List<GameObject> spawnedSlots = new List<GameObject>();
+    private InventorySlot_PossessableObject selectedSlot = null; // 선택된 아이템
+    private int selectedSlotIndex = -1;
 
-
-    void Start()
-    {
-        // UIManager.Instance.Inventory_PossessableObjectUI.gameObject.SetActive(false);
-
-    }
 
     // 미사용(보류)
     BasePossessable FindPossessed()
@@ -29,7 +25,6 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
                 Debug.Log("obj:" + obj);
                 return obj;
         }
-
         return null;
     }
     
@@ -44,7 +39,6 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
             obj.GetComponent<InventorySlot_PossessableObject>().SetSlot(slot);
             spawnedSlots.Add(obj);
         }
-
         gameObject.SetActive(true);
     }
 
@@ -136,28 +130,36 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
 
     private void Update()
     {
-        if (!isPlacing) return;
+        // if (!isPlacing) return;
 
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        // 마우스 위치에 미리보기 따라다님
-        if (previewInstance != null)
-            previewInstance.transform.position = mousePos;
+        // // 마우스 위치에 미리보기 따라다님
+        // if (previewInstance != null)
+        //     previewInstance.transform.position = mousePos;
 
-        // 왼쪽 클릭으로 설치 확정
-        if (Input.GetMouseButtonDown(0))
-        {
-            ConfirmPlacement(mousePos);
-            UseItem(itemToPlace, 1);
-        }
+        // // 왼쪽 클릭으로 설치 확정
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     ConfirmPlacement(mousePos);
+        //     UseItem(itemToPlace, 1);
+        // }
 
-        // 오른쪽 클릭으로 취소
-        if (Input.GetMouseButtonDown(1))
-        {
-            CancelPlacement();
-        }
+        // // 오른쪽 클릭으로 취소
+        // if (Input.GetMouseButtonDown(1))
+        // {
+        //     CancelPlacement();
+        // }
+
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+            SelectSlot(0);
+
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+            SelectSlot(1);
+
+        if (Input.GetKeyDown(KeyCode.Q))
+            TryUseSelectedItem();
     }
-
 
     private void CancelPlacement()
     {
@@ -167,6 +169,70 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
         isPlacing = false;
     }
 
+    private void SelectSlot(int index)
+    {
+        if (index >= 0 && index < spawnedSlots.Count)
+        {
+            selectedSlotIndex = index;
+            selectedSlot = spawnedSlots[index].GetComponent<InventorySlot_PossessableObject>();
+
+            Debug.Log("선택된 슬롯: " + selectedSlot.item.Item_Name);
+
+            // 선택된 슬롯 시각적 강조 (옵션)
+            HighlightSlot(index);
+        }
+    }
+
+    private void TryUseSelectedItem()
+    {
+        if (selectedSlot == null || selectedSlot.item == null) return;
+
+        // 예: 상호작용 가능한 조건 검사
+        if (CanUseItem(selectedSlot.item))
+        {
+            UseOrPlaceItem(selectedSlot.item);
+        }
+        else
+        {
+            Debug.Log("사용 조건이 충족되지 않음");
+        }
+    }
+
+    private bool CanUseItem(ItemData item)
+    {
+        if (item == null) return false;
+
+        // // 예: 플레이어가 근처에 상호작용 대상이 있는가?
+        // if (item.Item_Type == ItemType.Consumable)
+        // {
+        //     return IsNearUsableTarget(); // 예: 문, 상자, 장치 등
+        // }
+
+        // // 예: 설치형 아이템은 설치 가능한 위치인지?
+        // if (item.Item_Type == ItemType.Placeable)
+        // {
+        //     return IsPlaceableHere(); // 예: 빈 공간인지, 겹치지 않는지
+        // }
+
+        return true;
+    }
+
+
+    private void HighlightSlot(int index)
+    {
+        for (int i = 0; i < spawnedSlots.Count; i++)
+        {
+            GameObject slotObj = spawnedSlots[i];
+            Outline outline = slotObj.GetComponent<Outline>();
+
+            if (outline != null)
+            {
+                outline.enabled = (i == index);
+            }
+        }
+    }
+
+    
     public void UseItem(ItemData item, int amount)
     {
         InventorySlot_PossessableObject slot = spawnedSlots
