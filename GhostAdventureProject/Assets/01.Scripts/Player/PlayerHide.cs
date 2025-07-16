@@ -58,7 +58,9 @@ public class PlayerHide : MonoBehaviour
                 Ch1_HideAreaEvent.Instance.RegisterArea(hideID.areaID);
             }
 
-            HidePlayer();
+            PossessionQTESystem.Instance.StartQTE();
+
+            //HidePlayer();
         }
     }
 
