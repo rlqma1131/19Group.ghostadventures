@@ -197,8 +197,8 @@ public class EnemyAI : MonoBehaviour
             movement.MoveToTarget(movement.chaseSpeed);
 
             // null 체크 추가
-            if (Ch1_HideAreaEvent.Instance != null)
-                Ch1_HideAreaEvent.Instance.RemoveHideAreaComponent();
+            if (Ch1_HideAreaEventManager.Instance != null)
+                Ch1_HideAreaEventManager.Instance.RemoveHideAreaComponent();
         }
     }
 
@@ -331,7 +331,7 @@ public class EnemyAI : MonoBehaviour
             yield return null;
         }
 
-        Ch1_HideAreaEvent.Instance?.AddHideAreaComponent();
+        Ch1_HideAreaEventManager.Instance?.AddHideAreaComponent();
         ChangeState(AIState.LostTarget);
     }
 
