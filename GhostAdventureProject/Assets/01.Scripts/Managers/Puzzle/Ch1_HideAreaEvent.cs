@@ -8,12 +8,13 @@ public class Ch1_HideAreaEvent : MonoBehaviour
 
     [SerializeField] private AudioClip UnlockCloset;
 
+    [Header("퍼즐")]
     [SerializeField] private List<string> correctOrder = new() { "침대", "인형", "의자" };
     [SerializeField] private List<string> currentOrder = new();
 
-    private Ch1_Closet closet => FindObjectOfType<Ch1_Closet>();
-    private PlayerHide PlayerHide => FindObjectOfType<PlayerHide>();
-    private PlayerHide playerHide => GameManager.Instance.Player.GetComponent<PlayerHide>();
+    [Header("퍼즐 은신처 & 옷장")]
+    [SerializeField] private HideAreaID[] hideAreas;
+    [SerializeField] private Ch1_Closet closet;
 
     public bool Solved { get; private set; } = false;
 
@@ -23,6 +24,13 @@ public class Ch1_HideAreaEvent : MonoBehaviour
         {
             Instance = this;
         }
+    }
+
+    private void Start()
+    {
+        // 퍼즐 풀기 전에는 퍼즐은신처 못쓰도록
+        RemoveHideAreaComponent();
+        Debug.Log("HideAreaEvent 초기화 완료");
     }
 
     public void RegisterArea(string id)
@@ -46,11 +54,10 @@ public class Ch1_HideAreaEvent : MonoBehaviour
                  SoundManager.Instance.PlaySFX(UnlockCloset);
 
                 // 플레이어 나타남
-                PlayerHide.ShowPlayer();
+                PossessionSystem.Instance.CurrentTarget.Unpossess();
 
                 // 퍼즐 풀면 아이방 HideArea에 못숨도록
-                UnTagAllHideAreas();
-                playerHide.canHide = false;
+                RemoveHideAreaComponent();
             }
             else
             {
@@ -71,27 +78,31 @@ public class Ch1_HideAreaEvent : MonoBehaviour
         return true;
     }
 
-    public void UnTagAllHideAreas()
+    public void RemoveHideAreaComponent()
     {
-        HideAreaID[] areas = FindObjectsOfType<HideAreaID>();
-        foreach (var area in areas)
+        foreach (var areaID in hideAreas)
         {
-            if (area.CompareTag("HideArea"))
+            if (areaID.CompareTag("HideArea"))
             {
-                area.tag = "Untagged";
+                var hide = areaID.GetComponent<HideArea>();
+                if (hide != null)
+                {
+                    Destroy(hide);
+                }
             }
         }
     }
 
     // 그림 발견하고 부터 숨기 가능
-    public void RestoreHideAreaTags()
+    public void AddHideAreaComponent()
     {
-        HideAreaID[] areas = FindObjectsOfType<HideAreaID>();
-        foreach (var area in areas)
+        foreach (var areaID in hideAreas)
         {
-            if (area.CompareTag("Untagged"))
+            if (areaID.CompareTag("HideArea"))
             {
-                area.tag = "HideArea";
+                areaID.gameObject.AddComponent<HideArea>();
+                var hide = areaID.GetComponent<HideArea>();
+                hide.highlight = areaID.highlight;
             }
         }
     }

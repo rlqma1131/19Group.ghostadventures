@@ -24,12 +24,6 @@ public class PossessionSystem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // HideArea는 무시하고 빙의 가능 오브젝트만 처리
-        if (other.CompareTag("HideArea"))
-        {
-            return; // HideArea는 PlayerHide.cs에서 처리하도록 무시
-        }
-
         Debug.Log($"트리거 충돌: {other.name}");
         var possessionObject = other.GetComponent<BasePossessable>();
         if (possessionObject != null)
@@ -40,12 +34,6 @@ public class PossessionSystem : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        // HideArea는 무시하고 빙의 가능 오브젝트만 처리
-        if (other.CompareTag("HideArea"))
-        {
-            return; // HideArea는 PlayerHide.cs에서 처리하도록 무시
-        }
-
         var possessionObject = other.GetComponent<BasePossessable>();
         if (possessionObject != null)
         {
@@ -70,10 +58,12 @@ public class PossessionSystem : MonoBehaviour
                     SoulEnergySystem.Instance.Consume(2);
                 }
                 break;
+
             case "Cat":
                 // 고양이는 풀 충전
                 Debug.Log("고양이덕에 풀충전입니다옹");
                 break;
+
             case "Person":
                 // 사람 구현되면 피로도에 따라 소모량 조정
                 if (!SoulEnergySystem.Instance.HasEnoughEnergy(3))
@@ -86,6 +76,8 @@ public class PossessionSystem : MonoBehaviour
                     SoulEnergySystem.Instance.Consume(3);
                 }
                 break;
+
+            case "SoundTrigger":
             default:
                 if (!SoulEnergySystem.Instance.HasEnoughEnergy(3))
                 {
@@ -101,13 +93,25 @@ public class PossessionSystem : MonoBehaviour
 
         UIManager.Instance.PromptUI.ShowPrompt($"빙의 시도 중...", 2f);
 
-        RequestPossession();
+        RequestQTE();
         return true;
     }
 
-    public void RequestPossession()
+    public void RequestQTE()
     {
-        PossessionQTESystem.Instance.StartQTE();
+        switch (obssessingTarget.tag)
+        {
+            // 사람, 유인 오브젝트, 은신처만 QTE 요청
+            case "Person":
+            case "SoundTrigger":
+            case "HideArea":
+                PossessionQTESystem.Instance.StartQTE();
+                break;
+
+            default:
+                PossessionStateManager.Instance.StartPossessionTransition();
+                break;
+        }
     }
 
     // 빙의 가능 대상 설정

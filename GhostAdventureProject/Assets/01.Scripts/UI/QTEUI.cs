@@ -55,7 +55,6 @@ public class QTEUI : MonoBehaviour
 
                 if (!wasSuccess)
                 {
-                    Debug.Log("❌ QTE 실패 (입력 없음 또는 실패 범위)");
                     PossessionQTESystem.Instance.HandleQTEResult(false);
                 }
                 return;
@@ -70,7 +69,6 @@ public class QTEUI : MonoBehaviour
 
             if (currentAngle >= minAngle && currentAngle <= maxAngle)
             {
-                Debug.Log("✅ QTE 성공!");
                 wasSuccess = true;
                 isRunning = false;
                 gameObject.SetActive(false);
@@ -78,7 +76,6 @@ public class QTEUI : MonoBehaviour
             }
             else
             {
-                Debug.Log("⛔ 입력했지만 실패 영역 (계속 회전)");
                 wasSuccess = false;
                 isRunning = false;
                 gameObject.SetActive(false);
@@ -89,7 +86,6 @@ public class QTEUI : MonoBehaviour
             // isRunning = false;
             // gameObject.SetActive(false);
             // bool success = (currentAngle >= minAngle && currentAngle <= maxAngle);
-            // Debug.Log(success ? "✅ QTE 성공!" : "❌ QTE 실패 (타이밍 안 맞음)");
             // PossessionQTESystem.Instance.HandleQTEResult(success);
         }
     }

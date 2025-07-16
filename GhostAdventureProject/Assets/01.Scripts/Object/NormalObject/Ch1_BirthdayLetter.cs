@@ -10,7 +10,7 @@ public class Ch1_BirthdayLetter : MonoBehaviour
     [SerializeField] private CluePickup cluePickup;        
 
     private bool isZoomActive = false;
-    private bool zoomActivatedOnce = false;
+    //private bool zoomActivatedOnce = false;
     private bool isPlayerInside = false;
 
     private void Start()
@@ -70,11 +70,11 @@ public class Ch1_BirthdayLetter : MonoBehaviour
             {
                 letterZoom.SetActive(false);
 
-                if (!zoomActivatedOnce)
-                {
-                    Ch1_HideAreaEvent.Instance.RestoreHideAreaTags();
-                    zoomActivatedOnce = true;
-                }
+                //if (!zoomActivatedOnce)
+                //{
+                //    Ch1_HideAreaEvent.Instance.AddHideAreaComponent();
+                //    zoomActivatedOnce = true;
+                //}
 
                 if (isPlayerInside)
                     PlayerInteractSystem.Instance.AddInteractable(gameObject);
