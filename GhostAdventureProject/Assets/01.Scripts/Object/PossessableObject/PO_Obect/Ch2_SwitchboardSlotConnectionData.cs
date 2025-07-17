@@ -22,14 +22,14 @@ public static class Ch2_SwitchboardSlotConnectionData
         { 1, new SlotConnection[]
             {
                 new SlotConnection { },                          // 0도
-                new SlotConnection { right = true },                          // 90도
+                new SlotConnection { },                          // 90도
                 new SlotConnection { bottom = true, right = true },// 180도
-                new SlotConnection { bottom = true }                           // 270도
+                new SlotConnection { }                           // 270도
             }
         },
         { 2, new SlotConnection[]
             {
-                new SlotConnection { left = true},                          // 0도
+                new SlotConnection {},                          // 0도
                 new SlotConnection { },                          // 90도
                 new SlotConnection { },                          // 180도
                 new SlotConnection { left = true, bottom = true } // 270도
@@ -38,7 +38,7 @@ public static class Ch2_SwitchboardSlotConnectionData
         { 3, new SlotConnection[]
             {
                 new SlotConnection { },                          // 0도
-                new SlotConnection { top = true },                          // 90도
+                new SlotConnection { },                          // 90도
                 new SlotConnection { top = true, right = true },// 180도
                 new SlotConnection { top = true, right = true  } // 270도
             }
@@ -47,16 +47,16 @@ public static class Ch2_SwitchboardSlotConnectionData
             {
                 new SlotConnection { left = true, top = true },// 0도
                 new SlotConnection { left = true, top = true },// 90도
-                new SlotConnection { top = true },                          // 180도
-                new SlotConnection { left = true }                           // 270도
+                new SlotConnection { },                          // 180도
+                new SlotConnection { }                           // 270도
             }
         },
         { 5, new SlotConnection[]
             {
                 new SlotConnection { },                          // 0도
-                new SlotConnection { top = true },                          // 90도
+                new SlotConnection { },                          // 90도
                 new SlotConnection { top = true, right = true },// 180도
-                new SlotConnection { right = true }                           // 270도
+                new SlotConnection { }                           // 270도
             }
         },
     };

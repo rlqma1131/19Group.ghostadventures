@@ -6,8 +6,14 @@ public class Ch2_SwitchboardPuzzleManager : MonoBehaviour
 {
     public Ch2_SwitchboardButton[] pieces; // 0 ~ 5
 
+    private Ch2_Switchboard switchboard;
+
     public bool CanControl { get; private set; } = false;
 
+    private void Start()
+    {
+        switchboard = GetComponentInParent<Ch2_Switchboard>();
+    }
     public void EnablePuzzleControl()
     {
         CanControl = true;
@@ -25,7 +31,7 @@ public class Ch2_SwitchboardPuzzleManager : MonoBehaviour
             Debug.Log("퍼즐 해결됨!");
             DisablePuzzleControl();
 
-            // 이펙트나 사운드, 후속 로직 실행
+            switchboard.SolvedPuzzle();
         }
     }
 }
