@@ -28,7 +28,6 @@ public class Ch2_SwitchboardPuzzleManager : MonoBehaviour
     {
         if (Ch2_SwichboardPuzzleSolver.IsPathConnected(pieces))
         {
-            Debug.Log("퍼즐 해결됨!");
             DisablePuzzleControl();
 
             switchboard.SolvedPuzzle();

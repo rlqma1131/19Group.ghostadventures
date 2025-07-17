@@ -5,6 +5,7 @@ using UnityEngine;
 public class Ch2_LeftSwing : BasePossessable
 {
     [SerializeField] private Ch2_Kiosk targetKiosk;
+    [SerializeField] private Ch2_Computer targetComputer;
     [SerializeField] private GameObject q_Key;
     private int qteSuccessCount = 0;
     private int totalQTECount = 3;
@@ -19,8 +20,6 @@ public class Ch2_LeftSwing : BasePossessable
     
     protected override void Update()
     {
-        base.Update();
-
         if (!isPossessed || isQTESequenceRunning)
         {
             q_Key.SetActive(false);
@@ -34,6 +33,12 @@ public class Ch2_LeftSwing : BasePossessable
             qteSuccessCount = 0;
             StartNextQTE();
         }
+        
+        if (!isQTESequenceRunning && Input.GetKeyDown(KeyCode.E))
+        {
+            Unpossess();
+        }
+        
         q_Key.SetActive(true);
     }
     
@@ -63,6 +68,8 @@ public class Ch2_LeftSwing : BasePossessable
             // 컴퓨터, 키오스크 hasActivated = true 포함된 매서드 추가
             if (targetKiosk != null)
                 targetKiosk.Activate();
+            if(targetComputer != null)
+                targetComputer.Activate();
             
             Unpossess();
             isQTESequenceRunning = false;
