@@ -8,6 +8,7 @@ public class Ch2_Switchboard : BasePossessable
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
 
     [Header("CCTV")]
+    [SerializeField] private Ch2_CCTVMonitor cctvMonitor;
     [SerializeField] private Ch2_CCTV[] cams;
 
     private Ch2_SwitchboardPuzzleManager puzzleManager;
@@ -51,10 +52,13 @@ public class Ch2_Switchboard : BasePossessable
         zoomCamera.Priority = 5;
         Unpossess();
 
-        // CCTV 빙의 가능
+        hasActivated = false;
+
+        // CCTV, 모니터 빙의 가능
         foreach (var cctv in cams)
         {
             cctv.ActivateCCTV();
         }
+        cctvMonitor.ActivateCCTVMonitor();
     }
 }
