@@ -18,6 +18,7 @@ public class Ch2_SwitchboardButton : MonoBehaviour
     {
         if (!puzzleManager.CanControl) return;
 
+        // 클릭하면 버튼 회전
         RotateButton();
     }
 
