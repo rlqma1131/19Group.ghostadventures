@@ -1,17 +1,17 @@
 ﻿using Cinemachine;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Ch2_Switchboard : BasePossessable
 {
-    [SerializeField] private Ch2_CCTV[] cams;
+    [Header("줌 카메라")]
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
 
-    private Ch2_SwitchboardPuzzleManager puzzleManager;
+    [Header("CCTV")]
+    [SerializeField] private Ch2_CCTVMonitor cctvMonitor;
+    [SerializeField] private Ch2_CCTV[] cams;
 
-    private bool isControlMode = false;
-    private Coroutine solvedPuzzleCoroutine;
+    private Ch2_SwitchboardPuzzleManager puzzleManager;
 
     protected override void Start()
     {
@@ -29,7 +29,6 @@ public class Ch2_Switchboard : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            isControlMode = false;
             zoomCamera.Priority = 5;
             Unpossess();
         }
@@ -37,7 +36,6 @@ public class Ch2_Switchboard : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
-        isControlMode = true;
         zoomCamera.Priority = 20;
 
         puzzleManager.EnablePuzzleControl();
@@ -51,13 +49,16 @@ public class Ch2_Switchboard : BasePossessable
     private IEnumerator SolvedPuzzleRoutine()
     {
         yield return new WaitForSeconds(2f);
-        isControlMode = false;
         zoomCamera.Priority = 5;
         Unpossess();
 
+        hasActivated = false;
+
+        // CCTV, 모니터 빙의 가능
         foreach (var cctv in cams)
         {
             cctv.ActivateCCTV();
         }
+        cctvMonitor.ActivateCCTVMonitor();
     }
 }
