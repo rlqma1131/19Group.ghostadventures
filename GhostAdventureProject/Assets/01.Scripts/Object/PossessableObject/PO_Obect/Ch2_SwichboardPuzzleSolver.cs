@@ -11,46 +11,11 @@ public static class Ch2_SwichboardPuzzleSolver
             if (IsConnectedToStart(button))
             {
                 bool[] visited = new bool[buttons.Length];
-                int index = System.Array.IndexOf(buttons, button);
-
-                if (DFS(buttons, index, visited))
+                DFS(buttons, System.Array.IndexOf(buttons, button), visited);
+                if (AllVisited(visited) && EndVisited(buttons, visited))
                     return true;
             }
         }
-
-        return false;
-    }
-
-    static bool DFS(Ch2_SwitchboardButton[] buttons, int index, bool[] visited)
-    {
-        if (IsConnectedToEnd(buttons[index]))
-        {
-            Debug.Log("!!! End connected !!!");
-            return true;
-        }
-
-        visited[index] = true;
-
-        for (int i = 0; i < buttons.Length; i++)
-        {
-            if (visited[i]) continue;
-
-            if (IsConnected(buttons[index], buttons[i]))
-            {
-                Debug.Log($"--> {buttons[index].id} to {buttons[i].id} 연결!");
-                if (DFS(buttons, i, visited))
-                    return true;
-            }
-        }
-
-        return false;
-    }
-    static bool IsConnected(Ch2_SwitchboardButton a, Ch2_SwitchboardButton b)
-    {
-        if (a.connection.right && b.connection.left) return true;
-        if (a.connection.left && b.connection.right) return true;
-        if (a.connection.top && b.connection.bottom) return true;
-        if (a.connection.bottom && b.connection.top) return true;
         return false;
     }
 
@@ -60,9 +25,39 @@ public static class Ch2_SwichboardPuzzleSolver
         return button.id == 0 && button.connection.left;
     }
 
-    static bool IsConnectedToEnd(Ch2_SwitchboardButton button)
+    static bool AllVisited(bool[] visited)
     {
-        // 끝 조건: id==5이고, right가 열려 있으면 정답!
-        return button.id == 5 && button.connection.right;
+        foreach (var v in visited)
+            if (!v) return false;
+        return true;
+    }
+
+    static bool EndVisited(Ch2_SwitchboardButton[] buttons, bool[] visited)
+    {
+        for (int i = 0; i < buttons.Length; i++)
+            if (buttons[i].id == 5 && visited[i])
+                return true;
+        return false;
+    }
+
+    static void DFS(Ch2_SwitchboardButton[] buttons, int index, bool[] visited)
+    {
+        if (visited[index]) return;
+        visited[index] = true;
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            if (visited[i]) continue;
+            if (IsConnected(buttons[index], buttons[i]))
+                DFS(buttons, i, visited);
+        }
+    }
+
+    static bool IsConnected(Ch2_SwitchboardButton a, Ch2_SwitchboardButton b)
+    {
+        if (a.connection.right && b.connection.left) return true;
+        if (a.connection.left && b.connection.right) return true;
+        if (a.connection.top && b.connection.bottom) return true;
+        if (a.connection.bottom && b.connection.top) return true;
+        return false;
     }
 }
