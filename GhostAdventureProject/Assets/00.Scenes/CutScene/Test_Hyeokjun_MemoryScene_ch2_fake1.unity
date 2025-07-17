@@ -594,6 +594,7 @@ GameObject:
   m_Component:
   - component: {fileID: 277291233}
   - component: {fileID: 277291232}
+  - component: {fileID: 277291234}
   m_Layer: 17
   m_Name: glich4
   m_TagString: Untagged
@@ -668,6 +669,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &277291234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277291231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: cf97472e552335241ba11a2ca813922c, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 428624699}
+          m_TargetAssemblyTypeName: CameraShake, Assembly-CSharp
+          m_MethodName: DoShake
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &333866742
 GameObject:
   m_ObjectHideFlags: 0
@@ -1201,6 +1232,53 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 4.6, y: 4.6, z: 4.6}
   m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &428624698
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 428624700}
+  - component: {fileID: 428624699}
+  m_Layer: 0
+  m_Name: shake
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &428624699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428624698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf4874af1e418b4b806850d09f13ed2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  virtualCamera: {fileID: 2119046682}
+  defaultShakeIntensity: 1
+  defaultShakeTime: 0.2
+--- !u!4 &428624700
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428624698}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.6, y: -5, z: -9.68}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3208,6 +3286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 981682353}
   - component: {fileID: 981682352}
+  - component: {fileID: 981682354}
   m_Layer: 17
   m_Name: glich3
   m_TagString: Untagged
@@ -3282,6 +3361,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &981682354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981682351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: cf97472e552335241ba11a2ca813922c, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 428624699}
+          m_TargetAssemblyTypeName: CameraShake, Assembly-CSharp
+          m_MethodName: DoShake
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &999041141
 GameObject:
   m_ObjectHideFlags: 0
@@ -3540,8 +3649,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.33868694, y: 0.2034514, z: 0}
-    m_Extent: {x: 12.895213, y: 7.2058487, z: 0}
+    m_Center: {x: 0.33866835, y: 0.20319963, z: 0}
+    m_Extent: {x: 12.895195, y: 7.205597, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -4064,7 +4173,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.36
+  orthographic size: 0.75
   m_Depth: 74.96
   m_CullingMask:
     serializedVersion: 2
@@ -4446,6 +4555,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1474708965}
   - component: {fileID: 1474708964}
+  - component: {fileID: 1474708966}
   m_Layer: 17
   m_Name: glich1
   m_TagString: Untagged
@@ -4520,6 +4630,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1474708966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474708963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: cf97472e552335241ba11a2ca813922c, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 428624699}
+          m_TargetAssemblyTypeName: CameraShake, Assembly-CSharp
+          m_MethodName: DoShake
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1528544128
 GameObject:
   m_ObjectHideFlags: 0
@@ -4896,6 +5036,7 @@ GameObject:
   - component: {fileID: 1579741010}
   - component: {fileID: 1579741009}
   - component: {fileID: 1579741008}
+  - component: {fileID: 1579741011}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -4979,6 +5120,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1579741011
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579741006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
+  m_AmplitudeGain: 0
+  m_FrequencyGain: 1
+  mNoiseOffsets: {x: 816.93555, y: 122.0199, z: 946.2588}
 --- !u!1 &1596778579
 GameObject:
   m_ObjectHideFlags: 0
@@ -5322,6 +5480,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1950011561}
   - component: {fileID: 1950011560}
+  - component: {fileID: 1950011562}
   m_Layer: 17
   m_Name: glich4 (1)
   m_TagString: Untagged
@@ -5396,6 +5555,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1950011562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950011559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: cf97472e552335241ba11a2ca813922c, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 428624699}
+          m_TargetAssemblyTypeName: CameraShake, Assembly-CSharp
+          m_MethodName: DoShake
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1972102308
 GameObject:
   m_ObjectHideFlags: 0
@@ -5490,6 +5679,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1979386901}
   - component: {fileID: 1979386900}
+  - component: {fileID: 1979386902}
   m_Layer: 17
   m_Name: glich2
   m_TagString: Untagged
@@ -5564,6 +5754,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1979386902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979386899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: cf97472e552335241ba11a2ca813922c, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 428624699}
+          m_TargetAssemblyTypeName: CameraShake, Assembly-CSharp
+          m_MethodName: DoShake
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &2026610131
 GameObject:
   m_ObjectHideFlags: 0
@@ -5797,6 +6017,26 @@ PlayableDirector:
     value: {fileID: 1421206391}
   - key: {fileID: 3319064099729473922, guid: cf27b3250cc49c54e9d9f1c151550724, type: 2}
     value: {fileID: 519621702}
+  - key: {fileID: 7901837187332703149, guid: cf27b3250cc49c54e9d9f1c151550724, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -5985240215927003821, guid: cf27b3250cc49c54e9d9f1c151550724, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 556962898998579364, guid: cf27b3250cc49c54e9d9f1c151550724, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -1775549554379085020, guid: cf27b3250cc49c54e9d9f1c151550724, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 1097633020574530292, guid: cf27b3250cc49c54e9d9f1c151550724, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 4941070320365912670, guid: cf27b3250cc49c54e9d9f1c151550724, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 8870393459523442372, guid: cf27b3250cc49c54e9d9f1c151550724, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -8511147147556343972, guid: cf27b3250cc49c54e9d9f1c151550724, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -6902395150502224450, guid: cf27b3250cc49c54e9d9f1c151550724, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 6267031640910364374, guid: cf27b3250cc49c54e9d9f1c151550724, type: 2}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References:
     - b9f97aed7d6795e42a0525522754312e: {fileID: 1939798797}
@@ -6099,7 +6339,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2119046683}
   - component: {fileID: 2119046682}
-  - component: {fileID: 2119046681}
   m_Layer: 0
   m_Name: Virtual Camera (2)
   m_TagString: Untagged
@@ -6107,21 +6346,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2119046681
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2119046680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acf4874af1e418b4b806850d09f13ed2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  virtualCamera: {fileID: 2119046682}
-  defaultShakeIntensity: 1
-  defaultShakeTime: 0.33
 --- !u!114 &2119046682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6210,3 +6434,4 @@ SceneRoots:
   - {fileID: 1950011561}
   - {fileID: 2065554157}
   - {fileID: 598286872}
+  - {fileID: 428624700}

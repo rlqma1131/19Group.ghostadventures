@@ -20,14 +20,7 @@ public class CameraShake : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            
-            DoShake(2f);
-        }
-    }
+
 
     public void DoShake( float duration)
     {
