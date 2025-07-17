@@ -20,8 +20,6 @@ public class Ch2_LeftSwing : BasePossessable
     
     protected override void Update()
     {
-        base.Update();
-
         if (!isPossessed || isQTESequenceRunning)
         {
             q_Key.SetActive(false);
@@ -35,6 +33,12 @@ public class Ch2_LeftSwing : BasePossessable
             qteSuccessCount = 0;
             StartNextQTE();
         }
+        
+        if (!isQTESequenceRunning && Input.GetKeyDown(KeyCode.E))
+        {
+            Unpossess();
+        }
+        
         q_Key.SetActive(true);
     }
     

@@ -63,7 +63,7 @@ public class QTEUI : MonoBehaviour
 
                 if (!wasSuccess)
                 {
-                    PossessionQTESystem.Instance.HandleQTEResult(false);
+                    InvokeResult(false);
                 }
                 return;
             }

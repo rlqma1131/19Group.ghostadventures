@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class PossessionQTESystem : MonoBehaviour
 {
@@ -33,19 +34,31 @@ public class PossessionQTESystem : MonoBehaviour
     public void HandleQTEResult(bool success)
     {
         isRunning = false;
-        Time.timeScale = 1f;
         // UIManager연동되면 스캔 때 까만 배경 비활성화
         PossessionSystem.Instance.CanMove = true;
         if (success)
         {
             Debug.Log("QTE succeeded");
+            ResetTimeScale();
             GameManager.Instance.PlayerController.currentTarget?.OnQTESuccess();
         }
         else
         {
             Debug.Log("QTE failed");
-            GameManager.Instance.PlayerController.currentTarget?.OnQTEFailure();
+            StartCoroutine(DelayedFailure());
         }
+    }
+
+    private void ResetTimeScale()
+    {
+        Time.timeScale = 1f;
+    }
+
+    private IEnumerator DelayedFailure()
+    {
+        yield return new WaitForSeconds(0.05f);
+        ResetTimeScale();
+        GameManager.Instance.PlayerController.currentTarget?.OnQTEFailure();
     }
 
     //public void OnQTESuccess()
