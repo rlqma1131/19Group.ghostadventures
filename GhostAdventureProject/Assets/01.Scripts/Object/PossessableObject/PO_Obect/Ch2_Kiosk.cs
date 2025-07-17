@@ -12,6 +12,7 @@ public class Ch2_Kiosk : BasePossessable
     [SerializeField] private RectTransform kioskPanel;
     [SerializeField] private GameObject hintNoteObject;
     [SerializeField] private GameObject hiddenDoorObject;
+    [SerializeField] private GameObject kioskOn;
     
     [SerializeField] private Button[] allButtons;
     [SerializeField] private List<Button> correctSequence; // 인스펙터에서 정답 순서대로 등록
@@ -65,6 +66,7 @@ public class Ch2_Kiosk : BasePossessable
     public void Activate()
     {
         hasActivated = true;
+        kioskOn.SetActive(false);
     }
     
     private void OpenPanel()
