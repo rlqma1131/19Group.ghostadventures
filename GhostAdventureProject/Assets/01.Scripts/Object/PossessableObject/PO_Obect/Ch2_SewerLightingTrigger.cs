@@ -44,6 +44,9 @@ public class Ch2_SewerLightingTrigger : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
+        if (other.gameObject == GameManager.Instance.Player && !other.gameObject.activeInHierarchy)
+            return;
+        
         if (other.gameObject == GameManager.Instance.Player)
         {
             // Global Light 복원
@@ -57,6 +60,24 @@ public class Ch2_SewerLightingTrigger : MonoBehaviour
             {
                 playerLight.enabled = false;
             }
+        }
+    }
+    
+    public void ForceRestoreLighting()
+    {
+        if (globalLight != null && hasStoredOriginal)
+        {
+            globalLight.color = originalGlobalColor;
+        }
+
+        if (playerLight == null)
+        {
+            playerLight = GameManager.Instance.Player?.GetComponentInChildren<Light2D>(includeInactive: true);
+        }
+
+        if (playerLight != null)
+        {
+            playerLight.enabled = false;
         }
     }
 }
