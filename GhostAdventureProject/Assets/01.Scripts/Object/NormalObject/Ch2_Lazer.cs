@@ -16,8 +16,6 @@ public class Ch2_Lazer : MonoBehaviour
             Transform playerTr = GameManager.Instance.Player.transform;
             Vector3 knockbackTarget = playerTr.position + Vector3.left * knockbackDistance;
 
-            Debug.Log("[Ch2_Lazer] 플레이어와 트리거 충돌 - 넉백 Tween");
-
             playerTr.DOMove(knockbackTarget, knockbackDuration)
                 .SetEase(Ease.OutCubic)
                 .OnComplete(() =>

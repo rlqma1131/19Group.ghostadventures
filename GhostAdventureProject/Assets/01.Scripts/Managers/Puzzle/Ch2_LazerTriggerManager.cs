@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Ch2_LazerTriggerManager : MonoBehaviour
@@ -29,6 +28,7 @@ public class Ch2_LazerTriggerManager : MonoBehaviour
     {
         // 플레이어 조작 불가
         PossessionSystem.Instance.CanMove = false;
+        GameManager.Instance.PlayerController.animator.SetBool("Move", false);
 
         // 카메라 이동 연출 (5초)
         yield return new WaitForSeconds(2f);
