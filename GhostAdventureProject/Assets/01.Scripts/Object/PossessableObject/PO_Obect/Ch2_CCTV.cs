@@ -18,6 +18,11 @@ public class Ch2_CCTV : BasePossessable
 
     protected override void Update()
     {
+        if (monitor.isRevealed) // 기억조각 드러나면 빙의 불가
+        {
+            InactiveCCTV();
+        }
+
         if (!isPossessed || !hasActivated)
             return;
 
@@ -41,5 +46,10 @@ public class Ch2_CCTV : BasePossessable
     public void ActivateCCTV()
     {
         hasActivated = true;
+    }
+
+    public void InactiveCCTV()
+    {
+        hasActivated = false;
     }
 }
