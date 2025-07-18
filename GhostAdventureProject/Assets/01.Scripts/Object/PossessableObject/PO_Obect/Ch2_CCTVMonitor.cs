@@ -42,6 +42,16 @@ public class Ch2_CCTVMonitor : BasePossessable
         {
             zoomCamera.Priority = 5;
             Unpossess();
+
+            // 기본 모니터 화면으로 전환
+            for (int i = 0; i < lazerScreens.Length; i++)
+            {
+                if (lazerScreens[i] != null)
+                {
+                    lazerScreens[i].SetActive(false);
+                    screens[i].SetActive(true);
+                }
+            }
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
