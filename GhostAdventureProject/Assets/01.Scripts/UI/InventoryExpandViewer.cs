@@ -45,10 +45,12 @@ public class InventoryExpandViewer : MonoBehaviour
     }
 
     // 단서패널 닫기
-    public void HideClue()
+    public void HideClue(System.Action onComplete = null)
     {
         cluePanel.SetActive(false);
         isShowing = false;
+
+        onComplete?.Invoke();
     }
 
     public bool IsShowing() => isShowing;  

@@ -1,12 +1,23 @@
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
+
+public enum PersonCondition
+{
+    cheerful,
+    Normal,
+    Tired,
+}
+
 public class CH2_SecurityGuard : MoveBasePossessable
 {
-    [SerializeField] private LockedDoor door;
+    [SerializeField] private LockedDoor door; //도어락 있는 문 //없어도 될 것 같음
+    [SerializeField] private SafeBox safeBox; // 금고
     [SerializeField] private GameObject q_Key;
     [SerializeField] private Animator highlightAnim;
-
+    public int conditionIndex;
+    public PersonCondition condition = PersonCondition.Normal;
+    
     private bool isNearDoor = false;
 
     protected override void Start()
@@ -19,7 +30,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     {
         if (!hasActivated)
         {
-            q_Key.SetActive(false);
+            // q_Key.SetActive(false);
             return;
         }
         if (isNearDoor)
@@ -27,20 +38,17 @@ public class CH2_SecurityGuard : MoveBasePossessable
             Vector2 catPos = this.transform.position;
             catPos.y += 0.5f;
             q_Key.transform.position = catPos;
-            q_Key.SetActive(true);
+            // q_Key.SetActive(true);
         }
         else if (!isNearDoor)
         {
-            q_Key.SetActive(false);
+            // q_Key.SetActive(false);
         }
 
         base.Update();
 
         if (Input.GetKeyDown(KeyCode.Q) && isNearDoor)
         {
-            // q_Key.SetActive(false);
-            // // 문 열기
-            // StartCoroutine(CatAct());
         }
     }
 
@@ -60,6 +68,12 @@ public class CH2_SecurityGuard : MoveBasePossessable
         {
             isNearDoor = true;
         }
+
+        // bool doorlockopen = collision.GetComponent<DoorLock>().doorOpen;
+        // if(doorlockopen)
+        // {
+        //     StartCoroutine(SecurityGuardAct());
+        // }
     }
 
     protected override void OnTriggerExit2D(Collider2D collision)
@@ -103,14 +117,14 @@ public class CH2_SecurityGuard : MoveBasePossessable
         });
     }
 
-    IEnumerator CatAct()
+    IEnumerator SecurityGuardAct()
     {
-        // anim.SetTrigger("Open");
+        anim.SetTrigger("Open");
         // door.SolvePuzzle();
 
         yield return new WaitForSeconds(2f); // 2초 기다림
 
-        // zoomCamera.Priority = 5;
+        zoomCamera.Priority = 1;
         Unpossess();
         anim.Play("Cat_Sleeping");
         hasActivated = false;
