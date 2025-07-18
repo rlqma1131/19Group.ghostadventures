@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
+using DG.Tweening;
 
 public class Ch2_BookShelf : BasePossessable
 {
@@ -11,6 +12,11 @@ public class Ch2_BookShelf : BasePossessable
     
     [SerializeField] private Ch2_BookSlot[] bookSlots;
     [SerializeField] private GameObject doorToOpen;
+    
+    [SerializeField] private Transform moveTargetPosition;
+    [SerializeField] private float moveDuration = 1.0f;
+    [SerializeField] private float shakeDuration = 0.5f;
+    [SerializeField] private float shakeStrength = 0.3f;
 
     private bool isControlMode = false;
 
@@ -95,6 +101,14 @@ public class Ch2_BookShelf : BasePossessable
             doorToOpen.SetActive(true);
             ExitControlMode();
             hasActivated = false;
+            Unpossess();
+            
+            transform.DOShakePosition(shakeDuration, shakeStrength)
+                     .OnComplete(() =>
+                     {
+                         transform.DOMove(moveTargetPosition.position, moveDuration)
+                                  .SetEase(Ease.InOutSine);
+                     });
         }
     }
 }
