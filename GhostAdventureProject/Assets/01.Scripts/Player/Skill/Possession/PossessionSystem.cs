@@ -10,6 +10,7 @@ public class PossessionSystem : MonoBehaviour
     [SerializeField] private BasePossessable currentTarget; // 디버깅용
     private BasePossessable obssessingTarget;
     public BasePossessable CurrentTarget => currentTarget;
+    // public PersonCondition currentCondition;
 
     private PlayerController Player => GameManager.Instance.PlayerController;
     public bool CanMove { get; set; } = true;
@@ -66,14 +67,25 @@ public class PossessionSystem : MonoBehaviour
 
             case "Person":
                 // 사람 구현되면 피로도에 따라 소모량 조정
-                if (!SoulEnergySystem.Instance.HasEnoughEnergy(3))
+                if (!SoulEnergySystem.Instance.HasEnoughEnergy(1))
                 {
                     UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
                     return false;
                 }
                 else
                 {
-                    SoulEnergySystem.Instance.Consume(3);
+                    // if(currentCondition == PersonCondition.Vital)
+                    // {
+                    //     SoulEnergySystem.Instance.Consume(-1); // 1회복
+                    // }
+                    // else if(currentCondition == PersonCondition.Normal)
+                    // {
+                    //     SoulEnergySystem.Instance.Consume(0);
+                    // }
+                    // else if(currentCondition == PersonCondition.Tired)
+                    // {
+                    //     SoulEnergySystem.Instance.Consume(1);
+                    // }
                 }
                 break;
 

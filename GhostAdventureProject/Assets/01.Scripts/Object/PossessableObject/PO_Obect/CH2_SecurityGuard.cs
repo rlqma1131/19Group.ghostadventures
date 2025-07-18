@@ -2,21 +2,15 @@ using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 
-public enum PersonCondition
-{
-    cheerful,
-    Normal,
-    Tired,
-}
-
 public class CH2_SecurityGuard : MoveBasePossessable
-{
+{   
     [SerializeField] private LockedDoor door; //도어락 있는 문 //없어도 될 것 같음
     [SerializeField] private SafeBox safeBox; // 금고
+    [SerializeField] private Ch2_Radio radio; // 라디오
+    [SerializeField] private Ch2_Bench bench; // 벤치
     [SerializeField] private GameObject q_Key;
-    [SerializeField] private Animator highlightAnim;
     public int conditionIndex;
-    public PersonCondition condition = PersonCondition.Normal;
+    public PersonConditionHandler conditionHandler;
     
     private bool isNearDoor = false;
 
@@ -24,6 +18,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     {
         base.Start();
         hasActivated = true;
+        moveSpeed = 2f;
     }
 
     protected override void Update()
@@ -49,6 +44,29 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
         if (Input.GetKeyDown(KeyCode.Q) && isNearDoor)
         {
+        }
+
+        if(radio != null && radio.IsPlaying)
+        {
+            Vector3 targetPos = transform.position;
+            targetPos.x = radio.transform.position.x; // 라디오의 x포지션값으로 이동
+            transform.position = Vector3.MoveTowards(this.transform.position, targetPos, moveSpeed * Time.deltaTime);        
+        }
+    }
+
+     public void SetCondition(PersonCondition condition)
+    {
+        switch (condition)
+        {
+            case PersonCondition.Vital:
+                conditionHandler = new VitalConditionHandler();
+                break;
+            case PersonCondition.Normal:
+                conditionHandler = new NormalConditionHandler();
+                break;
+            case PersonCondition.Tired:
+                conditionHandler = new TiredConditionHandler();
+                break;
         }
     }
 
