@@ -76,7 +76,7 @@ public class QTEUI : MonoBehaviour
         {
             wasSuccess = currentAngle >= minAngle && currentAngle <= maxAngle;
             isRunning = false;
-            gameObject.SetActive(false);
+            // gameObject.SetActive(false);
             InvokeResult(wasSuccess);
             // if (currentAngle >= minAngle && currentAngle <= maxAngle)
             // {
@@ -107,6 +107,8 @@ public class QTEUI : MonoBehaviour
             resultCallback.Invoke(result);
         else
             PossessionQTESystem.Instance.HandleQTEResult(result);
+        
+        gameObject.SetActive(false);
     }
 
     void ShowSuccessArc()
