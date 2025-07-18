@@ -5,42 +5,33 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class Ch2_Radio : BasePossessable
-{   
-    //콜라이더 트리거에 닿으면
-    //하이라이트 빛나고
-    //E키 눌러서 빙의 가능
-    //Q키를 누르면 줌 됨 -> Ch2_RadioControll 스크립트로 넘어감
-
+{  
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
-    [SerializeField] private GameObject Q_Key;
+    [SerializeField] private GameObject needle; // 주파수 바늘
+    [SerializeField] private float triggerX_Person = 0.38f; // 트리거위치 - 사람
+    [SerializeField] private float triggerX_Enemy; // 트리거위치 - 적
+    [SerializeField] private AudioSource triggerSound_Person; // 트리거사운드 - 사람
+    [SerializeField] private AudioSource EnemyTriggerSound_Enemy; // 트리거사운드 - 적
+    private bool hasTriggered_Person = false; // 트리거발동 - 사람
+    private bool hasTriggered_Enemy = false; // 트리거발동 - 적
+    private bool isControlMode = false; // 주파수조정 가능모드(줌)
+    [SerializeField] private Animator speakerOn; // 스피커 애니메이션 재생용
+    [SerializeField] private GameObject UICanvas; // UI
+    [SerializeField] private float range = 0.0324f;
 
-    private Collider2D col;
-    private bool isControlMode = false;
-    private int channel = 1;
 
     protected override void Start()
     {
-        hasActivated = false;
-
-        col = GetComponent<Collider2D>();
-    }
-
-    public void ActivateTV()
-    {
-        if (hasActivated) return;
-
         hasActivated = true;
-        if (anim != null)
-            anim.SetTrigger("On");
+        UICanvas.SetActive(false);
     }
 
     protected override void Update()
     {
-        if (!isPossessed || !hasActivated)
+        if (!isPossessed)
         {
             return;
         }
-
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -50,66 +41,80 @@ public class Ch2_Radio : BasePossessable
                 isControlMode = false;
                 isPossessed = false;
                 UIManager.Instance.PlayModeUI_OpenAll();
-
                 zoomCamera.Priority = 5;
                 Unpossess();
-
             }
         }
-        
-        // 채널 변경
-        if (Input.GetKeyDown(KeyCode.W)) 
-        { 
-            channel = Mathf.Clamp(channel + 1, 1, 9); 
-            UpdateChannelDisplay();
-            // 채널 변경 효과음 추가
-            // zoomAnim.SetTrigger("Change");
-        }
-        if (Input.GetKeyDown(KeyCode.S)) 
-        { 
-            channel = Mathf.Clamp(channel - 1, 1, 9); 
-            UpdateChannelDisplay();
-            // 채널 변경 효과음 추가
-            // zoomAnim.SetTrigger("Change");
-        }
-
-        // 확정은 Space
-        if (channel == 9 && Input.GetKeyDown(KeyCode.Space))
+        // 주파수 변경
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            // 정답 효과음 추가
-
-            ShowMemoryandDoorOpen();
-            hasActivated = false;
-            col.enabled = false;
-
+            if(isControlMode)
+                GoToLeft();
         }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            if(isControlMode)
+                GoToRight();
+        }
+
+        // needle의 위치가 트리거 위치에 "가까워졌는지" 확인
+        if (!hasTriggered_Person && Mathf.Abs(needle.transform.localPosition.x - triggerX_Person) <= 0.01f)
+        {
+            triggerSound_Person.Play();
+            hasTriggered_Person = true;
+            AttractPerson();
+        }
+        // optional: needle이 트리거 영역을 벗어나면 다시 트리거 가능하도록 할 수도 있음
+        if (hasTriggered_Person && Mathf.Abs(needle.transform.localPosition.x - triggerX_Person) >= 0.01f)
+        {
+            triggerSound_Person.Stop();
+            hasTriggered_Person = false;
+        }
+            
     }
 
-    private void UpdateChannelDisplay()
+    private void GoToLeft()
+    {   
+        Vector3 needlePos = needle.transform.localPosition;
+        Debug.Log("Needle X Pos: " + needle.transform.position.x);
+        needlePos.x -= range;
+        needlePos.x = Mathf.Max(needlePos.x, 0.08815f);
+        needle.transform.localPosition = needlePos;
+    }
+    private void GoToRight()
     {
-        // if(channelTxt != null)
-        //     channelTxt.text = ($"0{channel}");
+        Vector3 needlePos = needle.transform.localPosition;
+        Debug.Log("Needle X Pos: " + needle.transform.position.x);
+        needlePos.x += range;
+        needlePos.x = Mathf.Min(needlePos.x, 0.51f);
+        needle.transform.localPosition = needlePos;
     }
 
-    private void ShowMemoryandDoorOpen()
+
+    // 사람을 끌어들임
+    private void AttractPerson()
     {
-        // 1. TV 줌 애니메이션 재생
-        // show.SetActive(true);
-        anim.SetTrigger("Solved");
-        // zoomAnim.SetTrigger("Show");
-        StartCoroutine(WaitZoomEnding(3f));
+        StartCoroutine(WaitZoomEnding(2f));
+        speakerOn.SetBool("OnSpeaker", true); // 스피커 애니메이션 재생
     }
+
+    // 적을 끌어들임
+    private void AttractEnemy()
+    {
+
+    }
+
 
     private IEnumerator WaitZoomEnding(float delay)
     {
         yield return new WaitForSeconds(delay);
-
-        // 3. 문 열기
+        // 스피커 애니메이션 재생됨
 
         // 4. 빙의 해제
         isPossessed = false;
         isControlMode = false;
         UIManager.Instance.PlayModeUI_OpenAll();
+        UICanvas.SetActive(false);
         zoomCamera.Priority = 5;
         Unpossess();
     }
@@ -117,10 +122,9 @@ public class Ch2_Radio : BasePossessable
     public override void OnPossessionEnterComplete() 
     {
         UIManager.Instance.PlayModeUI_CloseAll();
+        UICanvas.SetActive(true);
         zoomCamera.Priority = 20; // 빙의 시 카메라 우선순위 높이기
         isControlMode = true;
         isPossessed = true;
-        // channelTxt.text = "01"; // 초기 채널 표시
-        UpdateChannelDisplay();
     }
 }
