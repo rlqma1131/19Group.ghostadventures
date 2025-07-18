@@ -9,6 +9,7 @@ public class SafeBox : BaseInteractable
     [SerializeField] private GameObject openSafeBox; // 열린 금고
     [SerializeField] private ItemData needItem; // 금고를 여는데 필요한 아이템
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
+    [SerializeField] private GameObject ZoomSafeBox;
     [SerializeField] private GameObject q_Key;
     public bool safeBoxOpenAble; // 금고를 오픈할 수 있는 범위에 있는지 확인
     public bool safeBoxOpen; // 금고를 열었는지 확인
@@ -18,6 +19,7 @@ public class SafeBox : BaseInteractable
     {
         safeBoxOpenAble = false;
         safeBoxOpen = false;
+        ZoomSafeBox.SetActive(false);
         inventory = Inventory_PossessableObject.Instance;
     }
 
@@ -62,6 +64,7 @@ public class SafeBox : BaseInteractable
         q_Key.SetActive(false);
         openSafeBox.SetActive(true);
         inventory.TryUseSelectedItem();
+        ZoomSafeBox.SetActive(true);
 
         yield return new WaitForSeconds(1f);
         

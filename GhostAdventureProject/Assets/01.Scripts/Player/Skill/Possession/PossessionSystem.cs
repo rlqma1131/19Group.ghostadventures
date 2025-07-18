@@ -10,7 +10,6 @@ public class PossessionSystem : MonoBehaviour
     [SerializeField] private BasePossessable currentTarget; // 디버깅용
     private BasePossessable obssessingTarget;
     public BasePossessable CurrentTarget => currentTarget;
-    // public PersonCondition currentCondition;
 
     private PlayerController Player => GameManager.Instance.PlayerController;
     public bool CanMove { get; set; } = true;
@@ -74,18 +73,18 @@ public class PossessionSystem : MonoBehaviour
                 }
                 else
                 {
-                    // if(currentCondition == PersonCondition.Vital)
-                    // {
-                    //     SoulEnergySystem.Instance.Consume(-1); // 1회복
-                    // }
-                    // else if(currentCondition == PersonCondition.Normal)
-                    // {
-                    //     SoulEnergySystem.Instance.Consume(0);
-                    // }
-                    // else if(currentCondition == PersonCondition.Tired)
-                    // {
-                    //     SoulEnergySystem.Instance.Consume(1);
-                    // }
+                    if(Person.currentCondition == PersonCondition.Vital)
+                    {
+                        SoulEnergySystem.Instance.Consume(-1); // 1회복
+                    }
+                    else if(Person.currentCondition == PersonCondition.Normal)
+                    {
+                        SoulEnergySystem.Instance.Consume(0);
+                    }
+                    else if(Person.currentCondition == PersonCondition.Tired)
+                    {
+                        SoulEnergySystem.Instance.Consume(5); // 테스트 중
+                    }
                 }
                 break;
 
