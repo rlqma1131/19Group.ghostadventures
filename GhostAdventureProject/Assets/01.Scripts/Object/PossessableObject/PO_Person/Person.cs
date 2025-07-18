@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class Person : MonoBehaviour
 {
-    public PersonCondition currentCondition;
+    public static PersonCondition currentCondition;
     private PersonCondition lastCondition;
     public GameObject UI;
-    public GameObject vitalUI; // 프리팹
-    public GameObject normalUI; // 프리팹
-    public GameObject tiredUI; // 프리팹
+    public GameObject vitalUI;
+    public GameObject normalUI;
+    public GameObject tiredUI;
 
     void Start()
     {
@@ -31,7 +31,7 @@ public class Person : MonoBehaviour
         else if (currentCondition == PersonCondition.Tired)
             UI = tiredUI;
 
-        Vector3 uiPos = transform.position + Vector3.up * 3f;
+        Vector3 uiPos = transform.position + Vector3.up * 2.5f;
         UI.transform.position = uiPos;
 
         UI.SetActive(true);
