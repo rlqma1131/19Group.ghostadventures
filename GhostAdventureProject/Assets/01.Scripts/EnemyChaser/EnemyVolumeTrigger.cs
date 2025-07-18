@@ -14,8 +14,8 @@ public class EnemyVolumeTrigger : MonoBehaviour
     private bool PlayerFind = false;
     private ColorAdjustments colorAdjustments;
 
-    private Color farColor = new Color(137f / 255f, 137f / 255f, 137f / 255f);
-    private Color closeColor = new Color(108f / 255f, 0, 0);
+    [SerializeField]private Color farColor = new Color(137f / 255f, 137f / 255f, 137f / 255f);
+    [SerializeField]private Color closeColor = new Color(108f / 255f, 0, 0);
 
     private float t = 0f; // 현재 색상 보간 값 (0 = 원래색, 1 = 빨간색)
 
