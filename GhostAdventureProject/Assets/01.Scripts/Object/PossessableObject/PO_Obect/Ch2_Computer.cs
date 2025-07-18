@@ -16,7 +16,7 @@ public class Ch2_Computer : BasePossessable
 
     [Header("Puzzle Settings")]
     [SerializeField] private string correctPassword;
-    [SerializeField] private GameObject doorToOpen;
+    [SerializeField] private LockedDoor doorToOpen;
     [SerializeField] private GameObject monitorOn;
     
     [SerializeField] private GameObject q_Key;
@@ -124,7 +124,7 @@ public class Ch2_Computer : BasePossessable
         if (input == correctPassword)
         {
             Debug.Log(" 비밀번호 정답 ");
-            doorToOpen.SetActive(true);
+            doorToOpen.SolvePuzzle();
             ClosePanel();
         }
         else
