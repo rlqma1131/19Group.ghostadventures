@@ -4,7 +4,7 @@ using UnityEngine;
 public class MoveBasePossessable : BasePossessable
 {
     [SerializeField] protected CinemachineVirtualCamera zoomCamera;
-    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] protected float moveSpeed = 3f;
     protected SpriteRenderer spriteRenderer;
 
     protected override void Start()
