@@ -1,70 +1,63 @@
 using UnityEngine;
-using DG.Tweening;
 
 public class DoorLock : MonoBehaviour
 {   
-    [SerializeField] LockedDoor door;
-    [SerializeField] private ItemData wantItem;
-    private bool doorOpen = false;
+    [SerializeField] private LockedDoor door; // 문
+    [SerializeField] private ItemData needItem; // 문을 여는데 필요한 아이템
     [SerializeField] private GameObject q_Key;
+    private bool doorOpenAble; // 문을 열 수 있는 영역에 있는지 확인
+    private bool doorOpen; // 문을 열었는지 확인
+    Inventory_PossessableObject inventory; // 빙의 인벤토리(needItem을 갖고 있는지 확인용)
 
+    void Start()
+    {
+        doorOpenAble = false;
+        doorOpen = false;
+        inventory = Inventory_PossessableObject.Instance;
+    }
 
     void Update()
     {   
         if (Input.GetKeyDown(KeyCode.Q))
         {   
-            Inventory_PossessableObject inventory = Inventory_PossessableObject.Instance;
-
-            if(wantItem == inventory.selectedItem() && wantItem != null)
+            if(needItem == inventory.selectedItem() && needItem != null && doorOpenAble)
             {
-                OpenDoorLock();
-                doorOpen = true;
-                q_Key.SetActive(false);
-                inventory.TryUseSelectedItem();
                 UIManager.Instance.PromptUI.ShowPrompt("문이 열렸습니다.", 1.5f);
-                door.SolvePuzzle();
-                Destroy(this.gameObject);
+                OpenDoorLock();
                 return;
             }
-    
-            UIManager.Instance.PromptUI.ShowPrompt("문을 열 수 없습니다", 1.5f);
+            if(doorOpenAble && !doorOpen)
+            {
+                UIManager.Instance.PromptUI.ShowPrompt("문을 열 수 없습니다", 1.5f);
+            }
+            return;
         }
-        if(doorOpen == false)
+
+        if(!doorOpen)
             q_Key.SetActive(true);
-        
     }
 
-    // void OnTriggerEnter2D(Collider2D collision)
-    // {
-    //     ItemData selectItem = collision.GetComponent<Inventory_PossessableObject>().selected;
-    // }
+    // 도어락 풀리고 문 열림
     private void OpenDoorLock()
     {
-        Debug.Log("문 열림");
+        doorOpen = true;
+        q_Key.SetActive(false);
+        inventory.TryUseSelectedItem();   
+        door.SolvePuzzle();
+        Destroy(this.gameObject);
     }
-    // private void TriggerPlateEvent()
-    // {
-    //     Sequence shakeSeq = DOTween.Sequence();
-    //     int shakeCount = 3;
-    //     float startAngle = 5f;
-    //     float durationPerShake = 0.05f;
+    
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Person") || collision.CompareTag("Player"))
+        doorOpenAble = true;
+    }
 
-    //     SoundManager.Instance.PlaySFX(isShaking);
-    //     Debug.Log("Plate is shaking!");
-    //     SoundTriggerer.TriggerSound(transform.position);
-
-    //     for (int i = 0; i < shakeCount; i++)
-    //     {
-    //         float angle = Mathf.Lerp(startAngle, 0f, (float)i / shakeCount);
-    //         shakeSeq.Append(transform.DOLocalRotate(new Vector3(0, 0, angle), durationPerShake))
-    //                 .Append(transform.DOLocalRotate(new Vector3(0, 0, -angle), durationPerShake));
-    //     }
-
-    //     shakeSeq.Append(transform.DOLocalRotate(Vector3.zero, 0.03f));
-
-    //     // 고양이는 눈 깜빡이기만
-    //     cat.Blink();
-    // }
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Person") || collision.CompareTag("Player"))
+        doorOpenAble = false;    
+    }
 
 
 }
