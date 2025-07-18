@@ -36,16 +36,21 @@ public class PossessionQTESystem : MonoBehaviour
         isRunning = false;
         // UIManager연동되면 스캔 때 까만 배경 비활성화
         PossessionSystem.Instance.CanMove = true;
+        
+        ResetTimeScale();
+        
         if (success)
         {
             Debug.Log("QTE succeeded");
-            ResetTimeScale();
+            // ResetTimeScale();
             GameManager.Instance.PlayerController.currentTarget?.OnQTESuccess();
+            UIManager.Instance.PromptUI.ShowPrompt("빙의 성공!", 2f);
         }
         else
         {
             Debug.Log("QTE failed");
             StartCoroutine(DelayedFailure());
+            UIManager.Instance.PromptUI.ShowPrompt("빙의 실패!", 2f);
         }
     }
 
@@ -57,7 +62,7 @@ public class PossessionQTESystem : MonoBehaviour
     private IEnumerator DelayedFailure()
     {
         yield return new WaitForSeconds(0.05f);
-        ResetTimeScale();
+        // ResetTimeScale();
         GameManager.Instance.PlayerController.currentTarget?.OnQTEFailure();
     }
 

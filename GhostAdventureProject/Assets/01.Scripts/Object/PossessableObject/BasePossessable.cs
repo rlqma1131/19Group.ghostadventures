@@ -44,15 +44,13 @@ public abstract class BasePossessable : BaseInteractable
 
     public virtual void Unpossess()
     {
-        Debug.Log("빙의 해제");
+        UIManager.Instance.PromptUI.ShowPrompt("빙의 해제", 2f);
         isPossessed = false;
         PossessionStateManager.Instance.StartUnpossessTransition();
     }
 
     public virtual void OnQTESuccess()
     {
-        Debug.Log("QTE 성공 - 빙의 완료");
-
         // 빙의 효과음
         //SoundManager.Instance.PlaySFX(possessionSFX);
 
@@ -61,7 +59,6 @@ public abstract class BasePossessable : BaseInteractable
 
     public void OnQTEFailure()
     {
-        Debug.Log("QTE 실패 - 빙의 취소");
         isPossessed = false;
         SoulEnergySystem.Instance.Consume(1);
     }
