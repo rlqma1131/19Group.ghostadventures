@@ -1,14 +1,21 @@
 ﻿using UnityEngine;
 
-public class Ch2_LazerController : BasePossessable
+public class Ch2_LaserController : BasePossessable
 {
     [Header("레이저")]
-    [SerializeField] private GameObject lazer;
+    [SerializeField] private GameObject laser;
+
+    [Header("레이저 스크린")]
+    [SerializeField] private GameObject laserScreen;
+
+    private Animator laserScreenAnimator;
 
     protected override void Start()
     {
         isPossessed = false;
         hasActivated = false;
+
+        laserScreenAnimator = laserScreen.GetComponent<Animator>();
     }
 
     protected override void Update()
@@ -21,7 +28,8 @@ public class Ch2_LazerController : BasePossessable
         // 빙의 상태에서 레이저 On/Off
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            lazer.SetActive(!lazer.activeSelf);
+            laser.SetActive(!laser.activeSelf);
+            laserScreenAnimator.SetBool("Off", !laser.activeSelf);
         }
     }
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 
-public class Ch2_Lazer : MonoBehaviour
+public class Ch2_Laser : MonoBehaviour
 {
     [SerializeField] private float knockbackDistance = 1.5f;
     [SerializeField] private float knockbackDuration = 0.5f;
