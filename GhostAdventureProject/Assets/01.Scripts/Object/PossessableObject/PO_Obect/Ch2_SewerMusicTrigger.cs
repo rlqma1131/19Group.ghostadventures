@@ -21,30 +21,30 @@ public class Ch2_SewerMusicTrigger : MonoBehaviour
     {
         if (other.gameObject == GameManager.Instance.Player)
         {
-            // 1. 플레이어 Light2D 자동 탐색
-            if (playerLight == null)
-            {
-                playerLight = other.GetComponentInChildren<Light2D>(includeInactive: true);
-            }
-
-            // 2. Global Light 어둡게
-            if (globalLight != null)
-            {
-                if (!hasStoredOriginal)
-                {
-                    originalGlobalLightColor = globalLight.color;
-                    hasStoredOriginal = true;
-                }
-
-                globalLight.color = Color.black;
-                globalLight.intensity = 1f;
-            }
-
-            // 3. Player Light 켜기
-            if (playerLight != null)
-            {
-                playerLight.enabled = true;
-            }
+            // // 1. 플레이어 Light2D 자동 탐색
+            // if (playerLight == null)
+            // {
+            //     playerLight = other.GetComponentInChildren<Light2D>(includeInactive: true);
+            // }
+            //
+            // // 2. Global Light 어둡게
+            // if (globalLight != null)
+            // {
+            //     if (!hasStoredOriginal)
+            //     {
+            //         originalGlobalLightColor = globalLight.color;
+            //         hasStoredOriginal = true;
+            //     }
+            //
+            //     globalLight.color = Color.black;
+            //     globalLight.intensity = 1f;
+            // }
+            //
+            // // 3. Player Light 켜기
+            // if (playerLight != null)
+            // {
+            //     playerLight.enabled = true;
+            // }
 
             musicPuzzle?.StartPuzzle();
         }
@@ -54,17 +54,17 @@ public class Ch2_SewerMusicTrigger : MonoBehaviour
     {
         if (other.gameObject == GameManager.Instance.Player)
         {
-            // Global Light 복원
-            if (globalLight != null && hasStoredOriginal)
-            {
-                globalLight.color = originalGlobalLightColor;
-            }
-
-            // Player Light 끄기
-            if (playerLight != null)
-            {
-                playerLight.enabled = false;
-            }
+            // // Global Light 복원
+            // if (globalLight != null && hasStoredOriginal)
+            // {
+            //     globalLight.color = originalGlobalLightColor;
+            // }
+            //
+            // // Player Light 끄기
+            // if (playerLight != null)
+            // {
+            //     playerLight.enabled = false;
+            // }
 
             musicPuzzle?.StopPuzzle();
         }
