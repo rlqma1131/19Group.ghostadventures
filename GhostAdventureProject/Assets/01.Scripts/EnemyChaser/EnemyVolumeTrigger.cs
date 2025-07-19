@@ -6,16 +6,16 @@ using UnityEngine.Rendering.Universal;
 
 public class EnemyVolumeTrigger : MonoBehaviour
 {
-    [SerializeField] private Volume globalVolume;
+    [SerializeField] private Volume globalVolume; // 글로벌 볼륨
     [SerializeField] private Transform player;
     [SerializeField] private float detectionRadius = 15f;
 
-    private bool PlayerInTrigger = false;
-    private bool PlayerFind = false;
-    private ColorAdjustments colorAdjustments;
+    private bool PlayerInTrigger = false; // 트리거 감지
+    private bool PlayerFind = false; // 플레이어 찾음?
+    private ColorAdjustments colorAdjustments; // 글로벌 볼륨 색상 조정 컴포넌트
 
-    private Color farColor = new Color(137f / 255f, 137f / 255f, 137f / 255f);
-    private Color closeColor = new Color(108f / 255f, 0, 0);
+    [SerializeField]private Color farColor; //원래 글로벌볼륨 컬러
+    [SerializeField]private Color closeColor = new Color(108f / 255f, 0, 0); // 가까이 갈수록 컬러
 
     private float t = 0f; // 현재 색상 보간 값 (0 = 원래색, 1 = 빨간색)
 
@@ -31,7 +31,8 @@ public class EnemyVolumeTrigger : MonoBehaviour
             colorAdjustments = ca;
         }
 
-        globalVolume.enabled = false;
+        globalVolume.enabled = true;
+        farColor= colorAdjustments.colorFilter.value; // 초기 색상 설정
     }
 
     void Update()
