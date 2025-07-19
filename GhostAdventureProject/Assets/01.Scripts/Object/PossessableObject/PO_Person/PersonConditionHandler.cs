@@ -1,13 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-public enum PersonCondition
-{
-    Vital,   // 활력
-    Normal,  // 보통
-    Tired    // 피곤함
-}
 
 public abstract class PersonConditionHandler
 {
