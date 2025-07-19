@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// 씬 이름 → SceneType 변환을 위한 열거형
 //public enum SceneType
 //{
 //    Title,
@@ -19,6 +20,7 @@ public class SoundManager : Singleton<SoundManager>
     [Header("AudioSources")]
     [SerializeField] private AudioSource bgmSource;
     [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioSource sfxLoopSource;
 
     //[Header("BGM Clips")]
     //[SerializeField] private AudioClip bgm_Title;
@@ -187,4 +189,27 @@ public class SoundManager : Singleton<SoundManager>
     //    }
     //}
 
+    // 루프 효과음 재생
+    public void PlayLoopingSFX(AudioClip clip, float volume = 0.8f)
+    {
+        if (clip == null || sfxLoopSource == null)
+            return;
+
+        if (sfxLoopSource.isPlaying && sfxLoopSource.clip == clip)
+            return; // 이미 재생 중이면 중복 실행 안 함
+
+        sfxLoopSource.clip = clip;
+        sfxLoopSource.volume = volume;
+        sfxLoopSource.loop = true;
+        sfxLoopSource.Play();
+    }
+
+    public void StopLoopingSFX()
+    {
+        if (sfxLoopSource != null && sfxLoopSource.isPlaying)
+        {
+            sfxLoopSource.Stop();
+            sfxLoopSource.clip = null;
+        }
+    }
 }
