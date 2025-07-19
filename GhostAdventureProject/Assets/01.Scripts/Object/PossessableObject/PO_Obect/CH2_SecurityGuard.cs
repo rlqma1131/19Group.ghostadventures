@@ -2,14 +2,24 @@ using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 
+public enum GuardState { Idle, MovingToRadio, MovingToBench, Resting, MovingToOffice }
+
 public class CH2_SecurityGuard : MoveBasePossessable
 {   
     [SerializeField] private LockedDoor door; //도어락 있는 문 //없어도 될 것 같음
     [SerializeField] private SafeBox safeBox; // 금고
     [SerializeField] private Ch2_Radio radio; // 라디오
-    [SerializeField] private Ch2_Bench bench; // 벤치
+    // [SerializeField] private Ch2_Bench bench; // 벤치
+    public Transform Radio;
+    public Transform bench;
+    public Transform office;
+    private GuardState state; 
+
+    private float restTimer = 0f;
+    public float restDuration = 3f;
+    
     [SerializeField] private GameObject q_Key;
-    public int conditionIndex;
+    public Person targetPerson;
     public PersonConditionHandler conditionHandler;
     
     private bool isNearDoor = false;
@@ -48,14 +58,92 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
         if(radio != null && radio.IsPlaying)
         {
-            Vector3 targetPos = transform.position;
-            targetPos.x = radio.transform.position.x; // 라디오의 x포지션값으로 이동
-            transform.position = Vector3.MoveTowards(this.transform.position, targetPos, moveSpeed * Time.deltaTime);        
+            state = GuardState.MovingToRadio;
+            // Vector3 targetPos = transform.position;
+            // targetPos.x = radio.transform.position.x; // 라디오의 x포지션값으로 이동
+            // transform.position = Vector3.MoveTowards(this.transform.position, targetPos, moveSpeed * Time.deltaTime);        
         }
+
+        switch (state)
+    {
+        case GuardState.MovingToRadio:
+            MoveTo(Radio.position);
+            break;
+
+        case GuardState.MovingToBench:
+            MoveTo(bench.position);
+            break;
+
+        case GuardState.Resting:
+            restTimer += Time.deltaTime;
+            if (restTimer >= restDuration)
+            {
+                targetPerson.currentCondition = PersonCondition.Vital;
+                state = GuardState.MovingToOffice;
+                Debug.Log("휴식 끝! 사무실로 복귀");
+            }
+            break;
+
+        case GuardState.MovingToOffice:
+            MoveTo(office.position);
+            break;
     }
+    }
+
+// 목적지까지 이동
+    void MoveTo(Vector3 target)
+{   
+    Vector3 targetPos = transform.position;
+    targetPos.x = target.x;
+    transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+
+    if (Mathf.Abs(transform.position.x - target.x) < 0.1f)
+    {
+        OnDestinationReached(target);
+    }
+}
+
+// 목적지 도착시 처리
+void OnDestinationReached(Vector3 destination)
+{
+    if (destination == Radio.position)
+    {
+        targetPerson.currentCondition = PersonCondition.Normal;
+        state = GuardState.MovingToBench;
+        // StopRadioSound(); // 사운드 멈추기
+    }
+    else if (destination == bench.position)
+    {
+        targetPerson.currentCondition = PersonCondition.Normal;
+        state = GuardState.Resting;
+        restTimer = 0f;
+    }
+    else if (destination == office.position)
+    {
+        state = GuardState.Idle;
+        targetPerson.currentCondition = PersonCondition.Normal;
+        Debug.Log("경비실 도착. 상태 초기화");
+    }
+}
+
+private void StopRadioSound()
+{
+    Debug.Log("라디오소리 그만!");
+}
+    //트리거 감지 예시
+public void OnRadioTriggered()
+{
+    if (state == GuardState.Idle || state == GuardState.MovingToOffice)
+    {
+        targetPerson.currentCondition = PersonCondition.Tired;
+        state = GuardState.MovingToRadio;
+        Debug.Log("라디오 소리 탐지! 라디오로 이동");
+    }
+}
 
      public void SetCondition(PersonCondition condition)
     {
+        targetPerson.currentCondition = condition;
         switch (condition)
         {
             case PersonCondition.Vital:
@@ -119,7 +207,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         Vector3 originalPos = transform.position;
 
         // 2. 점프 시퀀스
-        Sequence jumpSequence = DOTween.Sequence();
+        DG.Tweening.Sequence jumpSequence = DOTween.Sequence();
 
         // 위로 점프
         jumpSequence.Append(transform.DOMoveY(originalPos.y + jumpHeight, jumpDuration * 0.5f).SetEase(Ease.OutQuad));

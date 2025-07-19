@@ -73,17 +73,21 @@ public class PossessionSystem : MonoBehaviour
                 }
                 else
                 {
-                    if(Person.currentCondition == PersonCondition.Vital)
+                    PersonCondition condition = obssessingTarget.GetComponent<Person>().currentCondition;
+                    if(condition == PersonCondition.Vital)
                     {
-                        SoulEnergySystem.Instance.Consume(-1); // 1회복
+                        SoulEnergySystem.Instance.Consume(-1);
+                        break;
                     }
-                    else if(Person.currentCondition == PersonCondition.Normal)
+                    else if(condition == PersonCondition.Normal)
                     {
                         SoulEnergySystem.Instance.Consume(0);
+                        break;
                     }
-                    else if(Person.currentCondition == PersonCondition.Tired)
+                    else if(condition == PersonCondition.Tired)
                     {
-                        SoulEnergySystem.Instance.Consume(5); // 테스트 중
+                        SoulEnergySystem.Instance.Consume(1);
+                        break;
                     }
                 }
                 break;
