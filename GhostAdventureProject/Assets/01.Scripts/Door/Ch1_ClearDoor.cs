@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Ch1_ClearDoor : MonoBehaviour
+public class Ch1_ClearDoor : BaseInteractable
 {
     [SerializeField] private Ch1_MemoryPositive_01_TeddyBear TeddyBear;
     [SerializeField] private Ch1_GarageEventManager garageEvent;
