@@ -35,7 +35,7 @@ public class Person : MonoBehaviour
                 lastCondition = currentCondition;
             }
 
-        // UI 위치는 매 프레임 갱신 (움직이는 캐릭터일 경우)
+        // UI 위치는 매 프레임 갱신 (움직이는 캐릭터)
         if (UI != null)
             UI.transform.position = transform.position + Vector3.up * yPos_UI;
     }    
