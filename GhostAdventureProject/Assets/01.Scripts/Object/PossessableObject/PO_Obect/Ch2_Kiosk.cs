@@ -18,6 +18,7 @@ public class Ch2_Kiosk : BasePossessable
     [SerializeField] private List<Button> correctSequence; // 인스펙터에서 정답 순서대로 등록
     [SerializeField] private List<Button> hiddenSequence;  // 히든 정답, 숨은 통로
     [SerializeField] private Button confirmButton;
+    [SerializeField] private Button resetButton;
     [SerializeField] private TextMeshProUGUI inputTextUI;
     
     private List<Button> currentInput = new();
@@ -86,6 +87,9 @@ public class Ch2_Kiosk : BasePossessable
         
         confirmButton.onClick.RemoveAllListeners();
         confirmButton.onClick.AddListener(CheckAnswer);
+        
+        resetButton.onClick.RemoveAllListeners();
+        resetButton.onClick.AddListener(ResetInput);
     }
     
     private void ClosePanel()
@@ -133,6 +137,13 @@ public class Ch2_Kiosk : BasePossessable
             currentInput.Clear();
             UpdateInputDisplay();
         }
+    }
+    
+    private void ResetInput()
+    {
+        currentInput.Clear();
+        UpdateInputDisplay();
+        Debug.Log("입력이 리셋되었습니다.");
     }
 
     private bool CompareSequence(List<Button> input, List<Button> target)

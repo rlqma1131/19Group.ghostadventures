@@ -16,6 +16,8 @@ public class Ch2_DrawingClue : MonoBehaviour
     private bool isZoomActive = false;
     private bool zoomActivatedOnce = false;
     [SerializeField] private bool hasActivated = false;
+    [SerializeField] private bool isLastClue = false;
+    [SerializeField] private Ch2_BackStreetObj finalObjectToActivate; 
 
     void Start()
     {
@@ -73,6 +75,12 @@ public class Ch2_DrawingClue : MonoBehaviour
                 if (!zoomActivatedOnce)
                 {
                     cluePickup?.PickupClue();
+                    
+                    if (isLastClue && finalObjectToActivate != null)
+                    {
+                        // finalObjectToActivate.SendMessage("OnFinalClueActivated");
+                        finalObjectToActivate.OnFinalClueActivated();
+                    }
 
                     if (nextClueObject != null)
                     {
