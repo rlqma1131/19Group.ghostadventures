@@ -74,7 +74,14 @@ public class UIManager : Singleton<UIManager>
 
     // ===========================================================================================    
 
+    // 커서 관리
+    [Header("Cursor Settings")]
+    [SerializeField] private Texture2D defaultCursor; // 기본
+    [SerializeField] private Texture2D findClueCursor; // 단서
+    [SerializeField] private Vector2 hotspot = Vector2.zero;
 
+    // -------------------------------------------------------------------------------------------
+    
     // private void Start()
     // {
     //     playModeUI.SetActive(false);
@@ -83,6 +90,27 @@ public class UIManager : Singleton<UIManager>
     //     // gameover.SetActive(false);
     // }
 
+    private void Start()
+    {
+        SetDefaultCursor();
+    }
+
+    // 기본 커서
+    public void SetDefaultCursor()
+    {
+        Cursor.SetCursor(defaultCursor, hotspot, CursorMode.Auto);
+    }
+
+    // 단서 커서
+    public void FindClueCursor()
+    {
+        Cursor.SetCursor(findClueCursor, hotspot, CursorMode.Auto);
+    }
+
+    public void ClearCursor()
+    {
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+    }
 
     // targetUI 하나만 보이게 하기
     public void ShowOnly(GameObject targetUI)

@@ -20,6 +20,7 @@ public class SafeBox : BaseInteractable
         safeBoxOpenAble = false;
         safeBoxOpen = false;
         ZoomSafeBox.SetActive(false);
+        q_Key.SetActive(false);
         inventory = Inventory_PossessableObject.Instance;
     }
 
@@ -36,19 +37,26 @@ public class SafeBox : BaseInteractable
             if(safeBoxOpenAble && !safeBoxOpen)
             {
                 UIManager.Instance.PromptUI.ShowPrompt("금고를 열 수 없습니다", 1.5f);
+                return;
             }
-            return;
         }
-        if(safeBoxOpen == false)
+        if(safeBoxOpenAble && !safeBoxOpen)
             q_Key.SetActive(true);
-        
+        if(!safeBoxOpenAble)
+            q_Key.SetActive(false);
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
         if(collision.CompareTag("Person") || collision.CompareTag("Player"))
-        safeBoxOpenAble = true;
+        {
+            if(!safeBoxOpen)
+            {
+                highlight.SetActive(true);
+                safeBoxOpenAble = true;
+            }
+        }
     }
 
     protected override void OnTriggerExit2D(Collider2D collision)
@@ -61,6 +69,7 @@ public class SafeBox : BaseInteractable
     IEnumerator OpenSafeBox()
     {
         safeBoxOpen = true;
+        highlight.SetActive(false);
         q_Key.SetActive(false);
         openSafeBox.SetActive(true);
         inventory.TryUseSelectedItem();
