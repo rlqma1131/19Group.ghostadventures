@@ -13,6 +13,8 @@ public class Ch2_SewerMusicPuzzle : MonoBehaviour
     private bool isPlaying = false;
     private float songStartTime;
     private bool movedDuringPlay = false;
+    
+    [SerializeField] private Transform returnPoint;
 
     public void StartPuzzle()
     {
@@ -95,6 +97,10 @@ public class Ch2_SewerMusicPuzzle : MonoBehaviour
 
     private void TriggerPunishment()
     {
-        Debug.Log("음악 재생 중 이동 감지 - 사신 트리거 ( 사운드 트리거 삽입 자리 )");
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null && returnPoint != null)
+        {
+            player.transform.position = returnPoint.position;
+        }
     }
 }

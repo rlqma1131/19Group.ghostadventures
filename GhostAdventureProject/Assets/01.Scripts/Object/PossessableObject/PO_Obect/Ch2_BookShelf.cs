@@ -11,12 +11,18 @@ public class Ch2_BookShelf : BasePossessable
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
     
     [SerializeField] private Ch2_BookSlot[] bookSlots;
+    [SerializeField] private List<Ch2_BookSlot> correctSequence;
+    [SerializeField] private GameObject resetButton;
     [SerializeField] private GameObject doorToOpen;
+    private List<Ch2_BookSlot> clickedSequence = new List<Ch2_BookSlot>();
     
     [SerializeField] private Transform moveTargetPosition;
     [SerializeField] private float moveDuration = 1.0f;
     [SerializeField] private float shakeDuration = 0.5f;
     [SerializeField] private float shakeStrength = 0.3f;
+    private int currentIndex = 0;
+    
+    [SerializeField] private List<Transform> moveTargets;
 
     private bool isControlMode = false;
 
@@ -54,7 +60,6 @@ public class Ch2_BookShelf : BasePossessable
         isControlMode = true;
         zoomCamera.Priority = 20;
         UIManager.Instance.PlayModeUI_CloseAll();
-        Debug.Log(" 책장 컨트롤 모드 진입");
     }
 
     private void ExitControlMode()
@@ -62,10 +67,8 @@ public class Ch2_BookShelf : BasePossessable
         isControlMode = false;
         zoomCamera.Priority = 5;
         UIManager.Instance.PlayModeUI_OpenAll();
-        Debug.Log(" 책장 컨트롤 모드 종료");
     }
-
-    // 마우스 클릭 처리 (Raycast)
+    
     private void LateUpdate()
     {
         if (!isControlMode || !Input.GetMouseButtonDown(0))
@@ -77,27 +80,60 @@ public class Ch2_BookShelf : BasePossessable
         if (hit.collider != null)
         {
             Ch2_BookSlot slot = hit.collider.GetComponent<Ch2_BookSlot>();
-            if (slot != null)
+            
+            if (slot.IsResetBook)
             {
-                slot.ToggleBook();
-                CheckPuzzleSolved();
+                ResetAllBooks();
+                return;
             }
+
+            slot.ToggleBook();
+            
+            if (slot.IsPushed)
+                clickedSequence.Add(slot);
+            else
+                clickedSequence.Remove(slot);
+
+            CheckPuzzleSolved();
         }
     }
 
     private void CheckPuzzleSolved()
     {
-        int count = 0;
+        if (clickedSequence.Count != correctSequence.Count)
+            return;
 
-        foreach (var slot in bookSlots)
+        for (int i = 0; i < correctSequence.Count; i++)
         {
-            if (slot.IsCorrectBook && slot.IsPushed)
-                count++;
+            if (clickedSequence[i] != correctSequence[i])
+                return;
         }
+        
+        Sequence moveSequence = DOTween.Sequence();
 
-        if (count == 5)
+        for (int i = 0; i < correctSequence.Count; i++)
         {
-            Debug.Log(" 정답 책 선택 완료");
+            var slot = correctSequence[i];
+            var target = moveTargets[i];
+
+            if (slot != null && target != null && slot.booknameRenderer != null)
+            {
+                var imgTransform = slot.booknameRenderer.transform;
+
+                moveSequence.Join(
+                    imgTransform.DOMove(target.position, 1.0f).SetEase(Ease.InOutSine)
+                );
+
+                moveSequence.Join(
+                    imgTransform.DOScale(3f, 1.0f).SetEase(Ease.OutQuad)
+                );
+            }
+        }
+        
+        moveSequence.AppendInterval(2f);
+        
+        moveSequence.OnComplete(() =>
+        {
             doorToOpen.SetActive(true);
             ExitControlMode();
             hasActivated = false;
@@ -109,6 +145,17 @@ public class Ch2_BookShelf : BasePossessable
                          transform.DOMove(moveTargetPosition.position, moveDuration)
                                   .SetEase(Ease.InOutSine);
                      });
+        });
+    }
+    
+    public void ResetAllBooks()
+    {
+        foreach (var slot in bookSlots)
+        {
+            if (slot.IsPushed)
+                slot.ToggleBook();
         }
+        // currentIndex = 0;
+        clickedSequence.Clear();
     }
 }
