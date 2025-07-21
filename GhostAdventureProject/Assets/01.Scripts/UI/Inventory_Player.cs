@@ -21,6 +21,24 @@ public class Inventory_Player : MonoBehaviour
 
     public void AddClue(ClueData clue)
     {
+        // 그림일기라면 기존 것 교체
+        if (clue.isDrawingClue)
+        {
+            for (int i = 0; i < collectedClues.Count; i++)
+            {
+                if (collectedClues[i].isDrawingClue)
+                {
+                    collectedClues[i] = clue;
+                    RefreshUI();
+                    return;
+                }
+            }
+
+            // 기존 그림일기 없으면 추가
+            collectedClues.Add(clue);
+            RefreshUI();
+            return;
+        }
         
         if (!collectedClues.Contains(clue)) //같은 clue 중복획득 방지 
         {

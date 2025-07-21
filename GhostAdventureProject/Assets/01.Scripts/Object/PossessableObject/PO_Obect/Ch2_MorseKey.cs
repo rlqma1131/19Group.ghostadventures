@@ -2,9 +2,17 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Ch2_MorseKey : BasePossessable
 {
+    [Header("출구")]
+    [SerializeField] private Ch2_ClearDoor clearDoor;
+
+    [Header("UI 그룹")]
+    [SerializeField] private CanvasGroup panelCanvasGroup; // 모스키 입력 판넬
+    [SerializeField] private RectTransform inputAreaUI; // 입력 영영 버튼UI
+
     [Header("모스 부호 UI")]
     [SerializeField] private TMP_Text morseDisplayText;      // 화면 하단: 현재 입력 중인 모스부호
 
@@ -15,6 +23,7 @@ public class Ch2_MorseKey : BasePossessable
     [SerializeField] private AudioClip dotInputSFX;
     [SerializeField] private AudioClip dashInputSFX;
 
+    private bool isSuccessAnimating = false;
     private Coroutine shakeCoroutine;
 
     private Dictionary<string, char> morseToChar = new Dictionary<string, char>()
@@ -58,18 +67,52 @@ public class Ch2_MorseKey : BasePossessable
     private float pressStartTime;
     private const float dashThreshold = 0.25f;
 
+    private void Awake()
+    {
+        if (panelCanvasGroup != null)
+        {
+            panelCanvasGroup.alpha = 0f;          // 완전 투명
+            panelCanvasGroup.interactable = false;
+            panelCanvasGroup.blocksRaycasts = false;
+        }
+
+        currentMorseChar = "";
+        decodedLetters.Clear();
+        UpdateUI();
+    }
+
     protected override void Update()
     {
-        base.Update();
-
         if (!isPossessed)
             return;
 
         // 입력 감지 (Dot / Dash)
         if (Input.GetMouseButtonDown(0))
         {
+            if (!IsPointerOverInputArea())
+                return;
+
             isPressing = true;
             pressStartTime = Time.time;
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            Unpossess();
+
+            // UI 초기화
+            decodedLetters.Clear();
+            currentMorseChar = "";
+            UpdateUI();
+        }
+        else if (Input.GetKeyDown(KeyCode.Q)) // 치트키
+        {
+            decodedLetters.Clear();
+            decodedLetters.AddRange(new char[] { 'H', 'E', 'L', 'P' });
+            UpdateUI();
+
+            StartSuccessShake(); // 진동 + 확대 + 빨갛게
+
+            clearDoor.ActivateClearDoor(); // 문 열기
         }
 
         if (isPressing && Input.GetMouseButtonUp(0))
@@ -99,7 +142,8 @@ public class Ch2_MorseKey : BasePossessable
         }
 
         // 전체 입력 리셋 처리
-        if ((decodedLetters.Count > 0 || currentMorseChar.Length > 0) && timeSinceLastInput > resetThreshold)
+        if (!isSuccessAnimating && (decodedLetters.Count > 0 || currentMorseChar.Length > 0) 
+            && timeSinceLastInput > resetThreshold)
         {
             Debug.Log("입력이 오래 멈췄습니다. 전체 초기화.");
             currentMorseChar = "";
@@ -108,10 +152,19 @@ public class Ch2_MorseKey : BasePossessable
         }
     }
 
+    public override void OnPossessionEnterComplete() 
+    { 
+        StartCoroutine(FadeInPanel(1.0f)); // 판넬 페이드 인
+    }
+
     private void UpdateUI()
     {
-        morseDisplayText.text = ConvertToVisualMorse(currentMorseChar);
         decodedDisplayText.text = new string(decodedLetters.ToArray());
+
+        if (!isSuccessAnimating)
+        {
+            morseDisplayText.text = ConvertToVisualMorse(currentMorseChar);
+        }
     }
 
     private string ConvertToVisualMorse(string rawMorse)
@@ -160,14 +213,17 @@ public class Ch2_MorseKey : BasePossessable
             string currentWord = new string(decodedLetters.ToArray());
             Debug.Log($"입력된 단어: {currentWord}");
 
+            // 정답
             if (currentWord == "HELP")
             {
-                ActivateExit();
+                StartSuccessShake(); // 진동 + 확대 + 빨갛게
+                clearDoor.ActivateClearDoor();
             }
+            // 오답
             else
             {
                 Debug.Log("틀린 단어입니다. 초기화");
-                StartShakeAndClear(); // 진동 애니메이션
+                StartShakeAndClear(); // 진동 + 초기화
             }
         }
 
@@ -237,9 +293,143 @@ public class Ch2_MorseKey : BasePossessable
         UpdateUI();
     }
 
-    private void ActivateExit()
+    private void StartSuccessShake()
     {
-        // 탈출구 활성화
+        if (shakeCoroutine != null)
+            StopCoroutine(shakeCoroutine);
+
+        shakeCoroutine = StartCoroutine(ShakeSuccess());
     }
 
+    private IEnumerator ShakeSuccess()
+    {
+        isSuccessAnimating = true;
+
+        decodedDisplayText.ForceMeshUpdate();
+        yield return null;
+
+        TMP_TextInfo textInfo = decodedDisplayText.textInfo;
+
+        float duration = 3f;
+        float timer = 0f;
+
+        Vector3[][] originalVertices = new Vector3[textInfo.meshInfo.Length][];
+        for (int i = 0; i < textInfo.meshInfo.Length; i++)
+        {
+            originalVertices[i] = textInfo.meshInfo[i].vertices.Clone() as Vector3[];
+        }
+
+        float minShake = 0.5f;
+        float maxShake = 10f;
+
+        Color32 originalColor = decodedDisplayText.color;
+        Color32 targetColor = new Color32(255, 0, 0, 255); // 빨강
+
+        yield return new WaitForSeconds(1.5f); // 약간의 딜레이 후 시작
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / duration;
+            float shakeStrength = Mathf.Lerp(minShake, maxShake, t);
+            Color32 lerpedColor = Color32.Lerp(originalColor, targetColor, t); // 점점 빨개짐
+
+            for (int i = 0; i < textInfo.characterCount; i++)
+            {
+                if (!textInfo.characterInfo[i].isVisible)
+                    continue;
+
+                int materialIndex = textInfo.characterInfo[i].materialReferenceIndex;
+                int vertexIndex = textInfo.characterInfo[i].vertexIndex;
+
+                Vector3[] vertices = textInfo.meshInfo[materialIndex].vertices;
+                Color32[] vertexColors = textInfo.meshInfo[materialIndex].colors32;
+
+                Vector3 offset = new Vector3(
+                    Random.Range(-1f, 1f),
+                    Random.Range(-1f, 1f),
+                    0f
+                ) * shakeStrength;
+
+                for (int j = 0; j < 4; j++)
+                {
+                    vertices[vertexIndex + j] = originalVertices[materialIndex][vertexIndex + j] + offset;
+                    vertexColors[vertexIndex + j] = lerpedColor; // 💡 색상 적용
+                }
+            }
+
+            for (int i = 0; i < textInfo.meshInfo.Length; i++)
+            {
+                textInfo.meshInfo[i].mesh.vertices = textInfo.meshInfo[i].vertices;
+                textInfo.meshInfo[i].mesh.colors32 = textInfo.meshInfo[i].colors32;
+                decodedDisplayText.UpdateGeometry(textInfo.meshInfo[i].mesh, i);
+            }
+
+            yield return null;
+        }
+
+        yield return StartCoroutine(FadeOutPanel(0.2f));
+    }
+
+
+
+
+    private IEnumerator FadeInPanel(float duration)
+    {
+        panelCanvasGroup.alpha = 0f;
+        panelCanvasGroup.interactable = true;
+        panelCanvasGroup.blocksRaycasts = true;
+
+        float timer = 0f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / duration;
+            panelCanvasGroup.alpha = Mathf.Lerp(0f, 1f, t);
+            yield return null;
+        }
+
+        panelCanvasGroup.alpha = 1f;
+    }
+
+    private IEnumerator FadeOutPanel(float duration)
+    {
+        float startAlpha = panelCanvasGroup.alpha;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / duration;
+            panelCanvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, t); // 점점 투명하게
+            yield return null;
+
+            hasActivated = false; // 더 이상 빙의 불가능
+            Unpossess();
+        }
+
+        panelCanvasGroup.alpha = 0f;
+        panelCanvasGroup.interactable = false;
+        panelCanvasGroup.blocksRaycasts = false;
+    }
+
+    // 입력 영역 눌렀는지 확인
+    private bool IsPointerOverInputArea()
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        foreach (var result in results)
+        {
+            if (result.gameObject == inputAreaUI.gameObject || result.gameObject.transform.IsChildOf(inputAreaUI))
+                return true;
+        }
+
+        return false;
+    }
 }
