@@ -58,6 +58,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
             float distance = Vector3.Distance(transform.position, player.position);
             targetT = Mathf.Clamp01(1 - (distance / detectionRadius));
             targetT = Mathf.Pow(targetT, 0.5f);
+            SoundManager.Instance.EnemySource.volume = Mathf.Lerp(0.01f, 0.3f, targetT); // 볼륨 조정
         }
 
         t = Mathf.Lerp(t, targetT, Time.deltaTime * 2f);
@@ -69,6 +70,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            SoundManager.Instance.FadeInLoopingSFX(SoundManager.Instance.EnemySource.clip, 1f, 0.5f);
             PlayerInTrigger = true;
             globalVolume.enabled = true;
         }
@@ -79,8 +81,9 @@ public class EnemyVolumeTrigger : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             PlayerInTrigger = false;
-           // globalVolume.enabled = false;
-       
+            SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
+            // globalVolume.enabled = false;
+
         }
     }
 
