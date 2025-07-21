@@ -69,11 +69,27 @@ public class MemoryFragment : BaseInteractable
         Sprite dropSprite = GetFragmentSpriteByType(data.type);
         if (fragmentDropPrefab == null || dropSprite == null) return;
 
-        GameObject drop = Instantiate(fragmentDropPrefab, transform.position + dropOffset, Quaternion.identity);
+        StartCoroutine(InstantiateDrop(dropSprite));
 
+        //GameObject drop = Instantiate(fragmentDropPrefab, transform.position + dropOffset, Quaternion.identity);
+
+        //if (drop.TryGetComponent(out SpriteRenderer sr))
+        //    sr.sprite = dropSprite;
+        //    sr.sortingOrder = 150; // 드랍 조각의 정렬 순서 설정
+
+        //StartCoroutine(PlayDropSequence(drop));
+    }
+
+    private IEnumerator InstantiateDrop(Sprite dropSprite)
+    {
+        yield return new WaitForSeconds(0.1f); // 잠시 대기 후 드랍 생성
+
+        GameObject drop = Instantiate(fragmentDropPrefab, transform.position + dropOffset, Quaternion.identity);
         if (drop.TryGetComponent(out SpriteRenderer sr))
+        {
             sr.sprite = dropSprite;
             sr.sortingOrder = 150; // 드랍 조각의 정렬 순서 설정
+        }
 
         StartCoroutine(PlayDropSequence(drop));
     }
