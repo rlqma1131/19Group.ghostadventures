@@ -14,6 +14,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     public Transform bench;
     public Transform OfficeDoor_Outside;
     public Transform OfficeDoor_Inside;
+    public SpriteRenderer sr;
 
     private GuardState state; 
     private float restTimer = 0f;
@@ -31,8 +32,9 @@ public class CH2_SecurityGuard : MoveBasePossessable
     {
         base.Start();
         hasActivated = true;
-        moveSpeed = 8f;
+        moveSpeed = 2f;
         isIn = true;
+        sr = GetComponentInChildren<SpriteRenderer>();
     }
 
     protected override void Update()
@@ -85,13 +87,19 @@ public class CH2_SecurityGuard : MoveBasePossessable
     // 목적지까지 이동
     void MoveTo(Vector3 target)
     {   
-        Vector3 targetPos = transform.position;
-        targetPos.x = target.x;
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
-
-        if (Mathf.Abs(transform.position.x - target.x) < 0.1f)
+        if(!isPossessed)
         {
-            OnDestinationReached(target);
+            Vector3 targetPos = transform.position;
+            targetPos.x = target.x;
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+            if(transform.position.x - target.x >0)
+                sr.flipX = true;
+            else
+                sr.flipX = false;
+            if (Mathf.Abs(transform.position.x - target.x) < 0.1f)
+            {
+                OnDestinationReached(target);
+            }
         }
     }
 
@@ -119,6 +127,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 state = GuardState.Idle;
                 targetPerson.currentCondition = PersonCondition.Unknown;
                 hasActivated = false;
+                isIn = true;
                 // waitTimer += Time.deltaTime;
                 // if (waitTimer >= waitDuration)
                 // {
