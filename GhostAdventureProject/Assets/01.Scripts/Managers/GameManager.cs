@@ -22,23 +22,36 @@ public class GameManager : Singleton<GameManager>
         SpawnPlayer();
     }
 
-    public void SpawnPlayer()
+    public void SpawnPlayer(bool useSavedData = false)
     {
-        if (currentPlayer == null)
+        Vector3 spawnPosition = Vector3.zero;
+
+        if (useSavedData)
+        {
+            SaveData data = SaveManager.LoadGame();
+            if (data != null && data.sceneName == SceneManager.GetActiveScene().name)
+            {
+                spawnPosition = data.playerPosition;
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] 저장 데이터 없음 또는 씬 불일치");
+            }
+        }
+        else
         {
             string sceneName = SceneManager.GetActiveScene().name;
             string startPointName = $"StartPoint_{sceneName}";
             Transform startPoint = GameObject.Find(startPointName)?.transform;
-
-            Vector3 spawnPosition = startPoint != null ? startPoint.position : Vector3.zero;
-
-            GameObject go = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
-            currentPlayer = go;
-            playerController = go.GetComponent<PlayerController>();
-            DontDestroyOnLoad(go);
-
-            Debug.Log($"[GameManager] Player 스폰 완료 - {startPointName} 위치에서 시작: {spawnPosition}");
+            spawnPosition = startPoint != null ? startPoint.position : Vector3.zero;
         }
+
+        GameObject go = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+        currentPlayer = go;
+        playerController = go.GetComponent<PlayerController>();
+        DontDestroyOnLoad(go);
+
+        Debug.Log($"[GameManager] Player 스폰 완료: {spawnPosition}");
     }
 
     /// <summary>

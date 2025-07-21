@@ -4,8 +4,11 @@ using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject>
+public class Inventory_PossessableObject : MonoBehaviour
 {
+    // 싱글톤
+    public static Inventory_PossessableObject Instance { get; private set; }
+
     public Transform slotParent; // 슬롯이 생성될 부모 위치
     public GameObject slotPrefab; // 슬롯 프리팹
     private ItemData itemToPlace;
@@ -18,6 +21,16 @@ public class Inventory_PossessableObject : Singleton<Inventory_PossessableObject
 
     void Start()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         inventory_Player = FindObjectOfType<Inventory_Player>();
     }
 

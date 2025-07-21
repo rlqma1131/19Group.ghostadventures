@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class HaveItem : Singleton<HaveItem>
+public class HaveItem : MonoBehaviour
 {
+    public static HaveItem Instance { get; private set; }
+
     [Header("ItemData Scriptable Object를 넣어주세요")]
     public List<ItemData> initialItems = new List<ItemData>();
 
@@ -11,6 +13,16 @@ public class HaveItem : Singleton<HaveItem>
 
     private void Start()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         ConvertToSlots();
     }
 
