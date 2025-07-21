@@ -2,7 +2,8 @@
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-
+using Cinemachine;
+using DG.Tweening;
 public class QTEUI2 : MonoBehaviour
 {
     [Header("UI References")]
@@ -20,6 +21,11 @@ public class QTEUI2 : MonoBehaviour
     private bool isRunning = false;
     private bool isSuccess;
 
+    private CinemachineVirtualCamera camera;
+    private float currentSize;
+    private float targetSize;
+
+
     public void Start()
     {
         success.gameObject.SetActive(false);
@@ -35,14 +41,19 @@ public class QTEUI2 : MonoBehaviour
         currentTime = 0f;
         gaugeBar.fillAmount = 0f;
         isRunning = true;
+        camera = GameManager.Instance.Player.GetComponent<PlayerCamera>().currentCam;
+        currentSize = camera.m_Lens.OrthographicSize;
         StartCoroutine(RunQTE());
     }
 
     private IEnumerator RunQTE()
     {
+        
         while (currentTime < timeLimit)
         {
-            if(currentPressCount >= requiredPresses)
+
+           
+            if (currentPressCount >= requiredPresses)
             {
                 success.gameObject.SetActive(true);
                 isSuccess = true;
@@ -54,16 +65,22 @@ public class QTEUI2 : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                 
+                 
+                 targetSize = camera.m_Lens.OrthographicSize - currentSize * 0.05f;
+                DOTween.To(() => camera.m_Lens.OrthographicSize, x => camera.m_Lens.OrthographicSize = x, targetSize, 0.3f);
                 currentPressCount++;
                 gaugeBar.fillAmount = Mathf.Clamp01((float)currentPressCount / requiredPresses);
             }
 
             yield return null;
         }
-        
+       
+
         // 탈출 성공시
         if (currentPressCount >= requiredPresses)
         {
+            DOTween.To(() => camera.m_Lens.OrthographicSize, x => camera.m_Lens.OrthographicSize = x, currentSize, 0.3f);
             success.gameObject.SetActive(true);
             isSuccess = true;
         }
@@ -71,6 +88,7 @@ public class QTEUI2 : MonoBehaviour
         // 탈출 실패시
         else
         {
+            DOTween.To(() => camera.m_Lens.OrthographicSize, x => camera.m_Lens.OrthographicSize = x, currentSize, 0.3f);
             fail.gameObject.SetActive(true);
             isSuccess = false;
         }

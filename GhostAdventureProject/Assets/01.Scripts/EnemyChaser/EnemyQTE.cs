@@ -73,7 +73,7 @@ public class EnemyQTE : MonoBehaviour
         QTEEffectManager.Instance.playerTarget = player;
         QTEEffectManager.Instance.enemyTarget = this.transform;
         QTEEffectManager.Instance.StartQTEEffects();
-
+        
         var qte2 = UIManager.Instance.QTE_UI_2;
         qte2.StartQTE();
 

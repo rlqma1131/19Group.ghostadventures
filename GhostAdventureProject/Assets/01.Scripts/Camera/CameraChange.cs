@@ -7,7 +7,7 @@ using UnityEngine;
 public class CameraChange : MonoBehaviour
 {
 
-    [SerializeField] private CinemachineVirtualCamera Vcam; // 현재 카메라를 참조하기 위한 변수
+    public  CinemachineVirtualCamera Vcam; // 현재 카메라를 참조하기 위한 변수
 
     private int CurrentPriority = 10; // 현재 카메라 우선순위
     private int ActivePriority = 13; // 활성화된 카메라 우선순위
