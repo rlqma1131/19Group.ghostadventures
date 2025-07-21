@@ -37,7 +37,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
 
     void Update()
     {
-        if (!PlayerFind && player == null)
+        if (!PlayerFind)
         {
             GameObject playerObject = GameManager.Instance.Player;
             if (playerObject != null)
@@ -49,6 +49,8 @@ public class EnemyVolumeTrigger : MonoBehaviour
 
         if (player == null || colorAdjustments == null) return;
 
+        if (!PlayerInTrigger && Mathf.Approximately(t, 0f)) return;
+
         float targetT = 0f;
 
         if (PlayerInTrigger)
@@ -58,12 +60,10 @@ public class EnemyVolumeTrigger : MonoBehaviour
             targetT = Mathf.Pow(targetT, 0.5f);
         }
 
-        // t를 부드럽게 변화시킴
-        t = Mathf.Lerp(t, targetT, Time.deltaTime * 2f); // 수치 클수록 빠르게 변화
-
-        // 색상 보간 적용
+        t = Mathf.Lerp(t, targetT, Time.deltaTime * 2f);
         colorAdjustments.colorFilter.value = Color.Lerp(farColor, closeColor, t);
     }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
