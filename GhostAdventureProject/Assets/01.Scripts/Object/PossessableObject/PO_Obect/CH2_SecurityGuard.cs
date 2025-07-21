@@ -12,8 +12,9 @@ public class CH2_SecurityGuard : MoveBasePossessable
     [SerializeField] private Ch2_Radio radio; // 라디오
     public Transform Radio;
     public Transform bench;
-    public Transform office;
-    public Transform inOfficeDoor;
+    public Transform OfficeDoor_Outside;
+    public Transform OfficeDoor_Inside;
+    public SpriteRenderer sr;
 
     private GuardState state; 
     private float restTimer = 0f;
@@ -31,13 +32,14 @@ public class CH2_SecurityGuard : MoveBasePossessable
     {
         base.Start();
         hasActivated = true;
-        moveSpeed = 8f;
+        moveSpeed = 2f;
         isIn = true;
+        sr = GetComponentInChildren<SpriteRenderer>();
     }
 
     protected override void Update()
     {
-        if (!hasActivated) return;
+        // if (!hasActivated) return;
 
         base.Update();
 
@@ -48,15 +50,14 @@ public class CH2_SecurityGuard : MoveBasePossessable
         if(radio != null && radio.IsPlaying)
         {
             state = GuardState.MovingToRadio;
-            this.gameObject.SetActive(true);
         }
 
         switch (state)
         {
             case GuardState.MovingToRadio:
-                // CheckInOut();
-                this.gameObject.SetActive(true);
-                MoveTo(Radio.position);
+                CheckInOut();
+                // this.gameObject.SetActive(true);
+                // MoveTo(Radio.position);
                 break;
 
             case GuardState.MovingToBench:
@@ -73,7 +74,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 break;
 
             case GuardState.MovingToOffice:
-                MoveTo(office.position);
+                MoveTo(OfficeDoor_Outside.position);
                 break;
             
             case GuardState.InOffice:
@@ -86,13 +87,19 @@ public class CH2_SecurityGuard : MoveBasePossessable
     // 목적지까지 이동
     void MoveTo(Vector3 target)
     {   
-        Vector3 targetPos = transform.position;
-        targetPos.x = target.x;
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
-
-        if (Mathf.Abs(transform.position.x - target.x) < 0.1f)
+        if(!isPossessed)
         {
-            OnDestinationReached(target);
+            Vector3 targetPos = transform.position;
+            targetPos.x = target.x;
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+            if(transform.position.x - target.x >0)
+                sr.flipX = true;
+            else
+                sr.flipX = false;
+            if (Mathf.Abs(transform.position.x - target.x) < 0.1f)
+            {
+                OnDestinationReached(target);
+            }
         }
     }
 
@@ -101,41 +108,54 @@ public class CH2_SecurityGuard : MoveBasePossessable
     {
         if (destination == Radio.position)
         {
+            // isIn = false;
             targetPerson.currentCondition = PersonCondition.Normal;
             state = GuardState.MovingToBench;
         }
         else if (destination == bench.position)
-        {
+        {   
+            // isIn = false;
             targetPerson.currentCondition = PersonCondition.Normal;
             state = GuardState.Resting;
             restTimer = 0f;
         }
-        else if (destination == office.position)
+        else if (destination == OfficeDoor_Outside.position)
         {
-            transform.position = inOfficeDoor.position;
-            state = GuardState.Idle;
-            targetPerson.currentCondition = PersonCondition.Normal;
-            waitTimer += Time.deltaTime;
-            if (waitTimer >= waitDuration)
+            if(!isIn)
             {
-                // this.gameObject.SetActive(false); // 임시
-                // 경비실 안으로 이동
-                Debug.Log("경비실 도착. 경비실 안으로 이동");
+                transform.position = OfficeDoor_Inside.position;
+                state = GuardState.Idle;
+                targetPerson.currentCondition = PersonCondition.Unknown;
+                hasActivated = false;
+                isIn = true;
+                // waitTimer += Time.deltaTime;
+                // if (waitTimer >= waitDuration)
+                // {
+                //     // this.gameObject.SetActive(false); // 임시
+                //     // 경비실 안으로 이동
+                //     Debug.Log("경비실 도착. 경비실 안으로 이동");
+                // }
             }
         }
     }
 
     // 밖인지 안인지 확인
-    void CheckInOut()
+    private void CheckInOut()
     {
         if(isIn)
         {
-            MoveTo(inOfficeDoor.position);
-            if(transform.position == inOfficeDoor.position)
-            {    
-                transform.position = office.position;
+            MoveTo(OfficeDoor_Inside.position);
+            if(transform.position.x == OfficeDoor_Inside.position.x)
+            {   
+                Vector3 guardPos = transform.position;
+                guardPos.x = OfficeDoor_Outside.position.x + 0.5f;
+                transform.position = guardPos;
                 isIn = false;
             }
+        }
+        else
+        {
+            MoveTo(Radio.position);
         }
     }
     
