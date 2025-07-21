@@ -13,4 +13,9 @@ public class Ch2_MemoryFake_BackStreetObj : MemoryFragment
     {
         isScannable = true;
     }
+
+    public override void AfterScan()
+    {
+        base.AfterScan();
+    }
 }
