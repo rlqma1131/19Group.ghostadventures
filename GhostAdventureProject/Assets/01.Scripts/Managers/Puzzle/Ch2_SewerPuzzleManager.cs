@@ -7,6 +7,7 @@ public class Ch2_SewerPuzzleManager : MonoBehaviour
     public static Ch2_SewerPuzzleManager Instance;
     [SerializeField] private GameObject mazeGroup;
     [SerializeField] private GameObject autoLights;
+    [SerializeField] private GameObject sewerMemoryObj;
 
     private bool isSolved = false;
 
@@ -25,7 +26,7 @@ public class Ch2_SewerPuzzleManager : MonoBehaviour
         isSolved = true;
         mazeGroup.SetActive(false);
         autoLights.SetActive(true);
-        Debug.Log(" 지하수로 퍼즐 완료 ");
+        sewerMemoryObj.SetActive(true);
     }
 
     public bool IsPuzzleSolved() => isSolved;
