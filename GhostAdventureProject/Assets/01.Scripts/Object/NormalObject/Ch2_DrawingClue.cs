@@ -90,6 +90,7 @@ public class Ch2_DrawingClue : MonoBehaviour
                     }
                     
                     zoomActivatedOnce = true;
+                    GetComponent<Collider2D>().enabled = false;
                 }
 
                 if (isPlayerInside)

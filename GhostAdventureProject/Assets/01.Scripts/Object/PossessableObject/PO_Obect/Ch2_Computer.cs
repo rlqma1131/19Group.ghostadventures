@@ -13,6 +13,15 @@ public class Ch2_Computer : BasePossessable
     [SerializeField] private GameObject passwordPanel;
     [SerializeField] private TMP_InputField passwordInput;
     [SerializeField] private Button confirmButton;
+    
+    [SerializeField] private GameObject correctImage;
+    [SerializeField] private GameObject wrongImage;
+    [SerializeField] private float wrongShakeStrength = 0.2f;
+    [SerializeField] private float wrongShakeDuration = 0.3f;
+    [SerializeField] private float flashDuration = 0.2f;
+    [SerializeField] private Image panelBackgroundImage;
+    [SerializeField] private Color defaultColor = new Color(0f, 0f, 0f, 0f);
+    [SerializeField] private Color flashColor = Color.red;
 
     [Header("Puzzle Settings")]
     [SerializeField] private string correctPassword;
@@ -123,16 +132,45 @@ public class Ch2_Computer : BasePossessable
 
         if (input == correctPassword)
         {
-            Debug.Log(" 비밀번호 정답 ");
-            doorToOpen.SolvePuzzle();
-            ClosePanel();
+            if (correctImage != null)
+            {
+                correctImage.SetActive(true);
+            }
+            StartCoroutine(ShowCorrectImage());  
         }
         else
         {
-            Debug.Log(" 비밀번호 틀림 ");
             passwordInput.text = "";
-            passwordInput.ActivateInputField();
+            StartCoroutine(WrongFeedback());  
         }
+    }
+    
+    private IEnumerator ShowCorrectImage()
+    {
+        yield return new WaitForSeconds(2f);
+        doorToOpen.SolvePuzzle();
+        ClosePanel();
+    }
+    
+    private IEnumerator WrongFeedback()
+    {
+        wrongImage.SetActive(true);
+        // 흔들림 (UI 패널 자체 흔들기)
+        monitorPanel.DOShakeAnchorPos(wrongShakeDuration, wrongShakeStrength);
+
+        // 빨간색 플래시
+        if (panelBackgroundImage != null)
+        {
+            panelBackgroundImage.color = flashColor;
+            yield return new WaitForSeconds(flashDuration);
+            panelBackgroundImage.color = defaultColor;
+        }
+        
+        yield return new WaitForSeconds(1f);
+        wrongImage.SetActive(false);
+
+        // 입력창 재활성화
+        passwordInput.ActivateInputField();
     }
 
     public void Activate()
