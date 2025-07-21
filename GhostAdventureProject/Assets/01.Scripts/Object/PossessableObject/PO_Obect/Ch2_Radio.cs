@@ -95,7 +95,7 @@ public class Ch2_Radio : BasePossessable
         {
             speakerOn.SetBool("OnSpeaker", true); // 스피커 애니메이션 재생
             Animator musicalNoteAni = musicalNoteOn.GetComponent<Animator>();
-            musicalNoteAni.SetBool("OnSpeaker", true);
+            // musicalNoteAni.SetBool("OnSpeaker", true);
             musicalNoteOn.SetActive(true);
         }
         else if(!IsPlaying)
@@ -103,7 +103,7 @@ public class Ch2_Radio : BasePossessable
             speakerOn.SetBool("OnSpeaker", false); // 스피커 애니메이션 재생
             musicalNoteOn.SetActive(false);
             Animator musicalNoteAni = musicalNoteOn.GetComponent<Animator>();
-            musicalNoteAni.SetBool("OnSpeaker", false);
+            // musicalNoteAni.SetBool("OnSpeaker", false);
         }
     }
 

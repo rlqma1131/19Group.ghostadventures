@@ -13,6 +13,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     public Transform Radio;
     public Transform bench;
     public Transform office;
+    public Transform inOfficeDoor;
 
     private GuardState state; 
     private float restTimer = 0f;
@@ -24,29 +25,19 @@ public class CH2_SecurityGuard : MoveBasePossessable
     
     [SerializeField] private GameObject q_Key;
     private bool isNearDoor = false;
+    private bool isIn;
     
     protected override void Start()
     {
         base.Start();
         hasActivated = true;
         moveSpeed = 8f;
+        isIn = true;
     }
 
     protected override void Update()
     {
         if (!hasActivated) return;
-
-        if (isNearDoor)
-        {
-            // Vector2 catPos = this.transform.position;
-            // catPos.y += 0.5f;
-            // q_Key.transform.position = catPos;
-            // q_Key.SetActive(true);
-        }
-        else if (!isNearDoor)
-        {
-            // q_Key.SetActive(false);
-        }
 
         base.Update();
 
@@ -59,14 +50,11 @@ public class CH2_SecurityGuard : MoveBasePossessable
             state = GuardState.MovingToRadio;
             this.gameObject.SetActive(true);
         }
-        if(radio != null && !radio.IsPlaying)
-        {
-            state = GuardState.MovingToOffice;
-        }
 
         switch (state)
         {
             case GuardState.MovingToRadio:
+                // CheckInOut();
                 this.gameObject.SetActive(true);
                 MoveTo(Radio.position);
                 break;
@@ -122,8 +110,9 @@ public class CH2_SecurityGuard : MoveBasePossessable
             state = GuardState.Resting;
             restTimer = 0f;
         }
-        else if (destination == office.position && !(state == GuardState.MovingToRadio))
+        else if (destination == office.position)
         {
+            transform.position = inOfficeDoor.position;
             state = GuardState.Idle;
             targetPerson.currentCondition = PersonCondition.Normal;
             waitTimer += Time.deltaTime;
@@ -132,6 +121,20 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 // this.gameObject.SetActive(false); // 임시
                 // 경비실 안으로 이동
                 Debug.Log("경비실 도착. 경비실 안으로 이동");
+            }
+        }
+    }
+
+    // 밖인지 안인지 확인
+    void CheckInOut()
+    {
+        if(isIn)
+        {
+            MoveTo(inOfficeDoor.position);
+            if(transform.position == inOfficeDoor.position)
+            {    
+                transform.position = office.position;
+                isIn = false;
             }
         }
     }

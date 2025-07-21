@@ -6,13 +6,6 @@ using UnityEngine;
 
 public class Inventory_Player : MonoBehaviour
 {
-    //관리인 ( 직원증 ( 관리실 문 해금 ) , 포스트잇 ( 메모판에서의 조합 ) , 열쇠 ( 금고 열쇠 ) )
-    // 라디오가 켜져서 관리실에서 나와 라디오를 끄러 옴 ( 켠디션 하 )
-    //라디오를 끄고 벤치에 앉으러 갈때까지 ( 컨디션 중 )
-    //벤치에 앉음 ( 컨디션 상 )
-
-
-
     public List<ClueData> collectedClues = new List<ClueData>(); // 단서데이터를 모아놓은 리스트
     public List<InventorySlot_Player> inventorySlots; // 슬롯 4개
     private int currentPage = 0;
@@ -44,6 +37,30 @@ public class Inventory_Player : MonoBehaviour
         {
             collectedClues.Add(clue);
             //UI 갱신 이벤트 호출
+            RefreshUI();
+        }
+    }
+
+    // 단서 삭제
+    public void RemoveClue(ClueData clue)
+    {
+        if (collectedClues.Contains(clue))
+        {
+            collectedClues.Remove(clue);
+            RefreshUI();
+        }
+        else
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("이 단서가 아니야", 2f);
+        }
+    }
+    
+    // 이전 스테이지 단서 모두 삭제
+    public void RemoveClueBeforeStage()
+    {
+        if(collectedClues != null)
+        {
+            collectedClues.Clear();
             RefreshUI();
         }
     }
