@@ -17,9 +17,6 @@ public class Ch2_BackStreetObj : MonoBehaviour
     [SerializeField] private float moveDownDistance = 100f;
     [SerializeField] private float moveDownTime = 0.7f;
     
-    [SerializeField] private Ch2_MemoryFake_BackStreetObj memoryFragmentObject;
-    
-    
     public void OnFinalClueActivated()
     {
         Sequence seq = DOTween.Sequence();
@@ -41,13 +38,13 @@ public class Ch2_BackStreetObj : MonoBehaviour
         // 4. 바닥으로 스르륵 떨어짐
         seq.Join(revealMoveTarget.DOMove(fallTargetPoint.position, moveDownTime).SetEase(Ease.OutCubic));
 
-        // 5. 최종 기억 조각 활성화
-        seq.AppendCallback(() =>
-        {
-            if (memoryFragmentObject != null)
-            {
-                memoryFragmentObject.ActivateBackStreetObj();
-            }
-        });
+        // // 5. 최종 기억 조각 활성화
+        // seq.AppendCallback(() =>
+        // {
+        //     if (memoryFragmentObject != null)
+        //     {
+        //         memoryFragmentObject.ActivateBackStreetObj();
+        //     }
+        // });
     }
 }

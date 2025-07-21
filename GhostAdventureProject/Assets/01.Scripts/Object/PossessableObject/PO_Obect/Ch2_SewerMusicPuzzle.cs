@@ -73,10 +73,7 @@ public class Ch2_SewerMusicPuzzle : MonoBehaviour
         float elapsed = Time.time - songStartTime;
 
         // 경고 시간 이전 - 감시 X
-        if (elapsed <= warningTime)
-        {
-            return;
-        }
+        if (elapsed <= warningTime) return;
 
         // 경고 시간 이후 - 재생 끝나는 시점까지만 감시
         if (elapsed > warningTime && elapsed <= musicSegmentDuration)
@@ -95,12 +92,29 @@ public class Ch2_SewerMusicPuzzle : MonoBehaviour
         return Mathf.Abs(h) > 0.1f || Mathf.Abs(v) > 0.1f;
     }
 
+    private string[] punishmentMessages =
+    {
+        "다시… 같은 공간…",
+        "이 소리를… 무시하면 안돼.",
+        "소리엔… 반응하면 안 돼.",
+        "들켰다... 다시 처음으로.",
+        "음악이 끝날 때까지 기다려야 해.",
+        "노랫 소리가 들리면 움직이면 안돼",
+        "전등을 따라 미로 끝까지 가보자"
+    };
+    
     private void TriggerPunishment()
     {
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null && returnPoint != null)
         {
             player.transform.position = returnPoint.position;
+        }
+        
+        if (UIManager.Instance != null && UIManager.Instance.PromptUI != null)
+        {
+            string msg = punishmentMessages[Random.Range(0, punishmentMessages.Length)];
+            UIManager.Instance.PromptUI.ShowPrompt(msg, 2f);
         }
     }
 }
