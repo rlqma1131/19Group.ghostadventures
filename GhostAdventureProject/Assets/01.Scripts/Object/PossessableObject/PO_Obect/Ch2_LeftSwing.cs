@@ -77,7 +77,13 @@ public class Ch2_LeftSwing : BasePossessable
         }
         else
         {
-            StartNextQTE();
+            StartCoroutine(StartNextQTEDelayed());
         }
+    }
+    
+    private IEnumerator StartNextQTEDelayed()
+    {
+        yield return null; // 1프레임 대기 (또는 WaitForSecondsRealtime(0.1f))
+        StartNextQTE();
     }
 }
