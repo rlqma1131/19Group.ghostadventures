@@ -3045,7 +3045,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &574953437
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5099,7 +5099,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7441378727112994656, guid: cf8d9b7aba505b24fb594c7620d4bf71, type: 3}
       propertyPath: m_Name
-      value: OfficeDoor
+      value: OfficeDoor_Outside
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5388,7 +5388,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4732976139016957083, guid: fbb6236d6e2d0924989d1d9e7cd6408c, type: 3}
       propertyPath: m_Name
-      value: InOfficDoor
+      value: OfficeDoor_Inside
       objectReference: {fileID: 0}
     - target: {fileID: 7537533740529131480, guid: fbb6236d6e2d0924989d1d9e7cd6408c, type: 3}
       propertyPath: targetDoor
@@ -9801,8 +9801,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.85995007, y: 0.43420005, z: 0}
-    m_Extent: {x: 8.96215, y: 7.5371, z: 0}
+    m_Center: {x: -0.86000013, y: 0.43414998, z: 0}
+    m_Extent: {x: 8.9608, y: 7.5377502, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -10563,7 +10563,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1985739317984991533, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.99
+      value: -39.21
       objectReference: {fileID: 0}
     - target: {fileID: 1985739317984991533, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10641,6 +10641,14 @@ PrefabInstance:
       propertyPath: inOfficeDoor
       value: 
       objectReference: {fileID: 1498048714}
+    - target: {fileID: 6234196687190449394, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
+      propertyPath: OfficeDoor_Inside
+      value: 
+      objectReference: {fileID: 1498048714}
+    - target: {fileID: 6234196687190449394, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
+      propertyPath: OfficeDoor_Outside
+      value: 
+      objectReference: {fileID: 908334872}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
