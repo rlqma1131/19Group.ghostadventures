@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public enum GuardState { Idle, MovingToRadio, MovingToBench, Resting, MovingToOffice, InOffice }
 
@@ -16,6 +17,8 @@ public class CH2_SecurityGuard : MoveBasePossessable
     private GuardState state; 
     private float restTimer = 0f;
     public float restDuration = 3f;
+    private float waitTimer = 0f;
+    private float waitDuration = 1f;
     public Person targetPerson;
     public PersonConditionHandler conditionHandler;
     
@@ -54,11 +57,17 @@ public class CH2_SecurityGuard : MoveBasePossessable
         if(radio != null && radio.IsPlaying)
         {
             state = GuardState.MovingToRadio;
+            this.gameObject.SetActive(true);
+        }
+        if(radio != null && !radio.IsPlaying)
+        {
+            state = GuardState.MovingToOffice;
         }
 
         switch (state)
         {
             case GuardState.MovingToRadio:
+                this.gameObject.SetActive(true);
                 MoveTo(Radio.position);
                 break;
 
@@ -83,6 +92,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 hasActivated = false;
                 break;
         }
+
     }
 
     // 목적지까지 이동
@@ -112,30 +122,34 @@ public class CH2_SecurityGuard : MoveBasePossessable
             state = GuardState.Resting;
             restTimer = 0f;
         }
-        else if (destination == office.position)
+        else if (destination == office.position && !(state == GuardState.MovingToRadio))
         {
             state = GuardState.Idle;
             targetPerson.currentCondition = PersonCondition.Normal;
-            Debug.Log("경비실 도착. 상태 초기화");
+            waitTimer += Time.deltaTime;
+            if (waitTimer >= waitDuration)
+            {
+                // this.gameObject.SetActive(false); // 임시
+                // 경비실 안으로 이동
+                Debug.Log("경비실 도착. 경비실 안으로 이동");
+            }
         }
     }
+    
 
-private void StopRadioSound()
-{
-    Debug.Log("라디오소리 그만!");
-}
     //트리거 감지 예시
-public void OnRadioTriggered()
-{
-    if (state == GuardState.Idle || state == GuardState.MovingToOffice)
+    public void OnRadioTriggered()
     {
-        targetPerson.currentCondition = PersonCondition.Tired;
-        state = GuardState.MovingToRadio;
-        Debug.Log("라디오 소리 탐지! 라디오로 이동");
+        if (state == GuardState.Idle || state == GuardState.MovingToOffice)
+        {
+            targetPerson.currentCondition = PersonCondition.Tired;
+            state = GuardState.MovingToRadio;
+            Debug.Log("라디오 소리 탐지! 라디오로 이동");
+        }
     }
-}
-
-     public void SetCondition(PersonCondition condition)
+    
+    // QTE 관련 함수 (23일 이후 작업예정)  
+    public void SetCondition(PersonCondition condition)
     {
         targetPerson.currentCondition = condition;
         switch (condition)

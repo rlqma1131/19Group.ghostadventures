@@ -7,7 +7,8 @@ public enum PersonCondition
 {
     Vital,   // 활력
     Normal,  // 보통
-    Tired    // 피곤함
+    Tired,    // 피곤함
+    Unknown // 알 수 없음(빙의 불가)
 }
 
 public class Person : MonoBehaviour

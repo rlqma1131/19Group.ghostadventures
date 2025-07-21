@@ -7,6 +7,16 @@ public class CluePickup : MonoBehaviour
     [Header("단서 ScriptableObject를 넣어주세요")]
     public ClueData clueData;
 
+
+    void OnMouseEnter()
+    {
+        UIManager.Instance.FindClueCursor();
+    }
+
+    void OnMouseExit()
+    {
+        UIManager.Instance.SetDefaultCursor();
+    }
     public void PickupClue()
     {
         UIManager.Instance.Inventory_PlayerUI.AddClue(clueData);
