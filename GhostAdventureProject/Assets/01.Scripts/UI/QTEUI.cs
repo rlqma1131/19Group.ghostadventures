@@ -28,12 +28,12 @@ public class QTEUI : MonoBehaviour
     {
         currentAngle = 0f;
         needle.localEulerAngles = Vector3.zero;
-        gameObject.SetActive(true);
         isRunning = true;
         goingBack = false;
         wasSuccess = false;
         resultCallback = callback;
         ShowSuccessArc();
+        gameObject.SetActive(true);
     }
 
     void Update()
