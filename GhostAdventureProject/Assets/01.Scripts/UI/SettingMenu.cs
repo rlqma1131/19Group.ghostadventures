@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,7 +28,7 @@ public class SettingMenu : MonoBehaviour, IUIClosable
     private void Start()
     {
         settingsPanel.SetActive(false);
-        bgmSlider.onValueChanged.AddListener(SoundManager.Instance.SetBGMVolume);
+       // bgmSlider.onValueChanged.AddListener(SoundManager.Instance.SetBGMVolume);
         bgmSlider.value = SoundManager.Instance.BGMVolume;
         sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
         sfxSlider.value = SoundManager.Instance.SFXVolume;

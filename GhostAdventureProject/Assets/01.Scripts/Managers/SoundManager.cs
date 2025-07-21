@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 //    Main,
 //    Lv1_Castle,
 //    Lv2_Poison,
-//    Lv3_Desert,
+//    Lv3_Desert, 
 //    Lv4_Gold,
 //    Final,
 //    EndingScene
@@ -17,10 +17,11 @@ using UnityEngine.SceneManagement;
 
 public class SoundManager : Singleton<SoundManager>
 {
-    [Header("AudioSources")]
+    [Header("AudioSources")] 
     [SerializeField] private AudioSource bgmSource;
     [SerializeField] private AudioSource sfxSource;
     [SerializeField] private AudioSource sfxLoopSource;
+    [SerializeField] private AudioSource enemySource;
 
     //[Header("BGM Clips")]
     //[SerializeField] private AudioClip bgm_Title;
@@ -34,8 +35,10 @@ public class SoundManager : Singleton<SoundManager>
 
     public float BGMVolume => bgmSource.volume;
     public float SFXVolume => sfxSource.volume;
+    public AudioSource EnemySource => enemySource;
     public bool IsBGMMuted => bgmSource.mute;
     public bool IsSFXMuted => sfxSource.mute;
+    
 
     private Coroutine bgmFadeCoroutine;
 
@@ -157,10 +160,10 @@ public class SoundManager : Singleton<SoundManager>
     }
 
     // BGM 볼륨조절
-    public void SetBGMVolume(float sliderValue)
+    public void SetBGMVolume(float sliderValue , AudioSource audioSource)
     {
         float adjustedVolume = Mathf.Pow(sliderValue, 2f); // 지수 적용
-        bgmSource.volume = adjustedVolume;
+        audioSource.volume = adjustedVolume;
     }
 
     //SFX 볼륨조절
@@ -202,6 +205,8 @@ public class SoundManager : Singleton<SoundManager>
         sfxLoopSource.volume = volume;
         sfxLoopSource.loop = true;
         sfxLoopSource.Play();
+
+        Debug.Log($"Looping SFX started: {clip.name}");
     }
 
     public void StopLoopingSFX()
@@ -211,5 +216,63 @@ public class SoundManager : Singleton<SoundManager>
             sfxLoopSource.Stop();
             sfxLoopSource.clip = null;
         }
+
+        Debug.Log("Looping SFX stopped.");
     }
+
+    public void FadeInLoopingSFX(AudioClip clip, float duration = 1f, float targetVolume = 0.5f)
+    {
+        if (clip == null || sfxLoopSource == null)
+            return;
+
+        if (sfxLoopSource.isPlaying && sfxLoopSource.clip == clip)
+            return;
+
+        sfxLoopSource.clip = clip;
+        sfxLoopSource.volume = 0f;
+        sfxLoopSource.loop = true;
+        sfxLoopSource.Play();
+
+        StartCoroutine(FadeInCoroutine(duration, targetVolume));
+    }
+
+    private IEnumerator FadeInCoroutine(float duration, float targetVolume)
+    {
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            sfxLoopSource.volume = Mathf.Lerp(0f, targetVolume, timer / duration);
+            yield return null;
+        }
+
+        sfxLoopSource.volume = targetVolume;
+    }
+
+    public void FadeOutAndStopLoopingSFX(float duration = 1f)
+    {
+        if (sfxLoopSource != null && sfxLoopSource.isPlaying)
+        {
+            StartCoroutine(FadeOutCoroutine(duration));
+        }
+    }
+
+    private IEnumerator FadeOutCoroutine(float duration)
+    {
+        float startVolume = sfxLoopSource.volume;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            sfxLoopSource.volume = Mathf.Lerp(startVolume, 0f, timer / duration);
+            yield return null;
+        }
+
+        sfxLoopSource.Stop();
+        sfxLoopSource.clip = null;
+        sfxLoopSource.volume = startVolume; // 나중 재사용 대비해서 복원
+    }
+
 }
