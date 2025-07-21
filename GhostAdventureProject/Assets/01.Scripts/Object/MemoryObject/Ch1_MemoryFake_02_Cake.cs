@@ -5,14 +5,15 @@ using UnityEngine.Rendering.Universal;
 public class Ch1_MemoryFake_02_Cake : MemoryFragment
 {
     private Animator anim;
-    private ParticleSystem particleSystem;
-    private Light2D light;
+    private ParticleSystem _particleSystem;
+    private Light2D _light;
+
     void Start()
     {
         isScannable = false;
         anim = GetComponentInChildren<Animator>();
-        particleSystem = GetComponentInChildren<ParticleSystem>();
-        light = GetComponentInChildren<Light2D>();
+        _particleSystem = GetComponentInChildren<ParticleSystem>();
+        _light = GetComponentInChildren<Light2D>();
     }
 
     public void ActivateCake()
@@ -31,7 +32,7 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
     {
 
     
-        particleSystem.Play();
-        light.enabled = true;
+        _particleSystem.Play();
+        _light.enabled = true;
     }
 }
