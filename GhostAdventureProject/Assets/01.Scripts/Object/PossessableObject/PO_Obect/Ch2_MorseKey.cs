@@ -99,6 +99,9 @@ public class Ch2_MorseKey : BasePossessable
         {
             Unpossess();
 
+            UIManager.Instance.PlayModeUI_OpenAll();
+            StartCoroutine(FadeOutPanel(0.2f));
+
             // UI 초기화
             decodedLetters.Clear();
             currentMorseChar = "";
@@ -154,6 +157,7 @@ public class Ch2_MorseKey : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     { 
+        UIManager.Instance.PlayModeUI_CloseAll();
         StartCoroutine(FadeInPanel(1.0f)); // 판넬 페이드 인
     }
 
@@ -405,6 +409,8 @@ public class Ch2_MorseKey : BasePossessable
             yield return null;
 
             hasActivated = false; // 더 이상 빙의 불가능
+            UIManager.Instance.PlayModeUI_OpenAll();
+
             Unpossess();
         }
 
