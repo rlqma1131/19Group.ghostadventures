@@ -21,35 +21,26 @@ public class TVShutdownEffect : MonoBehaviour
         {
             originalScale = tvScreen.transform.localScale;
 
-            // 초기에는 완전히 꺼진 상태(스케일 0, 알파 0)로 시작
+            // 초기에는 완전히 꺼진 상태
             tvScreen.transform.localScale = Vector3.zero;
             tvScreen.color = new Color(1f, 1f, 1f, 0f);
         }
     }
-
 
     private void Start()
     {
         StartCoroutine(RandomTurnOnCoroutine());
     }
 
-
     private IEnumerator RandomTurnOnCoroutine()
     {
-
-
-
-        yield return new WaitForSeconds(waitTime);
-
-
+        yield return new WaitForSecondsRealtime(waitTime); // ← 수정됨
         PlayTurnOn();
     }
-
 
     [ContextMenu("Start TurnOn")]
     public void PlayTurnOn()
     {
-
         DOTween.Kill(this);
         if (tvScreen == null) return;
 
@@ -59,14 +50,12 @@ public class TVShutdownEffect : MonoBehaviour
         tvScreen.color = new Color(1f, 1f, 1f, 0f);
         tvScreen.transform.localScale = Vector3.zero;
 
-        Sequence turnOnSequence = DOTween.Sequence().SetId(this);
+        // timeScale = 0에서도 작동
+        Sequence turnOnSequence = DOTween.Sequence().SetId(this).SetUpdate(true);
         CCTVSound.PlayOneShot(CCTVSound.clip);
-        
+
         turnOnSequence.Append(tvScreen.transform.DOScaleX(originalScale.x, turnOnDuration * 0.3f).SetEase(Ease.OutExpo));
-
         turnOnSequence.Join(tvScreen.DOFade(1f, turnOnDuration * 0.2f));
-
-
         turnOnSequence.Append(tvScreen.transform.DOScaleY(originalScale.y, turnOnDuration * 0.7f).SetEase(Ease.OutBounce));
     }
 }

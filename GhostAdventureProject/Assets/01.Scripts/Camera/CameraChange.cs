@@ -12,8 +12,8 @@ public class CameraChange : MonoBehaviour
     private int CurrentPriority = 10; // 현재 카메라 우선순위
     private int ActivePriority = 13; // 활성화된 카메라 우선순위
 
-    [SerializeField] private UITweenAnimator uITweenAnimator; // UI 애니메이션 컴포넌트
-    [SerializeField] private TextMeshProUGUI text; // 방 이름 텍스트 컴포넌트
+    //[SerializeField] private UITweenAnimator uITweenAnimator; // UI 애니메이션 컴포넌트
+    //[SerializeField] private TextMeshProUGUI text; // 방 이름 텍스트 컴포넌트
 
 
 
