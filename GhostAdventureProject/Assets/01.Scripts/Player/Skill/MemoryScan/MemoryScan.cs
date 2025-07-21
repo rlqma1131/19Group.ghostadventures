@@ -127,7 +127,7 @@ public class MemoryScan : MonoBehaviour
         // 키를 뗐을 경우 스캔 중단
         else
         {
-            CancelScan("스캔이 중단");
+            CancleScan("스캔이 중단");
         }
     }
 
@@ -152,9 +152,6 @@ public class MemoryScan : MonoBehaviour
 
 
         currentScanObject.GetComponentInChildren<SpriteRenderer>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f); // 스캔 완료 후 색상 변경
-                                                                                                                          //// 스캔 대상 초기화
-                                                                                                                          //currentScanObject = null;
-                                                                                                                          //currentMemoryFragment = null;
 
         // 여기에 스캔 완료 후 처리 로직 추가 (예: UI 업데이트, 사운드 재생 등)
 
@@ -164,9 +161,20 @@ public class MemoryScan : MonoBehaviour
         //각 오브젝트 별로 기억 재생 이후 구현할 메서드
 
         currentMemoryFragment.AfterScan();
+
+        // 저장
+        SaveData data = new SaveData
+        {
+            sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
+            playerPosition = playerTransform.position,
+            checkpointId = currentScanObject.name // 또는 currentMemoryFragment 고유 ID
+        };
+
+        SaveManager.SaveGame(data);
+        Debug.Log($"[MemoryScan] 기억조각 스캔 완료 및 저장됨: {data.checkpointId}");
     }
 
-    private void CancelScan(string reason)
+    private void CancleScan(string reason)
     {
         Debug.Log(reason);
         isScanning = false;
@@ -195,7 +203,7 @@ public class MemoryScan : MonoBehaviour
             // 스캔 중에 범위를 벗어났다면 스캔을 취소
             if (isScanning)
             {
-                CancelScan("범위를 이탈하여 스캔이 중단되었습니다.");
+                CancleScan("범위를 이탈하여 스캔이 중단되었습니다.");
             }
 
 

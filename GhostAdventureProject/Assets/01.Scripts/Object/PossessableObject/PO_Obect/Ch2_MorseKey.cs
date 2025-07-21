@@ -375,9 +375,6 @@ public class Ch2_MorseKey : BasePossessable
         yield return StartCoroutine(FadeOutPanel(0.2f));
     }
 
-
-
-
     private IEnumerator FadeInPanel(float duration)
     {
         panelCanvasGroup.alpha = 0f;

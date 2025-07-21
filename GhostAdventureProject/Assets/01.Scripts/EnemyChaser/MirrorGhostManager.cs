@@ -88,7 +88,7 @@ public class MirrorGhostManager : MonoBehaviour
 
     private Transform player;
     private MirrorData currentActiveMirror = null;
-    private bool isPlayerControlDisabled = false;
+    //private bool isPlayerControlDisabled = false;
     private Coroutine currentShakeCoroutine = null;  // 현재 진행 중인 흔들림 코루틴
     private bool isEmergingInProgress = false;       // 6단계 진행 중 플래그
     private bool isDeathInProgress = false;          // 7단계 진행 중 플래그
@@ -589,7 +589,7 @@ public class MirrorGhostManager : MonoBehaviour
 
     void DisablePlayerControl()
     {
-        isPlayerControlDisabled = true;
+        //isPlayerControlDisabled = true;
         OnPlayerControlDisabled();
     }
 
