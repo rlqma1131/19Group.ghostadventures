@@ -1,23 +1,21 @@
 using Cinemachine;
 using System.Collections;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Ch2_Radio : BasePossessable
 {  
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
+    [SerializeField] private GameObject zoomRadio; // 라디오(줌)
     [SerializeField] private GameObject needle; // 주파수 바늘
     [SerializeField] private float range = 0.0324f; // 주파수 바늘 이동범위
     [SerializeField] private float triggerX_Person = 0.38f; // 트리거위치 - 사람
     [SerializeField] private float triggerX_Enemy; // 트리거위치 - 적
     [SerializeField] private AudioSource triggerSound_Person; // 트리거사운드 - 사람
     [SerializeField] private AudioSource EnemyTriggerSound_Enemy; // 트리거사운드 - 적
-    private bool hasTriggered_Person = false; // 트리거발동 - 사람
-    private bool hasTriggered_Enemy = false; // 트리거발동 - 적
-    private bool isControlMode = false; // 주파수조정 가능모드(줌)
+    private bool hasTriggered_Person = false; // 트리거발동여부 - 사람
+    private bool hasTriggered_Enemy = false; // 트리거발동여부 - 적
+    private bool isControlMode = false; // 주파수 조정가능 모드(줌)
     [SerializeField] private Animator speakerOn; // 스피커 애니메이션 재생용
-    [SerializeField] private GameObject UICanvas; // UI
     [SerializeField] private CH2_SecurityGuard guard;
     public bool IsPlaying=> triggerSound_Person.isPlaying;
 
@@ -25,7 +23,7 @@ public class Ch2_Radio : BasePossessable
     protected override void Start()
     {
         hasActivated = true;
-        UICanvas.SetActive(false);
+        zoomRadio.SetActive(false);
     }
 
     protected override void Update()
@@ -43,6 +41,7 @@ public class Ch2_Radio : BasePossessable
                 isControlMode = false;
                 isPossessed = false;
                 UIManager.Instance.PlayModeUI_OpenAll();
+                zoomRadio.SetActive(false);
                 zoomCamera.Priority = 5;
                 Unpossess();
             }
@@ -83,7 +82,6 @@ public class Ch2_Radio : BasePossessable
         {
             speakerOn.SetBool("OnSpeaker", false); // 스피커 애니메이션 재생
         }
-            
     }
 
     private void GoToLeft()
@@ -103,7 +101,6 @@ public class Ch2_Radio : BasePossessable
         needle.transform.localPosition = needlePos;
     }
 
-
     // 사람을 끌어들임
     private void AttractPerson()
     {
@@ -117,7 +114,6 @@ public class Ch2_Radio : BasePossessable
 
     }
 
-
     private IEnumerator WaitZoomEnding(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -127,15 +123,15 @@ public class Ch2_Radio : BasePossessable
         isPossessed = false;
         isControlMode = false;
         UIManager.Instance.PlayModeUI_OpenAll();
-        UICanvas.SetActive(false);
         zoomCamera.Priority = 5;
+        zoomRadio.SetActive(false);
         Unpossess();
     }
 
     public override void OnPossessionEnterComplete() 
     {
         UIManager.Instance.PlayModeUI_CloseAll();
-        UICanvas.SetActive(true);
+        zoomRadio.SetActive(true);
         zoomCamera.Priority = 20; // 빙의 시 카메라 우선순위 높이기
         isControlMode = true;
         isPossessed = true;
@@ -149,4 +145,5 @@ public class Ch2_Radio : BasePossessable
             triggerSound_Person.Stop();
         }        
     }
+    
 }

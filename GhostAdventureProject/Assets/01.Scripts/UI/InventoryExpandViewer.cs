@@ -11,6 +11,7 @@ public class InventoryExpandViewer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI clueName; // 단서 이름
     [SerializeField] private TextMeshProUGUI clueDescription; // 단서 설명
     private bool isShowing = false; // "패널 클릭시 닫기" 기능용 불값
+    public System.Action OnClueHidden; // 이벤트
 
     public static InventoryExpandViewer Instance; // 싱글톤(수정예정)
 
@@ -45,12 +46,12 @@ public class InventoryExpandViewer : MonoBehaviour
     }
 
     // 단서패널 닫기
-    public void HideClue(System.Action onComplete = null)
+    public void HideClue()
     {
         cluePanel.SetActive(false);
         isShowing = false;
 
-        onComplete?.Invoke();
+        OnClueHidden?.Invoke();
     }
 
     public bool IsShowing() => isShowing;  

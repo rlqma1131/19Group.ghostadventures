@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DoorLock : MonoBehaviour
+public class DoorLock : BaseInteractable
 {   
     [SerializeField] private LockedDoor door; // 문
     [SerializeField] private ItemData needItem; // 문을 여는데 필요한 아이템
@@ -23,21 +23,19 @@ public class DoorLock : MonoBehaviour
             if(needItem == inventory.selectedItem() && needItem != null && doorOpenAble)
             {
                 UIManager.Instance.PromptUI.ShowPrompt("문이 열렸습니다.", 1.5f);
+                q_Key.SetActive(false);
                 OpenDoorLock();
                 return;
             }
             if(doorOpenAble && !doorOpen)
             {
                 UIManager.Instance.PromptUI.ShowPrompt("문을 열 수 없습니다", 1.5f);
+                return;
             }
-            return;
         }
-
-        if(!doorOpen)
-            q_Key.SetActive(true);
     }
 
-    // 도어락 풀리고 문 열림
+    // 도어락 풀리고 문 열림 -> 도어락 오브젝트 삭제됨
     private void OpenDoorLock()
     {
         doorOpen = true;
@@ -47,16 +45,25 @@ public class DoorLock : MonoBehaviour
         Destroy(this.gameObject);
     }
     
-    void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Person") || collision.CompareTag("Player"))
-        doorOpenAble = true;
+        {
+            SetHighlight(true);
+            q_Key.SetActive(true);
+            doorOpenAble = true;
+        }
     }
 
-    void OnTriggerExit2D(Collider2D collision)
+    protected override void OnTriggerExit2D(Collider2D collision)
     {
         if(collision.CompareTag("Person") || collision.CompareTag("Player"))
-        doorOpenAble = false;    
+        {
+            SetHighlight(false);
+            q_Key.SetActive(false);
+            doorOpenAble = false;    
+            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        }
     }
 
 

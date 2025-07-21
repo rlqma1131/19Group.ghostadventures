@@ -2,47 +2,42 @@ using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 
-public enum GuardState { Idle, MovingToRadio, MovingToBench, Resting, MovingToOffice }
+public enum GuardState { Idle, MovingToRadio, MovingToBench, Resting, MovingToOffice, InOffice }
 
 public class CH2_SecurityGuard : MoveBasePossessable
 {   
     [SerializeField] private LockedDoor door; //도어락 있는 문 //없어도 될 것 같음
     [SerializeField] private SafeBox safeBox; // 금고
     [SerializeField] private Ch2_Radio radio; // 라디오
-    // [SerializeField] private Ch2_Bench bench; // 벤치
     public Transform Radio;
     public Transform bench;
     public Transform office;
-    private GuardState state; 
 
+    private GuardState state; 
     private float restTimer = 0f;
     public float restDuration = 3f;
-    
-    [SerializeField] private GameObject q_Key;
     public Person targetPerson;
     public PersonConditionHandler conditionHandler;
     
+    [SerializeField] private GameObject q_Key;
     private bool isNearDoor = false;
-
+    
     protected override void Start()
     {
         base.Start();
         hasActivated = true;
-        moveSpeed = 2f;
+        moveSpeed = 8f;
     }
 
     protected override void Update()
     {
-        if (!hasActivated)
-        {
-            // q_Key.SetActive(false);
-            return;
-        }
+        if (!hasActivated) return;
+
         if (isNearDoor)
         {
-            Vector2 catPos = this.transform.position;
-            catPos.y += 0.5f;
-            q_Key.transform.position = catPos;
+            // Vector2 catPos = this.transform.position;
+            // catPos.y += 0.5f;
+            // q_Key.transform.position = catPos;
             // q_Key.SetActive(true);
         }
         else if (!isNearDoor)
@@ -59,72 +54,71 @@ public class CH2_SecurityGuard : MoveBasePossessable
         if(radio != null && radio.IsPlaying)
         {
             state = GuardState.MovingToRadio;
-            // Vector3 targetPos = transform.position;
-            // targetPos.x = radio.transform.position.x; // 라디오의 x포지션값으로 이동
-            // transform.position = Vector3.MoveTowards(this.transform.position, targetPos, moveSpeed * Time.deltaTime);        
         }
 
         switch (state)
-    {
-        case GuardState.MovingToRadio:
-            MoveTo(Radio.position);
-            break;
+        {
+            case GuardState.MovingToRadio:
+                MoveTo(Radio.position);
+                break;
 
-        case GuardState.MovingToBench:
-            MoveTo(bench.position);
-            break;
+            case GuardState.MovingToBench:
+                MoveTo(bench.position);
+                break;
 
-        case GuardState.Resting:
-            restTimer += Time.deltaTime;
-            if (restTimer >= restDuration)
-            {
-                targetPerson.currentCondition = PersonCondition.Vital;
-                state = GuardState.MovingToOffice;
-                Debug.Log("휴식 끝! 사무실로 복귀");
-            }
-            break;
+            case GuardState.Resting:
+                restTimer += Time.deltaTime;
+                if (restTimer >= restDuration)
+                {
+                    targetPerson.currentCondition = PersonCondition.Vital;
+                    state = GuardState.MovingToOffice;
+                }
+                break;
 
-        case GuardState.MovingToOffice:
-            MoveTo(office.position);
-            break;
+            case GuardState.MovingToOffice:
+                MoveTo(office.position);
+                break;
+            
+            case GuardState.InOffice:
+                hasActivated = false;
+                break;
+        }
     }
-    }
 
-// 목적지까지 이동
+    // 목적지까지 이동
     void MoveTo(Vector3 target)
-{   
-    Vector3 targetPos = transform.position;
-    targetPos.x = target.x;
-    transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+    {   
+        Vector3 targetPos = transform.position;
+        targetPos.x = target.x;
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
 
-    if (Mathf.Abs(transform.position.x - target.x) < 0.1f)
-    {
-        OnDestinationReached(target);
+        if (Mathf.Abs(transform.position.x - target.x) < 0.1f)
+        {
+            OnDestinationReached(target);
+        }
     }
-}
 
-// 목적지 도착시 처리
-void OnDestinationReached(Vector3 destination)
-{
-    if (destination == Radio.position)
+    // 목적지 도착시 처리
+    void OnDestinationReached(Vector3 destination)
     {
-        targetPerson.currentCondition = PersonCondition.Normal;
-        state = GuardState.MovingToBench;
-        // StopRadioSound(); // 사운드 멈추기
+        if (destination == Radio.position)
+        {
+            targetPerson.currentCondition = PersonCondition.Normal;
+            state = GuardState.MovingToBench;
+        }
+        else if (destination == bench.position)
+        {
+            targetPerson.currentCondition = PersonCondition.Normal;
+            state = GuardState.Resting;
+            restTimer = 0f;
+        }
+        else if (destination == office.position)
+        {
+            state = GuardState.Idle;
+            targetPerson.currentCondition = PersonCondition.Normal;
+            Debug.Log("경비실 도착. 상태 초기화");
+        }
     }
-    else if (destination == bench.position)
-    {
-        targetPerson.currentCondition = PersonCondition.Normal;
-        state = GuardState.Resting;
-        restTimer = 0f;
-    }
-    else if (destination == office.position)
-    {
-        state = GuardState.Idle;
-        targetPerson.currentCondition = PersonCondition.Normal;
-        Debug.Log("경비실 도착. 상태 초기화");
-    }
-}
 
 private void StopRadioSound()
 {
