@@ -83,10 +83,11 @@ public class MemoryScan : MonoBehaviour
     {
         if (currentMemoryFragment.IsScannable)
         {
-            UIManager.Instance.PromptUI.ShowPrompt($"스캔 진행 중...", 2f);
 
             isScanning = true;
             scanTime = 0f;
+
+            UIManager.Instance.PromptUI.ShowPrompt($"스캔 진행 중...", 3f);
 
             scanPanel?.SetActive(true);
             if (scanCircleUI != null)
@@ -94,7 +95,6 @@ public class MemoryScan : MonoBehaviour
                 scanCircleUI.gameObject.SetActive(true);
                 scanCircleUI.fillAmount = 0f;
             }
-
             else
             {
                 Debug.LogWarning("Scan Circle UI가 설정되지 않았습니다. UI를 확인해주세요.");

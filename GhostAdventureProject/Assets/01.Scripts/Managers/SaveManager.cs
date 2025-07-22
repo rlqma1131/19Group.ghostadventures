@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
 
 [System.Serializable]
 public class SaveData
@@ -7,6 +8,8 @@ public class SaveData
     public string sceneName;
     public Vector3 playerPosition;
     public string checkpointId;
+    public List<MemoryData> scannedMemoryList;
+    public List<ClueData> collectedClues;
 
     // 인벤토리, 능력치 등 추가
 }

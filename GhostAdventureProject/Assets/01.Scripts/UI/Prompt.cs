@@ -75,7 +75,7 @@ public class Prompt : MonoBehaviour
 
     private IEnumerator HideAfterDelay(float dlaytime)
     {
-        yield return new WaitForSeconds(dlaytime);
+        yield return new WaitForSecondsRealtime(dlaytime);
         PromptPanel.SetActive(false);
         isActive = false;
         // onD
