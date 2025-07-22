@@ -13,6 +13,7 @@ public class TypewriterDialogue : MonoBehaviour
     //public GameObject dialoguePanel; //대화창 패널
     public TextMeshProUGUI dialogueText; //대화 텍스트 컴포넌트
     public float typingSpeed = 0.05f; // 타이핑 속도 
+    private bool isFinished = false;
 
     private bool isAuto = false; // 자동 대화
     public float autoNextDelay = 0.7f; // 한 대사 완료 후 다음으로 넘어가기까지의 지연 시간
@@ -63,15 +64,38 @@ public class TypewriterDialogue : MonoBehaviour
 
     void Update()
     {
+        // 자동 대화 모드일 때는 클릭 입력을 무시합니다.
+        if (isAuto) return;
+
+        // 마우스 왼쪽 버튼을 클릭했을 때
         if (Input.GetMouseButtonDown(0))
         {
             if (isTyping)
             {
+                // 1. 현재 대사가 타이핑 중이면, 즉시 전체 문장을 보여줍니다.
                 skipTyping = true;
             }
-            else
+            else if (!isFinished)
             {
+                // 2. 타이핑이 끝났고 아직 보여줄 대사가 남았다면, 다음 대사를 시작합니다.
                 NextLine();
+            }
+            else // isFinished == true
+            {
+                // 3. 모든 대화가 끝났다면, 대화창을 닫고 타임라인을 재개합니다.
+                dialogueText.text = "";
+                dialogueText.gameObject.SetActive(false);
+
+                if (timelineControl != null)
+                {
+                    timelineControl.ResumeTimeline();
+                }
+                else
+                {
+                    Debug.LogWarning("TimelineControl이 할당되지 않아 타임라인을 재개할 수 없습니다.");
+                }
+
+                isFinished = false; // 상태 초기화
             }
         }
     }
@@ -179,42 +203,33 @@ public class TypewriterDialogue : MonoBehaviour
 
     void NextLine()
     {
-        if (dialogues == null || dialogues.Length == 0)
+        if ((dialogues == null || dialogues.Length == 0))
         {
             Debug.LogWarning("dialogues 배열이 비어 있거나 null입니다.");
             return;
         }
+
         if (index < dialogues.Length - 1)
         {
             index++;
             StopAllCoroutines();
 
-
-
-            // isShakingDialogue 값에 따라 코루틴 선택
             if (isShakingDialogue)
             {
-                StartCoroutine(TypeLineShake()); // 흔들림 모드면 흔들림 코루틴 시작
+                StartCoroutine(TypeLineShake());
             }
             else
             {
-                StartCoroutine(TypeLine());      // 아니면 일반 코루틴 시작
+                StartCoroutine(TypeLine());
             }
         }
         else
         {
-            dialogueText.text = "";
-            dialogueText.gameObject.SetActive(false);
-            if (timelineControl != null)
-            {
-                timelineControl.ResumeTimeline();
-            }
-            else
-            {
-                Debug.LogWarning("TimelineControl이 할당되지 않아 타임라인을 재개할 수 없습니다.");
-            }
+            
+            isFinished = true;
         }
     }
+
 
 
     public void StartAutoDialogueByIndex(int dialogueSetIndex)

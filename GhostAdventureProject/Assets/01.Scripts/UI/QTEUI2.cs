@@ -25,7 +25,7 @@ public class QTEUI2 : MonoBehaviour
     private float currentSize;
     private float targetSize;
 
-
+    private CinemachineBasicMultiChannelPerlin noise;
     public void Start()
     {
         success.gameObject.SetActive(false);
@@ -43,6 +43,7 @@ public class QTEUI2 : MonoBehaviour
         isRunning = true;
         camera = GameManager.Instance.Player.GetComponent<PlayerCamera>().currentCam;
         currentSize = camera.m_Lens.OrthographicSize;
+        noise = camera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         StartCoroutine(RunQTE());
     }
 
@@ -69,6 +70,7 @@ public class QTEUI2 : MonoBehaviour
                  
                  targetSize = camera.m_Lens.OrthographicSize - currentSize * 0.05f;
                 DOTween.To(() => camera.m_Lens.OrthographicSize, x => camera.m_Lens.OrthographicSize = x, targetSize, 0.3f);
+                StartCoroutine(ShakeCamera(0.3f, 3f, 10f));
                 currentPressCount++;
                 gaugeBar.fillAmount = Mathf.Clamp01((float)currentPressCount / requiredPresses);
             }
@@ -100,7 +102,16 @@ public class QTEUI2 : MonoBehaviour
         fail.gameObject.SetActive(false);
 
     }
+    private IEnumerator ShakeCamera(float duration, float amplitude, float frequency)
+    {
+        noise.m_AmplitudeGain = amplitude;
+        noise.m_FrequencyGain = frequency;
 
+        yield return new WaitForSeconds(duration);
+
+        noise.m_AmplitudeGain = 0f;
+        noise.m_FrequencyGain = 0f;
+    }
     // (선택) 외부에서 QTE 상태 확인용
     public bool IsQTERunning() => isRunning;
     public bool IsSuccess() => isSuccess;
