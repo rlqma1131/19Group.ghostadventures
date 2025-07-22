@@ -20,6 +20,11 @@ public class PossessionSystem : MonoBehaviour
         {
             Instance = this;
         }
+        else
+        {
+            Destroy(this);
+            return;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)

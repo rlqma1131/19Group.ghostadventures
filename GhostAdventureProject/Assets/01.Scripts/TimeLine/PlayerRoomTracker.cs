@@ -9,12 +9,15 @@ public class PlayerRoomTracker : MonoBehaviour
 
     
 
-    private void Awake()
+    private void Start()
     {
-        uITweenAnimator = FindObjectOfType<UITweenAnimator>();
-        text = GameObject.Find("InfoText").GetComponent<TextMeshProUGUI>();
-
+        uITweenAnimator = UIManager.Instance.GetComponentInChildren<UITweenAnimator>();
+        if (uITweenAnimator != null)
+        {
+            text = uITweenAnimator.GetComponent<TextMeshProUGUI>();
+        }
     }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
 

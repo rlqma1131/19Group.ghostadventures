@@ -1,6 +1,4 @@
-﻿using System;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
@@ -12,67 +10,40 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject soundManager;
     [SerializeField] private GameObject cutSceneManager;
     [SerializeField] private GameObject qteEffectManager;
-
+    
     public GameObject playerPrefab;
+
     private GameObject currentPlayer;
     private PlayerController playerController;
-
-    private void Start()
-    {
-        SpawnPlayer();
-    }
-
-    public void SpawnPlayer(bool useSavedData = false)
-    {
-        Vector3 spawnPosition = Vector3.zero;
-
-        if (useSavedData)
-        {
-            SaveData data = SaveManager.LoadGame();
-            if (data != null && data.sceneName == SceneManager.GetActiveScene().name)
-            {
-                spawnPosition = data.playerPosition;
-            }
-            else
-            {
-                Debug.LogWarning("[GameManager] 저장 데이터 없음 또는 씬 불일치");
-            }
-        }
-        else
-        {
-            string sceneName = SceneManager.GetActiveScene().name;
-            string startPointName = $"StartPoint_{sceneName}";
-            Transform startPoint = GameObject.Find(startPointName)?.transform;
-            spawnPosition = startPoint != null ? startPoint.position : Vector3.zero;
-        }
-
-        GameObject go = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
-        currentPlayer = go;
-        playerController = go.GetComponent<PlayerController>();
-        DontDestroyOnLoad(go);
-
-        Debug.Log($"[GameManager] Player 스폰 완료: {spawnPosition}");
-    }
-
-    /// <summary>
-    /// Player가 파괴될 때 호출
-    /// </summary>
-    public void OnPlayerDestroyed()
-    {
-        if (currentPlayer != null)
-        {
-            currentPlayer = null;
-            playerController = null;
-
-            Debug.Log("[GameManager] Player 파괴됨");
-        }
-    }
 
     public GameObject Player => currentPlayer;
     public PlayerController PlayerController => playerController;
 
-    private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
-    private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
+
+    // 게임 이어하기
+    private bool loadFromSave = false;
+    private SaveData pendingSaveData;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // StartScene에서는 플레이어 스폰 안함
+        if (SceneManager.GetActiveScene().name != "StartScene")
+        {
+            TrySpawnPlayer();
+        }
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -80,17 +51,13 @@ public class GameManager : Singleton<GameManager>
 
         if (sceneName == "StartScene")
         {
-            // 타이틀 씬이면 자기 자신 포함 관련 매니저 제거
+            Debug.Log("[GameManager] StartScene 로드됨 - Player 제거");
             Destroy(currentPlayer);
             currentPlayer = null;
             playerController = null;
-
-            Destroy(gameObject); // GameManager 자기 자신 제거
-            // DestroyIfExists<UIManager>();
-            // DestroyIfExists<PossessionStateManager>();
             return;
         }
-        
+
         Debug.Log($"씬 로드됨: {scene.name}");
 
         EnsureManagerExists<ChapterEndingManager>(chapterEndingManager);
@@ -100,7 +67,64 @@ public class GameManager : Singleton<GameManager>
         EnsureManagerExists<CutsceneManager>(cutSceneManager);
         EnsureManagerExists<QTEEffectManager>(qteEffectManager);
 
+        TrySpawnPlayer();
+
         Debug.Log("[GameManager] 씬 로드 완료 - EnemyAI는 자동으로 Player 찾음");
+    }
+
+    public void SetPendingLoad(SaveData data)
+    {
+        loadFromSave = true;
+        pendingSaveData = data;
+    }
+
+    public void TrySpawnPlayer()
+    {
+        if (currentPlayer != null)
+        {
+            Debug.LogWarning("[GameManager] 이미 플레이어가 존재합니다.");
+            return;
+        }
+
+        Vector3 spawnPosition = Vector3.zero;
+
+        if (loadFromSave && pendingSaveData != null)
+        {
+            spawnPosition = pendingSaveData.playerPosition;
+            Debug.Log($"[GameManager] 이어하기 위치에서 스폰: {spawnPosition}");
+        }
+        else
+        {
+            string sceneName = SceneManager.GetActiveScene().name;
+            Debug.Log($"[GameManager] 새로운 씬 로드됨: {sceneName}");
+            string startPointName = $"StartPoint_{sceneName}";
+            Debug.Log($"[GameManager] 시작 위치 이름: {startPointName}");
+            Transform startPoint = GameObject.Find(startPointName)?.transform;
+            Debug.Log($"[GameManager] 시작 위치 찾기: {startPoint != null}");
+            spawnPosition = startPoint != null ? startPoint.position : Vector3.zero;
+            Debug.Log($"[GameManager] 시작 위치에서 스폰: {spawnPosition}");
+        }
+
+        GameObject go = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+        DontDestroyOnLoad(go);
+        currentPlayer = go;
+        playerController = go.GetComponent<PlayerController>();
+
+        Debug.Log("[GameManager] Player 스폰 완료");
+
+        // 초기화
+        loadFromSave = false;
+        pendingSaveData = null;
+    }
+
+    public void OnPlayerDestroyed()
+    {
+        if (currentPlayer != null)
+        {
+            currentPlayer = null;
+            playerController = null;
+            Debug.Log("[GameManager] Player 파괴됨");
+        }
     }
 
     private void EnsureManagerExists<T>(GameObject prefab) where T : MonoBehaviour
@@ -111,14 +135,15 @@ public class GameManager : Singleton<GameManager>
             Debug.Log($"[{typeof(T).Name}] 자동 생성됨");
         }
     }
-    
-    // private void DestroyIfExists<T>() where T : MonoBehaviour
-    // {
-    //     T instance = Singleton<T>.Instance;
-    //     if (instance != null)
-    //     {
-    //         Destroy(instance.gameObject);
-    //         Debug.Log($"[GameManager] {typeof(T).Name} 파괴됨");
-    //     }
-    // }
+
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SaveManager.DeleteSave();
+            Debug.Log("[GameManager] 저장 데이터 삭제됨");
+        }
+    }
+#endif
 }
