@@ -13,7 +13,7 @@ public class GameManager : Singleton<GameManager>
     
     public GameObject playerPrefab;
 
-    private GameObject currentPlayer;
+    [SerializeField] private GameObject currentPlayer;
     private PlayerController playerController;
 
     public GameObject Player => currentPlayer;
@@ -49,7 +49,7 @@ public class GameManager : Singleton<GameManager>
     {
         string sceneName = scene.name;
 
-        if (sceneName == "StartScene")
+        if (sceneName == "StartScene" && sceneName == "IntroScene_Real")
         {
             Debug.Log("[GameManager] StartScene 로드됨 - Player 제거");
             Destroy(currentPlayer);
