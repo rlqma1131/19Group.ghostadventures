@@ -33,6 +33,12 @@ public class BloomDirtEffect : MonoBehaviour
     private IEnumerator AnimateBloomDirtIntensity(float targetIntensity)
     {
         // 점점 증가
+
+        if (bloom == null)
+        {
+            Debug.LogError("Bloom 컴포넌트가 초기화되지 않았습니다!");
+            yield break;
+        }
         float timer = 0f;
         while (timer < duration)
         {
