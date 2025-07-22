@@ -6,22 +6,32 @@ public class PixelExploder : MonoBehaviour
 {
     [Header("Pixel Explosion Settings")]
     public Shader pixelParticleShader; // 셰이더를 직접 할당받을 변수
-
+    //픽셀 사이즈
     public float minPixelSize = 0.04f;
     public float maxPixelSize = 0.21f;
-
+    //퍼지는범위
     public float explosionMin = 0.6f;
     public float explosionMax = 1.4f;
+    //퍼지는 시간
     public float explodeDuration = 1.0f;
+    //흡수 시간
     public float absorbDuration = 1.0f;
+    //흡수 전 딜레이
     public float delayBeforeAbsorb = 0.8f;
-    public int pixelStep = 26;
+    //픽셀 간격
+    public int pixelStep;
 
     [Header("Glow Brightness")]
     public float ColorValue = 5f;
 
     private List<GameObject> pixelPieces = new List<GameObject>();
     private Transform playerTransform;
+
+    void Awake()
+    {
+        
+        DOTween.SetTweensCapacity(500, 125);
+    }
 
     // 테스트용 Update 함수
     //private void Update()
@@ -32,12 +42,13 @@ public class PixelExploder : MonoBehaviour
     //    }
     //}
 
+
     public void Explode()
     {
-        // 셰이더가 할당되었는지 확인하는 안전장치
+        // 셰이더가 할당되었는지 확인
         if (pixelParticleShader == null)
         {
-            Debug.LogError("Pixel Particle Shader가 할당되지 않았습니다! Inspector에서 할당해주세요.");
+            Debug.LogError("Pixel Particle Shader 없음 Inspector에서 할당해주세요.");
             return;
         }
 
@@ -53,11 +64,12 @@ public class PixelExploder : MonoBehaviour
         }
 
         Sprite sprite = sr.sprite;
+        pixelStep = Mathf.Max(1, (int)(sprite.rect.width / 24));
         Texture2D tex = sprite.texture;
 
         if (!tex.isReadable)
         {
-            Debug.LogError("Sprite 텍스처의 Read/Write Enable이 꺼져있습니다! 텍스처 임포트 설정에서 켜주세요.");
+            Debug.LogError("Sprite 텍스처의 Read/Write Enable를 켜주세용 (advanced 열면 있음)");
             return;
         }
 
@@ -118,27 +130,28 @@ public class PixelExploder : MonoBehaviour
                     {
                         if (playerTransform != null)
                         {
-                            DOVirtual.DelayedCall(delayBeforeAbsorb, () =>
+                            var absorbSeq = DOTween.Sequence();
+                            absorbSeq.AppendInterval(delayBeforeAbsorb);
+                            absorbSeq.Append(pixelObj.transform.DOMove(playerTransform.position, absorbDuration).SetEase(Ease.InCubic));
+                            absorbSeq.Append(mat.DOColor(new Color(color.r, color.g, color.b, 0), "_BaseColor", 0.3f));
+                            absorbSeq.Join(mat.DOColor(new Color(emissionColor.r, emissionColor.g, emissionColor.b, 0), "_EmissionColor", 0.3f));
+                            absorbSeq.OnComplete(() =>
                             {
-                                pixelObj.transform.DOMove(playerTransform.position, absorbDuration)
-                                    .SetEase(Ease.InCubic)
-                                    .OnComplete(() =>
-                                    {
-                                        // BaseColor와 EmissionColor를 동시에 Fade Out
-                                        mat.DOColor(new Color(color.r, color.g, color.b, 0), "_BaseColor", 0.3f);
-                                        mat.DOColor(new Color(emissionColor.r, emissionColor.g, emissionColor.b, 0), "_EmissionColor", 0.3f)
-                                           .OnComplete(() => Destroy(pixelObj));
-                                    });
+                                absorbSeq.Kill();
+                                Destroy(pixelObj);
                             });
                         }
                         else
                         {
-                            // 플레이어가 없으면 그냥 사라지도록 처리
-                            mat.DOColor(new Color(color.r, color.g, color.b, 0), "_BaseColor", 0.3f)
-                               .SetDelay(delayBeforeAbsorb);
-                            mat.DOColor(new Color(emissionColor.r, emissionColor.g, emissionColor.b, 0), "_EmissionColor", 0.3f)
-                               .SetDelay(delayBeforeAbsorb)
-                               .OnComplete(() => Destroy(pixelObj));
+                            var fadeSeq = DOTween.Sequence();
+                            fadeSeq.AppendInterval(delayBeforeAbsorb);
+                            fadeSeq.Append(mat.DOColor(new Color(color.r, color.g, color.b, 0), "_BaseColor", 0.3f));
+                            fadeSeq.Join(mat.DOColor(new Color(emissionColor.r, emissionColor.g, emissionColor.b, 0), "_EmissionColor", 0.3f));
+                            fadeSeq.OnComplete(() =>
+                            {
+                                fadeSeq.Kill();
+                                Destroy(pixelObj);
+                            });
                         }
                     });
             }

@@ -88,12 +88,14 @@ public class MemoryFragment : BaseInteractable
         Vector3 startPos = drop.transform.position;
         PossessionSystem.Instance.CanMove = false; // 플레이어 이동 비활성화
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
-        // === 1. 튕기기 애니메이션 ===
-        yield return DOTween.Sequence()
+         // === 1. 튕기기 애니메이션 ===
+        var bounceSeq = DOTween.Sequence()
             .Append(drop.transform.DOMoveY(startPos.y + bounceHeight, bounceDuration / 2f).SetEase(Ease.OutQuad))
             .Append(drop.transform.DOMoveY(startPos.y, bounceDuration / 2f).SetEase(Ease.InQuad))
-            .Join(drop.transform.DOPunchScale(Vector3.one * 0.1f, bounceDuration, 5, 1))
-            .WaitForCompletion();
+            .Join(drop.transform.DOPunchScale(Vector3.one * 0.1f, bounceDuration, 5, 1));
+
+        yield return bounceSeq.WaitForCompletion();
+        bounceSeq.Kill();
 
         // === 2. 회전 궤도 진입 및 상승 ===
         Vector3 center = startPos;
@@ -151,6 +153,7 @@ public class MemoryFragment : BaseInteractable
 
         }, targetAngle, rotateTime).SetEase(Ease.InOutSine);
         yield return rotate.WaitForCompletion();
+        rotate.Kill();
 
         drop.GetComponent<PixelExploder>()?.Explode(); // 픽셀 폭발 효과 적용
 
