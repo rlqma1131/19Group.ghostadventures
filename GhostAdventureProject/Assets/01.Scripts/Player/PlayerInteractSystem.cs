@@ -21,6 +21,11 @@ public class PlayerInteractSystem : MonoBehaviour
         {
             Instance = this;
         }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
     }
 
     private void Update()

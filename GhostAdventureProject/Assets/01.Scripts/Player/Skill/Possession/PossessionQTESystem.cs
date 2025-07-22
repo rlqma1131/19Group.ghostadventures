@@ -15,6 +15,11 @@ public class PossessionQTESystem : MonoBehaviour
         {
             Instance = this;
         }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
     }
 
     private void Start()

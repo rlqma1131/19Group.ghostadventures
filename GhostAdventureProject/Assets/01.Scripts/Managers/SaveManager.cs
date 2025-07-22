@@ -34,9 +34,9 @@ public static class SaveManager
         return JsonUtility.FromJson<SaveData>(json);
     }
 
-    //public static void DeleteSave()
-    //{
-    //    if (File.Exists(SavePath))
-    //        File.Delete(SavePath);
-    //}
+    public static void DeleteSave()
+    {
+        if (File.Exists(SavePath))
+            File.Delete(SavePath);
+    }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,7 +9,8 @@ public class ContinueButton : MonoBehaviour
         SaveData data = SaveManager.LoadGame();
         if (data != null)
         {
-            StartCoroutine(LoadSceneAndSpawn(data));
+            GameManager.Instance.SetPendingLoad(data);
+            SceneManager.LoadScene(data.sceneName);
         }
         else
         {
@@ -18,11 +18,12 @@ public class ContinueButton : MonoBehaviour
         }
     }
 
-    private IEnumerator LoadSceneAndSpawn(SaveData data)
-    {
-        AsyncOperation op = SceneManager.LoadSceneAsync(data.sceneName);
-        yield return new WaitUntil(() => op.isDone);
+    //private IEnumerator LoadSceneAndSpawn(SaveData data)
+    //{
+    //    AsyncOperation op = SceneManager.LoadSceneAsync(data.sceneName);
+    //    yield return new WaitUntil(() => op.isDone);
 
-        GameManager.Instance.SpawnPlayer(true); // 저장된 위치에서 스폰
-    }
+    //    Debug.Log($"씬 로드 완료: {data.sceneName}, 플레이어 스폰");
+    //    GameManager.Instance.SpawnPlayer(true); // 저장된 위치에서 스폰
+    //}
 }

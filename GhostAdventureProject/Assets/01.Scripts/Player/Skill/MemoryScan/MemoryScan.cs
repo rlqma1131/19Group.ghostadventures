@@ -150,7 +150,6 @@ public class MemoryScan : MonoBehaviour
             Debug.Log("이미 스캔된 기억 조각이거나, MemoryFragment 컴포넌트가 없습니다.");
         }
 
-
         currentScanObject.GetComponentInChildren<SpriteRenderer>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f); // 스캔 완료 후 색상 변경
 
         // 여기에 스캔 완료 후 처리 로직 추가 (예: UI 업데이트, 사운드 재생 등)
@@ -163,15 +162,15 @@ public class MemoryScan : MonoBehaviour
         currentMemoryFragment.AfterScan();
 
         // 저장
-        //SaveData data = new SaveData
-        //{
-        //    sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
-        //    playerPosition = playerTransform.position,
-        //    checkpointId = currentScanObject.name // 또는 currentMemoryFragment 고유 ID
-        //};
+        SaveData data = new SaveData
+        {
+            sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
+            playerPosition = playerTransform.position,
+            checkpointId = currentScanObject.name // 또는 currentMemoryFragment 고유 ID
+        };
 
-        //SaveManager.SaveGame(data);
-        //Debug.Log($"[MemoryScan] 기억조각 스캔 완료 및 저장됨: {data.checkpointId}");
+        SaveManager.SaveGame(data);
+        Debug.Log($"[MemoryScan] 기억조각 스캔 완료 및 저장됨: {data.checkpointId}");
     }
 
     private void CancleScan(string reason)

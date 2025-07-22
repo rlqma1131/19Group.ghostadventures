@@ -25,6 +25,11 @@ public class SoulEnergySystem : MonoBehaviour
         {
             Instance = this;
         }
+        else
+        {
+            Destroy(this);
+            return;
+        }
     }
 
     private void Start()

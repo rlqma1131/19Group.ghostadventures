@@ -24,6 +24,11 @@ public class Ch1_HideAreaEventManager : MonoBehaviour
         {
             Instance = this;
         }
+        else
+        {
+            Destroy(this);
+            return;
+        }
     }
 
     private void Start()
