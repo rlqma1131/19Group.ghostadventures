@@ -13,25 +13,31 @@ public class DoorLock : BaseInteractable
     {
         doorOpenAble = false;
         doorOpen = false;
-        inventory = Inventory_PossessableObject.Instance;
     }
 
     void Update()
     {   
         if (Input.GetKeyDown(KeyCode.Q))
         {   
-            if(needItem == inventory.selectedItem() && needItem != null && doorOpenAble)
-            {
-                UIManager.Instance.PromptUI.ShowPrompt("문이 열렸습니다.", 1.5f);
-                q_Key.SetActive(false);
-                OpenDoorLock();
-                return;
-            }
             if(doorOpenAble && !doorOpen)
             {
-                UIManager.Instance.PromptUI.ShowPrompt("문을 열 수 없습니다", 1.5f);
+                inventory = Inventory_PossessableObject.Instance;
+                
+                if(inventory == null || needItem != inventory.selectedItem())
+                {
+                    UIManager.Instance.PromptUI.ShowPrompt("문을 열 수 없습니다", 1.5f);
+                    return;
+                }
+                if(needItem == inventory.selectedItem() && needItem != null && doorOpenAble)
+                {
+                    UIManager.Instance.PromptUI.ShowPrompt("문이 열렸습니다.", 1.5f);
+                    q_Key.SetActive(false);
+                    OpenDoorLock();
+                    return;
+                }
                 return;
             }
+
         }
     }
 

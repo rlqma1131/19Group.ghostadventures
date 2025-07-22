@@ -27,12 +27,7 @@ public class GameManager : Singleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-
-        // StartScene에서는 플레이어 스폰 안함
-        if (SceneManager.GetActiveScene().name != "StartScene")
-        {
-            TrySpawnPlayer();
-        }
+        string sceneName = SceneManager.GetActiveScene().name;
     }
 
     private void OnEnable()
@@ -43,13 +38,24 @@ public class GameManager : Singleton<GameManager>
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        if (UIManager.Instance != null)
+            UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         string sceneName = scene.name;
 
-        if (sceneName == "StartScene" && sceneName == "IntroScene_Real")
+        if (sceneName != "StartScene" && sceneName != "IntroScene_Real")
+        {
+            if (UIManager.Instance != null)
+                UIManager.Instance.PlayModeUI_OpenAll(); // 플레이모드 UI 열기
+
+            TrySpawnPlayer();
+        }
+
+        if (sceneName == "StartScene")
         {
             Debug.Log("[GameManager] StartScene 로드됨 - Player 제거");
             Destroy(currentPlayer);
@@ -58,8 +64,6 @@ public class GameManager : Singleton<GameManager>
             return;
         }
 
-        Debug.Log($"씬 로드됨: {scene.name}");
-
         EnsureManagerExists<ChapterEndingManager>(chapterEndingManager);
         EnsureManagerExists<UIManager>(uiManager);
         EnsureManagerExists<PossessionStateManager>(possessionStateManager);
@@ -67,9 +71,11 @@ public class GameManager : Singleton<GameManager>
         EnsureManagerExists<CutsceneManager>(cutSceneManager);
         EnsureManagerExists<QTEEffectManager>(qteEffectManager);
 
-        TrySpawnPlayer();
+        Debug.Log($"씬 로드됨: {scene.name}");
 
-        Debug.Log("[GameManager] 씬 로드 완료 - EnemyAI는 자동으로 Player 찾음");
+        //PausePlayer(); // 플레이어 일시정지
+
+        //Invoke(nameof(RunPlayer), 2f); // 씬 로드 후 잠시 대기 후 플레이어 활성화
     }
 
     public void SetPendingLoad(SaveData data)
@@ -133,6 +139,22 @@ public class GameManager : Singleton<GameManager>
         {
             Instantiate(prefab);
             Debug.Log($"[{typeof(T).Name}] 자동 생성됨");
+        }
+    }
+
+    private void RunPlayer()
+    {
+        if (currentPlayer != null)
+        {
+            PossessionSystem.Instance.CanMove = true;
+        }
+    }
+
+    private void PausePlayer() 
+    { 
+        if (currentPlayer != null)
+        {
+            PossessionSystem.Instance.CanMove = false;
         }
     }
 
