@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
+    // Enemy의 상태를 변경하는 스크립트
+    // -> 변경된 상태에 따라 다른 스크립트에 있는 함수 실행함.
+
     [Header("기본 설정")]
     public Transform Player;
     public float detectionRange = 5f;
@@ -103,7 +106,7 @@ public class EnemyAI : MonoBehaviour
             return;
 
         stateTimer += Time.deltaTime;
-        UpdateCurrentState();
+        // UpdateCurrentState();
         CheckStateTransitions();
         UpdateAnimations();
     }
@@ -154,40 +157,40 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void UpdateCurrentState()
-    {
-        switch (currentState)
-        {
-            case AIState.Patrolling:
-                patrol.UpdatePatrolling();
-                break;
-            case AIState.Chasing:
-                UpdateChasing();
-                break;
-            case AIState.ChaseResidual:
-                break;
-            case AIState.SearchWaiting:
-            case AIState.LostTarget:
-            case AIState.Waiting:
-            case AIState.CaughtPlayer:
-            case AIState.StunnedAfterQTE:
-            case AIState.QTEAnimation:
-                movement.StopMoving();
-                break;
-            case AIState.Searching:
-                search.UpdateSearching();
-                break;
-            case AIState.SearchComplete:
-                search.UpdateSearchComplete();
-                break;
-            case AIState.Returning:
-                movement.MoveToTarget(movement.moveSpeed * 0.9f);
-                break;
-            case AIState.DistractedByDecoy:
-                UpdateDistractedState();
-                break;
-        }
-    }
+    // private void UpdateCurrentState()
+    // {
+    //     switch (currentState)
+    //     {
+    //         case AIState.Patrolling:
+    //             patrol.UpdatePatrolling();
+    //             break;
+    //         case AIState.Chasing:
+    //             UpdateChasing();
+    //             break;
+    //         case AIState.ChaseResidual:
+    //             break;
+    //         case AIState.SearchWaiting:
+    //         case AIState.LostTarget:
+    //         case AIState.Waiting:
+    //         case AIState.CaughtPlayer:
+    //         case AIState.StunnedAfterQTE:
+    //         case AIState.QTEAnimation:
+    //             movement.StopMoving();
+    //             break;
+    //         case AIState.Searching:
+    //             search.UpdateSearching();
+    //             break;
+    //         case AIState.SearchComplete:
+    //             search.UpdateSearchComplete();
+    //             break;
+    //         case AIState.Returning:
+    //             movement.MoveToTarget(movement.moveSpeed * 0.9f);
+    //             break;
+    //         case AIState.DistractedByDecoy:
+    //             UpdateDistractedState();
+    //             break;
+    //     }
+    // }
 
     private void UpdateChasing()
     {
@@ -222,6 +225,8 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+
+    // Update()에서 호출하면서 프레임마다 상태 변화 감지
     private void CheckStateTransitions()
     {
         if (Player == null)
@@ -233,7 +238,7 @@ public class EnemyAI : MonoBehaviour
 
         bool hiding = PossessionStateManager.Instance.IsPossessing();
         float dist = Vector3.Distance(transform.position, Player.position);
-        bool inRange = dist < detectionRange;
+        bool inRange = dist < detectionRange; //발견범위보다 거리가 더 적을때 inRange == true
 
         switch (currentState)
         {
@@ -318,6 +323,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    // !Range 일 때 실행됨 -> LostTarget
     private IEnumerator RunChaseResidual(Vector3 targetPos)
     {
         ChangeState(AIState.ChaseResidual);
