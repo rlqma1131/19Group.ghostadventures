@@ -74,6 +74,9 @@ public class SoulEnergySystem : MonoBehaviour
 
     public void SetRestoreBoost(float newInterval, int newAmount)
     {
+        if (newAmount <= currentRestoreAmount)
+            return;
+        
         currentRestoreInterval = newInterval;
         currentRestoreAmount = newAmount;
         
