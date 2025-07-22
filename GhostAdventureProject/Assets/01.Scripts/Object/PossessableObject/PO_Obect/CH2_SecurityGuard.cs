@@ -123,7 +123,9 @@ public class CH2_SecurityGuard : MoveBasePossessable
         {
             if(!isIn)
             {
-                transform.position = OfficeDoor_Inside.position;
+                Vector3 targetPos = transform.position;
+                targetPos.x = OfficeDoor_Inside.position.x;
+                transform.position = targetPos;
                 state = GuardState.Idle;
                 targetPerson.currentCondition = PersonCondition.Unknown;
                 hasActivated = false;
@@ -151,6 +153,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 guardPos.x = OfficeDoor_Outside.position.x + 0.5f;
                 transform.position = guardPos;
                 isIn = false;
+                hasActivated = true;
             }
         }
         else

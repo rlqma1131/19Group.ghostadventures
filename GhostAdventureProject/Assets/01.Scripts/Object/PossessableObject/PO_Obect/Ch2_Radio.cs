@@ -29,6 +29,22 @@ public class Ch2_Radio : BasePossessable
 
     protected override void Update()
     {
+
+        if(IsPlaying)
+        {
+            speakerOn.SetBool("OnSpeaker", true); // 스피커 애니메이션 재생
+            musicalNoteOn.SetActive(true);
+            Animator musicalNoteAni = musicalNoteOn.GetComponent<Animator>();
+            musicalNoteAni.SetBool("OnSpeaker", true);
+        }
+        else if(!IsPlaying)
+        {
+            speakerOn.SetBool("OnSpeaker", false); // 스피커 애니메이션 재생
+            Animator musicalNoteAni = musicalNoteOn.GetComponent<Animator>();
+            musicalNoteAni.SetBool("OnSpeaker", false);
+            musicalNoteOn.SetActive(false);
+        }
+
         if (!isPossessed)
         {
             return;
@@ -91,20 +107,6 @@ public class Ch2_Radio : BasePossessable
             hasTriggered_Enemy = false;
         }
         // ===============================================================================================
-        if(IsPlaying)
-        {
-            speakerOn.SetBool("OnSpeaker", true); // 스피커 애니메이션 재생
-            musicalNoteOn.SetActive(true);
-            Animator musicalNoteAni = musicalNoteOn.GetComponent<Animator>();
-            musicalNoteAni.SetBool("OnSpeaker", true);
-        }
-        else if(!IsPlaying)
-        {
-            speakerOn.SetBool("OnSpeaker", false); // 스피커 애니메이션 재생
-            Animator musicalNoteAni = musicalNoteOn.GetComponent<Animator>();
-            musicalNoteAni.SetBool("OnSpeaker", false);
-            musicalNoteOn.SetActive(false);
-        }
     }
 
     private void GoToLeft()
@@ -166,6 +168,7 @@ public class Ch2_Radio : BasePossessable
         if(other.CompareTag("Person"))
         {
             triggerSound_Person.Stop();
+            GoToLeft();
         }        
     }
     
