@@ -8,6 +8,7 @@ public class Ch2_SewerPuzzleManager : MonoBehaviour
     [SerializeField] private GameObject mazeGroup;
     [SerializeField] private GameObject autoLights;
     [SerializeField] private GameObject sewerMemoryObj;
+    [SerializeField] private GameObject sewerVolumeObj;
 
     private bool isSolved = false;
 
@@ -24,8 +25,9 @@ public class Ch2_SewerPuzzleManager : MonoBehaviour
     public void SetPuzzleSolved()
     {
         isSolved = true;
-        mazeGroup.SetActive(false);
+        sewerVolumeObj.SetActive(true);
         autoLights.SetActive(true);
+        mazeGroup.SetActive(false);
         sewerMemoryObj.SetActive(true);
     }
 

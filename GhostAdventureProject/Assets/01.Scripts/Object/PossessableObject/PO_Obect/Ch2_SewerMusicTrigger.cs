@@ -6,12 +6,12 @@ using UnityEngine.Rendering.Universal;
 
 public class Ch2_SewerMusicTrigger : MonoBehaviour
 {
-    [SerializeField] private Light2D globalLight;
+    // [SerializeField] private Light2D globalLight;
 
     private Ch2_SewerMusicPuzzle musicPuzzle;
-    private Color originalGlobalLightColor;
-    private bool hasStoredOriginal = false;
-    private Light2D playerLight;
+    // private Color originalGlobalLightColor;
+    // private bool hasStoredOriginal = false;
+    // private Light2D playerLight;
     private GameObject player;
 
     private void Awake()
