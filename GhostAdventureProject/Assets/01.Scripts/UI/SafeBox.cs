@@ -22,7 +22,6 @@ public class SafeBox : BaseInteractable
         safeBoxOpen = false;
         ZoomSafeBox.SetActive(false);
         q_Key.SetActive(false);
-        inventory = Inventory_PossessableObject.Instance;
     }
 
     void Update()
@@ -31,6 +30,8 @@ public class SafeBox : BaseInteractable
         {   
             if(safeBoxOpenAble && !safeBoxOpen)
             {
+                inventory = Inventory_PossessableObject.Instance;
+                
                 if(inventory == null)
                 {
                     UIManager.Instance.PromptUI.ShowPrompt("금고를 열 수 없습니다", 1.5f);

@@ -13,7 +13,6 @@ public class DoorLock : BaseInteractable
     {
         doorOpenAble = false;
         doorOpen = false;
-        inventory = Inventory_PossessableObject.Instance;
     }
 
     void Update()
@@ -22,6 +21,8 @@ public class DoorLock : BaseInteractable
         {   
             if(doorOpenAble && !doorOpen)
             {
+                inventory = Inventory_PossessableObject.Instance;
+                
                 if(inventory == null || needItem != inventory.selectedItem())
                 {
                     UIManager.Instance.PromptUI.ShowPrompt("문을 열 수 없습니다", 1.5f);
