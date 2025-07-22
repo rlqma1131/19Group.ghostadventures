@@ -159,6 +159,14 @@ public class SoundManager : Singleton<SoundManager>
         sfxSource.PlayOneShot(clip, volume);
     }
 
+    public void StopSFX()
+    {
+        if (sfxSource != null && sfxSource.isPlaying)
+        {
+            sfxSource.Stop();
+        }
+    }
+
     // BGM 볼륨조절
     public void SetBGMVolume(float sliderValue , AudioSource audioSource)
     {

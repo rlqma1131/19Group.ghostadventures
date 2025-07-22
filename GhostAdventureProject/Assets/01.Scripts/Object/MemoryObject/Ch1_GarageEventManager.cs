@@ -4,7 +4,7 @@ using UnityEngine.Playables;
 /// <summary>
 /// TeddyBear 한테 붙는 클래스
 /// </summary>
-public class Ch1_GarageEventManager : BaseInteractable
+public class    Ch1_GarageEventManager : BaseInteractable
 {
     private Ch1_MemoryPositive_01_TeddyBear bear;
     [SerializeField] private KeyBoard keyboard;

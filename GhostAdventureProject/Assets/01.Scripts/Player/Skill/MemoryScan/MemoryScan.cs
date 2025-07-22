@@ -18,6 +18,7 @@ public class MemoryScan : MonoBehaviour
     [SerializeField] private GameObject currentScanObject; // 현재 스캔 대상 오브젝트
     [SerializeField] private MemoryFragment currentMemoryFragment;
 
+    [SerializeField] private AudioClip scanSound;
     // 기억조각 스캔 가능 여부
     private bool isSannable;
 
@@ -52,6 +53,7 @@ public class MemoryScan : MonoBehaviour
         // 스캔이 진행 중일 때 로직 처리
         if (isScanning)
         {
+            
             UpdateScan();
         }
     }
@@ -111,6 +113,11 @@ public class MemoryScan : MonoBehaviour
 
     private void UpdateScan()
     {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+
+            SoundManager.Instance.PlaySFX(scanSound); 
+        }
         // 키를 계속 누르고 있는지 확인
         if (Input.GetKey(KeyCode.E))
         {
@@ -127,7 +134,9 @@ public class MemoryScan : MonoBehaviour
         // 키를 뗐을 경우 스캔 중단
         else
         {
+            SoundManager.Instance.StopSFX();
             CancleScan("스캔이 중단");
+
         }
     }
 
