@@ -51,12 +51,6 @@ public class InventorySlot_PossessableObject : MonoBehaviour
     //     // UI 표시 업데이트 등
     // }
 
-    public void OnClick()
-    {
-        inventoryRef.UseOrPlaceItem(item);
-    }
-
-
     /// ✅ 아이템 수량 증가
     public void AddItem(int amount = 1)
     {
