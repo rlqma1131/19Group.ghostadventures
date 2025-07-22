@@ -73,9 +73,9 @@ public class GameManager : Singleton<GameManager>
 
         Debug.Log($"씬 로드됨: {scene.name}");
 
-        PausePlayer(); // 플레이어 일시정지
+        //PausePlayer(); // 플레이어 일시정지
 
-        Invoke(nameof(RunPlayer), 2f); // 씬 로드 후 잠시 대기 후 플레이어 활성화
+        //Invoke(nameof(RunPlayer), 2f); // 씬 로드 후 잠시 대기 후 플레이어 활성화
     }
 
     public void SetPendingLoad(SaveData data)
