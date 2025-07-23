@@ -269,4 +269,19 @@ public class CH2_SecurityGuard : MoveBasePossessable
         anim.Play("Cat_Sleeping");
         hasActivated = false;
     }
+
+    protected override void OnDoorInteract()
+    {
+        if (!isNearDoor) return;
+
+        // 경비가 문을 통과함
+        Vector3 newPos = transform.position;
+        newPos.x = OfficeDoor_Inside.position.x; // 또는 원하는 포인트
+        transform.position = newPos;
+
+        Debug.Log("경비가 문을 통과함");
+        
+        // doorPass는 다시 false로 초기화해도 됨
+        doorPass = false;
+    }
 }

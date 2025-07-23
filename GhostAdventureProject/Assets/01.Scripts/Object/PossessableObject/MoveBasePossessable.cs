@@ -21,11 +21,13 @@ public class MoveBasePossessable : BasePossessable
         
         Move();
         
-        if (isPossessed && doorPass)
-            return;
-        
         if (Input.GetKeyDown(KeyCode.E))
         {
+            if(doorPass)
+            {
+                OnDoorInteract();
+                return;
+            }
             zoomCamera.Priority = 5;
             Unpossess();
         }
@@ -61,5 +63,8 @@ public class MoveBasePossessable : BasePossessable
                 spriteRenderer.flipX = h < 0f;
             }
         }
+    }
+    protected virtual void OnDoorInteract()
+    { // 자식클래스에서 설정
     }
 }

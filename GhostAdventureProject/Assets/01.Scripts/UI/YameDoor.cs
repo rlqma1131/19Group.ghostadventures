@@ -17,15 +17,15 @@ public class YameDoor : MonoBehaviour
 
     void Update()
     {
-        if(moveAble)
-        {
-            if(Input.GetKeyDown(KeyCode.E))
-            {
-                Vector3 targetDoorPos = guard.transform.position;
-                targetDoorPos.x = targetDoor.transform.position.x;   
-                guard.transform.position = targetDoorPos;
-            }
-        }
+        // if(moveAble)
+        // {
+        //     if(Input.GetKeyDown(KeyCode.E))
+        //     {
+        //         Vector3 targetDoorPos = guard.transform.position;
+        //         targetDoorPos.x = targetDoor.transform.position.x;   
+        //         guard.transform.position = targetDoorPos;
+        //     }
+        // }
         
     }
 
