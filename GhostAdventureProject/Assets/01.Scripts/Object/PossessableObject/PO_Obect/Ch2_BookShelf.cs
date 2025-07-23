@@ -163,8 +163,7 @@ public class Ch2_BookShelf : BasePossessable
 
     private void ConsumeClue(ClueData[] clues)
     {
-        UIManager uimanager = UIManager.Instance;
-        uimanager.Inventory_PlayerUI.RemoveClue(clues);
+        UIManager.Instance.Inventory_PlayerUI.RemoveClue(clues);
     }
 
 }

@@ -3,65 +3,75 @@ using UnityEngine;
 using DG.Tweening;
 using Unity.VisualScripting;
 
-public enum GuardState { Idle, MovingToRadio, MovingToBench, Resting, MovingToOffice, InOffice }
+public enum GuardState { Idle, MovingToRadio, TurnOffRadio, MovingToBench, Resting, MovingToOffice, InOffice, Work, Roading }
 
 public class CH2_SecurityGuard : MoveBasePossessable
 {   
-    [SerializeField] private LockedDoor door; //도어락 있는 문 //없어도 될 것 같음
+    // [SerializeField] private LockedDoor door; //도어락 있는 문 //없어도 될 것 같음
+    [SerializeField] private DoorLock doorLock; // 도어락
     [SerializeField] private SafeBox safeBox; // 금고
     [SerializeField] private Ch2_Radio radio; // 라디오
-    public Transform Radio;
-    public Transform bench;
-    public Transform OfficeDoor_Outside;
-    public Transform OfficeDoor_Inside;
-    public SpriteRenderer sr;
+    public Transform Radio; // 라디오 위치
+    public Transform bench; // 벤치 위치
+    public Transform OfficeDoor_Outside; // 경비실 문(밖)
+    public Transform OfficeDoor_Inside; // 경비실 문(안)
+    public Transform chair; // 경비실 안 의자 위치
+    private GuardState state; // 경비원의 상태
+    private float turnOffRadioTimer = 0f;
+    private float turnOffRadioDuration = 2f; // 라디오 끄는 시간
+    private float restTimer = 0f; 
+    public float restDuration = 3f; // 휴식시간
+    private float roadingTimer = 0f;
+    private float roadingDuration = 5f; // 로딩시간
 
-    private GuardState state; 
-    private float restTimer = 0f;
-    public float restDuration = 3f;
-    private float waitTimer = 0f;
-    private float waitDuration = 1f;
     public Person targetPerson;
     public PersonConditionHandler conditionHandler;
-    
     [SerializeField] private GameObject q_Key;
     private bool isNearDoor = false;
-    private bool isIn;
-    private bool onetime = false;
+    private bool isInOffice;// 경비실 안에 있는지 확인
+    private bool oneTimeShowClue = false; // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만)
     
+    
+    // 빙의되지 않았을 때 -> 라디오소리가 들리면 라디오를 따라감
+    // 빙의가 풀렸을 때 -> 라디오 소리가 들려도 confused 상태가 됨
+    
+
+
+
+    // 처음 시작시 빙의불가(경비실안에 있음)
     protected override void Start()
     {
         base.Start();
-        hasActivated = true;
         moveSpeed = 2f;
-        isIn = true;
-        sr = GetComponentInChildren<SpriteRenderer>();
+        hasActivated = false;
+        isInOffice = true;
+        targetPerson.currentCondition = PersonCondition.Unknown;
     }
 
     protected override void Update()
     {
-        // if (!hasActivated) return;
-
+        Debug.Log(state);
         base.Update();
-
-        if (Input.GetKeyDown(KeyCode.Q) && isNearDoor)
+        if(isPossessed)
         {
+            // anim.Play("Idle");
         }
-        if(isPossessed && Input.GetKeyDown(KeyCode.Alpha7) && !onetime)
+        // 단서 관련 로직 (추후 수정예정)---------------------------
+        if(isPossessed && Input.GetKeyDown(KeyCode.Alpha7) && !oneTimeShowClue)
         {
             UIManager.Instance.InventoryExpandViewerUI.OnClueHidden += ShowText;
-            onetime = true;
+            oneTimeShowClue = true;
         }
 
         if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4))
         {
             UIManager.Instance.InventoryExpandViewerUI.OnClueHidden -= ShowText;
         }
-
-        
+        //----------------------------------------------------
 
         if(radio != null && radio.IsPlaying)
         {
+            // anim.Play("Idle");
             state = GuardState.MovingToRadio;
         }
 
@@ -69,8 +79,15 @@ public class CH2_SecurityGuard : MoveBasePossessable
         {
             case GuardState.MovingToRadio:
                 CheckInOut();
-                // this.gameObject.SetActive(true);
-                // MoveTo(Radio.position);
+                break;
+
+            case GuardState.TurnOffRadio:
+                turnOffRadioTimer += Time.deltaTime;
+                if(turnOffRadioTimer >= turnOffRadioDuration) 
+                {
+                    targetPerson.currentCondition = PersonCondition.Normal;
+                    state = GuardState.MovingToBench;
+                }
                 break;
 
             case GuardState.MovingToBench:
@@ -91,29 +108,41 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 break;
             
             case GuardState.InOffice:
-                hasActivated = false;
+                break;
+
+            case GuardState.Work:
+                MoveTo(chair.position);
+                break;
+
+            case GuardState.Roading:
+                radio.triggerSound_Person.Stop();
+                roadingTimer += Time.deltaTime;
+                if(roadingTimer >= roadingDuration) 
+                {
+                    if(isInOffice)
+                        state = GuardState.Work;
+                    else
+                        state = GuardState.MovingToOffice;
+                }
                 break;
         }
-
-    }
-
-    void ShowText()
-    {
-        UIManager.Instance.PromptUI.ShowPrompt("잃어버린 게 뭘까...? 사람일까, 기억일까.", 2f);
     }
 
     // 목적지까지 이동
     void MoveTo(Vector3 target)
     {   
         if(!isPossessed)
-        {
+        {   
+            anim.SetBool("Work", false);
+            anim.SetBool("Rest", false);
+            anim.SetBool("Move", true);
             Vector3 targetPos = transform.position;
             targetPos.x = target.x;
             transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
             if(transform.position.x - target.x >0)
-                sr.flipX = true;
+                spriteRenderer.flipX = true;
             else
-                sr.flipX = false;
+                spriteRenderer.flipX = false;
             if (Mathf.Abs(transform.position.x - target.x) < 0.1f)
             {
                 OnDestinationReached(target);
@@ -124,45 +153,46 @@ public class CH2_SecurityGuard : MoveBasePossessable
     // 목적지 도착시 처리
     void OnDestinationReached(Vector3 destination)
     {
-        if (destination == Radio.position)
+        // 라디오에 도착했을 때
+        if (destination == Radio.position) 
         {
-            // isIn = false;
-            targetPerson.currentCondition = PersonCondition.Normal;
-            state = GuardState.MovingToBench;
+            state = GuardState.TurnOffRadio;
+            anim.SetBool("Move", false);
         }
+
+        // 벤치에 도착했을 때
         else if (destination == bench.position)
         {   
-            // isIn = false;
-            targetPerson.currentCondition = PersonCondition.Normal;
             state = GuardState.Resting;
+            anim.SetBool("Move", false);
+            anim.SetBool("Rest", true);
             restTimer = 0f;
         }
+        
+        // 경비실 문(밖)에 도착했을 때
         else if (destination == OfficeDoor_Outside.position)
         {
-            if(!isIn && !isPossessed)
+            if(!isPossessed)
             {
                 Vector3 targetPos = transform.position;
                 targetPos.x = OfficeDoor_Inside.position.x;
                 transform.position = targetPos;
-                state = GuardState.Idle;
-                targetPerson.currentCondition = PersonCondition.Unknown;
-                hasActivated = false;
-                isIn = true;
-                // waitTimer += Time.deltaTime;
-                // if (waitTimer >= waitDuration)
-                // {
-                //     // this.gameObject.SetActive(false); // 임시
-                //     // 경비실 안으로 이동
-                //     Debug.Log("경비실 도착. 경비실 안으로 이동");
-                // }
+                state = GuardState.Work;
             }
+        }
+
+        // 경비실 의자에 도착했을 때
+        else if (destination == chair.position)
+        {
+            anim.SetBool("Move", false);
+            anim.SetBool("Work", true);
         }
     }
 
-    // 밖인지 안인지 확인
+    // 경비실 문으로 이동 후 라디오로 이동 
     private void CheckInOut()
     {
-        if(isIn && !isPossessed)
+        if(isInOffice)
         {
             MoveTo(OfficeDoor_Inside.position);
             if(transform.position.x == OfficeDoor_Inside.position.x)
@@ -170,25 +200,11 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 Vector3 guardPos = transform.position;
                 guardPos.x = OfficeDoor_Outside.position.x + 0.5f;
                 transform.position = guardPos;
-                isIn = false;
-                hasActivated = true;
             }
         }
         else
         {
             MoveTo(Radio.position);
-        }
-    }
-    
-
-    //트리거 감지 예시
-    public void OnRadioTriggered()
-    {
-        if (state == GuardState.Idle || state == GuardState.MovingToOffice)
-        {
-            targetPerson.currentCondition = PersonCondition.Tired;
-            state = GuardState.MovingToRadio;
-            Debug.Log("라디오 소리 탐지! 라디오로 이동");
         }
     }
     
@@ -218,74 +234,35 @@ public class CH2_SecurityGuard : MoveBasePossessable
     }
 
     // 문 근처에 있는지 확인
+    // 경비원이 있는 곳이 경비실 안인지 밖인지 확인 (트리거)
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
 
-        if (collision.GetComponent<LockedDoor>() == door)
-        {
-            isNearDoor = true;
-        }
-
-        // bool doorlockopen = collision.GetComponent<DoorLock>().doorOpen;
-        // if(doorlockopen)
+        // if (collision.GetComponent<LockedDoor>() == door)
         // {
-        //     StartCoroutine(SecurityGuardAct());
+        //     isNearDoor = true;
         // }
+        if(collision.CompareTag("In"))
+        {
+            isInOffice = true;
+            hasActivated = false;
+        }
     }
-
     protected override void OnTriggerExit2D(Collider2D collision)
     {
         base.OnTriggerExit2D(collision);
 
-        if (collision.GetComponent<LockedDoor>() == door)
+        // if (collision.GetComponent<LockedDoor>() == door)
+        // {
+        //     isNearDoor = false;
+        // }
+        if(collision.CompareTag("In"))
         {
-            isNearDoor = false;
-        }
-    }
-
-    public void Blink()
-    {
-        anim.SetTrigger("Blink");
-    }
-
-    public void ActivateCat()
-    {
-        // 1. 점프 애니메이션
-        float jumpHeight = 1.5f;
-        float jumpDuration = 0.4f;
-
-        // 현재 위치 저장
-        Vector3 originalPos = transform.position;
-
-        // 2. 점프 시퀀스
-        DG.Tweening.Sequence jumpSequence = DOTween.Sequence();
-
-        // 위로 점프
-        jumpSequence.Append(transform.DOMoveY(originalPos.y + jumpHeight, jumpDuration * 0.5f).SetEase(Ease.OutQuad));
-
-        // 아래로 착지
-        jumpSequence.Append(transform.DOMoveY(originalPos.y, jumpDuration * 0.5f).SetEase(Ease.InQuad));
-
-        // 3. 착지 후 Idle 애니메이션으로 전환
-        jumpSequence.AppendCallback(() =>
-        {
+            isInOffice = false;
             hasActivated = true;
-            anim.SetBool("Idle", true);
-        });
-    }
-
-    IEnumerator SecurityGuardAct()
-    {
-        anim.SetTrigger("Open");
-        // door.SolvePuzzle();
-
-        yield return new WaitForSeconds(2f); // 2초 기다림
-
-        zoomCamera.Priority = 1;
-        Unpossess();
-        anim.Play("Cat_Sleeping");
-        hasActivated = false;
+            targetPerson.currentCondition = PersonCondition.Unknown;
+        }
     }
 
     protected override void OnDoorInteract()
@@ -301,5 +278,24 @@ public class CH2_SecurityGuard : MoveBasePossessable
         
         // doorPass는 다시 false로 초기화해도 됨
         doorPass = false;
+    }
+
+    // 빙의 해제시
+    public override void Unpossess()
+    {
+        radio.triggerSound_Person.Stop();
+        base.Unpossess();
+        state = GuardState.Roading;
+        anim.SetBool("Move", false);
+        roadingTimer = 0f;
+    }
+    public override void OnPossessionEnterComplete()
+    {
+
+    }
+
+    void ShowText()
+    {
+        UIManager.Instance.PromptUI.ShowPrompt("잃어버린 게 뭘까...? 사람일까, 기억일까.", 2f);
     }
 }

@@ -40,8 +40,12 @@ public class Ch2_Raven : MoveBasePossessable
         base.Update();
 
         if (Input.GetKeyDown(KeyCode.Q))
-        {
-            anim.SetTrigger("Attack");
+        { 
+            if(isPossessed)
+            {
+                anim.SetTrigger("Attack");
+            }
+    
             if(isNearDoor)
             {
                 // underGroundDoor.SolvePuzzle();

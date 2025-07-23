@@ -10,8 +10,8 @@ public class Ch2_Radio : BasePossessable
     [SerializeField] private float range = 0.0324f; // 주파수 바늘 이동범위
     [SerializeField] private float triggerX_Person = 0.38f; // 트리거위치 - 사람
     [SerializeField] private float triggerX_Enemy = 0.09f; // 트리거위치 - 적
-    [SerializeField] private AudioSource triggerSound_Person; // 트리거사운드 - 사람
-    [SerializeField] private AudioSource triggerSound_Enemy; // 트리거사운드 - 적
+    public AudioSource triggerSound_Person; // 트리거사운드 - 사람
+    public AudioSource triggerSound_Enemy; // 트리거사운드 - 적
     private bool hasTriggered_Person = false; // 트리거발동여부 - 사람
     private bool hasTriggered_Enemy = false; // 트리거발동여부 - 적
     private bool isControlMode = false; // 주파수 조정가능 모드(줌)
