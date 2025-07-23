@@ -101,7 +101,7 @@ public class Ch2_Raven : MoveBasePossessable
 
     public void Blink()
     {
-        anim.SetTrigger("Blink");
+        // anim.SetTrigger("Blink");
     }
 
     public void ActivateCat()
@@ -126,7 +126,7 @@ public class Ch2_Raven : MoveBasePossessable
         jumpSequence.AppendCallback(() =>
         {
             hasActivated = true;
-            anim.SetBool("Idle", true);
+            // anim.SetBool("Idle", true);
         });
     }
 
