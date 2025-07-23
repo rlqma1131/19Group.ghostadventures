@@ -10,6 +10,8 @@ public class YameScan_correct : MonoBehaviour
     [SerializeField] private Image scanCircleUI; //스캔 원 UI
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject door; // 지하수로와 연결된 문
+    [SerializeField] private GameObject shelf; // 문 막고 있는 책장
+    [SerializeField] private GameObject e_key;
 
 
 
@@ -133,8 +135,11 @@ public class YameScan_correct : MonoBehaviour
         scanCircleUI?.gameObject.SetActive(false);
 
         door.SetActive(true);
-        Animator doorani = door.GetComponent<Animator>();
-        doorani.SetBool("Open", true);
+        // Animator doorani = door.GetComponent<Animator>();
+        // doorani.SetBool("Open", true);
+        Vector3 shelfPos = shelf.transform.position;
+        shelfPos.x -= 3f;
+        shelf.transform.position = shelfPos;
         Debug.Log("지하수로와 연결된 문을 발견했습니다");
 
     }
@@ -155,6 +160,12 @@ public class YameScan_correct : MonoBehaviour
         {
             isNearMemory = true;
             currentScanObject = collision.gameObject;
+
+            Vector3 e_keyPos = transform.position; 
+            e_keyPos.y += 0.3f;
+            e_key.transform.position = e_keyPos;
+            e_key.SetActive(true);
+
             // currentMemoryFragment = currentScanObject.GetComponent<MemoryFragment>();
         }
     }
