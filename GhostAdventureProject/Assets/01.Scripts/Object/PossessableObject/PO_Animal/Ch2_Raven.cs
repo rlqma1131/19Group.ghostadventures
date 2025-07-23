@@ -6,12 +6,14 @@ public class Ch2_Raven : MoveBasePossessable
 {
 
     [SerializeField] private LockedDoor underGroundDoor; // 지하창고 연결 문
-    [SerializeField] private GameObject q_Key;
     [SerializeField] private Animator highlightAnim;
     [SerializeField] private GameObject SandCastle;
 
     private bool isNearDoor = false;
     private bool sandCastleBreakAble = false;
+
+        [SerializeField] private float flyForce = 5f;
+    [SerializeField] private float diveSpeed = 10f;
 
     protected override void Start()
     {
@@ -23,19 +25,16 @@ public class Ch2_Raven : MoveBasePossessable
     {
         if (!hasActivated)
         {
-            q_Key.SetActive(false);
             return;
         }
         if (isNearDoor || sandCastleBreakAble)
         {
             Vector2 catPos = this.transform.position;
             catPos.y += 0.5f;
-            q_Key.transform.position = catPos;
-            q_Key.SetActive(true);
+            // q_Key.SetActive(true);
         }
         else if (!isNearDoor)
         {
-            q_Key.SetActive(false);
         }
 
         base.Update();
@@ -44,21 +43,48 @@ public class Ch2_Raven : MoveBasePossessable
         {
             if(isNearDoor)
             {
-                q_Key.SetActive(false);
-                underGroundDoor.SolvePuzzle();
+                // underGroundDoor.SolvePuzzle();
                 // 문 열기
                 // StartCoroutine(CatAct());
             }
-            if(sandCastleBreakAble)
-            {
-                // anim.SetBool("Attack", true);
-                underGroundDoor.SolvePuzzle();
-                Debug.Log("문이 열렸습니다");
-            }
+            // if(sandCastleBreakAble)
+            // {
+            //     // anim.SetBool("Attack", true);
+            //     underGroundDoor.SolvePuzzle();
+            //     Debug.Log("문이 열렸습니다");
+            // }
         }
-
-
+        HandleFlight();
     }
+
+        
+    void HandleFlight()
+    {
+    if(isPossessed)
+    {
+    // 날기: 스페이스바
+    if (Input.GetKey(KeyCode.Space))
+    {
+        transform.position += Vector3.up * flyForce * Time.deltaTime;
+        // if (anim != null)
+            // anim.SetBool("Fly", true);
+    }
+    else
+    {
+        // if (anim != null)
+            // anim.SetBool("Fly", false);
+    }
+
+    // 급강하: S 키
+    if (Input.GetKey(KeyCode.S))
+    {
+        transform.position += Vector3.down * diveSpeed * Time.deltaTime;
+        // if (anim != null)
+        //     anim.SetTrigger("Dive"); // 애니메이션이 있다면
+        }
+    }
+    }
+
 
     public override void OnQTESuccess()
     {
