@@ -8,6 +8,10 @@ public class Ch2_CCTV : BasePossessable
     [Header("CCTV 모니터")]
     [SerializeField] private Ch2_CCTVMonitor monitor;
 
+    [Header("조작키")]
+    [SerializeField] private GameObject aKey;
+    [SerializeField] private GameObject dKey;
+
     protected override void Start()
     {
         isPossessed = false;
@@ -29,7 +33,10 @@ public class Ch2_CCTV : BasePossessable
         if (Input.GetKeyDown(KeyCode.E))
         {
             Unpossess();
+            aKey.SetActive(false);
+            dKey.SetActive(false);
         }
+
         // 좌우 움직임에 따라 모니터화면도 움직이기
         else if (Input.GetKeyDown(KeyCode.D))
         {
@@ -51,5 +58,11 @@ public class Ch2_CCTV : BasePossessable
     public void InactiveCCTV()
     {
         hasActivated = false;
+    }
+
+    public override void OnPossessionEnterComplete() 
+    { 
+        aKey.SetActive(true);
+        dKey.SetActive(true);
     }
 }
