@@ -8,7 +8,6 @@ public class Prompt : MonoBehaviour
 {
     private GameObject PromptPanel; // 프롬프트 패널 이미지
     private TMP_Text PromptText; // 프롬프트 텍스트
-
     private Queue<string> PromptQueue = new Queue<string>();
     private System.Action onDialogComplete;
     private bool isActive = false;

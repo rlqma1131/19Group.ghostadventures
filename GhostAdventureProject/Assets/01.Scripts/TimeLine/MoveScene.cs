@@ -10,20 +10,32 @@ public class MoveScene : MonoBehaviour
 
     private float skipTimer = 0f; // S 키를 누른 시간을 측정하는 타이머
     private const float SKIP_DURATION = 3.0f; // 스킵에 필요한 시간 (3초)
-
+    [SerializeField] private string nextSceneName;
     private bool isSkipActive = false; // 스킵 활성화 여부
-   
+
+    [SerializeField] Image space1;
+    [SerializeField] Image space2;
+
+    private bool isHolding = false;
+    private Coroutine flashingCoroutine;
+
     private void Awake()
     {
         skip.fillAmount = 1f;
+    }
+    private void Start()
+    {
+        flashingCoroutine = StartCoroutine(FlashImages());
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.Space))
         {
-            Debug.Log("S 키를 눌렀습니다. 타임라인 스킵 시작");
+
+            isHolding = true;
             skipTimer += Time.unscaledDeltaTime;
             skip.fillAmount = 1.0f - (skipTimer / SKIP_DURATION);
 
@@ -31,22 +43,28 @@ public class MoveScene : MonoBehaviour
             {
                 isSkipActive = true;
             }
+            ShowImage2Only();
         }
 
-        if (Input.GetKeyUp(KeyCode.S))
+        if (Input.GetKeyUp(KeyCode.Space))
         {
             // 타이머와 이미지 fillAmount 초기화
+            isHolding = false;
             skipTimer = 0f;
             if (skip != null)
             {
                 skip.fillAmount = 1f;
             }
+
+            if (flashingCoroutine != null)
+                StopCoroutine(flashingCoroutine);
+            flashingCoroutine = StartCoroutine(FlashImages());
         }
 
         if (isSkipActive)
         {
             // 타임라인 스킵이 활성화되면 씬 이동
-            GoScene("Ch01_House");
+            GoScene(nextSceneName);
             isSkipActive = false; // 스킵 상태 초기화
         }
     }
@@ -55,5 +73,34 @@ public class MoveScene : MonoBehaviour
     {
         // 타임라인이 종료되면 씬 이동
         SceneManager.LoadScene(Scenename);
+        //if (!GameManager.Instance.Player.activeSelf)
+        //{
+        //    //GameManager.Instance.Player.gameObject.SetActive(true); // 플레이어 활성화
+
+
+        //}
+    }
+
+    private IEnumerator FlashImages()
+    {
+        while (!isHolding)
+        {
+            space1.enabled = true;
+            space2.enabled = false;
+            yield return new WaitForSeconds(0.7f);
+
+            space1.enabled = false;
+            space2.enabled = true;
+            yield return new WaitForSeconds(0.7f);
+        }
+    }
+
+    private void ShowImage2Only()
+    {
+        if (flashingCoroutine != null)
+            StopCoroutine(flashingCoroutine);
+
+        space1.enabled = false;
+        space2.enabled = true;
     }
 }
