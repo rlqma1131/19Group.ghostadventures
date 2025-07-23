@@ -18,7 +18,7 @@ public class Ch2_BookSlot : MonoBehaviour
     [SerializeField] private Color pushedColor = new Color(0.6f, 0.6f, 0.6f, 1f); // 어두운 색
     private Color originalColor;
     public SpriteRenderer booknameRenderer;
-    [SerializeField] private Color defaultColor = Color.black;
+    [SerializeField] private Color defaultColor;
     [SerializeField] private Color pushedTextColor = Color.white;
 
     [SerializeField] private bool isResetBook = false;

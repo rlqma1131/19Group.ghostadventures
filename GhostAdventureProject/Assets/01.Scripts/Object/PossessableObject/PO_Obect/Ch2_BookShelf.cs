@@ -139,6 +139,7 @@ public class Ch2_BookShelf : BasePossessable
             doorToOpen.SetActive(true);
             ExitControlMode();
             hasActivated = false;
+            Unpossess();
             ConsumeClue(needClues);
             transform.DOShakePosition(shakeDuration, shakeStrength)
                      .OnComplete(() =>
