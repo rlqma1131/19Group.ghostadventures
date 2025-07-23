@@ -17815,8 +17815,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.85909986, y: 0.43375015, z: 0}
-    m_Extent: {x: 8.961201, y: 7.53755, z: 0}
+    m_Center: {x: -0.85914993, y: 0.43365002, z: 0}
+    m_Extent: {x: 8.96165, y: 7.53695, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -61145,10 +61145,10 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5652682530802007486, guid: dffa7386b99954149b37e03afa14800e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2085804142}
+      addedObject: {fileID: 2085804141}
     - targetCorrespondingSourceObject: {fileID: 5652682530802007486, guid: dffa7386b99954149b37e03afa14800e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2085804141}
+      addedObject: {fileID: 2085804144}
   m_SourcePrefab: {fileID: 100100000, guid: dffa7386b99954149b37e03afa14800e, type: 3}
 --- !u!224 &2085804139 stripped
 RectTransform:
@@ -61205,7 +61205,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.1041318, y: 1.3125486}
   m_EdgeRadius: 0
---- !u!114 &2085804142
+--- !u!114 &2085804144
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -61214,20 +61214,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2085804140}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ee5c19e368214d8d92a1ac745fe7d02, type: 3}
+  m_Script: {fileID: 11500000, guid: 07b740841f5c942e2bc7b4d154d558da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 124781384}
-  data: {fileID: 11400000, guid: c9500486131ffbb4aacd45c92979a630, type: 2}
-  isScannable: 0
-  canStore: 0
-  fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
-  dropOffset: {x: 0, y: 0, z: 0}
-  bounceHeight: 0.3
-  bounceDuration: 0.5
-  rotateTime: 2
-  ellipseRadiusX: 0.8
-  ellipseRadiusZ: 1.5
+  scan_duration: 2
+  scanPanel: {fileID: 0}
+  scanCircleUI: {fileID: 0}
+  player: {fileID: 0}
+  currentScanObject: {fileID: 0}
 --- !u!1 &2093757784
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,28 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class YameScan : MonoBehaviour
+public class YameScan_correct : MonoBehaviour
 {
 
     [Header("Scan Settings")]
     [SerializeField] private float scan_duration = 2f; //스캔 시간
-
-    [Header("UI References")]
     [SerializeField] private GameObject scanPanel; //스캔 패널
     [SerializeField] private Image scanCircleUI; //스캔 원 UI
-    [SerializeField] private Transform playerTransform; //플레이어 위치
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject door; // 지하수로와 연결된 문
+
+
 
     // 내부 상태 변수
     private float scanTime = 0f;
     private bool isScanning = false;
     private bool isNearMemory = false;
     [SerializeField] private GameObject currentScanObject; // 현재 스캔 대상 오브젝트
-    [SerializeField] private MemoryFragment currentMemoryFragment;
-
-    // 기억조각 스캔 가능 여부
-    private bool isSannable;
 
     private Camera mainCamera;
 
@@ -33,18 +28,12 @@ public class YameScan : MonoBehaviour
         scanPanel = UIManager.Instance.scanUI;
         scanCircleUI = UIManager.Instance.scanUI.transform.Find("CircleUI")?.GetComponent<Image>();
         scanCircleUI?.gameObject.SetActive(false);
+        player = FindObjectOfType<PlayerController>().gameObject;
 
     }
 
     void Update()
     {
-        if (currentMemoryFragment != null)
-        {
-            isSannable = currentMemoryFragment.IsScannable;
-        }
-
-        if (!isSannable)
-            return;
 
         // 스캔 가능한 상태가 아니거나, 스캔 중이 아닐 때 입력을 받음
         if (isNearMemory && !isScanning && Input.GetKeyDown(KeyCode.E))
@@ -65,7 +54,7 @@ public class YameScan : MonoBehaviour
         if (scanCircleUI != null && scanCircleUI.gameObject.activeInHierarchy)
         {
             // 플레이어의 월드 위치를 스크린 위치로 변환하여 UI 위치를 갱신
-            scanCircleUI.transform.position = mainCamera.WorldToScreenPoint(playerTransform.position) + new Vector3(-40, 50, 0);
+            scanCircleUI.transform.position = mainCamera.WorldToScreenPoint(player.transform.position) + new Vector3(-40, 50, 0);
         }
     }
 
@@ -84,7 +73,7 @@ public class YameScan : MonoBehaviour
 
     private void StartScan()
     {
-        if (currentMemoryFragment.IsScannable)
+        // if (currentMemoryFragment.IsScannable)
         {
 
             isScanning = true;
@@ -143,37 +132,11 @@ public class YameScan : MonoBehaviour
         scanPanel?.SetActive(false);
         scanCircleUI?.gameObject.SetActive(false);
 
-        // 이미 스캔되었는지 확인
-        if (currentMemoryFragment != null && currentMemoryFragment.IsScannable)
-        {
-            currentMemoryFragment.IsScannedCheck();
-        }
-        else
-        {
-            Debug.Log("이미 스캔된 기억 조각이거나, MemoryFragment 컴포넌트가 없습니다.");
-        }
+        door.SetActive(true);
+        Animator doorani = door.GetComponent<Animator>();
+        doorani.SetBool("Open", true);
+        Debug.Log("지하수로와 연결된 문을 발견했습니다");
 
-        currentScanObject.GetComponentInChildren<SpriteRenderer>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f); // 스캔 완료 후 색상 변경
-
-        // 여기에 스캔 완료 후 처리 로직 추가 (예: UI 업데이트, 사운드 재생 등)
-
-        //SceneManager.LoadScene($"{currentMemoryFragment.data.CutSceneName}", LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
-        //Time.timeScale = 0f; // 시간 흐름을 원래대로 복구
-
-        //각 오브젝트 별로 기억 재생 이후 구현할 메서드
-
-        currentMemoryFragment.AfterScan();
-
-        // 저장
-        SaveData data = new SaveData
-        {
-            sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
-            playerPosition = playerTransform.position,
-            checkpointId = currentScanObject.name // 또는 currentMemoryFragment 고유 ID
-        };
-
-        SaveManager.SaveGame(data);
-        Debug.Log($"[MemoryScan] 기억조각 스캔 완료 및 저장됨: {data.checkpointId}");
     }
 
     private void CancleScan(string reason)
@@ -188,17 +151,17 @@ public class YameScan : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Memory"))
+        if (collision.CompareTag("Player"))
         {
             isNearMemory = true;
             currentScanObject = collision.gameObject;
-            currentMemoryFragment = currentScanObject.GetComponent<MemoryFragment>();
+            // currentMemoryFragment = currentScanObject.GetComponent<MemoryFragment>();
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Memory"))
+        if (collision.CompareTag("Player"))
         {
             isNearMemory = false;
 
@@ -208,9 +171,8 @@ public class YameScan : MonoBehaviour
                 CancleScan("범위를 이탈하여 스캔이 중단되었습니다.");
             }
 
-
             currentScanObject = null;
-            currentMemoryFragment = null;
         }
     }
+    
 }
