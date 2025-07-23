@@ -39,7 +39,7 @@ public abstract class BaseDoor : BaseInteractable
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") || other.CompareTag("Person"))
         {
             playerNearby = true;
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
@@ -48,7 +48,7 @@ public abstract class BaseDoor : BaseInteractable
 
     protected override void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") || other.CompareTag("Person"))
         {
             playerNearby = false;
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);

@@ -121,7 +121,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         }
         else if (destination == OfficeDoor_Outside.position)
         {
-            if(!isIn)
+            if(!isIn && !isPossessed)
             {
                 Vector3 targetPos = transform.position;
                 targetPos.x = OfficeDoor_Inside.position.x;
@@ -144,7 +144,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     // 밖인지 안인지 확인
     private void CheckInOut()
     {
-        if(isIn)
+        if(isIn && !isPossessed)
         {
             MoveTo(OfficeDoor_Inside.position);
             if(transform.position.x == OfficeDoor_Inside.position.x)

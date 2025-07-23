@@ -19,13 +19,17 @@ public class MoveBasePossessable : BasePossessable
         if (!isPossessed || !PossessionSystem.Instance.CanMove)
             return;
         
+        Move();
+        
+        if (isPossessed && doorPass)
+            return;
+        
         if (Input.GetKeyDown(KeyCode.E))
         {
             zoomCamera.Priority = 5;
             Unpossess();
         }
 
-        Move();
     }
 
     public override void OnPossessionEnterComplete()
