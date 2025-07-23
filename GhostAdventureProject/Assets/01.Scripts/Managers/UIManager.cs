@@ -94,7 +94,7 @@ public class UIManager : Singleton<UIManager>
     private void Start()
     {
         SetDefaultCursor();
-        if(SceneManager.GetActiveScene().name == "Start")
+        if(SceneManager.GetActiveScene().name == "IntroScene_Real")
         {
             PlayModeUI_CloseAll();
         }
