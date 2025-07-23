@@ -1,5 +1,6 @@
 using Unity.Mathematics;
 using UnityEngine;
+using DG.Tweening;
 
 public class Ch2_Bat_Trigger : MonoBehaviour
 {
@@ -48,3 +49,44 @@ public class Ch2_Bat_Trigger : MonoBehaviour
             sr.flipX = false;
     }
 }
+// public class CarMover : MonoBehaviour
+// {
+//     [SerializeField] private float moveDistance = 5f;
+//     [SerializeField] private float moveDuration = 2f;
+//     [SerializeField] private SpriteRenderer spriteRenderer;
+//     [SerializeField] private float bounceHeight = 0.2f;     // 들썩 높이
+//     [SerializeField] private float bounceDuration = 0.3f;   // 들썩 속도
+
+//     private bool facingRight = true;
+
+//     void Start()
+//     {
+//         if (spriteRenderer == null)
+//             spriteRenderer = GetComponent<SpriteRenderer>();
+
+//         // 위치 저장
+//         Vector3 startPos = transform.position;
+//         Vector3 endPos = new Vector3(startPos.x + moveDistance, startPos.y, startPos.z);
+
+//         // 좌우 이동 트윈
+//         transform.DOMoveX(endPos.x, moveDuration)
+//             .SetLoops(-1, LoopType.Yoyo)
+//             .SetEase(Ease.InOutSine)
+//             .OnStepComplete(FlipX);
+
+//         // 들썩거리는 트윈 (Y축으로 위아래 반복)
+//         transform.DOMoveY(startPos.y + bounceHeight, bounceDuration)
+//             .SetLoops(-1, LoopType.Yoyo)
+//             .SetEase(Ease.InOutSine);
+
+//         flipX = true
+//         spriteRenderer.flipX = true;
+//         facingRight = false;
+//     }
+
+//     void FlipX()
+//     {
+//         facingRight = !facingRight;
+//         spriteRenderer.flipX = !facingRight;
+//     }
+// }
