@@ -10,7 +10,7 @@ public class MoveScene : MonoBehaviour
 
     private float skipTimer = 0f; // S 키를 누른 시간을 측정하는 타이머
     private const float SKIP_DURATION = 3.0f; // 스킵에 필요한 시간 (3초)
-
+    [SerializeField] private string nextSceneName;
     private bool isSkipActive = false; // 스킵 활성화 여부
    
     private void Awake()
@@ -46,7 +46,7 @@ public class MoveScene : MonoBehaviour
         if (isSkipActive)
         {
             // 타임라인 스킵이 활성화되면 씬 이동
-            GoScene("Ch01_House");
+            GoScene(nextSceneName);
             isSkipActive = false; // 스킵 상태 초기화
         }
     }
@@ -55,5 +55,11 @@ public class MoveScene : MonoBehaviour
     {
         // 타임라인이 종료되면 씬 이동
         SceneManager.LoadScene(Scenename);
+        if (!GameManager.Instance.Player.activeSelf)
+        {
+            //GameManager.Instance.Player.gameObject.SetActive(true); // 플레이어 활성화
+
+
+        }
     }
 }

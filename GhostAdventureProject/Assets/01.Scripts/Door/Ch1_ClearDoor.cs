@@ -9,14 +9,14 @@ public class Ch1_ClearDoor : BaseInteractable
     [SerializeField] private Ch1_MemoryPositive_01_TeddyBear TeddyBear;
     [SerializeField] private Ch1_GarageEventManager garageEvent;
     [SerializeField] private PlayableDirector playable;
-
+    Inventory_Player inventory_Player;
     private bool canOpenDoor = false;
     public bool testing = true; // 테스트용 변수
 
 
     void Start()
     {
-        
+        inventory_Player = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         playable.stopped += OnTimelineFinished;
     }
     private void Update()
@@ -42,7 +42,8 @@ public class Ch1_ClearDoor : BaseInteractable
                 PossessionSystem.Instance.CanMove = false;
                 playable.Play();
                 UIManager.Instance.PlayModeUI_CloseAll();
-                GameManager.Instance.Player.gameObject.SetActive(false); // 플레이어 비활성화
+                inventory_Player.RemoveClueBeforeStage();
+                Destroy(GameManager.Instance.Player.gameObject); // 플레이어 비활성화
                 //SceneManager.LoadScene("Ch02");
             }
         }
@@ -70,9 +71,9 @@ public class Ch1_ClearDoor : BaseInteractable
 
     void OnTimelineFinished(PlayableDirector obj)
     {
-        UIManager.Instance.PlayModeUI_CloseAll();
         PossessionSystem.Instance.CanMove = true;
         SceneManager.LoadScene("Ch01_To_Ch02");
+        UIManager.Instance.PlayModeUI_CloseAll();
     }
 
 
