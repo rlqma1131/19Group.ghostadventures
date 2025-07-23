@@ -28,13 +28,10 @@ public class MemoryScan : MonoBehaviour
     private Camera mainCamera;
     private Inventory_Player inventory_Player;
 
-    private void Awake()
-    {
-        inventory_Player = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
-    }
-
     void Start()
     {
+        inventory_Player = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
+
         mainCamera = Camera.main;
         // 초기 UI 상태 설정
         scanPanel = UIManager.Instance.scanUI;
