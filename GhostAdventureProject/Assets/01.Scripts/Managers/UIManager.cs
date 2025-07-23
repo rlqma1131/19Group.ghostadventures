@@ -93,6 +93,7 @@ public class UIManager : Singleton<UIManager>
     private void Start()
     {
         SetDefaultCursor();
+        PlayModeUI_CloseAll();
     }
 
     // 기본 커서
