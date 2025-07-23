@@ -181,6 +181,9 @@ public class Inventory_PossessableObject : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha6))
             SelectSlot(1);
+            
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+            SelectSlot(2);
 
         // if (Input.GetKeyDown(KeyCode.Q))
         //     TryUseSelectedItem();
