@@ -13,7 +13,7 @@ public class Ch2_Raven : MoveBasePossessable
     private bool sandCastleBreakAble = false;
 
         [SerializeField] private float flyForce = 5f;
-    [SerializeField] private float diveSpeed = 10f;
+    [SerializeField] private float diveSpeed = 5f;
 
     protected override void Start()
     {
@@ -41,6 +41,7 @@ public class Ch2_Raven : MoveBasePossessable
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            anim.SetTrigger("Attack");
             if(isNearDoor)
             {
                 // underGroundDoor.SolvePuzzle();
