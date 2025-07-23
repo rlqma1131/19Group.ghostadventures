@@ -119,9 +119,10 @@ public class Inventory_PossessableObject : MonoBehaviour
         {
             inventory_Player.AddClue(item.clue);
             UseItem(item, 0);
-            UIManager.Instance.PromptUI.ShowPrompt("단서를 획득했습니다. 인벤토리를 확인하세요", 2f);
+            UIManager.Instance.InventoryExpandViewerUI.ShowClue(item.clue);
         }
     }
+    
     
     // 설치 아이템 프리팹(반투명) 보여주기
     public void StartPlacingItem(ItemData item)

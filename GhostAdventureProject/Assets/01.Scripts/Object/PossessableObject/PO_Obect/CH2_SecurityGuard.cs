@@ -27,6 +27,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     [SerializeField] private GameObject q_Key;
     private bool isNearDoor = false;
     private bool isIn;
+    private bool onetime = false;
     
     protected override void Start()
     {
@@ -46,6 +47,18 @@ public class CH2_SecurityGuard : MoveBasePossessable
         if (Input.GetKeyDown(KeyCode.Q) && isNearDoor)
         {
         }
+        if(isPossessed && Input.GetKeyDown(KeyCode.Alpha7) && !onetime)
+        {
+            UIManager.Instance.InventoryExpandViewerUI.OnClueHidden += ShowText;
+            onetime = true;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            UIManager.Instance.InventoryExpandViewerUI.OnClueHidden -= ShowText;
+        }
+
+        
 
         if(radio != null && radio.IsPlaying)
         {
@@ -82,6 +95,11 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 break;
         }
 
+    }
+
+    void ShowText()
+    {
+        UIManager.Instance.PromptUI.ShowPrompt("잃어버린 게 뭘까...? 사람일까, 기억일까.", 2f);
     }
 
     // 목적지까지 이동
@@ -121,7 +139,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         }
         else if (destination == OfficeDoor_Outside.position)
         {
-            if(!isIn)
+            if(!isIn && !isPossessed)
             {
                 Vector3 targetPos = transform.position;
                 targetPos.x = OfficeDoor_Inside.position.x;
@@ -144,7 +162,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     // 밖인지 안인지 확인
     private void CheckInOut()
     {
-        if(isIn)
+        if(isIn && !isPossessed)
         {
             MoveTo(OfficeDoor_Inside.position);
             if(transform.position.x == OfficeDoor_Inside.position.x)
@@ -268,5 +286,20 @@ public class CH2_SecurityGuard : MoveBasePossessable
         Unpossess();
         anim.Play("Cat_Sleeping");
         hasActivated = false;
+    }
+
+    protected override void OnDoorInteract()
+    {
+        if (!isNearDoor) return;
+
+        // 경비가 문을 통과함
+        Vector3 newPos = transform.position;
+        newPos.x = OfficeDoor_Inside.position.x; // 또는 원하는 포인트
+        transform.position = newPos;
+
+        Debug.Log("경비가 문을 통과함");
+        
+        // doorPass는 다시 false로 초기화해도 됨
+        doorPass = false;
     }
 }

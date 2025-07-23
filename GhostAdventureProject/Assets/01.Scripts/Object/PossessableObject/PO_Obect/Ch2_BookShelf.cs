@@ -26,6 +26,8 @@ public class Ch2_BookShelf : BasePossessable
 
     private bool isControlMode = false;
 
+    [SerializeField] private ClueData[] needClues;
+
     protected override void Update()
     {
         if (!isPossessed || !hasActivated)
@@ -137,8 +139,7 @@ public class Ch2_BookShelf : BasePossessable
             doorToOpen.SetActive(true);
             ExitControlMode();
             hasActivated = false;
-            Unpossess();
-            
+            ConsumeClue(needClues);
             transform.DOShakePosition(shakeDuration, shakeStrength)
                      .OnComplete(() =>
                      {
@@ -158,4 +159,11 @@ public class Ch2_BookShelf : BasePossessable
         // currentIndex = 0;
         clickedSequence.Clear();
     }
+
+    private void ConsumeClue(ClueData[] clues)
+    {
+        UIManager uimanager = UIManager.Instance;
+        uimanager.Inventory_PlayerUI.RemoveClue(clues);
+    }
+
 }

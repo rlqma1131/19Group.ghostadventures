@@ -54,6 +54,19 @@ public class Inventory_Player : MonoBehaviour
             UIManager.Instance.PromptUI.ShowPrompt("이 단서가 아니야", 2f);
         }
     }
+    public void RemoveClue(ClueData[] clues)
+    {
+        foreach(ClueData clue in clues)
+        {
+            if(collectedClues.Contains(clue))
+            {
+                collectedClues.Remove(clue);
+            }
+        }
+        RefreshUI();
+    }
+
+
     
     // 이전 스테이지 단서 모두 삭제
     public void RemoveClueBeforeStage()
