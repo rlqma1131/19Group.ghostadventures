@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class Prompt : MonoBehaviour
+public class Prompt_UnPlayMode : MonoBehaviour
 {
     private GameObject PromptPanel; // 프롬프트 패널 이미지
     private TMP_Text PromptText; // 프롬프트 텍스트
@@ -12,18 +12,18 @@ public class Prompt : MonoBehaviour
     private System.Action onDialogComplete;
     private bool isActive = false;
 
-    private void Start()
+    private void Start() 
     {
         PromptPanel = gameObject;
         PromptText = gameObject.GetComponentInChildren<TextMeshProUGUI>();
-        
+
         PromptPanel.SetActive(false);
     }
 
 
     // ===================== 대화용 - 클릭시 넘어감 ============================
-    
-    public void ShowPrompt(string[] lines) //, System.Action onComplete = null
+
+    public void ShowPrompt_UnPlayMode(string[] lines) //, System.Action onComplete = null
     {
         PromptQueue.Clear();
         foreach (var line in lines)
@@ -49,13 +49,13 @@ public class Prompt : MonoBehaviour
             // onDialogComplete?.Invoke();
         }
     }
-    
+
 
     private void Update()
     {
-        if(!isActive) return;
-        
-        if(Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.F))
+        if (!isActive) return;
+
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.F))
             ShowNextLine();
     }
 
@@ -63,7 +63,7 @@ public class Prompt : MonoBehaviour
 
 
     // 메시지와 시간 둘 다 받음
-    public void ShowPrompt(string line, float dlaytime)
+    public void ShowPrompt_UnPlayMode(string line, float dlaytime)
     {
 
         PromptPanel.SetActive(true); // 패널 보이게하기

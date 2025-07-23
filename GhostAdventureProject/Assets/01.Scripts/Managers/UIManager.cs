@@ -16,7 +16,7 @@ public class UIManager : Singleton<UIManager>
     // 1. 플레이모드 UI
     [SerializeField] private SoulGauge soulGauge; // 영혼에너지 
     [SerializeField] private Prompt prompt; // 프롬프트
-    [SerializeField] private Prompt prompt2; // 컷신용 프롬프트
+    [SerializeField] private Prompt_UnPlayMode prompt2; // 컷신용 프롬프트
     [SerializeField] private QTEUI qte1;// QTE
     [SerializeField] private QTEUI2 qte2; // QTE2
     public GameObject scanUI; // 스캔UI
@@ -33,7 +33,7 @@ public class UIManager : Singleton<UIManager>
     // 외부 접근용
     public SoulGauge SoulGaugeUI => soulGauge;
     public Prompt PromptUI => prompt;
-    public Prompt PromptUI2 => prompt2;
+    public Prompt_UnPlayMode PromptUI2 => prompt2;
     public QTEUI QTE_UI => qte1;
     public QTEUI2 QTE_UI_2 => qte2;
     public MemoryStorage MemoryStorageUI => memoryStorage;

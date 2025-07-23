@@ -30,10 +30,10 @@ public class Ch2_LaserTriggerManager : MonoBehaviour
         PossessionSystem.Instance.CanMove = false;
         GameManager.Instance.PlayerController.animator.SetBool("Move", false);
 
-        // 카메라 이동 연출 (5초)
-        yield return new WaitForSeconds(2f);
+        // 카메라 이동 연출 (6초)
+        yield return new WaitForSeconds(6f);
 
-        UIManager.Instance.PromptUI.ShowPrompt("어째선지 닿으면 위험할 것 같다...", 3f);
+        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("어째선지 닿으면 위험할 것 같다...", 3f);
         yield return new WaitForSeconds(3f);
 
         // 카메라 잠깐 멈췄다가 복귀 (3초)
