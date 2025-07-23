@@ -10,6 +10,7 @@ public class YameScan_fake : MonoBehaviour
     [SerializeField] private GameObject scanPanel; //스캔 패널
     [SerializeField] private Image scanCircleUI; //스캔 원 UI
     [SerializeField] private GameObject player;
+    [SerializeField] private GameObject e_key;
 
     // 내부 상태 변수
     private float scanTime = 0f;
@@ -27,7 +28,7 @@ public class YameScan_fake : MonoBehaviour
         scanCircleUI = UIManager.Instance.scanUI.transform.Find("CircleUI")?.GetComponent<Image>();
         scanCircleUI?.gameObject.SetActive(false);
         player = FindObjectOfType<PlayerController>().gameObject;
-
+        e_key.SetActive(false);
     }
 
     void Update()
@@ -151,6 +152,10 @@ public class YameScan_fake : MonoBehaviour
         {
             isNearMemory = true;
             currentScanObject = collision.gameObject;
+            Vector3 e_keyPos = transform.position; 
+            e_keyPos.y += 0.3f;
+            e_key.transform.position = e_keyPos;
+            e_key.SetActive(true);
             // currentMemoryFragment = currentScanObject.GetComponent<MemoryFragment>();
         }
     }
@@ -160,6 +165,7 @@ public class YameScan_fake : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             isNearMemory = false;
+            e_key.SetActive(false);
 
             // 스캔 중에 범위를 벗어났다면 스캔을 취소
             if (isScanning)
