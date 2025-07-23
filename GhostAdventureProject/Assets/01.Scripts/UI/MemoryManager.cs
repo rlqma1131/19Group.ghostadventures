@@ -38,6 +38,7 @@ public class MemoryManager : MonoBehaviour
    public void TryCollect(MemoryData memoryData)
    {
         // scan 여부는 MemoryFragment에서 이미 체크한 상태라고 가정
+
         if (collectedMemoryIDs.Contains(memoryData.memoryTitle)) return;
 
         collectedMemoryIDs.Add(memoryData.memoryTitle);
