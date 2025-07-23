@@ -64,6 +64,9 @@ public class Ch2_CCTVMonitor : BasePossessable
         if (Input.GetKeyDown(KeyCode.E))
         {
             zoomCamera.Priority = 5;
+
+            UIManager.Instance.PlayModeUI_OpenAll();
+
             Unpossess();
 
             // 기본 모니터 화면으로 전환
@@ -149,7 +152,10 @@ public class Ch2_CCTVMonitor : BasePossessable
 
         memoryH.SetActive(true);
         hasActivated = false; // 기억 스캔 전까지 빙의 불가
+
         zoomCamera.Priority = 5;
+
+        UIManager.Instance.PlayModeUI_OpenAll();
 
         isRevealStarted = false; // 조작 가능 상태로 복귀
         Unpossess();
@@ -159,7 +165,9 @@ public class Ch2_CCTVMonitor : BasePossessable
     {
         zoomCamera.Priority = 20;
 
-        if(!isRevealed)
+        UIManager.Instance.PlayModeUI_CloseAll();
+
+        if (!isRevealed)
             CheckMemoryUnlockCondition();
     }
 

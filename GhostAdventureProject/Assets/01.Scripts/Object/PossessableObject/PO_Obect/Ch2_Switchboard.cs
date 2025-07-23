@@ -29,6 +29,7 @@ public class Ch2_Switchboard : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            UIManager.Instance.PlayModeUI_OpenAll();
             zoomCamera.Priority = 5;
             Unpossess();
         }
@@ -38,6 +39,7 @@ public class Ch2_Switchboard : BasePossessable
     {
         zoomCamera.Priority = 20;
 
+        UIManager.Instance.PlayModeUI_CloseAll();
         puzzleManager.EnablePuzzleControl();
     }
 
@@ -51,6 +53,8 @@ public class Ch2_Switchboard : BasePossessable
         yield return new WaitForSeconds(2f);
         zoomCamera.Priority = 5;
         Unpossess();
+
+        UIManager.Instance.PlayModeUI_OpenAll();
 
         hasActivated = false;
 

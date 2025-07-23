@@ -8,6 +8,9 @@ public class Ch2_LaserController : BasePossessable
     [Header("레이저 스크린")]
     [SerializeField] private GameObject laserScreen;
 
+    [Header("조작키")]
+    [SerializeField] private GameObject qKey;
+
     private Animator laserScreenAnimator;
 
     protected override void Start()
