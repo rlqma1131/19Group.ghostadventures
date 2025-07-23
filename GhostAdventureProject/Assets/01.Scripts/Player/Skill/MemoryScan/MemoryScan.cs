@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class MemoryScan : MonoBehaviour
@@ -19,10 +21,17 @@ public class MemoryScan : MonoBehaviour
     [SerializeField] private MemoryFragment currentMemoryFragment;
 
     [SerializeField] private AudioClip scanSound;
+
     // 기억조각 스캔 가능 여부
     private bool isSannable;
 
     private Camera mainCamera;
+    private Inventory_Player inventory_Player;
+
+    private void Awake()
+    {
+        inventory_Player = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
+    }
 
     void Start()
     {
@@ -173,13 +182,20 @@ public class MemoryScan : MonoBehaviour
         // 저장
         SaveData data = new SaveData
         {
+            checkpointId = currentScanObject.name,
             sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
             playerPosition = playerTransform.position,
-            checkpointId = currentScanObject.name // 또는 currentMemoryFragment 고유 ID
+
+            collectedClueNames = inventory_Player.collectedClues.Select(c => c.clue_Name).ToList(),
+
+            collectedMemoryIDs = MemoryManager.Instance.collectedMemoryIDs.ToList(),
+
+            scannedMemoryTitles = MemoryManager.Instance.ScannedMemories.Select(m => m.memoryTitle).ToList()
         };
 
         SaveManager.SaveGame(data);
         Debug.Log($"[MemoryScan] 기억조각 스캔 완료 및 저장됨: {data.checkpointId}");
+
     }
 
     private void CancleScan(string reason)

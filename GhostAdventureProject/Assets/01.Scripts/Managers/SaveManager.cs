@@ -8,8 +8,10 @@ public class SaveData
     public string sceneName;
     public Vector3 playerPosition;
     public string checkpointId;
-    public List<MemoryData> scannedMemoryList;
-    public List<ClueData> collectedClues;
+
+    public List<string> collectedClueNames;      // clue_Name (아이템 이름)
+    public List<string> collectedMemoryIDs;      // memoryID (MemoryData의 고유값)
+    public List<string> scannedMemoryTitles;     // memoryTitle
 
     // 인벤토리, 능력치 등 추가
 }

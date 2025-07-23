@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 //using UnityEditor.Build;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public interface IUIClosable
 {
@@ -93,7 +94,11 @@ public class UIManager : Singleton<UIManager>
     private void Start()
     {
         SetDefaultCursor();
-        PlayModeUI_CloseAll();
+        if(SceneManager.GetActiveScene().name == "Start")
+        {
+            PlayModeUI_CloseAll();
+        }
+    
     }
 
     // 기본 커서
