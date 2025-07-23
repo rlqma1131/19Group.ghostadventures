@@ -70,7 +70,7 @@ public class Ch1_ClearDoor : BaseInteractable
 
     void OnTimelineFinished(PlayableDirector obj)
     {
-
+        UIManager.Instance.PlayModeUI_CloseAll();
         PossessionSystem.Instance.CanMove = true;
         SceneManager.LoadScene("Ch01_To_Ch02");
     }
