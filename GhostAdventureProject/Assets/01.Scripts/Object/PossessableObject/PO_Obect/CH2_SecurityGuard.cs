@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 using Unity.VisualScripting;
@@ -30,11 +30,12 @@ public class CH2_SecurityGuard : MoveBasePossessable
     private bool isNearDoor = false;
     private bool isInOffice;// 경비실 안에 있는지 확인
     private bool oneTimeShowClue = false; // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만)
-    
-    
+    public bool doorPass = false;
+
+
     // 빙의되지 않았을 때 -> 라디오소리가 들리면 라디오를 따라감
     // 빙의가 풀렸을 때 -> 라디오 소리가 들려도 confused 상태가 됨
-    
+
 
 
 
@@ -52,7 +53,22 @@ public class CH2_SecurityGuard : MoveBasePossessable
     {
         Debug.Log(state);
         base.Update();
-        if(isPossessed)
+
+        if (!isPossessed)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (doorPass)
+            {
+                OnDoorInteract();
+                return;
+            }
+            zoomCamera.Priority = 5;
+            Unpossess();
+        }
+
+        if (isPossessed)
         {
             // anim.Play("Idle");
         }

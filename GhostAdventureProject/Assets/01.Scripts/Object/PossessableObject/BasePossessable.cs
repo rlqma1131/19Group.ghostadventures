@@ -9,7 +9,6 @@ public abstract class BasePossessable : BaseInteractable
     public bool isPossessed;
     public bool HasActivated => hasActivated;
     public bool IsPossessedState => isPossessed;
-    public bool doorPass = false;
     
     protected virtual void Start()
     {
@@ -21,9 +20,6 @@ public abstract class BasePossessable : BaseInteractable
     protected virtual void Update()
     {
         if (!isPossessed)
-            return;
-        
-        if (isPossessed && doorPass)
             return;
         
         if (Input.GetKeyDown(KeyCode.E))
@@ -48,12 +44,9 @@ public abstract class BasePossessable : BaseInteractable
 
     public virtual void Unpossess()
     {
-        if(!doorPass)
-        {
-        UIManager.Instance.PromptUI.ShowPrompt("빙의 해제", 2f);
+        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("빙의 해제", 2f);
         isPossessed = false;
         PossessionStateManager.Instance.StartUnpossessTransition();
-        }
     }
 
     public virtual void OnQTESuccess()
