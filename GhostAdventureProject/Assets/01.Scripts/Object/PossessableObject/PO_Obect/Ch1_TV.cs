@@ -51,7 +51,6 @@ public class Ch1_TV : BasePossessable
             spaceBar.SetActive(false);
             return;
         }
-
         UI.SetActive(true);
         spaceBar.SetActive(true);
 
@@ -98,6 +97,7 @@ public class Ch1_TV : BasePossessable
             ShowMemoryandDoorOpen();
             hasActivated = false;
             col.enabled = false;
+            PuzzleStateManager.Instance.MarkPuzzleSolved("티비");
 
         }
     }
@@ -150,6 +150,7 @@ public class Ch1_TV : BasePossessable
         isPossessed = true;
         channelTxt.text = "01"; // 초기 채널 표시
         UpdateChannelDisplay();
+        UIManager.Instance.PromptUI.ShowPrompt("힌트를 살펴보자");
     }
 
 }

@@ -81,6 +81,8 @@ public class Ch1_BirthdayLetter : MonoBehaviour
             });
             
         cluePickup.PickupClue();
+        PuzzleStateManager.Instance.MarkPuzzleSolved("깜짝상자");
+        UIManager.Instance.PromptUI.ShowPrompt("누구 생일이었지… 8월… 14일");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -88,7 +90,11 @@ public class Ch1_BirthdayLetter : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         isPlayerInside = true;
-
+        
+        if(!PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("…상자? 왜 여기에 이런 게…");
+        }
         if (!isZoomActive)
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }

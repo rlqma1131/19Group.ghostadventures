@@ -73,6 +73,7 @@ public class Ch1_Clock : BasePossessable
         if (hour == 8 && minute == 14)
         {
             Debug.Log("정답");
+            PuzzleStateManager.Instance.MarkPuzzleSolved("시계");
             tvObject.ActivateTV();
             isControlMode = false;
             HideClockUI();
@@ -112,11 +113,28 @@ public class Ch1_Clock : BasePossessable
             {
                 clockZoom.SetActive(false);
             });
+        UIManager.Instance.PromptUI.ShowPrompt("어? 저 TV… 무언가 보여줄지도 몰라.」");
     }
 
     public override void OnPossessionEnterComplete()
     {
         isControlMode = true;
         ShowClockUI();
+    }
+
+    protected override void OnTriggerEnter2D(Collider2D collision)
+    {
+        base.OnTriggerEnter2D(collision);
+        if(collision.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
+        {
+            if(PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
+            {
+                UIManager.Instance.PromptUI.ShowPrompt("시간을 떠올릴만한 숫자를 본 거 같은데");
+            }
+            else
+            {
+                UIManager.Instance.PromptUI.ShowPrompt("시계가 멈춰 있네…");
+            }
+        }
     }
 }
