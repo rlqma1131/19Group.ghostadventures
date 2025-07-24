@@ -17,11 +17,11 @@ public class HaveItem : MonoBehaviour
         {
             Instance = this;
         }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        //else
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
 
         ConvertToSlots();
     }
