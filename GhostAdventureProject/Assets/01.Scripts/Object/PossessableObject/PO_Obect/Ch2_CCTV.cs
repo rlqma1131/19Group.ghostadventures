@@ -12,6 +12,9 @@ public class Ch2_CCTV : BasePossessable
     [SerializeField] private GameObject aKey;
     [SerializeField] private GameObject dKey;
 
+    [Header("하이라이트 애니메이터")]
+    [SerializeField] private Animator highlightanim;
+
     protected override void Start()
     {
         isPossessed = false;
@@ -41,11 +44,15 @@ public class Ch2_CCTV : BasePossessable
         else if (Input.GetKeyDown(KeyCode.D))
         {
             anim.SetBool("Right", true);
+            highlightanim.SetBool("Right", true);
+
             monitor?.SetMonitorAnimBool(index, "Right", true);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
             anim.SetBool("Right", false);
+            highlightanim.SetBool("Right", false);
+
             monitor?.SetMonitorAnimBool(index, "Right", false);
         }
     }

@@ -28,6 +28,7 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
         isScannable = false;
         ChapterEndingManager.Instance.CollectCh1Clue("H");
     }
+
     private void AfterScanEffect()
     {
 
