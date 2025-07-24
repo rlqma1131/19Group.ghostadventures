@@ -55,40 +55,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
     protected override void Update()
     {
-        base.Update();
-
-        if (!isPossessed)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (doorPass)
-            {
-                OnDoorInteract();
-                return;
-            }
-            zoomCamera.Priority = 5;
-            Unpossess();
-        }
-
-        if (isPossessed)
-        {
-            // anim.Play("Idle");
-        }
-        // 단서 관련 로직 (추후 수정예정)---------------------------
-        if(isPossessed && Input.GetKeyDown(KeyCode.Alpha7) && !oneTimeShowClue)
-        {
-            UIManager.Instance.InventoryExpandViewerUI.OnClueHidden += ShowText;
-            oneTimeShowClue = true;
-        }
-
-        if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            UIManager.Instance.InventoryExpandViewerUI.OnClueHidden -= ShowText;
-        }
-        //----------------------------------------------------
-
-        if(radio != null && radio.IsPlaying)
+        if (radio != null && radio.IsPlaying)
         {
             // anim.Play("Idle");
             state = GuardState.MovingToRadio;
@@ -144,6 +111,38 @@ public class CH2_SecurityGuard : MoveBasePossessable
                         state = GuardState.MovingToOffice;
                 }
                 break;
+        }
+
+        if (!isPossessed)
+            return;
+
+        Move();
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (doorPass)
+            {
+                OnDoorInteract();
+                return;
+            }
+            zoomCamera.Priority = 5;
+            Unpossess();
+        }
+
+        if (isPossessed)
+        {
+            // anim.Play("Idle");
+        }
+        // 단서 관련 로직 (추후 수정예정)---------------------------
+        if (isPossessed && Input.GetKeyDown(KeyCode.Alpha7) && !oneTimeShowClue)
+        {
+            UIManager.Instance.InventoryExpandViewerUI.OnClueHidden += ShowText;
+            oneTimeShowClue = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            UIManager.Instance.InventoryExpandViewerUI.OnClueHidden -= ShowText;
         }
     }
 

@@ -34,7 +34,7 @@ public class MoveBasePossessable : BasePossessable
         zoomCamera.Priority = 20;
     }
 
-    void Move()
+    protected void Move()
     {
         float h = Input.GetAxis("Horizontal");
 
