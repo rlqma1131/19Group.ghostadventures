@@ -5,6 +5,7 @@ public class DoorLock : BaseInteractable
     [SerializeField] private ItemData needItem; // 문을 여는데 필요한 아이템
     [SerializeField] private GameObject q_Key;
     [SerializeField] private CH2_SecurityGuard guard;
+    [SerializeField] private GameObject closeDoorSprite;
     private bool doorOpenAble; // 문을 열 수 있는 영역에 있는지 확인
     private bool doorOpen; // 문을 열었는지 확인
     Inventory_PossessableObject inventory; // 빙의 인벤토리(needItem을 갖고 있는지 확인용)
@@ -56,6 +57,7 @@ public class DoorLock : BaseInteractable
         q_Key.SetActive(false);
         inventory.TryUseSelectedItem();   
         this.gameObject.SetActive(false);
+        closeDoorSprite.SetActive(false);
     }
     
     protected override void OnTriggerEnter2D(Collider2D collision)

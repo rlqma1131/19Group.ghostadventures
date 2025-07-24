@@ -31,14 +31,14 @@ public class CH2_SecurityGuard : MoveBasePossessable
     private bool isInOffice;// 경비실 안에 있는지 확인
     private bool oneTimeShowClue = false; // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만)
     public bool isdoorLockOpen;
+    private GameObject player;
     
     
     // 빙의되지 않았을 때 -> 라디오소리가 들리면 라디오를 따라감
     // 빙의가 풀렸을 때 -> 라디오 소리가 들려도 confused 상태가 됨
     
 
-
-
+    
     // 처음 시작시 빙의불가(경비실안에 있음)
     protected override void Start()
     {
@@ -47,11 +47,11 @@ public class CH2_SecurityGuard : MoveBasePossessable
         hasActivated = false;
         isInOffice = true;
         targetPerson.currentCondition = PersonCondition.Unknown;
+        player = FindObjectOfType<PlayerController>().gameObject;
     }
 
     protected override void Update()
     {
-        Debug.Log(state);
         base.Update();
         if(isPossessed)
         {
@@ -196,7 +196,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         if(isInOffice)
         {
             MoveTo(OfficeDoor_Inside.position);
-            if(transform.position.x == OfficeDoor_Inside.position.x && !isPossessed)
+            if(transform.position.x == OfficeDoor_Inside.position.x)
             {   
                 Vector3 guardPos = transform.position;
                 guardPos.x = OfficeDoor_Outside.position.x + 0.5f;
@@ -241,45 +241,60 @@ public class CH2_SecurityGuard : MoveBasePossessable
     {
         base.OnTriggerEnter2D(collision);
 
-        // if (collision.GetComponent<LockedDoor>() == door)
-        // {
-        //     isNearDoor = true;
-        // }
         if(collision.CompareTag("In"))
         {
             isInOffice = true;
             hasActivated = false;
+            targetPerson.currentCondition = PersonCondition.Unknown;
         }
     }
     protected override void OnTriggerExit2D(Collider2D collision)
     {
         base.OnTriggerExit2D(collision);
 
-        // if (collision.GetComponent<LockedDoor>() == door)
-        // {
-        //     isNearDoor = false;
-        // }
         if(collision.CompareTag("In"))
         {
             isInOffice = false;
             hasActivated = true;
-            targetPerson.currentCondition = PersonCondition.Unknown;
         }
     }
 
     protected override void OnDoorInteract()
     {
-        // if (!isNearDoor) return;
+        // 경비가 문을 통과함
+        if(isPossessed && doorPass && isdoorLockOpen && !isInOffice)
+        {
+            Vector3 newPos = transform.position;
+            newPos.x = OfficeDoor_Inside.position.x; // 또는 원하는 포인트
+            transform.position = newPos;
 
-        // // 경비가 문을 통과함
-        // Vector3 newPos = transform.position;
-        // newPos.x = OfficeDoor_Inside.position.x; // 또는 원하는 포인트
-        // transform.position = newPos;
+            Debug.Log("경비가 문을 통과함");
+            
+            // doorPass는 다시 false로 초기화해도 됨
+        }
+        else if(isPossessed && doorPass && isdoorLockOpen && isInOffice)
+        {
+            Vector3 newPos = transform.position;
+            newPos.x = OfficeDoor_Outside.position.x; // 또는 원하는 포인트
+            transform.position = newPos;
 
-        // Debug.Log("경비가 문을 통과함");
-        
-        // // doorPass는 다시 false로 초기화해도 됨
-        // doorPass = false;
+            Debug.Log("경비가 문을 통과함");
+            
+            // doorPass는 다시 false로 초기화해도 됨
+        }
+        else if(!isPossessed && doorPass && isdoorLockOpen && !isInOffice)
+        {
+            Vector3 newPos = player.transform.position;
+            newPos.x = OfficeDoor_Inside.position.x; // 또는 원하는 포인트
+            player.transform.position = newPos;
+        }
+
+        else if(!isPossessed && doorPass && isdoorLockOpen && isInOffice)
+        {
+            Vector3 newPos = player.transform.position;
+            newPos.x = OfficeDoor_Outside.position.x; // 또는 원하는 포인트
+            player.transform.position = newPos;
+        }
     }
 
     // 빙의 해제시
@@ -293,7 +308,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     }
     public override void OnPossessionEnterComplete()
     {
-
+        base.OnPossessionEnterComplete();
     }
 
     void ShowText()

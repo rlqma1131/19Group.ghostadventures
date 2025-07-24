@@ -14867,8 +14867,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.8599, y: 0.43304992, z: 0}
-    m_Extent: {x: 8.961599, y: 7.5371504, z: 0}
+    m_Center: {x: -0.85955, y: 0.43449998, z: 0}
+    m_Extent: {x: 8.961451, y: 7.5371, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -27251,9 +27251,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guard: {fileID: 1940845545}
-  e_key: {fileID: 0}
   targetDoor: {fileID: 4732976138972935324}
   closeSprite: {fileID: 271477923}
+  player: {fileID: 0}
 --- !u!61 &730388315
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -49685,6 +49685,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1550051898 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7732527426384423816, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
+  m_PrefabInstance: {fileID: 710417239}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b33371072e93a41a894b4bc591cf92e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1551762254
 GameObject:
   m_ObjectHideFlags: 0
@@ -59715,18 +59726,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1985739317984991533, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1985739317984991533, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1985739317984991533, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1985739317984991533, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
       propertyPath: m_LocalPosition.x
       value: -74.47205
       objectReference: {fileID: 0}
@@ -59778,26 +59777,10 @@ PrefabInstance:
       propertyPath: normalUI
       value: 
       objectReference: {fileID: 508937785}
-    - target: {fileID: 3689581038993551637, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3689581038993551637, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.8799995
-      objectReference: {fileID: 0}
-    - target: {fileID: 3689581038993551637, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -10.000003
-      objectReference: {fileID: 0}
     - target: {fileID: 4570034663430982813, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
       propertyPath: m_Name
       value: 'SecurityGuard '
       objectReference: {fileID: 0}
-    - target: {fileID: 6234196687190449394, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
-      propertyPath: door
-      value: 
-      objectReference: {fileID: 1101651717}
     - target: {fileID: 6234196687190449394, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
       propertyPath: Radio
       value: 
@@ -59815,13 +59798,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1820669274}
     - target: {fileID: 6234196687190449394, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
-      propertyPath: office
+      propertyPath: safeBox
       value: 
-      objectReference: {fileID: 670634090}
+      objectReference: {fileID: 1550051898}
     - target: {fileID: 6234196687190449394, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
-      propertyPath: inOfficeDoor
+      propertyPath: doorLock
       value: 
-      objectReference: {fileID: 2320773569807034131}
+      objectReference: {fileID: 2060650304}
     - target: {fileID: 6234196687190449394, guid: 83f037ee3e10d4576b954b6bf4d8e451, type: 3}
       propertyPath: OfficeDoor_Inside
       value: 
@@ -62105,6 +62088,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2060650304 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3376054868138851973, guid: 47b4187ed9d3c47ee8b1dbd77abfb9fb, type: 3}
+  m_PrefabInstance: {fileID: 666559882}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e993e9b0f86184aa2a41079c03558a34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2062223536
@@ -64673,9 +64667,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guard: {fileID: 1940845545}
-  e_key: {fileID: 0}
   targetDoor: {fileID: 730388312}
   closeSprite: {fileID: 0}
+  player: {fileID: 0}
 --- !u!1 &4849946825620725396
 GameObject:
   m_ObjectHideFlags: 0
