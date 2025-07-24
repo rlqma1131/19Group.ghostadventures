@@ -50,7 +50,6 @@ public class StealthDoor : MonoBehaviour
         if (!playerRegistered && GameManager.Instance?.Player != null)
         {
             allTargets.Add(GameManager.Instance.Player.transform);
-            Debug.Log("[StealthDoor] Update에서 Player 등록 완료");
             playerRegistered = true;
         }
 
