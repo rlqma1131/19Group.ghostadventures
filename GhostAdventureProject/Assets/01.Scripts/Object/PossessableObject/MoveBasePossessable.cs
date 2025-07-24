@@ -7,6 +7,7 @@ public class MoveBasePossessable : BasePossessable
     [SerializeField] protected float moveSpeed = 3f;
     protected SpriteRenderer spriteRenderer;
 
+
     protected override void Start()
     {
         base.Start();
@@ -23,15 +24,9 @@ public class MoveBasePossessable : BasePossessable
         
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if(doorPass)
-            {
-                OnDoorInteract();
-                return;
-            }
             zoomCamera.Priority = 5;
             Unpossess();
         }
-
     }
 
     public override void OnPossessionEnterComplete()

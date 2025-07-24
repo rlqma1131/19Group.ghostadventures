@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 using Unity.VisualScripting;
@@ -34,9 +34,12 @@ public class CH2_SecurityGuard : MoveBasePossessable
     private GameObject player;
     
     
+    public bool doorPass = false;
+
+
     // 빙의되지 않았을 때 -> 라디오소리가 들리면 라디오를 따라감
     // 빙의가 풀렸을 때 -> 라디오 소리가 들려도 confused 상태가 됨
-    
+
 
     
     // 처음 시작시 빙의불가(경비실안에 있음)
@@ -53,7 +56,22 @@ public class CH2_SecurityGuard : MoveBasePossessable
     protected override void Update()
     {
         base.Update();
-        if(isPossessed)
+
+        if (!isPossessed)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (doorPass)
+            {
+                OnDoorInteract();
+                return;
+            }
+            zoomCamera.Priority = 5;
+            Unpossess();
+        }
+
+        if (isPossessed)
         {
             // anim.Play("Idle");
         }
