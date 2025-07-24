@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Ch3_MirrorObj : BasePossessable
 {
-    private bool isFound = false;
+    public bool isFound { get; private set; } = false;
     private SpriteRenderer sr;
     
     [SerializeField] private bool isCorrect = false;
@@ -38,6 +38,10 @@ public class Ch3_MirrorObj : BasePossessable
             else
             {
                 GetComponentInParent<Ch3_MirrorRoomManager>()?.OnWrongObjectReleased();
+                
+                // 다시 빙의되지 않게 막기
+                hasActivated = false;
+                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 0.5f);
             }
 
             Unpossess();

@@ -22,7 +22,7 @@ public class Ch3_MirrorRoomManager : MonoBehaviour
     {
         if (puzzleCleared) return;
 
-        if (differences.All(d => !d.gameObject.activeSelf))
+        if (differences.All(d => d.isFound))
         {
             puzzleCleared = true;
             StartCoroutine(ClearPuzzleRoutine());
