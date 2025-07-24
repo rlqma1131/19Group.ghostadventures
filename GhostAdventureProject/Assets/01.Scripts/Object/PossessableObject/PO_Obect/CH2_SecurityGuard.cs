@@ -30,6 +30,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     private bool isNearDoor = false;
     private bool isInOffice;// 경비실 안에 있는지 확인
     private bool oneTimeShowClue = false; // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만)
+    public bool isdoorLockOpen;
     
     
     // 빙의되지 않았을 때 -> 라디오소리가 들리면 라디오를 따라감
@@ -195,12 +196,13 @@ public class CH2_SecurityGuard : MoveBasePossessable
         if(isInOffice)
         {
             MoveTo(OfficeDoor_Inside.position);
-            if(transform.position.x == OfficeDoor_Inside.position.x)
+            if(transform.position.x == OfficeDoor_Inside.position.x && !isPossessed)
             {   
                 Vector3 guardPos = transform.position;
                 guardPos.x = OfficeDoor_Outside.position.x + 0.5f;
                 transform.position = guardPos;
             }
+
         }
         else
         {
@@ -267,17 +269,17 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
     protected override void OnDoorInteract()
     {
-        if (!isNearDoor) return;
+        // if (!isNearDoor) return;
 
-        // 경비가 문을 통과함
-        Vector3 newPos = transform.position;
-        newPos.x = OfficeDoor_Inside.position.x; // 또는 원하는 포인트
-        transform.position = newPos;
+        // // 경비가 문을 통과함
+        // Vector3 newPos = transform.position;
+        // newPos.x = OfficeDoor_Inside.position.x; // 또는 원하는 포인트
+        // transform.position = newPos;
 
-        Debug.Log("경비가 문을 통과함");
+        // Debug.Log("경비가 문을 통과함");
         
-        // doorPass는 다시 false로 초기화해도 됨
-        doorPass = false;
+        // // doorPass는 다시 false로 초기화해도 됨
+        // doorPass = false;
     }
 
     // 빙의 해제시

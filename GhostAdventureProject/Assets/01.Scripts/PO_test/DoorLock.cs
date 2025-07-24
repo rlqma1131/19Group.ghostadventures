@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class DoorLock : BaseInteractable
 {   
-    [SerializeField] private LockedDoor door; // 문
     [SerializeField] private ItemData needItem; // 문을 여는데 필요한 아이템
     [SerializeField] private GameObject q_Key;
+    [SerializeField] private CH2_SecurityGuard guard;
     private bool doorOpenAble; // 문을 열 수 있는 영역에 있는지 확인
     private bool doorOpen; // 문을 열었는지 확인
     Inventory_PossessableObject inventory; // 빙의 인벤토리(needItem을 갖고 있는지 확인용)
@@ -14,6 +14,13 @@ public class DoorLock : BaseInteractable
         doorOpenAble = false;
         doorOpen = false;
     }
+
+    void OnEnable()
+    {
+        doorOpen = false;
+        guard.isdoorLockOpen = doorOpen;
+    }
+
 
     void Update()
     {   
@@ -45,10 +52,10 @@ public class DoorLock : BaseInteractable
     private void OpenDoorLock()
     {
         doorOpen = true;
+        guard.isdoorLockOpen = doorOpen;
         q_Key.SetActive(false);
         inventory.TryUseSelectedItem();   
-        door.SolvePuzzle();
-        Destroy(this.gameObject);
+        this.gameObject.SetActive(false);
     }
     
     protected override void OnTriggerEnter2D(Collider2D collision)
