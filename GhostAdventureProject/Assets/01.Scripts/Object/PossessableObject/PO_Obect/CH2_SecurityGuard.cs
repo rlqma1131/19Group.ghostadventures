@@ -248,6 +248,20 @@ public class CH2_SecurityGuard : MoveBasePossessable
             targetPerson.currentCondition = PersonCondition.Unknown;
         }
     }
+    // private void OnTriggerStay2D(Collider2D other)
+    // {
+    //     base.OnTriggerEnter2D(other);
+
+    //     if(other.CompareTag("In"))
+    //     {
+    //         isInOffice = true;
+    //         hasActivated = false;
+    //         targetPerson.currentCondition = PersonCondition.Unknown;
+    //     }
+    // }
+    
+    
+    
     protected override void OnTriggerExit2D(Collider2D collision)
     {
         base.OnTriggerExit2D(collision);
@@ -267,33 +281,12 @@ public class CH2_SecurityGuard : MoveBasePossessable
             Vector3 newPos = transform.position;
             newPos.x = OfficeDoor_Inside.position.x; // 또는 원하는 포인트
             transform.position = newPos;
-
-            Debug.Log("경비가 문을 통과함");
-            
-            // doorPass는 다시 false로 초기화해도 됨
         }
         else if(isPossessed && doorPass && isdoorLockOpen && isInOffice)
         {
             Vector3 newPos = transform.position;
             newPos.x = OfficeDoor_Outside.position.x; // 또는 원하는 포인트
             transform.position = newPos;
-
-            Debug.Log("경비가 문을 통과함");
-            
-            // doorPass는 다시 false로 초기화해도 됨
-        }
-        else if(!isPossessed && doorPass && isdoorLockOpen && !isInOffice)
-        {
-            Vector3 newPos = player.transform.position;
-            newPos.x = OfficeDoor_Inside.position.x; // 또는 원하는 포인트
-            player.transform.position = newPos;
-        }
-
-        else if(!isPossessed && doorPass && isdoorLockOpen && isInOffice)
-        {
-            Vector3 newPos = player.transform.position;
-            newPos.x = OfficeDoor_Outside.position.x; // 또는 원하는 포인트
-            player.transform.position = newPos;
         }
     }
 

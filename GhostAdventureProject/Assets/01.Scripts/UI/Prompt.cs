@@ -23,7 +23,7 @@ public class Prompt : MonoBehaviour
 
     // ===================== 대화용 - 클릭시 넘어감 ============================
     
-    public void ShowPrompt(string[] lines) //, System.Action onComplete = null
+    public void ShowPrompt(List<string> lines) //, System.Action onComplete = null
     {
         PromptQueue.Clear();
         foreach (var line in lines)
@@ -79,6 +79,45 @@ public class Prompt : MonoBehaviour
         isActive = false;
         // onD
     }
+
+    // 기본프롬프트 1.5초 ==============================================================
+    public void ShowPrompt(string line)
+    {
+        PromptPanel.SetActive(true); // 패널 보이게하기
+        PromptText.text = line;
+        StartCoroutine(HideAfterDelay());
+    }
+
+
+    private IEnumerator HideAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(1.5f);
+        PromptPanel.SetActive(false);
+        isActive = false;
+        // onD
+    }
+    // ==============================================================================
+
+    public void ShowPrompt(params string[] lines)
+    {
+        StartCoroutine(ShowPromptSequence(lines));
+    }
+
+    private IEnumerator ShowPromptSequence(string[] lines)
+    {
+        PromptPanel.SetActive(true);
+        isActive = true;
+
+        foreach (string line in lines)
+        {
+            PromptText.text = line;
+            yield return new WaitForSecondsRealtime(1.5f);
+        }
+
+        PromptPanel.SetActive(false);
+        isActive = false;
+    }
+    // ===================================================================================
 }
 
 

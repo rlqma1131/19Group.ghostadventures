@@ -35,4 +35,17 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
         _particleSystem.Play();
         _light.enabled = true;
     }
+
+    protected override void OnTriggerEnter2D(Collider2D other)
+    {
+        base.OnTriggerEnter2D(other);
+        if(other.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("후라이팬"))
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("쥐를 먼저 쫒아내야겠어");
+        }
+        else if(other.CompareTag("Player") && PuzzleStateManager.Instance.IsPuzzleSolved("후라이팬"))
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("쥐는 어디로 갔을라나?", "아무튼 이제 케잌을 살펴보자");
+        } 
+    }
 }

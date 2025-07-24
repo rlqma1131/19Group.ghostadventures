@@ -69,5 +69,20 @@ public class Ch1_Pan : BasePossessable
             Unpossess();
             isFalling = false;
         });
+        PuzzleStateManager.Instance.MarkPuzzleSolved("후라이팬");
+    }
+
+    protected override void OnTriggerEnter2D(Collider2D collision)
+    {   
+        if(collision.CompareTag("Person"))
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("후라이팬이네", "떨어뜨려 볼까?");
+        }
+    }
+
+    public override void Unpossess()
+    {
+        base.Unpossess();
+        UIManager.Instance.PromptUI.ShowPrompt("으악 소리가 너무 커");
     }
 }
