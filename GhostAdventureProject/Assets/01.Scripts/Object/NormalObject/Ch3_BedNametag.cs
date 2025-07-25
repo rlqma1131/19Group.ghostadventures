@@ -1,25 +1,21 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
 
-public class Ch1_Drawing : BaseInteractable
+public class Ch3_BedNametag : BaseInteractable
 {
-    [SerializeField] private GameObject drawingZoom; // 확대용 드로잉 UI (Canvas 하위)
-    [SerializeField] private RectTransform drawingPos; // 드로잉 UI의 시작 위치
+    [SerializeField] private GameObject nametagZoom; // 확대용 드로잉 UI (Canvas 하위)
+    [SerializeField] private RectTransform nametagPos; // 드로잉 UI의 시작 위치
     [SerializeField] private Image zoomPanel;        // 배경 패널 (알파 페이드용)
-    private CluePickup cluePickup;
 
     private bool isPlayerInside = false;
     private bool isZoomActive = false;
-    private bool zoomActivatedOnce = false;
 
     void Start()
     {
-        cluePickup = GetComponent<CluePickup>();
-
         // UI 초기화
-        drawingZoom.SetActive(false);
-        drawingPos.anchoredPosition = new Vector2(0, -Screen.height);
+        nametagZoom.SetActive(false);
+        nametagPos.anchoredPosition = new Vector2(0, -Screen.height);
     }
 
     void Update()
@@ -31,16 +27,16 @@ public class Ch1_Drawing : BaseInteractable
 
             if (isZoomActive)
             {
-                HideDrawingZoom();
+                HideNametagZoom();
             }
             else
             {
-                ShowDrawingZoom();
+                ShowNametagZoom();
             }
         }
     }
 
-    private void ShowDrawingZoom()
+    private void ShowNametagZoom()
     {
         isZoomActive = true;
 
@@ -49,36 +45,28 @@ public class Ch1_Drawing : BaseInteractable
         zoomPanel.DOFade(150f / 255f, 0.5f);
 
         // 슬라이드 인
-        drawingZoom.SetActive(true);
-        drawingPos.anchoredPosition = new Vector2(0, -Screen.height);
-        drawingPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
+        nametagZoom.SetActive(true);
+        nametagPos.anchoredPosition = new Vector2(0, -Screen.height);
+        nametagPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
 
         PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
     }
 
-    private void HideDrawingZoom()
+    private void HideNametagZoom()
     {
         isZoomActive = false;
 
         zoomPanel.DOFade(0f, 0.5f);
 
-        drawingPos.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
+        nametagPos.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
             .SetEase(Ease.InCubic)
             .OnComplete(() =>
             {
-                drawingZoom.SetActive(false);
-
-                if (!zoomActivatedOnce)
-                {
-                    Ch1_HideAreaEventManager.Instance.AddHideAreaComponent();
-                    zoomActivatedOnce = true;
-                }
+                nametagZoom.SetActive(false);
 
                 if (isPlayerInside)
                     PlayerInteractSystem.Instance.AddInteractable(gameObject);
             });
-        
-        cluePickup.PickupClue();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -98,7 +86,7 @@ public class Ch1_Drawing : BaseInteractable
         isPlayerInside = false;
 
         if (isZoomActive)
-            HideDrawingZoom(); // 플레이어가 나가면 자동 닫기
+            HideNametagZoom(); // 플레이어가 나가면 자동 닫기
 
         PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
     }

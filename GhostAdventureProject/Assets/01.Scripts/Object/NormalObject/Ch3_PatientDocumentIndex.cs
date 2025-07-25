@@ -1,13 +1,17 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
 
-public class Ch1_Drawing : BaseInteractable
+public class Ch3_PatientDocumentIndex : MonoBehaviour
 {
     [SerializeField] private GameObject drawingZoom; // 확대용 드로잉 UI (Canvas 하위)
     [SerializeField] private RectTransform drawingPos; // 드로잉 UI의 시작 위치
     [SerializeField] private Image zoomPanel;        // 배경 패널 (알파 페이드용)
-    private CluePickup cluePickup;
+
+    [Header("줌 서류")]
+    [SerializeField] private GameObject zoomDocument;
 
     private bool isPlayerInside = false;
     private bool isZoomActive = false;
@@ -15,8 +19,6 @@ public class Ch1_Drawing : BaseInteractable
 
     void Start()
     {
-        cluePickup = GetComponent<CluePickup>();
-
         // UI 초기화
         drawingZoom.SetActive(false);
         drawingPos.anchoredPosition = new Vector2(0, -Screen.height);
@@ -39,7 +41,6 @@ public class Ch1_Drawing : BaseInteractable
             }
         }
     }
-
     private void ShowDrawingZoom()
     {
         isZoomActive = true;
@@ -77,8 +78,6 @@ public class Ch1_Drawing : BaseInteractable
                 if (isPlayerInside)
                     PlayerInteractSystem.Instance.AddInteractable(gameObject);
             });
-        
-        cluePickup.PickupClue();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -103,3 +102,4 @@ public class Ch1_Drawing : BaseInteractable
         PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
     }
 }
+

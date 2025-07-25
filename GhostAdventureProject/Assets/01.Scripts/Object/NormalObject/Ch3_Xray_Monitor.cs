@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Ch3_Xray_Monitor : MonoBehaviour
+public class Ch3_Xray_Monitor : BaseInteractable
 {
     [SerializeField] private GameObject monitorZoom; // 확대용 드로잉 UI (Canvas 하위)
     [SerializeField] private RectTransform monitorPos; // 드로잉 UI의 시작 위치
@@ -10,7 +10,6 @@ public class Ch3_Xray_Monitor : MonoBehaviour
 
     private bool isPlayerInside = false;
     private bool isZoomActive = false;
-    private bool zoomActivatedOnce = false;
 
     void Start()
     {
@@ -64,12 +63,6 @@ public class Ch3_Xray_Monitor : MonoBehaviour
             .OnComplete(() =>
             {
                 monitorZoom.SetActive(false);
-
-                if (!zoomActivatedOnce)
-                {
-                    Ch1_HideAreaEventManager.Instance.AddHideAreaComponent();
-                    zoomActivatedOnce = true;
-                }
 
                 if (isPlayerInside)
                     PlayerInteractSystem.Instance.AddInteractable(gameObject);
