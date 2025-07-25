@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class Prompt : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Prompt : MonoBehaviour
     private Queue<string> PromptQueue = new Queue<string>();
     private System.Action onDialogComplete;
     private bool isActive = false;
+    private Tween promptTween;
 
     private void Start()
     {
@@ -63,60 +65,97 @@ public class Prompt : MonoBehaviour
 
 
     // 메시지와 시간 둘 다 받음
-    public void ShowPrompt(string line, float dlaytime)
+    public void ShowPrompt(string line, float delaytime)
     {
-
         PromptPanel.SetActive(true); // 패널 보이게하기
         PromptText.text = line;
-        StartCoroutine(HideAfterDelay(dlaytime));
+        
+        promptTween?.Kill();
+
+        promptTween = DOVirtual.DelayedCall(delaytime, () =>
+        {
+            PromptPanel.SetActive(false);
+            isActive = false;
+        });
+        // StartCoroutine(HideAfterDelay(delaytime));
     }
 
 
-    private IEnumerator HideAfterDelay(float dlaytime)
-    {
-        yield return new WaitForSecondsRealtime(dlaytime);
-        PromptPanel.SetActive(false);
-        isActive = false;
-        // onD
-    }
+    // private IEnumerator HideAfterDelay(float dlaytime)
+    // {
+    //     yield return new WaitForSecondsRealtime(dlaytime);
+    //     PromptPanel.SetActive(false);
+    //     isActive = false;
+    //     // onD
+    // }
 
-    // 기본프롬프트 1.5초 ==============================================================
+    // 기본프롬프트 2초 ==============================================================
     public void ShowPrompt(string line)
     {
         PromptPanel.SetActive(true); // 패널 보이게하기
         PromptText.text = line;
-        StartCoroutine(HideAfterDelay());
+
+        promptTween?.Kill();
+
+        promptTween = DOVirtual.DelayedCall(2f, () =>
+        {
+            PromptPanel.SetActive(false);
+            isActive = false;
+        });
+        
+        // StartCoroutine(HideAfterDelay());
     }
 
 
-    private IEnumerator HideAfterDelay()
-    {
-        yield return new WaitForSecondsRealtime(1.5f);
-        PromptPanel.SetActive(false);
-        isActive = false;
-        // onD
-    }
+    // private IEnumerator HideAfterDelay()
+    // {
+    //     yield return new WaitForSecondsRealtime(2f);
+    //     PromptPanel.SetActive(false);
+    //     isActive = false;
+    //     // onD
+    // }
     // ==============================================================================
 
-    public void ShowPrompt(params string[] lines)
-    {
-        StartCoroutine(ShowPromptSequence(lines));
-    }
-
-    private IEnumerator ShowPromptSequence(string[] lines)
+    public void ShowPrompt_2 (params string[] lines)
     {
         PromptPanel.SetActive(true);
         isActive = true;
 
+        promptTween?.Kill();
+
+        Sequence seq = DOTween.Sequence();
+
         foreach (string line in lines)
         {
-            PromptText.text = line;
-            yield return new WaitForSecondsRealtime(1.5f);
+            seq.AppendCallback(() => 
+            {
+                PromptText.text = line;
+            });
+            seq.AppendInterval(1.5f);
         }
-
-        PromptPanel.SetActive(false);
-        isActive = false;
+         seq.AppendCallback(() =>
+        {
+            PromptPanel.SetActive(false);
+            isActive = false;
+        });
+        promptTween = seq;
+        // StartCoroutine(ShowPromptSequence(lines));
     }
+
+    // private IEnumerator ShowPromptSequence(string[] lines)
+    // {
+    //     PromptPanel.SetActive(true);
+    //     isActive = true;
+
+    //     foreach (string line in lines)
+    //     {
+    //         PromptText.text = line;
+    //         yield return new WaitForSecondsRealtime(1.5f);
+    //     }
+
+    //     PromptPanel.SetActive(false);
+    //     isActive = false;
+    // }
     // ===================================================================================
 }
 

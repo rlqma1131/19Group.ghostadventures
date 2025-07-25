@@ -150,7 +150,7 @@ public class Ch1_TV : BasePossessable
         isPossessed = true;
         channelTxt.text = "01"; // 초기 채널 표시
         UpdateChannelDisplay();
-        UIManager.Instance.PromptUI.ShowPrompt("힌트를 살펴보자");
+        UIManager.Instance.PromptUI.ShowPrompt("힌트를 살펴보자", 2.5f);
     }
 
 }
