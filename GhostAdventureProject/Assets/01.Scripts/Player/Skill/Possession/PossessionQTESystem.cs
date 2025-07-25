@@ -49,13 +49,13 @@ public class PossessionQTESystem : MonoBehaviour
             Debug.Log("QTE succeeded");
             // ResetTimeScale();
             GameManager.Instance.PlayerController.currentTarget?.OnQTESuccess();
-            UIManager.Instance.PromptUI.ShowPrompt("빙의 성공!", 2f);
+            UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("빙의 성공!", 2f);
         }
         else
         {
             Debug.Log("QTE failed");
             StartCoroutine(DelayedFailure());
-            UIManager.Instance.PromptUI.ShowPrompt("빙의 실패!", 2f);
+            UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("빙의 실패!", 2f);
         }
     }
 
