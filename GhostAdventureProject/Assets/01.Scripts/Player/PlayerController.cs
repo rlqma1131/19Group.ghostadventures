@@ -31,14 +31,17 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (CurrentTargetIsPossessable() && currentTarget.HasActivated)
+            if(currentTarget != null)
             {
-                PossessionSystem.Instance.TryPossess();
-            }
-            else if (!CurrentTargetIsPossessable() && !currentTarget.HasActivated)
-            {
-                Debug.Log("빙의불가능 상태");
-                currentTarget.CantPossess();
+                if (CurrentTargetIsPossessable() && currentTarget.HasActivated)
+                {
+                    PossessionSystem.Instance.TryPossess();
+                }
+                else if (!CurrentTargetIsPossessable() && !currentTarget.HasActivated)
+                {
+                    Debug.Log("빙의불가능 상태");
+                    currentTarget.CantPossess();
+                }
             }
         }
     }

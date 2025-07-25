@@ -10,12 +10,24 @@ public class SaveDatas
     public List<string> solvedPuzzleIDs = new List<string>();
 }
 
-public class PuzzleStateManager : Singleton<PuzzleStateManager>
+public class PuzzleStateManager : MonoBehaviour
 {
+    public static PuzzleStateManager Instance { get; private set; }
 
     private HashSet<string> solvedPuzzles = new HashSet<string>();
 
     private string savePath => Application.persistentDataPath + "/save.json";
+
+
+    private void Awake() 
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;        
+    }
 
     public void MarkPuzzleSolved(string puzzleID)
     {

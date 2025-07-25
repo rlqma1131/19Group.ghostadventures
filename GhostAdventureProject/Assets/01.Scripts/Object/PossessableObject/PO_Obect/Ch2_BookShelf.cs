@@ -32,29 +32,32 @@ public class Ch2_BookShelf : BasePossessable
     {
         if (!isPossessed || !hasActivated)
         {
-            q_Key.SetActive(false);
+            //q_Key.SetActive(false);
             return;
         }
+        EnterControlMode();
+        // if (Input.GetKeyDown(KeyCode.Q))
+        // {
+        //     if (!isControlMode)
+        //     {
+        //         q_Key.SetActive(false);
+        //         
+        //     }
+        //     else
+        //     {
+        //         q_Key.SetActive(true);
+        //         
+        //     }
+        // }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if (!isControlMode)
-            {
-                q_Key.SetActive(false);
-                EnterControlMode();
-            }
-            else
-            {
-                q_Key.SetActive(true);
-                ExitControlMode();
-            }
-        }
-
-        if (!isControlMode && Input.GetKeyDown(KeyCode.E))
-        {
+            isControlMode = false;
+            ExitControlMode();
             Unpossess();
         }
-        q_Key.SetActive(true);
+        if (!isControlMode) return;
+        //q_Key.SetActive(true);
     }
 
     private void EnterControlMode()

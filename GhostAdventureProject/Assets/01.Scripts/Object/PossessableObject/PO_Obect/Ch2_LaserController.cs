@@ -15,6 +15,11 @@ public class Ch2_LaserController : BasePossessable
 
     private Animator laserScreenAnimator;
     private SpriteRenderer spriteRenderer;
+
+    public System.Action<Ch2_LaserController> OnLaserDeactivated;
+    public bool IsLaserActive => laser.activeSelf;
+    private bool wasLaserActive = true;
+
     protected override void Start()
     {
         isPossessed = false;
@@ -35,14 +40,20 @@ public class Ch2_LaserController : BasePossessable
             qKey.SetActive(false);
         }
 
-        // 빙의 상태에서 레이저 On/Off
         if (Input.GetKeyDown(KeyCode.Q))
         {
             bool laserActive = !laser.activeSelf;
             laser.SetActive(laserActive);
             laserScreenAnimator.SetBool("Off", !laserActive);
-
             spriteRenderer.sprite = laserActive ? on : off;
+
+            // 비활성화 이벤트 감지
+            if (wasLaserActive && !laserActive)
+            {
+                OnLaserDeactivated?.Invoke(this);
+            }
+
+            wasLaserActive = laserActive;
         }
     }
 

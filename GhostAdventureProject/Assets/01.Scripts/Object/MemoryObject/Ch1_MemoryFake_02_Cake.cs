@@ -46,7 +46,7 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
         }
         else if(other.CompareTag("Player") && PuzzleStateManager.Instance.IsPuzzleSolved("후라이팬"))
         {
-            UIManager.Instance.PromptUI.ShowPrompt("쥐는 어디로 갔을라나?", "아무튼 이제 케잌을 살펴보자");
+            UIManager.Instance.PromptUI.ShowPrompt_2("쥐는 어디로 갔을라나?", "아무튼 이제 케잌을 살펴보자");
         } 
     }
 }
