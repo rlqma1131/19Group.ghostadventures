@@ -27,8 +27,6 @@ public class Ch2_Computer : BasePossessable
     [SerializeField] private string correctPassword;
     [SerializeField] private LockedDoor doorToOpen;
     [SerializeField] private GameObject monitorOn;
-    
-    [SerializeField] private GameObject q_Key;
 
     private Vector2 hiddenPos = new(0, -800);
     private Vector2 visiblePos = new(0, 0);
@@ -52,32 +50,16 @@ public class Ch2_Computer : BasePossessable
 
     protected override void Update()
     {
-        base.Update();
-
         if (!isPossessed || !hasActivated)
-        {
-            q_Key.SetActive(false);
             return;
-        }
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            if (!isPanelOpen)
-            {
-                q_Key.SetActive(false);
-                OpenPanel();
-            }
-            else
-            {
-                q_Key.SetActive(true);
-                ClosePanel();
-            }
-        }
+        if (!isPanelOpen)
+            OpenPanel();
 
-        if (isPanelOpen && Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("패널 열려있음 - 빙의 해제 차단됨");
-            return;
+            Unpossess();
+            ClosePanel();
         }
 
         // 엔터 키로 비밀번호 제출
@@ -85,8 +67,6 @@ public class Ch2_Computer : BasePossessable
         {
             SubmitPassword();
         }
-        
-        q_Key.SetActive(true);
     }
 
     public void OpenPanel()
