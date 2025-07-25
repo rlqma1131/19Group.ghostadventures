@@ -16,13 +16,13 @@ public class Ch2_ClearDoor : BaseInteractable
         {
             if (!canOpenDoor)
             {
-                UIManager.Instance.PromptUI.ShowPrompt("...잠겨 있다.", 2f);
+                UIManager.Instance.PromptUI.ShowPrompt("아직은 나갈 수 없어", 2f);
                 return;
             }
             else
             {
                 // CH3로 이동
-                Debug.Log("챕터3 슈우우우우우우ㅜㅇ우웃");
+                SceneManager.LoadScene("Ch03_Hospital");
             }
         }
     }

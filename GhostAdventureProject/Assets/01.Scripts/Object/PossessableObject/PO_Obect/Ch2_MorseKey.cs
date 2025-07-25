@@ -6,9 +6,6 @@ using UnityEngine.EventSystems;
 
 public class Ch2_MorseKey : BasePossessable
 {
-    [Header("출구")]
-    [SerializeField] private Ch2_ClearDoor clearDoor;
-
     [Header("UI 그룹")]
     [SerializeField] private CanvasGroup panelCanvasGroup; // 모스키 입력 판넬
     [SerializeField] private RectTransform inputAreaUI; // 입력 영영 버튼UI
@@ -27,6 +24,7 @@ public class Ch2_MorseKey : BasePossessable
     [SerializeField] private GameObject handprint;
     [SerializeField] private AudioClip mudSFX;
 
+    private Ch2_MemoryPositive_01_HandPrint memory;
     private bool isSuccessAnimating = false;
     private Coroutine shakeCoroutine;
 
@@ -80,6 +78,7 @@ public class Ch2_MorseKey : BasePossessable
             panelCanvasGroup.blocksRaycasts = false;
         }
 
+        memory = handprint.GetComponent<Ch2_MemoryPositive_01_HandPrint>();
         handprint.SetActive(false);
 
         currentMorseChar = "";
@@ -120,8 +119,6 @@ public class Ch2_MorseKey : BasePossessable
             UpdateUI();
 
             StartSuccessShake(); // 진동 + 확대 + 빨갛게
-
-            clearDoor.ActivateClearDoor(); // 문 열기
         }
 
         if (isPressing && Input.GetMouseButtonUp(0))
@@ -227,7 +224,6 @@ public class Ch2_MorseKey : BasePossessable
             if (currentWord == "HELP")
             {
                 StartSuccessShake(); // 진동 + 확대 + 빨갛게
-                clearDoor.ActivateClearDoor();
             }
             // 오답
             else
@@ -381,6 +377,7 @@ public class Ch2_MorseKey : BasePossessable
         yield return StartCoroutine(FadeOutPanel(0.2f));
 
         revealMemory(); // 기억 조각 나타남
+        memory.ActivateHandPrint();
     }
 
     private IEnumerator FadeInPanel(float duration)
