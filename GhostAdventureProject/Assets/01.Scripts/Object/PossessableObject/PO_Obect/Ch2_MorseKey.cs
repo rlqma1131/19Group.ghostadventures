@@ -23,6 +23,10 @@ public class Ch2_MorseKey : BasePossessable
     [SerializeField] private AudioClip dotInputSFX;
     [SerializeField] private AudioClip dashInputSFX;
 
+    [Header("기억 조각")]
+    [SerializeField] private GameObject handprint;
+    [SerializeField] private AudioClip mudSFX;
+
     private bool isSuccessAnimating = false;
     private Coroutine shakeCoroutine;
 
@@ -75,6 +79,8 @@ public class Ch2_MorseKey : BasePossessable
             panelCanvasGroup.interactable = false;
             panelCanvasGroup.blocksRaycasts = false;
         }
+
+        handprint.SetActive(false);
 
         currentMorseChar = "";
         decodedLetters.Clear();
@@ -373,6 +379,8 @@ public class Ch2_MorseKey : BasePossessable
         }
 
         yield return StartCoroutine(FadeOutPanel(0.2f));
+
+        revealMemory(); // 기억 조각 나타남
     }
 
     private IEnumerator FadeInPanel(float duration)
@@ -434,5 +442,11 @@ public class Ch2_MorseKey : BasePossessable
         }
 
         return false;
+    }
+
+    void revealMemory()
+    {
+        SoundManager.Instance.PlaySFX(mudSFX); // 진흙 소리
+        handprint.SetActive(true);
     }
 }
