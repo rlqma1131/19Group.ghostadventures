@@ -20,8 +20,10 @@ public class Ch2_CCTVMonitor : BasePossessable
     private Animator[] cctvScreenAnimators;
 
     private bool isActivatedFirst = true;
+    private bool firstZoom = true; // 처음 줌 카메라 활성화 여부
     public bool isRevealed { get; private set; } = false; // 기억조각 처음 한번만 나타내기
     private bool isRevealStarted = false;
+
     protected override void Start()
     {
         isPossessed = false;
@@ -169,6 +171,12 @@ public class Ch2_CCTVMonitor : BasePossessable
 
         UIManager.Instance.PlayModeUI_CloseAll();
 
+        if (firstZoom && !isRevealed)
+        {
+            firstZoom = false;
+            UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("CCTV 화면이다. 카메라를 조작할 수 있을까?", 2f);
+        }
+
         if (!isRevealed)
             CheckMemoryUnlockCondition();
     }
@@ -183,6 +191,15 @@ public class Ch2_CCTVMonitor : BasePossessable
             isActivatedFirst = false;
             Invoke(nameof(ActivateFirst), 2.3f);
         }
+    }
+
+    public bool SolvedCheck()
+    {
+        cctvScreenAnimators[0].SetBool("Right", true);
+        cctvScreenAnimators[1].SetBool("Right", false);
+        cctvScreenAnimators[2].SetBool("Right", false);
+        cctvScreenAnimators[3].SetBool("Right", true);
+        return true;
     }
 
     void ActivateFirst()

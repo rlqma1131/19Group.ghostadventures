@@ -47,6 +47,7 @@ public class Ch2_CCTV : BasePossessable
             highlightanim.SetBool("Right", true);
 
             monitor?.SetMonitorAnimBool(index, "Right", true);
+            CheckSolvedPrompt();
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
@@ -54,6 +55,15 @@ public class Ch2_CCTV : BasePossessable
             highlightanim.SetBool("Right", false);
 
             monitor?.SetMonitorAnimBool(index, "Right", false);
+            CheckSolvedPrompt();
+        }
+    }
+    
+    void CheckSolvedPrompt()
+    {
+        if (monitor.SolvedCheck())
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("CCTV 화면을 확인해야봐야겠어", 2f);
         }
     }
 
