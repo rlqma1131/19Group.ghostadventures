@@ -15,11 +15,11 @@ public class Inventory_Player : MonoBehaviour
     public void AddClue(ClueData clue)
     {
         // 그림일기라면 기존 것 교체
-        if (clue.isDrawingClue)
+        if (clue.clueType == ClueType.DrawingClue)
         {
             for (int i = 0; i < collectedClues.Count; i++)
             {
-                if (collectedClues[i].isDrawingClue)
+                if (collectedClues[i].clueType == ClueType.DrawingClue)
                 {
                     collectedClues[i] = clue;
                     RefreshUI();

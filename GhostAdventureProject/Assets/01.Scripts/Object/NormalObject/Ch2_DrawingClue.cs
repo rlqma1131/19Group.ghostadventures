@@ -6,6 +6,9 @@ using DG.Tweening;
 
 public class Ch2_DrawingClue : MonoBehaviour
 {
+    [Header("프롬프트 메시지 설정")] [SerializeField]
+    private string promptMessage;
+    
     [SerializeField] private GameObject drawingZoom;             // 확대용 UI (Canvas 내)
     [SerializeField] private RectTransform drawingPos;           // 시작 위치
     [SerializeField] private Image zoomPanel;                    // 배경 패널 (페이드용)
@@ -56,6 +59,16 @@ public class Ch2_DrawingClue : MonoBehaviour
         drawingPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
 
         PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        
+        if (cluePickup != null)
+        {
+            cluePickup.PickupClue();
+        }
+        
+        if (!string.IsNullOrEmpty(promptMessage))
+        {
+            UIManager.Instance.PromptUI.ShowPrompt(promptMessage, 2f);
+        }
     }
 
     private void HideDrawingZoom()
@@ -74,7 +87,7 @@ public class Ch2_DrawingClue : MonoBehaviour
 
                 if (!zoomActivatedOnce)
                 {
-                    cluePickup?.PickupClue();
+                    // cluePickup?.PickupClue();
                     
                     if (isLastClue && finalObjectToActivate != null)
                     {

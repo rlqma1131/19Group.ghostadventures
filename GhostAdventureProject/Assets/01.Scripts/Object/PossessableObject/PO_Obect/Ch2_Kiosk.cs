@@ -29,6 +29,7 @@ public class Ch2_Kiosk : BasePossessable
     private Vector2 visiblePos = new(0, 0);
     
     [SerializeField] private SafeBox safeBox;
+    private bool openPromptShown = false;
 
     protected override void Start()
     {
@@ -73,7 +74,7 @@ public class Ch2_Kiosk : BasePossessable
 
     public override void CantPossess()
     {
-        UIManager.Instance.PromptUI.ShowPrompt("“전력이 없어..",2f);
+        UIManager.Instance.PromptUI.ShowPrompt("전력이 없어..",2f);
     }
 
     public void Activate()
@@ -92,7 +93,7 @@ public class Ch2_Kiosk : BasePossessable
         
         if (safeBox != null)
         {
-            if (safeBox.safeBoxOpen)
+            if (!openPromptShown && safeBox.safeBoxOpen)
             {
                 UIManager.Instance.PromptUI.ShowPrompt("금고 안에서 본 이상한 기호들... 저 버튼과 닮았어.", 2f);
             }
@@ -185,7 +186,6 @@ public class Ch2_Kiosk : BasePossessable
     {
         currentInput.Clear();
         UpdateInputDisplay();
-        Debug.Log("입력이 리셋되었습니다.");
     }
 
     private bool CompareSequence(List<Button> input, List<Button> target)

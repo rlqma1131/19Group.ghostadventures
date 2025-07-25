@@ -25,6 +25,9 @@ public class Ch2_LeftSwing : BasePossessable
             q_Key.SetActive(false);
             return;
         }
+        
+        if(isPossessed)
+            UIManager.Instance.PromptUI.ShowPrompt("흔들어볼까?",2f);
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -72,6 +75,7 @@ public class Ch2_LeftSwing : BasePossessable
                 targetComputer.Activate();
             
             Unpossess();
+            UIManager.Instance.PromptUI.ShowPrompt("이 그네가…발전기…?",2f);
             isQTESequenceRunning = false;
             hasActivated = false;
         }
