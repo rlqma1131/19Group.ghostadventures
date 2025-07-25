@@ -26,9 +26,6 @@ public class Ch2_LaserTrigger : MonoBehaviour
     }
     private void OnTimelineFinished(PlayableDirector obj)
     {
-        
-        PossessionSystem.Instance.CanMove = true; 
-        UIManager.Instance.PlayModeUI_OpenAll();    
         director.stopped -= OnTimelineFinished; 
     }
 

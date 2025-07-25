@@ -33,13 +33,19 @@ public class Ch2_LaserTriggerManager : MonoBehaviour
         // 카메라 이동 연출 (6초)
         yield return new WaitForSeconds(6f);
 
-        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("어째선지 닿으면 위험할 것 같다...", 3f);
+        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("가까이 가면 뜨거워…", 3f);
+
         yield return new WaitForSeconds(3f);
+
+        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("이 불빛… 닿으면 위험할 것 같아.", 3f);
 
         // 카메라 잠깐 멈췄다가 복귀 (3초)
         yield return new WaitForSeconds(3f);
 
+        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("위에 있는 저 장치를 작동해보자", 2f);
+        
         // 플레이어 조작 가능
+        UIManager.Instance.PlayModeUI_OpenAll();
         PossessionSystem.Instance.CanMove = true;
     }
 }
