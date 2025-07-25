@@ -45,6 +45,7 @@ public class Ch2_Switchboard : BasePossessable
 
     public void SolvedPuzzle()
     {
+        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("CCTV 전력이 연결됐어!", 1f);
         StartCoroutine(SolvedPuzzleRoutine());
     }
 

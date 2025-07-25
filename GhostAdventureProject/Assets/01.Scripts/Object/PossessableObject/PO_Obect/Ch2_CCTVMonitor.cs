@@ -19,9 +19,9 @@ public class Ch2_CCTVMonitor : BasePossessable
 
     private Animator[] cctvScreenAnimators;
 
+    private bool isActivatedFirst = true;
     public bool isRevealed { get; private set; } = false; // 기억조각 처음 한번만 나타내기
     private bool isRevealStarted = false;
-
     protected override void Start()
     {
         isPossessed = false;
@@ -159,6 +159,8 @@ public class Ch2_CCTVMonitor : BasePossessable
 
         isRevealStarted = false; // 조작 가능 상태로 복귀
         Unpossess();
+
+        Invoke(nameof(RevealPrompt), 2.5f); // 문양 스캔 프롬프트 표시
     }
 
     public override void OnPossessionEnterComplete()
@@ -174,5 +176,22 @@ public class Ch2_CCTVMonitor : BasePossessable
     public void ActivateCCTVMonitor()
     {
         hasActivated = true;
+
+        // 처음 활성화 됐을 때 프롬프트
+        if(isActivatedFirst)
+        {
+            isActivatedFirst = false;
+            Invoke(nameof(ActivateFirst), 2.3f);
+        }
+    }
+
+    void ActivateFirst()
+    {
+        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("관리실 안 CCTV 화면도 켜진 것 같아. 카메라를 조작할 수 있을까?", 2f);
+    }
+
+    void RevealPrompt()
+    {
+        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("이 문양, 뭔가 의미가 있는 것 같아. 스캔해보자.", 2f);
     }
 }

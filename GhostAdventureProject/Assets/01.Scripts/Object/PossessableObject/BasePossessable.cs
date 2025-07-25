@@ -5,11 +5,11 @@ public abstract class BasePossessable : BaseInteractable
     [SerializeField] protected Animator anim;
     [SerializeField] protected bool hasActivated; // 빙의가 가능한 상태인지 여부
     [SerializeField] private AudioClip possessionSFX;
-    
+
     public bool isPossessed;
     public bool HasActivated => hasActivated;
     public bool IsPossessedState => isPossessed;
-    
+
     protected virtual void Start()
     {
         isPossessed = false;
@@ -21,7 +21,7 @@ public abstract class BasePossessable : BaseInteractable
     {
         if (!isPossessed)
             return;
-        
+
         if (Input.GetKeyDown(KeyCode.E))
             Unpossess();
     }
@@ -66,4 +66,6 @@ public abstract class BasePossessable : BaseInteractable
     // 빙의 애니메이션이 끝나면 호출되는 메서드
     // 필요에 따라 빙의애니메이션 끝나면 구현되는 기능들을 넣어주세요.
     public virtual void OnPossessionEnterComplete() { }
+
+    public virtual void CantPossess() { }
 }
