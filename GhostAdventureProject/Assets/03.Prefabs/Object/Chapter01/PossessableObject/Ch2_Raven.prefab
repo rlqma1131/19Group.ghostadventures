@@ -311,7 +311,7 @@ MonoBehaviour:
   m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 40
-    OrthographicSize: 3
+    OrthographicSize: 4
     NearClipPlane: 0.1
     FarClipPlane: 5000
     Dutch: 0
@@ -398,8 +398,8 @@ GameObject:
   - component: {fileID: 3057721228153118778}
   - component: {fileID: 7535857832905629503}
   - component: {fileID: 7762429250242191419}
-  - component: {fileID: 7738944141479001157}
   - component: {fileID: 5023764423342151964}
+  - component: {fileID: 3287357793814230545}
   m_Layer: 0
   m_Name: Ch2_Raven
   m_TagString: Animal
@@ -443,7 +443,6 @@ MonoBehaviour:
   hasActivated: 0
   possessionSFX: {fileID: 0}
   isPossessed: 0
-  doorPass: 0
   zoomCamera: {fileID: 3517789406948542676}
   moveSpeed: 3
   underGroundDoor: {fileID: 0}
@@ -486,7 +485,22 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!50 &7738944141479001157
+--- !u!114 &5023764423342151964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8441691396360961903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b499ce4da8f514603a730f5a9c32953c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialItems:
+  - {fileID: 11400000, guid: b618a084d23b84c889da88d31822cdf7, type: 2}
+  inventorySlots: []
+--- !u!50 &3287357793814230545
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -512,22 +526,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!114 &5023764423342151964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8441691396360961903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b499ce4da8f514603a730f5a9c32953c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialItems:
-  - {fileID: 11400000, guid: b618a084d23b84c889da88d31822cdf7, type: 2}
-  inventorySlots: []
+  m_Constraints: 4
 --- !u!1001 &5733249349742287911
 PrefabInstance:
   m_ObjectHideFlags: 0
