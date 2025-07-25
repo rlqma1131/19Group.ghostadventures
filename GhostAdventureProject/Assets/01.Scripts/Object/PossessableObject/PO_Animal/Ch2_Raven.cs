@@ -12,7 +12,7 @@ public class Ch2_Raven : MoveBasePossessable
     private bool isNearDoor = false;
     private bool sandCastleBreakAble = false;
 
-        [SerializeField] private float flyForce = 5f;
+    [SerializeField] private float flyForce = 5f;
     [SerializeField] private float diveSpeed = 5f;
 
     protected override void Start()
@@ -85,7 +85,7 @@ public class Ch2_Raven : MoveBasePossessable
             }
         }
     }
-        
+
     // void HandleFlight()
     // {
     // if(isPossessed)
@@ -113,6 +113,11 @@ public class Ch2_Raven : MoveBasePossessable
     // }
     // }
 
+    public override void Unpossess()
+    {
+        base.Unpossess();
+    }
+
 
     public override void OnQTESuccess()
     {
@@ -133,7 +138,6 @@ public class Ch2_Raven : MoveBasePossessable
 
         if(collision.gameObject == SandCastle)
         {
-            Debug.Log("모래성파괴가능범위진입");
             sandCastleBreakAble = true;
         }
     }
