@@ -4,5 +4,10 @@ using UnityEngine;
 
 public class Ch2_MemoryFake_BackStreetObj : MemoryFragment
 {
-    
+    [SerializeField] private GameObject drawingClue2;
+    public override void AfterScan()
+    {
+        base.AfterScan();
+        drawingClue2.SetActive(true);
+    }
 }

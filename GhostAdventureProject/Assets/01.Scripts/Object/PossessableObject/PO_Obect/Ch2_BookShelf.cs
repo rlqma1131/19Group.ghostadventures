@@ -24,7 +24,7 @@ public class Ch2_BookShelf : BasePossessable
 
     private bool isControlMode = false;
 
-    [SerializeField] private ClueData[] needClues;
+    [SerializeField] private List<ClueData> needClues;
     private bool promptShown = false;
 
     protected override void Update()
@@ -165,9 +165,9 @@ public class Ch2_BookShelf : BasePossessable
         clickedSequence.Clear();
     }
 
-    private void ConsumeClue(ClueData[] clues)
+    private void ConsumeClue(List<ClueData> clues)
     {
-        UIManager.Instance.Inventory_PlayerUI.RemoveClue(clues);
+        UIManager.Instance.Inventory_PlayerUI.RemoveClue(clues.ToArray());
     }
 
     private bool HasAllClues()
