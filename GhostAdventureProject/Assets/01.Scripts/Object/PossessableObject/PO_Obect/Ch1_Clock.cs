@@ -80,6 +80,7 @@ public class Ch1_Clock : BasePossessable
             hasActivated = false;
             Unpossess();
             UI.SetActive(false); 
+            
         }
     }
 
@@ -106,7 +107,7 @@ public class Ch1_Clock : BasePossessable
     {
         // 판넬 끄기
         zoomPanel.DOFade(0f, 0.5f);
-
+       
         clockPos.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
             .SetEase(Ease.InCubic)
             .OnComplete(() =>
@@ -127,13 +128,15 @@ public class Ch1_Clock : BasePossessable
         base.OnTriggerEnter2D(collision);
         if(collision.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
         {
+             UIManager.Instance.noticePopup.FadeInAndOut("※ 파란 빛을 띄는 오브젝트는 \nE키로 빙의할 수 있습니다.");
+
             if(PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
             {
                 UIManager.Instance.PromptUI.ShowPrompt("시간을 떠올릴만한 숫자를 본 거 같은데");
             }
             else
             {
-                UIManager.Instance.PromptUI.ShowPrompt("시계가 멈춰 있네…");
+                UIManager.Instance.PromptUI.ShowPrompt("시계가 멈춰 있네...");
             }
         }
     }
