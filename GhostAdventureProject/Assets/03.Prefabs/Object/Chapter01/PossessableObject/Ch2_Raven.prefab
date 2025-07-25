@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4428891055061866252}
   - component: {fileID: 8563339471385720338}
   - component: {fileID: 8817544002557258685}
-  - component: {fileID: 4196060752515749305}
+  - component: {fileID: 5748522157113285715}
   m_Layer: 0
   m_Name: MainSprite
   m_TagString: Untagged
@@ -107,8 +107,8 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!58 &4196060752515749305
-CircleCollider2D:
+--- !u!61 &5748522157113285715
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -139,9 +139,19 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.000000029802322, y: -0.19268359}
+  m_Offset: {x: 0.0049757957, y: -0.3234381}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 0.8}
+    newSize: {x: 0.15, y: 0.12}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 0.113720044
+  m_Size: {x: 0.19389057, y: 0.15312374}
+  m_EdgeRadius: 0
 --- !u!1 &4749966867187731962
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,6 +399,7 @@ GameObject:
   - component: {fileID: 7535857832905629503}
   - component: {fileID: 7762429250242191419}
   - component: {fileID: 7738944141479001157}
+  - component: {fileID: 5023764423342151964}
   m_Layer: 0
   m_Name: Ch2_Raven
   m_TagString: Animal
@@ -502,6 +513,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &5023764423342151964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8441691396360961903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b499ce4da8f514603a730f5a9c32953c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialItems:
+  - {fileID: 11400000, guid: b618a084d23b84c889da88d31822cdf7, type: 2}
+  inventorySlots: []
 --- !u!1001 &5733249349742287911
 PrefabInstance:
   m_ObjectHideFlags: 0
