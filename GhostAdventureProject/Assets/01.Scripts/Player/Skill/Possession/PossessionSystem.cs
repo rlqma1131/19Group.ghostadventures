@@ -113,11 +113,11 @@ public class PossessionSystem : MonoBehaviour
 
         if (obssessingTarget.tag == "HideArea")
         {
-            UIManager.Instance.PromptUI.ShowPrompt($"은신 시도 중...", 2f);
+            UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode($"은신 시도 중...", 2f);
         }
         else
         {
-            UIManager.Instance.PromptUI.ShowPrompt($"빙의 시도 중...", 2f);
+            UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode($"빙의 시도 중...", 2f);
         }
 
         RequestObssession();

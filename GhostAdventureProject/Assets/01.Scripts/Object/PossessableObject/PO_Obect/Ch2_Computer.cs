@@ -13,6 +13,7 @@ public class Ch2_Computer : BasePossessable
     [SerializeField] private GameObject passwordPanel;
     [SerializeField] private TMP_InputField passwordInput;
     [SerializeField] private Button confirmButton;
+    [SerializeField] private Button closePasswordButton;
     
     [SerializeField] private GameObject correctImage;
     [SerializeField] private GameObject wrongImage;
@@ -45,6 +46,11 @@ public class Ch2_Computer : BasePossessable
         if (confirmButton != null)
         {
             confirmButton.onClick.AddListener(SubmitPassword);
+        }
+        
+        if (closePasswordButton != null)
+        {
+            closePasswordButton.onClick.AddListener(ClosePasswordPanel);
         }
     }
 
@@ -87,8 +93,12 @@ public class Ch2_Computer : BasePossessable
                 monitorPanel.gameObject.SetActive(false);
             });
     }
-
-    // 파일 아이콘 클릭 → 더블클릭 체크
+    
+    private void ClosePasswordPanel()
+    {
+        passwordPanel.SetActive(false);
+    }
+    
     public void OnFileIconClick()
     {
         float time = Time.time;

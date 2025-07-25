@@ -41,11 +41,9 @@ public class Ch02_NPCEvent : MonoBehaviour
 
     private void OnTimelineStopped(PlayableDirector playable)
     {
-
-
         PossessionSystem.Instance.CanMove = true; // 플레이어 이동 가능하게 설정
         UIManager.Instance.PlayModeUI_OpenAll(); // 플레이모드 UI 다시 열기
-        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("이 쪽지는 나를 말하는 건가?", 1.5f); // 프롬프트 UI 닫기
+        UIManager.Instance.PromptUI.ShowPrompt("이 쪽지는 나를 말하는 건가?", 1.5f); // 프롬프트 UI 닫기
     }
 
     private void OnDisable()
