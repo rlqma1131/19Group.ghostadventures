@@ -6,8 +6,6 @@ using DG.Tweening;
 
 public class Ch2_BookShelf : BasePossessable
 {
-    [SerializeField] private GameObject q_Key;
-    
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
     
     [SerializeField] private Ch2_BookSlot[] bookSlots;
@@ -20,13 +18,14 @@ public class Ch2_BookShelf : BasePossessable
     [SerializeField] private float moveDuration = 1.0f;
     [SerializeField] private float shakeDuration = 0.5f;
     [SerializeField] private float shakeStrength = 0.3f;
-    private int currentIndex = 0;
+    // private int currentIndex = 0;
     
     [SerializeField] private List<Transform> moveTargets;
 
     private bool isControlMode = false;
 
     [SerializeField] private ClueData[] needClues;
+    private bool promptShown = false;
 
     protected override void Update()
     {
@@ -35,29 +34,25 @@ public class Ch2_BookShelf : BasePossessable
             //q_Key.SetActive(false);
             return;
         }
-        EnterControlMode();
-        // if (Input.GetKeyDown(KeyCode.Q))
-        // {
-        //     if (!isControlMode)
-        //     {
-        //         q_Key.SetActive(false);
-        //         
-        //     }
-        //     else
-        //     {
-        //         q_Key.SetActive(true);
-        //         
-        //     }
-        // }
-
+        
+        if (!promptShown && HasAllClues())
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("이 책들은 여기 없는데?", 2f);
+            promptShown = true;
+        }
+        
+        if(!isControlMode) 
+            EnterControlMode();
+        
         if (Input.GetKeyDown(KeyCode.E))
         {
-            isControlMode = false;
+            //isControlMode = false;
             ExitControlMode();
             Unpossess();
+            promptShown = false;
         }
-        if (!isControlMode) return;
-        //q_Key.SetActive(true);
+        // if (!isControlMode) return;
+        // q_Key.SetActive(true);
     }
 
     private void EnterControlMode()
@@ -92,6 +87,12 @@ public class Ch2_BookShelf : BasePossessable
                 return;
             }
 
+            if (!HasAllClues())
+            {
+                UIManager.Instance.PromptUI.ShowPrompt("아직 단서가 부족해", 1.5f);
+                return;
+            }
+            
             slot.ToggleBook();
             
             if (slot.IsPushed)
@@ -169,4 +170,13 @@ public class Ch2_BookShelf : BasePossessable
         UIManager.Instance.Inventory_PlayerUI.RemoveClue(clues);
     }
 
+    private bool HasAllClues()
+    {
+        foreach (var clue in needClues)
+        {
+            if (!UIManager.Instance.Inventory_PlayerUI.collectedClues.Contains(clue))
+                return false;
+        }
+        return true;
+    }
 }

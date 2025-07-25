@@ -8,7 +8,6 @@ using TMPro;
 
 public class Ch2_Kiosk : BasePossessable
 {
-    [SerializeField] private GameObject q_Key;
     [SerializeField] private RectTransform kioskPanel;
     [SerializeField] private GameObject hintNoteObject;
     [SerializeField] private GameObject hiddenDoorObject;
@@ -29,7 +28,6 @@ public class Ch2_Kiosk : BasePossessable
     private Vector2 visiblePos = new(0, 0);
     
     [SerializeField] private SafeBox safeBox;
-    private bool openPromptShown = false;
 
     protected override void Start()
     {
@@ -93,7 +91,7 @@ public class Ch2_Kiosk : BasePossessable
         
         if (safeBox != null)
         {
-            if (!openPromptShown && safeBox.safeBoxOpen)
+            if (safeBox.safeBoxOpen)
             {
                 UIManager.Instance.PromptUI.ShowPrompt("금고 안에서 본 이상한 기호들... 저 버튼과 닮았어.", 2f);
             }

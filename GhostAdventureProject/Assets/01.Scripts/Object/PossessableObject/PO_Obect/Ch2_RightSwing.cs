@@ -20,6 +20,7 @@ public class Ch2_RightSwing : BasePossessable
         {
             q_Key.SetActive(false);
             anim.SetTrigger("RightSwing");
+            UIManager.Instance.PromptUI.ShowPrompt("아무일도 일어나지 않는군..",2f);
         }
         q_Key.SetActive(true);
     }
