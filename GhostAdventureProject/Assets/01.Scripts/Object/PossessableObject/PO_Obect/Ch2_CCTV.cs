@@ -72,4 +72,9 @@ public class Ch2_CCTV : BasePossessable
         aKey.SetActive(true);
         dKey.SetActive(true);
     }
+
+    public override void CantPossess()
+    {
+        UIManager.Instance.PromptUI.ShowPrompt("전력이 끊겨있는 것 같아", 2f);
+    }
 }

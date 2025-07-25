@@ -29,9 +29,17 @@ public class PlayerController : MonoBehaviour
 
         HandleMovement();
 
-        if (Input.GetKeyDown(KeyCode.E) && CurrentTargetIsPossessable())
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            PossessionSystem.Instance.TryPossess();
+            if (CurrentTargetIsPossessable() && currentTarget.HasActivated)
+            {
+                PossessionSystem.Instance.TryPossess();
+            }
+            else if (!CurrentTargetIsPossessable() && !currentTarget.HasActivated)
+            {
+                Debug.Log("빙의불가능 상태");
+                currentTarget.CantPossess();
+            }
         }
     }
 
@@ -77,7 +85,7 @@ public class PlayerController : MonoBehaviour
         // 가까운 대상이 빙의 가능 상태인지 확인
         return currentTarget != null
             && PlayerInteractSystem.Instance.CurrentClosest == currentTarget.gameObject
-            && currentTarget.HasActivated
+            //&& currentTarget.HasActivated
             && !currentTarget.IsPossessedState;
     }
 

@@ -144,8 +144,8 @@ public class PossessionSystem : MonoBehaviour
     // 빙의 가능 대상 설정
     public void SetInteractTarget(BasePossessable target)
     {
-        if (!target.HasActivated)
-            return;
+        //if (!target.HasActivated)
+            //return;
 
         currentTarget = target;
         if (Player != null)
