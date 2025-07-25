@@ -8,7 +8,7 @@ public enum GuardState { Idle, MovingToRadio, TurnOffRadio, MovingToBench, Resti
 public class CH2_SecurityGuard : MoveBasePossessable
 {   
     // [SerializeField] private LockedDoor door; //도어락 있는 문 //없어도 될 것 같음
-    [SerializeField] private DoorLock doorLock; // 도어락
+    [SerializeField] private Ch2_DoorLock doorLock; // 도어락
     [SerializeField] private SafeBox safeBox; // 금고
     [SerializeField] private Ch2_Radio radio; // 라디오
     public Transform Radio; // 라디오 위치

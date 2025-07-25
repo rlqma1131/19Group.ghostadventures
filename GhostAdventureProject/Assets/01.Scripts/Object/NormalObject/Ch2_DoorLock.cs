@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DoorLock : BaseInteractable
+public class Ch2_DoorLock : BaseInteractable
 {   
     [SerializeField] private ItemData needItem; // 문을 여는데 필요한 아이템
     [SerializeField] private GameObject q_Key;
