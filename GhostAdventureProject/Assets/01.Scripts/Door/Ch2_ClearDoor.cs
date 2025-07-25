@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class Ch2_ClearDoor : BaseInteractable
 {
     private bool playerNearby = false;
-    private bool canOpenDoor = false;
+   [SerializeField] private bool canOpenDoor = false;
 
     private void Update()
     {
@@ -22,7 +22,8 @@ public class Ch2_ClearDoor : BaseInteractable
             else
             {
                 // CH3로 이동
-                SceneManager.LoadScene("Ch03_Hospital");
+                SceneManager.LoadScene("Ch02_To_Ch03");
+                UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
             }
         }
     }
