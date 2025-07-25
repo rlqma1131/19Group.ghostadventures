@@ -42,6 +42,9 @@ public class MemoryScan : MonoBehaviour
 
     void Update()
     {
+        if (PlayerInteractSystem.Instance.CurrentClosest != currentScanObject)
+            return;
+        
         if (currentMemoryFragment != null)
         {
             isSannable = currentMemoryFragment.IsScannable;
