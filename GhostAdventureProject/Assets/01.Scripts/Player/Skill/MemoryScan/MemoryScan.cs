@@ -56,13 +56,13 @@ public class MemoryScan : MonoBehaviour
         // 스캔 가능한 상태가 아니거나, 스캔 중이 아닐 때 입력을 받음
         if (isNearMemory && !isScanning && Input.GetKeyDown(KeyCode.E))
         {
+            UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("스캔 시도 중...", 2f);
             TryStartScan();
         }
 
         // 스캔이 진행 중일 때 로직 처리
         if (isScanning)
         {
-            
             UpdateScan();
         }
     }
