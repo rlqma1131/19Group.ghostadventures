@@ -10,12 +10,12 @@ public class Ch2_LeftSwing : BasePossessable
     private int qteSuccessCount = 0;
     private int totalQTECount = 3;
     private bool isQTESequenceRunning = false;
-    private QTEUI qteUI;
+    //private QTEUI qteUI;
 
     protected override void Start()
     {
         base.Start();
-        qteUI = FindObjectOfType<QTEUI>();
+        // qteUI = FindObjectOfType<QTEUI>();
     }
     
     protected override void Update()
@@ -48,7 +48,7 @@ public class Ch2_LeftSwing : BasePossessable
     private void StartNextQTE()
     {
         Time.timeScale = 0.3f;
-        qteUI.ShowQTEUI(OnQTEResult);
+        UIManager.Instance.QTE_UI.ShowQTEUI(OnQTEResult);
     }
 
     private void OnQTEResult(bool success)
