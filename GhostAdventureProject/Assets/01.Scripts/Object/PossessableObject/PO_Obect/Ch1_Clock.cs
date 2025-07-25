@@ -113,7 +113,7 @@ public class Ch1_Clock : BasePossessable
             {
                 clockZoom.SetActive(false);
             });
-        UIManager.Instance.PromptUI.ShowPrompt("어? 저 TV… 무언가 보여줄지도 몰라.」");
+        UIManager.Instance.PromptUI.ShowPrompt("어? 저 TV… 무언가 보여줄지도 몰라.");
     }
 
     public override void OnPossessionEnterComplete()

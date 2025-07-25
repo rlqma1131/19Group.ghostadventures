@@ -25,7 +25,8 @@ public class PuzzleStateManager : MonoBehaviour
         {
             Destroy(gameObject);
             return;
-        }         
+        }
+        Instance = this;        
     }
 
     public void MarkPuzzleSolved(string puzzleID)
