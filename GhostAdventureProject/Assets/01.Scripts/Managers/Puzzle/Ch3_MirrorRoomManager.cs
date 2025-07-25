@@ -34,25 +34,21 @@ public class Ch3_MirrorRoomManager : MonoBehaviour
         if (player == null || playerMovePoint == null) yield break;
 
         SpriteRenderer[] playerSprites = player.GetComponentsInChildren<SpriteRenderer>();
-
-        // 1. DOTween 페이드 아웃
+        
         foreach (var sr in playerSprites)
         {
             sr.DOFade(0f, 0.4f);
         }
         yield return new WaitForSeconds(0.5f);
-
-        // 2. 위치 이동
+        
         player.transform.position = playerMovePoint.position;
-
-        // 3. DOTween 페이드 인
+        
         foreach (var sr in playerSprites)
         {
             sr.DOFade(1f, 0.4f);
         }
         yield return new WaitForSeconds(0.5f);
-
-        // 4. mirrorRoom 내부 SpriteRenderer 페이드 아웃
+        
         SpriteRenderer[] mirrorSprites = mirrorRoom.GetComponentsInChildren<SpriteRenderer>(includeInactive: true);
         foreach (var sr in mirrorSprites)
         {
@@ -60,12 +56,10 @@ public class Ch3_MirrorRoomManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.6f);
-
-        // 5. mirrorRoom 비활성화
+        
         mirrorRoom.SetActive(false);
-
-        // 6. 퍼즐 완료 통보
-        Ch3_MirrorPuzzleManager.Instance.NotifyRoomCleared(mirrorRoom);
+        
+        Ch3_MirrorPuzzleManager.Instance.NotifyRoomCleared();
     }
 
     // 오답 처리용 함수
