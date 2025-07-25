@@ -59,36 +59,59 @@ public class Ch2_Raven : MoveBasePossessable
             //     Debug.Log("문이 열렸습니다");
             // }
         }
-        HandleFlight();
+        // HandleFlight();
     }
 
-        
-    void HandleFlight()
+    protected override void Move()
     {
-    if(isPossessed)
-    {
-    // 날기: 스페이스바
-    if (Input.GetKey(KeyCode.Space))
-    {
-        transform.position += Vector3.up * flyForce * Time.deltaTime;
-        // if (anim != null)
-            // anim.SetBool("Fly", true);
-    }
-    else
-    {
-        // if (anim != null)
-            // anim.SetBool("Fly", false);
-    }
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+        Vector3 move = new Vector3(h, v, 0);
+        // 이동 여부 판단
+        bool isMoving = move.sqrMagnitude > 0.01f;
 
-    // 급강하: S 키
-    if (Input.GetKey(KeyCode.S))
-    {
-        transform.position += Vector3.down * diveSpeed * Time.deltaTime;
-        // if (anim != null)
-        //     anim.SetTrigger("Dive"); // 애니메이션이 있다면
+        if (anim != null)
+        {
+            anim.SetBool("Move", isMoving);
+        }
+        if (isMoving)
+        {
+            transform.position += move * moveSpeed * Time.deltaTime;
+
+            // 좌우 Flip
+            if (spriteRenderer != null && Mathf.Abs(h) > 0.01f)
+            {
+                spriteRenderer.flipX = h < 0f;
+            }
         }
     }
-    }
+        
+    // void HandleFlight()
+    // {
+    // if(isPossessed)
+    // {
+    // // 날기: 스페이스바
+    // if (Input.GetKey(KeyCode.Space))
+    // {
+    //     transform.position += Vector3.up * flyForce * Time.deltaTime;
+    //     // if (anim != null)
+    //         // anim.SetBool("Fly", true);
+    // }
+    // else
+    // {
+    //     // if (anim != null)
+    //         // anim.SetBool("Fly", false);
+    // }
+
+    // 급강하: S 키
+    // if (Input.GetKey(KeyCode.S))
+    // {
+    //     transform.position += Vector3.down * diveSpeed * Time.deltaTime;
+    //     // if (anim != null)
+    //     //     anim.SetTrigger("Dive"); // 애니메이션이 있다면
+    //     }
+    // }
+    // }
 
 
     public override void OnQTESuccess()
