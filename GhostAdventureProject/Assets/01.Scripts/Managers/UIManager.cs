@@ -27,8 +27,6 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private ESCMenu escMenu; // ESC 메뉴
     public NoticePopup noticePopup;
 
-    
-
     // QTE 이펙트 캔버스 추가
     [SerializeField] private GameObject qteEffectCanvas; // QTE 이펙트 캔버스
 
@@ -43,6 +41,7 @@ public class UIManager : Singleton<UIManager>
     public Inventory_PossessableObject Inventory_PossessableObjectUI => inventory_PossessableObject;
     public InventoryExpandViewer InventoryExpandViewerUI => inventoryExpandViewer;
     public ESCMenu ESCMenuUI => escMenu;
+    public NoticePopup NoticePopupUI => noticePopup;
 
     // QTE 이펙트 캔버스 외부 접근용
     public GameObject QTEEffectCanvas => qteEffectCanvas;
@@ -67,6 +66,7 @@ public class UIManager : Singleton<UIManager>
     [Header("UICanvas 전체 키고 끌때 사용")]
     [SerializeField] private GameObject playModeUI; // 플레이모드 모든 UI(Canvas)
     [SerializeField] private GameObject startEndingUI; // 게임 시작/엔딩 모든 UI(Canvas)
+    [SerializeField] private GameObject TutorialUI; // 튜토리얼 모든 UI(Canvas)
     [SerializeField] private GameObject interactUI; // 상호작용 모든 UI(Canvas)
 
 
@@ -101,6 +101,16 @@ public class UIManager : Singleton<UIManager>
             PlayModeUI_CloseAll();
         }
     
+    }
+
+    public void TutorialUI_CloseAll()
+    {
+        TutorialUI.SetActive(false);
+    }
+
+    public void TutorialUI_OpenAll()
+    {
+        TutorialUI.SetActive(true);
     }
 
     // 기본 커서
@@ -300,6 +310,7 @@ public class UIManager : Singleton<UIManager>
     //         Hide_Q_Key();
     //     }
     // }
+    
     
 }
 

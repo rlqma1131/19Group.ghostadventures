@@ -16,7 +16,7 @@ public class NoticePopup : MonoBehaviour
     //public float endX = 0f;
 
 
-    public float waitTime = 1.0f; // UI가 화면에 머무는 시간 (1초)
+    public float waitTime = 2.0f; // UI가 화면에 머무는 시간 (1초)
 
     //public void SlideInAndOut()
     //{

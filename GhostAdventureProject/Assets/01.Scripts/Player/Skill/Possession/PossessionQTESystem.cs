@@ -24,7 +24,8 @@ public class PossessionQTESystem : MonoBehaviour
 
     private void Start()
     {
-        QTEUI.gameObject.SetActive(false);
+        if(QTEUI != null)
+            QTEUI.gameObject.SetActive(false);
     }
 
     public void StartQTE()
