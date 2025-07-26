@@ -41,6 +41,8 @@ public class Ch1_Mouse : MoveBasePossessable
 
         base.Update();
 
+        InteractTutorial();
+
         if(canEnter)
             q_Key.SetActive(true);
 
@@ -54,6 +56,12 @@ public class Ch1_Mouse : MoveBasePossessable
         }
         
     }
+
+    private void InteractTutorial()
+    {
+        TutorialManager.Instance.Show(TutorialStep.Mouse_Possesse);
+    }
+
 
     public void ActivateMouse()
     {

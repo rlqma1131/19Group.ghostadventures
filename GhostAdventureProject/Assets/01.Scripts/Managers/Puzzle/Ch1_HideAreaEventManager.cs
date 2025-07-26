@@ -63,12 +63,17 @@ public class Ch1_HideAreaEventManager : MonoBehaviour
 
                 // 퍼즐 풀면 아이방 HideArea에 못숨도록
                 RemoveHideAreaComponent();
+
+                PuzzleStateManager.Instance.MarkPuzzleSolved("그림일기");
+                UIManager.Instance.PromptUI.ShowPrompt("열렸다… 안에 뭐가…");
+
+                
             }
             else
             {
                 currentOrder.Clear();
                 // 틀림 메시지 출력
-                UIManager.Instance.PromptUI.ShowPrompt("...아무 일도 일어나지 않았다.", 2f);
+                UIManager.Instance.PromptUI.ShowPrompt_Random("다시… 처음부터 생각해보자.", "이게 아니야");
             }
         }
     }

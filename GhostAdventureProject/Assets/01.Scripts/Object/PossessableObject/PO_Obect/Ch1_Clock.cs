@@ -115,6 +115,7 @@ public class Ch1_Clock : BasePossessable
                 clockZoom.SetActive(false);
             });
         UIManager.Instance.PromptUI.ShowPrompt("어? 저 TV… 무언가 보여줄지도 몰라.");
+        UIManager.Instance.NoticePopupUI.FadeInAndOut("※목표 : TV 켜기 ");
     }
 
     public override void OnPossessionEnterComplete()
@@ -128,7 +129,7 @@ public class Ch1_Clock : BasePossessable
         base.OnTriggerEnter2D(collision);
         if(collision.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
         {
-             UIManager.Instance.noticePopup.FadeInAndOut("※ 파란 빛을 띄는 오브젝트는 \nE키로 빙의할 수 있습니다.");
+            UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 파란 빛을 띄는 오브젝트는 \nE키로 빙의할 수 있습니다.");
 
             if(PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
             {

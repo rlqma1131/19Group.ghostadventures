@@ -35,7 +35,7 @@ public class Ch1_MainFlashlight : BasePossessable
                 timerExpired = true;
                 timerActive = false;
 
-                Debug.Log("시간 초과!");
+                UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 제한 시간이 종료되었습니다.");
 
                 if (isControlMode)
                 {
@@ -171,6 +171,7 @@ public class Ch1_MainFlashlight : BasePossessable
                 Unpossess();
 
                 Door.SolvePuzzle();
+                UIManager.Instance.PromptUI.ShowPrompt("N", 3f);
             }
         }
     }

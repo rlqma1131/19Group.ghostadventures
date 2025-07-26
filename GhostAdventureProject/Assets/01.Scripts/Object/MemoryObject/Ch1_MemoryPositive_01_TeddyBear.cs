@@ -21,4 +21,12 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
         isScannable = false;
         Completed_TeddyBear = true;
     }
+
+    protected override void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Player") && !ChapterEndingManager.Instance.AllCh1CluesCollected())
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("단서가 부족해...");
+        }
+    }
 }

@@ -97,7 +97,7 @@ public class Prompt : MonoBehaviour
 
         promptTween?.Kill();
 
-        promptTween = DOVirtual.DelayedCall(2f, () =>
+        promptTween = DOVirtual.DelayedCall(1.5f, () =>
         {
             PromptPanel.SetActive(false);
             isActive = false;
@@ -142,21 +142,36 @@ public class Prompt : MonoBehaviour
         // StartCoroutine(ShowPromptSequence(lines));
     }
 
-    // private IEnumerator ShowPromptSequence(string[] lines)
-    // {
-    //     PromptPanel.SetActive(true);
-    //     isActive = true;
+    // 여러 대사 중 랜덤 출력 ========================================================================
+    public void ShowPrompt_Random(params string[] lines)
+    {
+        if (lines == null || lines.Length == 0) return;
 
-    //     foreach (string line in lines)
-    //     {
-    //         PromptText.text = line;
-    //         yield return new WaitForSecondsRealtime(1.5f);
-    //     }
+        PromptPanel.SetActive(true);
+        isActive = true;
 
-    //     PromptPanel.SetActive(false);
-    //     isActive = false;
-    // }
-    // ===================================================================================
+        promptTween?.Kill();
+
+        Sequence seq = DOTween.Sequence();
+
+        // ✅ 랜덤으로 한 줄 선택
+        string chosenLine = lines[Random.Range(0, lines.Length)];
+
+        seq.AppendCallback(() => 
+        {
+            PromptText.text = chosenLine;
+        });
+        seq.AppendInterval(1.5f);
+
+        seq.AppendCallback(() =>
+        {
+            PromptPanel.SetActive(false);
+            isActive = false;
+        });
+
+        promptTween = seq;
+    }
+
 }
 
 

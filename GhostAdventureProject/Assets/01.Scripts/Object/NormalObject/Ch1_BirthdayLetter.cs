@@ -12,6 +12,7 @@ public class Ch1_BirthdayLetter : MonoBehaviour
     private bool isZoomActive = false;
     //private bool zoomActivatedOnce = false;
     private bool isPlayerInside = false;
+    private bool PickupLetter = false;
 
     private void Start()
     {
@@ -30,11 +31,14 @@ public class Ch1_BirthdayLetter : MonoBehaviour
 
     private void Update()
     {
+        if (PickupLetter)
+                return;
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (!isZoomActive && !isPlayerInside)
                 return;
-
+            
             if (isZoomActive)
                 HideLetterZoom();
             else
@@ -81,8 +85,11 @@ public class Ch1_BirthdayLetter : MonoBehaviour
             });
             
         cluePickup.PickupClue();
-        PuzzleStateManager.Instance.MarkPuzzleSolved("깜짝상자");
+        PickupLetter = true;
+        PuzzleStateManager.Instance.MarkPuzzleSolved("편지");
         UIManager.Instance.PromptUI.ShowPrompt("누구 생일이었지… 8월… 14일");
+        UIManager.Instance.NoticePopupUI.FadeInAndOut("1~4: 인벤토리 단서 확인"); // 수정될 수 있음
+        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -91,10 +98,6 @@ public class Ch1_BirthdayLetter : MonoBehaviour
 
         isPlayerInside = true;
         
-        if(!PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
-        {
-            UIManager.Instance.PromptUI.ShowPrompt("…상자? 왜 여기에 이런 게…");
-        }
         if (!isZoomActive)
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }

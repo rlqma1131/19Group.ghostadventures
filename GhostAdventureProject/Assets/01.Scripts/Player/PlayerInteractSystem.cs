@@ -9,7 +9,7 @@ public class PlayerInteractSystem : MonoBehaviour
     // 싱글톤
     public static PlayerInteractSystem Instance { get; private set; }
 
-    [SerializeField] private GameObject eKey;
+    [SerializeField] public GameObject eKey;
     [SerializeField] private GameObject currentClosest; 
     public GameObject CurrentClosest => currentClosest;// 디버깅용
     

@@ -9,7 +9,7 @@ public class HideArea : BasePossessable
     [SerializeField] private int energyCost = 1;
 
     private Coroutine consumeCoroutine;
-    private bool isHiding = false;
+    protected bool isHiding = false;
 
     protected override void Update()
     {
@@ -56,4 +56,5 @@ public class HideArea : BasePossessable
         isHiding = false;
         base.Unpossess();
     }
+
 }

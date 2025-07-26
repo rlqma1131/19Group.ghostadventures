@@ -30,12 +30,19 @@ public class PlayerRoomTracker : MonoBehaviour
                     text.text = $"{room.roomName}";
                     //uITweenAnimator.SlideInAndOut();
                     uITweenAnimator.FadeInAndOut();
+                
+                if (room.roomName == "거실" && !TutorialManager.Instance.HasCompleted(TutorialStep.LivingRoomIntro_Start))
+                {
+                    TutorialManager.Instance.Show(TutorialStep.LivingRoomIntro_Start);
+                }
+                
+                if (room.roomName == "다용도실" && !TutorialManager.Instance.HasCompleted(TutorialStep.LaundryRoom))
+                {
+                    TutorialManager.Instance.Show(TutorialStep.LaundryRoom);                    
+                }
             }
 
-            // if (room != null && room.roomName == "거실" && !TutorialManager.Instance.HasCompleted(TutorialStep.LivingRoomIntro_Start))
-            // {
-            //     TutorialManager.Instance.Show(TutorialStep.LivingRoomIntro_Start);
-            // }
+
         }
     }
 }

@@ -16,9 +16,13 @@ public class Ch1_CelebrityBox : BasePossessable
         
         if (!isPossessed || !hasActivated)
         {
+            if(q_Key != null)
             q_Key.SetActive(false);
             return;
         }
+        
+        InteractTutorial();
+        
         if (Input.GetKeyDown(KeyCode.Q))
         {
             q_Key.SetActive(false);
@@ -27,6 +31,10 @@ public class Ch1_CelebrityBox : BasePossessable
         q_Key.SetActive(true);
     }
 
+    private void InteractTutorial()
+    {
+        TutorialManager.Instance.Show(TutorialStep.Q_key_Interact);
+    }
     private void TriggerBoxEvent()
     {
         hasActivated = true;
@@ -44,6 +52,7 @@ public class Ch1_CelebrityBox : BasePossessable
         StartCoroutine(ShowLetterWithDelay());
 
         hasActivated = false;
+        PuzzleStateManager.Instance.MarkPuzzleSolved("깜짝상자");
     }
     private IEnumerator ShowLetterWithDelay()
     {
@@ -55,4 +64,17 @@ public class Ch1_CelebrityBox : BasePossessable
         yield return null;
         Unpossess(); // 빙의 해제
     }
+
+    protected override void OnTriggerEnter2D(Collider2D other)
+    {
+        base.OnTriggerEnter2D(other);
+        if(!PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
+        {
+            UIManager.Instance.TutorialUI_CloseAll();
+            UIManager.Instance.PromptUI.ShowPrompt("…상자? 왜 여기에 이런 게…");
+            UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 파란 빛을 띄는 오브젝트는 E키로 빙의할 수 있습니다.");
+            // UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 반응하는 오브젝트에 가까이 가면 [E키]로 상호작용할 수 있습니다");
+        }
+    }
+
 }

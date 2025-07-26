@@ -32,11 +32,16 @@ public class Ch1_Mirror : MonoBehaviour
 
         float alpha = Mathf.Clamp01(fogTime / fogDuration);
         SetAlpha(alpha);
+        if (!revealed && alpha >= 0.3f)
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("…글씨…?");       
+        }
 
         if (!revealed && alpha >= 0.5f)
         {
             revealed = true;
             ChapterEndingManager.Instance.CollectCh1Clue("W");
+            PuzzleStateManager.Instance.MarkPuzzleSolved("욕실");
         }
     }
 
@@ -45,5 +50,13 @@ public class Ch1_Mirror : MonoBehaviour
         Color alphaLetterW = this.letterW.color;
         alphaLetterW.a = alpha;
         this.letterW.color = alphaLetterW;
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Player") && PuzzleStateManager.Instance.IsPuzzleSolved("욕실"))
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("W", 3f);       
+        }
     }
 }
