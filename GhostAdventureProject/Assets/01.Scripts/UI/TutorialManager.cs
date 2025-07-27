@@ -65,7 +65,7 @@ public class TutorialManager : MonoBehaviour
                 break;
 
             case TutorialStep.ShowControlKey_And_HighLightBithdayBox: // 튜토리얼 키 보여주기, 깜짝상자 하이라이트
-                canMove = false;
+                PossessionSystem.Instance.CanMove = true;
                 uimanager.TutorialUI_OpenAll();
                 celebrityBox.highlight.SetActive(true); 
                 break;
@@ -100,9 +100,9 @@ public class TutorialManager : MonoBehaviour
     // 거실 진입시
     public async void LivingRoom_StartTutorial()
     {   
-        canMove = false;
+        PossessionSystem.Instance.CanMove = false;
         await Task.Delay(2000);
-        prompt.ShowPrompt_2("나도나도 모르게 여기로 들어왔어..", "여기서 기억을 찾을 수 있을까?");
+        prompt.ShowPrompt_2("나도 모르게 여기로 들어왔어..", "여기서 기억을 찾을 수 있을까?");
         await Task.Delay(3000);
         notice.FadeInAndOut("※ 목표: 이 집 안에 흩어진 기억 조각을 찾아 수집하세요.");
         await Task.Delay(3000);
