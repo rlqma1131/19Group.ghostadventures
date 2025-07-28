@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class HideArea : BasePossessable
 {
@@ -67,13 +68,6 @@ public class HideArea : BasePossessable
         base.Unpossess();
     }
 
-    public void OnMouseEnter()
-    {
-        UIManager.Instance.HideAreaCursor();
-    }
-    public void OnMouseExit()
-    {
-        UIManager.Instance.SetDefaultCursor();
-    }
+
 
 }

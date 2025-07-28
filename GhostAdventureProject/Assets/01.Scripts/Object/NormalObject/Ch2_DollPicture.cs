@@ -5,6 +5,7 @@ using UnityEngine;
 public class Ch2_DollPicture : BaseInteractable
 {
     private bool interactAble = false;
+    private bool CompleteCluePickup = false;
     CluePickup cluePickup;
     void Start()
     {
@@ -12,19 +13,23 @@ public class Ch2_DollPicture : BaseInteractable
     }
     void Update()
     {
-        if(interactAble == true)
+        if(interactAble && !CompleteCluePickup)
         {
             if(Input.GetKeyDown(KeyCode.E))
             {
                 cluePickup.PickupClue();
+                CompleteCluePickup = true;
             }
         }
         
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        base.OnTriggerEnter2D(collision);
-        interactAble = true;
+        if (collision.CompareTag("Player") && !CompleteCluePickup)
+        {
+            interactAble = true;
+            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+        }
     }
 
     protected override void OnTriggerExit2D(Collider2D collision)

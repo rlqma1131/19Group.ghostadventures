@@ -40,8 +40,8 @@ public class Ch1_Mouse : MoveBasePossessable
         }
 
         base.Update();
-
-        InteractTutorial();
+        if(isPossessed)
+            InteractTutorial();
 
         if(canEnter)
             q_Key.SetActive(true);

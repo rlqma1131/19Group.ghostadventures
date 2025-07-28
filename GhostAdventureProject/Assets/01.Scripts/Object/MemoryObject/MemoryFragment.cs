@@ -213,7 +213,6 @@ public class MemoryFragment : BaseInteractable
 
             case MemoryData.MemoryType.Fake:
                 UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 기억 조각을 수집했습니다. 그러나… 뭔가 이상합니다.");
-                UIManager.Instance.PromptUI.ShowPrompt("내 기억이 맞을까?");
                 //FakeEndingManager.Instance.CollectFakeMemory(data.memoryID);
                 break;
         }
