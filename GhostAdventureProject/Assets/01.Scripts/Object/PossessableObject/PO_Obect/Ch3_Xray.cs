@@ -5,6 +5,7 @@ public class Ch3_Xray : BasePossessable
 {
     [Header("X-Ray 기계")]
     [SerializeField] private GameObject[] xRayHead; // 머리 ~ 발 순서
+    [SerializeField] private AudioClip scan;
 
     [Header("X-Ray 줌 화면")]
     [SerializeField] Image zoomPhotoScreen;
@@ -15,6 +16,7 @@ public class Ch3_Xray : BasePossessable
     [Header("조작키")]
     [SerializeField] private GameObject aKey;
     [SerializeField] private GameObject dKey;
+    [SerializeField] private GameObject qKey;
 
     private int currentPhotoIndex = 0;
 
@@ -24,6 +26,7 @@ public class Ch3_Xray : BasePossessable
 
         aKey.SetActive(false);
         dKey.SetActive(false);
+        qKey.SetActive(false);
 
         currentPhotoIndex = 0;
         UpdateXrayDisplay();
@@ -31,38 +34,42 @@ public class Ch3_Xray : BasePossessable
 
     protected override void Update()
     {
-        base.Update();
-
         if (!isPossessed) return;
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Unpossess();
             aKey.SetActive(false);
             dKey.SetActive(false);
+            qKey.SetActive(false);
+
+            Unpossess();
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
             if (currentPhotoIndex < zoomPhotos.Length - 1)
             {
                 currentPhotoIndex++;
-                UpdateXrayDisplay();
             }
+
+            UpdateXrayDisplay();
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
             if (currentPhotoIndex > 0)
             {
                 currentPhotoIndex--;
-                UpdateXrayDisplay();
             }
+
+            UpdateXrayDisplay();
+        }
+        else if (Input.GetKeyDown(KeyCode.Q))
+        {
+            SoundManager.Instance.PlaySFX(scan);
+            Scan();
         }
     }
     private void UpdateXrayDisplay()
     {
-        // 줌 이미지 전환
-        zoomPhotoScreen.sprite = zoomPhotos[currentPhotoIndex].sprite;
-
         // xRayHead 위치 이동
         for (int i = 0; i < xRayHead.Length; i++)
         {
@@ -70,9 +77,17 @@ public class Ch3_Xray : BasePossessable
         }
     }
 
+    private void Scan()
+    {
+        // 줌 이미지 전환
+        zoomPhotoScreen.sprite = zoomPhotos[currentPhotoIndex].sprite;
+    }
+
+
     public override void OnPossessionEnterComplete()
     {
         aKey.SetActive(true);
         dKey.SetActive(true);
+        qKey.SetActive(true);
     }
 }
