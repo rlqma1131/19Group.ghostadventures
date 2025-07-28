@@ -1,47 +1,62 @@
 ﻿using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Ch3_PatientDocumentIndex : MonoBehaviour
 {
-    [SerializeField] private GameObject drawingZoom; // 확대용 드로잉 UI (Canvas 하위)
-    [SerializeField] private RectTransform drawingPos; // 드로잉 UI의 시작 위치
-    [SerializeField] private Image zoomPanel;        // 배경 패널 (알파 페이드용)
+    [Header("서류 인덱스")]
+    [SerializeField] private GameObject highlight;
 
     [Header("줌 서류")]
-    [SerializeField] private GameObject zoomDocument;
+    [SerializeField] private GameObject documentZoom; // 확대용 드로잉 UI (Canvas 하위)
+    [SerializeField] private RectTransform documentPos; // 드로잉 UI의 시작 위치
+    [SerializeField] private Image zoomPanel;        // 배경 패널 (알파 페이드용)
 
-    private bool isPlayerInside = false;
+    private bool isMouseInRange = false;
     private bool isZoomActive = false;
-    private bool zoomActivatedOnce = false;
 
     void Start()
     {
         // UI 초기화
-        drawingZoom.SetActive(false);
-        drawingPos.anchoredPosition = new Vector2(0, -Screen.height);
+        documentZoom.SetActive(false);
+        documentPos.anchoredPosition = new Vector2(0, -Screen.height);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetMouseButtonDown(0))
         {
-            if (!isZoomActive && !isPlayerInside)
+            if (!isZoomActive && !isMouseInRange)
                 return;
 
             if (isZoomActive)
             {
-                HideDrawingZoom();
+                HideDocumentZoom();
             }
             else
             {
-                ShowDrawingZoom();
+                ShowDocumentZoom();
             }
         }
+
+        if (isZoomActive && Input.GetKeyDown(KeyCode.Escape))
+        {
+            HideDocumentZoom();
+        }
     }
-    private void ShowDrawingZoom()
+    private void OnMouseEnter()
+    {
+        isMouseInRange = true;
+        highlight.SetActive(true);
+    }
+
+    private void OnMouseExit()
+    {
+        isMouseInRange = false;
+        highlight.SetActive(false);
+    }
+
+    private void ShowDocumentZoom()
     {
         isZoomActive = true;
 
@@ -50,56 +65,23 @@ public class Ch3_PatientDocumentIndex : MonoBehaviour
         zoomPanel.DOFade(150f / 255f, 0.5f);
 
         // 슬라이드 인
-        drawingZoom.SetActive(true);
-        drawingPos.anchoredPosition = new Vector2(0, -Screen.height);
-        drawingPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
-
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        documentZoom.SetActive(true);
+        documentPos.anchoredPosition = new Vector2(0, -Screen.height);
+        documentPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
     }
 
-    private void HideDrawingZoom()
+    private void HideDocumentZoom()
     {
         isZoomActive = false;
 
         zoomPanel.DOFade(0f, 0.5f);
 
-        drawingPos.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
+        documentPos.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
             .SetEase(Ease.InCubic)
             .OnComplete(() =>
             {
-                drawingZoom.SetActive(false);
-
-                if (!zoomActivatedOnce)
-                {
-                    Ch1_HideAreaEventManager.Instance.AddHideAreaComponent();
-                    zoomActivatedOnce = true;
-                }
-
-                if (isPlayerInside)
-                    PlayerInteractSystem.Instance.AddInteractable(gameObject);
+                documentZoom.SetActive(false);
             });
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!other.CompareTag("Player")) return;
-
-        isPlayerInside = true;
-
-        if (!isZoomActive)
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (!other.CompareTag("Player")) return;
-
-        isPlayerInside = false;
-
-        if (isZoomActive)
-            HideDrawingZoom(); // 플레이어가 나가면 자동 닫기
-
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
     }
 }
 
