@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: 7191062871352369922}
   m_Layer: 0
   m_Name: Ch1_HideArea_Bed
-  m_TagString: HideArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -235,6 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: beec2a0599d1a4545a2025509e589db8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlight: {fileID: 0}
   areaID: "\uCE68\uB300"
 --- !u!61 &3196334592780893999
 BoxCollider2D:
@@ -299,3 +300,5 @@ MonoBehaviour:
   possessionSFX: {fileID: 0}
   isPossessed: 0
   hideAreaEnterSFX: {fileID: 0}
+  energyConsumeCycle: 2
+  energyCost: 1
