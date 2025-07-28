@@ -14,6 +14,7 @@ public class Ch1_ClearDoor : BaseInteractable
     public bool testing = true; // 테스트용 변수
 
 
+
     void Start()
     {
         inventory_Player = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
@@ -57,9 +58,9 @@ public class Ch1_ClearDoor : BaseInteractable
         {
             canOpenDoor = true;
         }
-        if (TeddyBear.Completed_TeddyBear || testing)
+        if (TeddyBear.Completed_TeddyBear || canOpenDoor)
         {
-            UIManager.Instance.PromptUI.ShowPrompt_2("여기서 볼 일은 끝난거 같아 ", "이제 여기서 나가자");
+            UIManager.Instance.PromptUI.ShowPrompt_Random("여기서 볼 일은 끝난거 같아 ", "이제 여기서 나가자");
         }
     }
 
