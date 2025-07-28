@@ -11,6 +11,7 @@ public class Ch3_PatientDocumentIndex : MonoBehaviour
     [SerializeField] private GameObject documentZoom; // 확대용 드로잉 UI (Canvas 하위)
     [SerializeField] private RectTransform documentPos; // 드로잉 UI의 시작 위치
     [SerializeField] private Image zoomPanel;        // 배경 패널 (알파 페이드용)
+    [SerializeField] private AudioClip paperSFX;     // 줌 효과음
 
     private bool isMouseInRange = false;
     private bool isZoomActive = false;
@@ -35,6 +36,7 @@ public class Ch3_PatientDocumentIndex : MonoBehaviour
             }
             else
             {
+                SoundManager.Instance.PlaySFX(paperSFX);
                 ShowDocumentZoom();
             }
         }
