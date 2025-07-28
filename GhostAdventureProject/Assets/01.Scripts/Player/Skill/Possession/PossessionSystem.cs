@@ -129,10 +129,13 @@ public class PossessionSystem : MonoBehaviour
         switch (obssessingTarget.tag)
         {
             // 사람, 유인 오브젝트, 은신처만 QTE 요청
-            case "Person":
             case "SoundTrigger":
             case "HideArea":
                 PossessionQTESystem.Instance.StartQTE();
+                break;
+            
+            case "Person":
+                PossessionQTESystem.Instance.StartQTE3();
                 break;
 
             default:

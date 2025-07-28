@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PossessionQTESystem : MonoBehaviour
@@ -7,6 +8,7 @@ public class PossessionQTESystem : MonoBehaviour
     public static PossessionQTESystem Instance { get; private set; }
 
     [SerializeField] private QTEUI QTEUI;
+    [SerializeField] private QTEUI3 QTEUI3;
     public bool isRunning { get; private set; } = false;
 
     void Awake() 
@@ -17,7 +19,7 @@ public class PossessionQTESystem : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            // Destroy(gameObject);
             return;
         }
     }
@@ -26,7 +28,10 @@ public class PossessionQTESystem : MonoBehaviour
     {
         if(QTEUI != null)
             QTEUI.gameObject.SetActive(false);
+        if(QTEUI3 != null)
+            QTEUI3.gameObject.SetActive(false);
     }
+
 
     public void StartQTE()
     {
@@ -35,6 +40,15 @@ public class PossessionQTESystem : MonoBehaviour
         isRunning = true;
         Debug.Log("Starting QTE");
         QTEUI.ShowQTEUI();
+    }
+
+    public void StartQTE3()
+    {
+        Time.timeScale = 0.3f;
+        // UIManager연동되면 스캔 때 까만 배경 활성화
+        isRunning = true;
+        Debug.Log("Starting QTE3");
+        QTEUI3.ShowQTEUI3();
     }
 
     public void HandleQTEResult(bool success)
