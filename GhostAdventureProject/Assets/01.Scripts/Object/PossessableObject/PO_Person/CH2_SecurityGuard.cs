@@ -51,6 +51,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         isInOffice = true;
         targetPerson.currentCondition = PersonCondition.Unknown;
         player = FindObjectOfType<PlayerController>().gameObject;
+        conditionHandler = new VitalConditionHandler();
     }
 
     protected override void Update()
@@ -60,7 +61,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
             // anim.Play("Idle");
             state = GuardState.MovingToRadio;
         }
-
+        
         switch (state)
         {
             case GuardState.MovingToRadio:
@@ -112,6 +113,9 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 }
                 break;
         }
+
+        SetCondition(targetPerson.currentCondition);
+
 
         if (!isPossessed)
             return;
@@ -243,6 +247,8 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 conditionHandler = new TiredConditionHandler();
                 break;
         }
+        QTESettings qteSettings = conditionHandler.GetQTESettings();
+        UIManager.Instance.QTE_UI_3.ApplySettings(qteSettings);
     }
 
     public override void OnQTESuccess()

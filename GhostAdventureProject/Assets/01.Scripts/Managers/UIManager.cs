@@ -19,6 +19,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Prompt_UnPlayMode prompt2; // 컷신용 프롬프트
     [SerializeField] private QTEUI qte1;// QTE
     [SerializeField] private QTEUI2 qte2; // QTE2
+    [SerializeField] private QTEUI3 qte3; // QTE3
     public GameObject scanUI; // 스캔UI
     [SerializeField] private MemoryStorage memoryStorage;// 기억저장소
     [SerializeField] private Inventory_Player inventory_Player; // 인벤토리-플레이어
@@ -36,6 +37,7 @@ public class UIManager : Singleton<UIManager>
     public Prompt_UnPlayMode PromptUI2 => prompt2;
     public QTEUI QTE_UI => qte1;
     public QTEUI2 QTE_UI_2 => qte2;
+    public QTEUI3 QTE_UI_3 => qte3;
     public MemoryStorage MemoryStorageUI => memoryStorage;
     public Inventory_Player Inventory_PlayerUI => inventory_Player;
     public Inventory_PossessableObject Inventory_PossessableObjectUI => inventory_PossessableObject;
