@@ -36,12 +36,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
     
     public bool doorPass = false;
 
-
-    // 빙의되지 않았을 때 -> 라디오소리가 들리면 라디오를 따라감
-    // 빙의가 풀렸을 때 -> 라디오 소리가 들려도 confused 상태가 됨
-
-
-    
     // 처음 시작시 빙의불가(경비실안에 있음)
     protected override void Start()
     {
@@ -231,7 +225,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
         }
     }
     
-    // QTE 관련 함수 (23일 이후 작업예정)  
     public void SetCondition(PersonCondition condition)
     {
         targetPerson.currentCondition = condition;
