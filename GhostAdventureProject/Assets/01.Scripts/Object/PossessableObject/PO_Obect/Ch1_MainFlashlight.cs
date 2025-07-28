@@ -21,12 +21,18 @@ public class Ch1_MainFlashlight : BasePossessable
     private float timeRemaining;
     private bool timerActive = false;
     private bool timerExpired = false;
+    private bool noticeTimePopup = false;
 
     protected override void Update()
     {
         // 타이머 실행
         if (timerActive && !puzzleCompleted && !timerExpired)
         {
+            if(noticeTimePopup == false)
+            {   
+                UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 제한 시간: 60초");
+                noticeTimePopup = true;
+            }
             timeRemaining -= Time.deltaTime;
 
             if (timeRemaining <= 0f)

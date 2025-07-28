@@ -15,5 +15,11 @@ public class Ch1_MemoryFake_03_Baseball : MemoryFragment
         isScannable = false;
         alphabet_A.SetActive(true);
         ChapterEndingManager.Instance.CollectCh1Clue("A");
+
+    }
+    protected override void PlusAction()
+    {
+        UIManager.Instance.PromptUI.ShowPrompt("A");
+
     }
 }

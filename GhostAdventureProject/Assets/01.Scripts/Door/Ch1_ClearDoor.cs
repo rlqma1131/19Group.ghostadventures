@@ -57,6 +57,10 @@ public class Ch1_ClearDoor : BaseInteractable
         {
             canOpenDoor = true;
         }
+        if (TeddyBear.Completed_TeddyBear || testing)
+        {
+            UIManager.Instance.PromptUI.ShowPrompt_2("여기서 볼 일은 끝난거 같아 ", "이제 여기서 나가자");
+        }
     }
 
     protected override void OnTriggerExit2D(Collider2D collision)

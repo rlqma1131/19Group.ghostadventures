@@ -52,6 +52,7 @@ public class KeyBoard : MonoBehaviour, IUIClosable
     // 키보드UI 열기
     public void OpenKeyBoard()
     {
+        UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 수집한 단서로 이름을 입력하세요.");
         keyBoardPanel.SetActive(true); // 키보드UI 열기
         UIManager.Instance.PlayModeUI_CloseAll();
     }

@@ -38,8 +38,8 @@ public class Ch1_Sofa : HideArea
         }
     }
 
-    public override void CantPossess() 
-    { 
-        TutorialManager.Instance.Show(TutorialStep.HideArea_QTE);
-    }
+    // public override void CantPossess() 
+    // { 
+    //     TutorialManager.Instance.Show(TutorialStep.HideArea_QTE);
+    // }
 }

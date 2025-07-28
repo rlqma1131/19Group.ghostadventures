@@ -180,6 +180,7 @@ public class MemoryFragment : BaseInteractable
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
         Time.timeScale = 0;
         ApplyMemoryEffect(); // 메모리 효과 적용
+        PlusAction();
 
     }
 
@@ -200,19 +201,24 @@ public class MemoryFragment : BaseInteractable
         {
             case MemoryData.MemoryType.Positive:
 
+                UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 기억 조각을 수집했습니다.");
                 Debug.Log($"MemoryFragment: {data.memoryID} - 스캔 완료!"); // 디버그용 로그
                 //퍼즐 조건 해금
                 break;
 
             case MemoryData.MemoryType.Negative:
+                UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 기억 조각을 수집했습니다.");
                 //ApplyDebuff(); // 적 추적 활성화 등
                 break;
 
             case MemoryData.MemoryType.Fake:
+                UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 기억 조각을 수집했습니다. 그러나… 뭔가 이상합니다.");
+                UIManager.Instance.PromptUI.ShowPrompt("내 기억이 맞을까?");
                 //FakeEndingManager.Instance.CollectFakeMemory(data.memoryID);
                 break;
         }
     }
 
     public virtual void AfterScan(){}
+    protected virtual void PlusAction(){}
 }

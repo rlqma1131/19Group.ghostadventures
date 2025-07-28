@@ -79,7 +79,6 @@ public class TutorialManager : MonoBehaviour
                 break;
 
             case TutorialStep.HideArea_QTE:
-                prompt.ShowPrompt("숨을 수 있어");
                 break;
             case TutorialStep.Mouse_Possesse:
                 prompt.ShowPrompt("숨겨진 공간을 찾아볼까?");

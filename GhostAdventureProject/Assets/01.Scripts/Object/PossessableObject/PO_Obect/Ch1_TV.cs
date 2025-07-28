@@ -140,6 +140,8 @@ public class Ch1_TV : BasePossessable
         UI.SetActive(false);
         zoomCamera.Priority = 5;
         Unpossess();
+        UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 노란 빛을 띄는 오브젝트는 E키를 3초간 눌러 스캔할 수 있습니다.");
+
     }
 
     public override void OnPossessionEnterComplete() 

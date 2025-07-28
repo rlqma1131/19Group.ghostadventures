@@ -129,7 +129,7 @@ public class Ch1_Clock : BasePossessable
         base.OnTriggerEnter2D(collision);
         if(collision.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
         {
-            UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 파란 빛을 띄는 오브젝트는 \nE키로 빙의할 수 있습니다.");
+            UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 파란 빛을 띄는 오브젝트는 E키로 빙의할 수 있습니다.");
 
             if(PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
             {

@@ -98,7 +98,7 @@ public class MemoryScan : MonoBehaviour
             isScanning = true;
             scanTime = 0f;
 
-            UIManager.Instance.PromptUI.ShowPrompt($"스캔 진행 중...", 3f);
+            // UIManager.Instance.PromptUI.ShowPrompt($"스캔 진행 중...", 3f);
 
             scanPanel?.SetActive(true);
             if (scanCircleUI != null)

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 
 public class LockedDoor : BaseDoor
 {
@@ -6,6 +7,7 @@ public class LockedDoor : BaseDoor
     [SerializeField] private string puzzleId = ""; // 퍼즐 식별자 (예: "LivingRoom_Kitchen")
     [SerializeField] private AudioClip lockedSound;
     [SerializeField] private AudioClip unlockSound;
+    [SerializeField] private GameObject lockIcon;
 
     [Header("Pair Door System")]
     [SerializeField] private LockedDoor pairedDoor; // 페어 문 (양방향 연결)
@@ -30,7 +32,8 @@ public class LockedDoor : BaseDoor
     protected override void TryInteract()
     {
         if (isLocked)
-        {
+        {   
+            ShowLockIcon();
             Debug.Log("문이 잠겨있습니다!");
             PlaySound(lockedSound);
         }
@@ -38,6 +41,23 @@ public class LockedDoor : BaseDoor
         {
             TeleportPlayer();
         }
+    }
+
+    void ShowLockIcon()
+    {
+        lockIcon.SetActive(true);
+
+        SpriteRenderer sr = lockIcon.GetComponent<SpriteRenderer>();
+        sr.color = new Color(1, 1, 1, 0); // 알파 0부터 시작
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(sr.DOFade(1f, 0.2f));
+        seq.AppendInterval(1.5f);
+        seq.Append(sr.DOFade(0f, 0.5f));
+        seq.OnComplete(() =>
+        {
+            lockIcon.SetActive(false);
+        });
     }
 
     // 퍼즐 해결 시 호출하는 메서드

@@ -81,7 +81,7 @@ public class YameScan_correct : MonoBehaviour
             isScanning = true;
             scanTime = 0f;
 
-            UIManager.Instance.PromptUI.ShowPrompt($"스캔 진행 중...", 3f);
+            UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode($"스캔 시도 중...", 3f);
 
             scanPanel?.SetActive(true);
             if (scanCircleUI != null)

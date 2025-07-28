@@ -14,6 +14,7 @@ public class EnergyRestoreZone : MonoBehaviour
         {
             SoulEnergySystem.Instance.SetRestoreBoost(reduceInterval, SoulEnergySystem.Instance.baseRestoreAmount + bonusRestoreAmount);
             SoulEnergySystem.Instance.EnableHealingEffect();
+            UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 빛이 나는 곳 근처에서 에너지가 회복됩니다.");
         }
     }
 

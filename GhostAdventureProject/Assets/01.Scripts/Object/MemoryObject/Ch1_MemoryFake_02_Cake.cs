@@ -29,6 +29,11 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
         ChapterEndingManager.Instance.CollectCh1Clue("H");
     }
 
+    protected override void PlusAction()
+    {
+        UIManager.Instance.PromptUI.ShowPrompt("H");
+    }
+
     private void AfterScanEffect()
     {
         _particleSystem.Play();

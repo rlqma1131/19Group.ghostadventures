@@ -78,9 +78,10 @@ public class UIManager : Singleton<UIManager>
     // ===========================================================================================    
 
     // 커서 관리
-    [Header("Cursor Settings")]
+    [Header("커서 셋팅")]
     [SerializeField] private Texture2D defaultCursor; // 기본
     [SerializeField] private Texture2D findClueCursor; // 단서
+    [SerializeField] private Texture2D hideAreaCursor; // 은신처
     [SerializeField] private Vector2 hotspot = Vector2.zero;
 
     // -------------------------------------------------------------------------------------------
@@ -124,6 +125,12 @@ public class UIManager : Singleton<UIManager>
     {
         Cursor.SetCursor(findClueCursor, hotspot, CursorMode.Auto);
     }
+
+    public void HideAreaCursor()
+    {
+        Cursor.SetCursor(hideAreaCursor, hotspot, CursorMode.Auto);
+    }
+
 
     public void ClearCursor()
     {

@@ -20,6 +20,12 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     {
         isScannable = false;
         Completed_TeddyBear = true;
+        
+        
+    }
+    protected override void PlusAction()
+    {
+        UIManager.Instance.PromptUI.ShowPrompt_2("맞아 이건 내 기억이야", "여기서 볼 일은 끝난거 같아");    
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
