@@ -11,7 +11,6 @@ public class Ch3_VirusMemoClue : MonoBehaviour
 
     private bool isPlayerInside = false;
     private bool isZoomActive = false;
-    private bool zoomActivatedOnce = false;
 
     void Start()
     {
@@ -67,12 +66,6 @@ public class Ch3_VirusMemoClue : MonoBehaviour
             .OnComplete(() =>
             {
                 virusMemoZoom.SetActive(false);
-
-                if (!zoomActivatedOnce)
-                {
-                    Ch1_HideAreaEventManager.Instance.AddHideAreaComponent();
-                    zoomActivatedOnce = true;
-                }
 
                 if (isPlayerInside)
                     PlayerInteractSystem.Instance.AddInteractable(gameObject);
