@@ -91,6 +91,7 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
     [SerializeField] private GameObject memoryNodePrefab;
     [SerializeField] private Transform leftPageSlot;
     [SerializeField] private Transform rightPageSlot;
+    [SerializeField] private Sprite defaultPageSprite; // 기본 페이지 이미지
     [SerializeField] private Image pageTurnImage; // 페이지 넘김 효과 표시할 이미지
     [SerializeField] private Sprite[] pageTurnSprites; // 프레임 순서대로 넣기
     [SerializeField] private float frameInterval = 0.05f; // 프레임 간 간격
@@ -199,8 +200,13 @@ private IEnumerator PageTurnCoroutine(System.Action onComplete)
         yield return new WaitForSeconds(frameInterval);
     }
 
-    pageTurnImage.gameObject.SetActive(false);
+    // pageTurnImage.gameObject.SetActive(false);
     isFlipping = false;
     onComplete?.Invoke();
+    
+    pageTurnImage.sprite = defaultPageSprite;
+
+    onComplete?.Invoke();
+    isFlipping = false;
 }
 }
