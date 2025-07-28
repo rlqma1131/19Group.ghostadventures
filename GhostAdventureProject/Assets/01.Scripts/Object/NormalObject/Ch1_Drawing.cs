@@ -79,6 +79,7 @@ public class Ch1_Drawing : BaseInteractable
             });
         
         cluePickup.PickupClue();
+        UIManager.Instance.PromptUI.ShowPrompt("숨바꼭질? 순서가 중요해보이는데", 3f);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

@@ -12,11 +12,11 @@ public class CluePickup : MonoBehaviour
     {
         UIManager.Instance.FindClueCursor();
     }
-
     void OnMouseExit()
     {
         UIManager.Instance.SetDefaultCursor();
     }
+    
     public void PickupClue()
     {
         UIManager.Instance.Inventory_PlayerUI.AddClue(clueData);

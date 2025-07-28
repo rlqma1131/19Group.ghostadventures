@@ -214,5 +214,5 @@ public class MemoryFragment : BaseInteractable
         }
     }
 
-    public virtual void AfterScan() { }
+    public virtual void AfterScan(){}
 }

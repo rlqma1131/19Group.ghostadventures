@@ -87,11 +87,11 @@ public class Inventory_Player : MonoBehaviour
             int clueIndex = startIndex + i;
             if(clueIndex < collectedClues.Count)
             {
-                inventorySlots[i].Setup(collectedClues[clueIndex]); //5번째 단서까지만 보이게
+                inventorySlots[i].Setup(collectedClues[clueIndex]); //4번째 단서까지만 보이게
             }
             else 
             {
-                inventorySlots[i].Clear(); //6번째 단서는 보이지 않음
+                inventorySlots[i].Clear(); //5번째 단서는 보이지 않음
             }
             // currentPageText.text = currentPage.ToString(); //현재 페이지 표시 
         }

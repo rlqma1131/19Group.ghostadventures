@@ -31,8 +31,6 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
 
     private void AfterScanEffect()
     {
-
-    
         _particleSystem.Play();
         _light.enabled = true;
     }

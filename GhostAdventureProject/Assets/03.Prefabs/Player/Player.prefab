@@ -9845,8 +9845,8 @@ GameObject:
   - component: {fileID: 3444247556733081424}
   - component: {fileID: 7916852254376772303}
   - component: {fileID: 6162963130353290279}
+  - component: {fileID: 7144567970523974118}
   - component: {fileID: 7723984142430952372}
-  - component: {fileID: 1747712013939851594}
   - component: {fileID: 4870225034165183840}
   - component: {fileID: 6991356920413539432}
   - component: {fileID: 4379810804845301284}
@@ -10037,6 +10037,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   currentTarget: {fileID: 0}
+--- !u!114 &7144567970523974118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5891190039501185461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 665255385a7328043a541528f3494857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scanPanel: {fileID: 0}
+  currentTarget: {fileID: 0}
 --- !u!114 &7723984142430952372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10056,20 +10070,6 @@ MonoBehaviour:
   currentScanObject: {fileID: 0}
   currentMemoryFragment: {fileID: 0}
   scanSound: {fileID: 8300000, guid: 13226057857eba349bfc80c4ae07ad2d, type: 3}
---- !u!114 &1747712013939851594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5891190039501185461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 665255385a7328043a541528f3494857, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scanPanel: {fileID: 0}
-  currentTarget: {fileID: 0}
 --- !u!114 &4870225034165183840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10142,7 +10142,7 @@ MonoBehaviour:
   - {x: 0.32, y: -0.28, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 157854
+  m_InstanceId: 56818
   m_LocalBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0.32, y: 0.28, z: 0}
