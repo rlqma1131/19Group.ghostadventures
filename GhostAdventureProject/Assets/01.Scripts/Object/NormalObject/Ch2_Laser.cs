@@ -16,6 +16,7 @@ public class Ch2_Laser : MonoBehaviour
             timelineDirector.Play();
             SoulEnergySystem.Instance.Consume(1);
             PossessionSystem.Instance.CanMove = false;
+            GameManager.Instance.PlayerController.animator.SetBool("Move", false);
             GameManager.Instance.PlayerController.animator.Play("Hit");
 
             Transform playerTr = GameManager.Instance.Player.transform;
