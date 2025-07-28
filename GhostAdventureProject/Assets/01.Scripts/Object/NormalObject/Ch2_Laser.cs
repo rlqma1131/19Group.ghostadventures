@@ -8,6 +8,7 @@ public class Ch2_Laser : MonoBehaviour
     [SerializeField] private float knockbackDistance = 1.5f;
     [SerializeField] private float knockbackDuration = 0.5f;
     [SerializeField] private PlayableDirector timelineDirector;
+
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.CompareTag("Player"))
@@ -15,6 +16,7 @@ public class Ch2_Laser : MonoBehaviour
             timelineDirector.Play();
             SoulEnergySystem.Instance.Consume(1);
             PossessionSystem.Instance.CanMove = false;
+            GameManager.Instance.PlayerController.animator.Play("Hit");
 
             Transform playerTr = GameManager.Instance.Player.transform;
             Vector3 knockbackTarget = playerTr.position + Vector3.left * knockbackDistance;
