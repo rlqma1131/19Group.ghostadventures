@@ -80,7 +80,7 @@ public class Ch2_Radio : BasePossessable
         {
             triggerSound_Person.Play();
             hasTriggered_Person = true;
-            guard.SetCondition(PersonCondition.Tired);
+            guard.targetPerson.SetCondition(PersonCondition.Tired);
             Debug.Log(guard.conditionHandler);
             // AttractPerson();
         }

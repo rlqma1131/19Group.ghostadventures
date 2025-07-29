@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System.Linq;
 
 public class Ch3_LockerSelector : MonoBehaviour
 {
@@ -19,11 +20,14 @@ public class Ch3_LockerSelector : MonoBehaviour
     [SerializeField] private Cinemachine.CinemachineVirtualCamera rewardCam;
 
     [SerializeField] private float cameraReturnDelay = 2f;
+    
+    [SerializeField] private List<ClueData> requiredClues;
 
     public void OnCorrectBodySelected()
     {
         b1fDoor.SetActive(true);
         IsSolved = true;
+        ConsumeClue(requiredClues);
 
         var lockers = FindObjectsOfType<Ch3_Locker>();
         foreach (var locker in lockers)
@@ -110,8 +114,18 @@ public class Ch3_LockerSelector : MonoBehaviour
         }
     }
     
-    // public bool HasAllClues()
-    // {
-    //     // 단서 획득 여부 확인 로직
-    // }
+    public bool HasAllClues()
+    {
+        foreach (var clue in requiredClues)
+        {
+            if (!UIManager.Instance.Inventory_PlayerUI.collectedClues.Contains(clue))
+                return false;
+        }
+        return true;
+    }
+    
+    private void ConsumeClue(List<ClueData> clues)
+    {
+        UIManager.Instance.Inventory_PlayerUI.RemoveClue(clues.ToArray());
+    }
 }

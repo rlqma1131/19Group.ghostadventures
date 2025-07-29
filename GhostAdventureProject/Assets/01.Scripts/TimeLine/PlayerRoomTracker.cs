@@ -21,8 +21,9 @@ public class PlayerRoomTracker : MonoBehaviour
         if(other.tag == "Room")
         {
             RoomInfo room = other.GetComponent<RoomInfo>();
-            if (room != null)
+            if (room != null ||!room.isCount)
             {   
+                room.isCount = true; // 방에 들어갈 때마다 카운트할지 여부 설정
                 room.roomCount++;
                 Debug.Log($"Entered {room.roomName}, count: {room.roomCount}");
 

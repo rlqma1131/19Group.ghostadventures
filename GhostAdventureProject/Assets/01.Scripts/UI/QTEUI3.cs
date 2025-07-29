@@ -99,8 +99,8 @@ if (!isRunning) return;
 
     public void ShowQTEUI3()
     {
-        gameObject.SetActive(true);
         isRunning = true;
+        UIManager.Instance.QTE_UI_3.gameObject.SetActive(true);
         timer = 0f;
         currentAngle = 0f;
         clearedZoneIndices.Clear();
