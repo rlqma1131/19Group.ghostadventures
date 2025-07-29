@@ -21,6 +21,7 @@ public enum TutorialStep
     SecurityGuard_GoToRadio,
     SecurityGuard_AfterRest,
     SecurityGuard_InOffice,
+    BlackShadow
 
 }
 public class TutorialManager : Singleton<TutorialManager>
@@ -97,7 +98,9 @@ public class TutorialManager : Singleton<TutorialManager>
             case TutorialStep.SecurityGuard_InOffice:
                 prompt.ShowPrompt("관리실에 들어가버렸어. 다시 유도해야 해.");
                 break;
-
+            case TutorialStep.BlackShadow:
+                prompt.ShowPrompt_2("방금... 그림자가...?", "여기… 무언가가 떨어져 있어. 살펴보자.");
+                break;
 
 
             // case TutorialStep.HideGuide:

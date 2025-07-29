@@ -57,13 +57,12 @@ public class HideArea : BasePossessable
         base.Unpossess();
     }
 
-    // void OnMouseEnter()
-    // {
-    //     UIManager.Instance.HideAreaCursor();
-    // }
-    // void OnMouseExit() 
-    // {
-    //     UIManager.Instance.SetDefaultCursor();
-    // }
-
+    public void OnMouseEnter() 
+    {
+        UIManager.Instance.HideAreaCursor();
+    }
+    public void OnMouseExit()
+    {
+        UIManager.Instance.SetDefaultCursor();
+    }
 }

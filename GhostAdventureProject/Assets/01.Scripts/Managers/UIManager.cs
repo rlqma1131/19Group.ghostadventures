@@ -86,6 +86,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Texture2D hideAreaCursor; // 은신처
     [SerializeField] private Texture2D lockDoorCursor; // 잠긴문
     [SerializeField] private Texture2D openDoorCursor; // 열린문
+    private GameObject lastHovered;
     [SerializeField] private Vector2 hotspot = Vector2.zero;
 
     // -------------------------------------------------------------------------------------------
@@ -106,6 +107,28 @@ public class UIManager : Singleton<UIManager>
             PlayModeUI_CloseAll();
         }
     
+    }
+    private void Update() {
+
+    // if (Input.GetMouseButtonDown(0)) // 클릭 시 확인
+    // {
+    //     Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    //     RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
+
+    //     if (hit.collider != null)
+    //     {
+    //         Debug.Log("감지됨: " + hit.collider.gameObject.name);
+    //     }
+    //     else
+    //     {
+    //         Debug.Log("히트 안 됨!");
+    //     }
+    // }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        TryCloseTopUI();
+
+
     }
 
     public void TutorialUI_CloseAll()
@@ -136,6 +159,7 @@ public class UIManager : Singleton<UIManager>
     // 은신처 커서
     public void HideAreaCursor()
     {
+        Debug.Log("HideAreaCursor 호출됨!");
         Cursor.SetCursor(hideAreaCursor, hotspot, CursorMode.Auto);
     }
     public void LockDoorCursor()
@@ -218,12 +242,6 @@ public class UIManager : Singleton<UIManager>
         {
             qteEffectCanvas.SetActive(!qteEffectCanvas.activeSelf);
         }
-    }
-
-     private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-            TryCloseTopUI();
     }
 
     // 가장 위에 있는 UI를 닫음
