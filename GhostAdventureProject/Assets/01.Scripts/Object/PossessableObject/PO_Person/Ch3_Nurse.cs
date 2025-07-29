@@ -18,7 +18,7 @@ public class Ch3_Nurse : MoveBasePossessable
     [SerializeField] private float waitDuration = 3f;   // 각 지점 대기 시간
     [SerializeField] private float stateChangeInterval = 15f; // 상태 변경 주기
 
-    private Person person;
+    private PersonConditionUI condition;
     private PersonConditionHandler conditionHandler;
     private NurseState state = NurseState.Work;
     private int currentWorkIndex = 0;
@@ -30,7 +30,7 @@ public class Ch3_Nurse : MoveBasePossessable
     {
         base.Start();
         moveSpeed = 2f;
-        person.currentCondition = PersonCondition.Tired;
+        condition.currentCondition = PersonCondition.Tired;
         conditionHandler = new VitalConditionHandler();
     }
 
@@ -65,17 +65,17 @@ public class Ch3_Nurse : MoveBasePossessable
         switch (state)
         {
             case NurseState.Work:
-                person.currentCondition = PersonCondition.Tired;
+                condition.currentCondition = PersonCondition.Tired;
                 HandleWork();
                 break;
             case NurseState.Rest:
-                person.currentCondition = PersonCondition.Vital;
+                condition.currentCondition = PersonCondition.Vital;
                 HandleRest();
                 break;
         }
 
         // 컨디션 UI & QTE 업데이트
-        SetCondition(person.currentCondition);
+        SetCondition(condition.currentCondition);
     }
 
     private void HandleWork()
@@ -152,7 +152,7 @@ public class Ch3_Nurse : MoveBasePossessable
 
     public void SetCondition(PersonCondition condition)
     {
-        person.currentCondition = condition;
+        this.condition.currentCondition = condition;
         switch (condition)
         {
             case PersonCondition.Vital:
