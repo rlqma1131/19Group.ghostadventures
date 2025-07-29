@@ -44,7 +44,7 @@ public abstract class BasePossessable : BaseInteractable
 
     public virtual void Unpossess()
     {
-        UIManager.Instance.PromptUI.ShowPrompt("빙의 해제", 2f);
+        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("빙의 해제", 2f);
         isPossessed = false;
         PossessionStateManager.Instance.StartUnpossessTransition();
     }

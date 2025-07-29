@@ -22,7 +22,6 @@ public class HideArea : BasePossessable
             isHiding = false;
             Unpossess();
         }
-
     }
 
     public override void OnQTESuccess()
@@ -58,6 +57,13 @@ public class HideArea : BasePossessable
         base.Unpossess();
     }
 
-
+    // void OnMouseEnter()
+    // {
+    //     UIManager.Instance.HideAreaCursor();
+    // }
+    // void OnMouseExit() 
+    // {
+    //     UIManager.Instance.SetDefaultCursor();
+    // }
 
 }

@@ -165,5 +165,13 @@ public class LockedDoor : BaseDoor
                 openIcon.SetActive(false);
         }
     }
+    // void OnMouseEnter()
+    // {
+    //     UIManager.Instance.LockDoorCursor();
+    // }
+    // void OnMouseExit() 
+    // {
+    //     UIManager.Instance.OpenDoorCursor();    
+    // }
 
 }

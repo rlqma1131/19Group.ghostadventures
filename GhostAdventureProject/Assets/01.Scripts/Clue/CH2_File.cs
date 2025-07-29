@@ -47,7 +47,8 @@ public class CH2_File : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         ZoomCamera.Priority = 5;
-        UIManager.Instance.PromptUI.ShowPrompt("단서를 획득했습니다. 인벤토리를 확인하세요", 2f);
+        UIManager.Instance.PromptUI.ShowPrompt("이건 힌트 같은데...", 2f);
+        PuzzleStateManager.Instance.MarkPuzzleSolved("금고");
         yield return new WaitForSeconds(2f);
         uimanager.InventoryExpandViewerUI.OnClueHidden -= CloseViewer;
         Destroy(zoomSafeBox);

@@ -17,7 +17,10 @@ public enum TutorialStep
     Mouse_Possesse, // 쥐 빙의 후 안내
     LaundryRoom,
     EnergyRestoreZone, // 에너지회복존 안내
-    Cake_Prompt // 
+    Cake_Prompt, //
+    SecurityGuard_GoToRadio,
+    SecurityGuard_AfterRest,
+    SecurityGuard_InOffice,
 
 }
 public class TutorialManager : Singleton<TutorialManager>
@@ -84,6 +87,19 @@ public class TutorialManager : Singleton<TutorialManager>
             case TutorialStep.Cake_Prompt:
                 prompt.ShowPrompt_2("쥐는 어디로 갔을라나?", "아무튼 이제 케잌을 살펴보자");
                 break;
+            case TutorialStep.SecurityGuard_GoToRadio:
+                prompt.ShowPrompt("나왔다... 지금이 기회야");
+                notice.FadeInAndOut("※ 사람은 컨디션이 좋을수록 빙의가 어려워집니다.");
+                break;
+            case TutorialStep.SecurityGuard_AfterRest:
+                prompt.ShowPrompt("컨디션이 너무 좋아서 힘들겠어..");
+                break;
+            case TutorialStep.SecurityGuard_InOffice:
+                prompt.ShowPrompt("관리실에 들어가버렸어. 다시 유도해야 해.");
+                break;
+
+
+
             // case TutorialStep.HideGuide:
             //     ToastUI.Instance.Show("※ 특정 오브젝트 빙의는 쉽지 않을 수 있습니다.\n숨을 수 있어!", 3f);
             //     break;

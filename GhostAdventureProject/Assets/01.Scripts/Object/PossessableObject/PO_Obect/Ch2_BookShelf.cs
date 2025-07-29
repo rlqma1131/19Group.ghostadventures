@@ -37,7 +37,7 @@ public class Ch2_BookShelf : BasePossessable
         
         if (!promptShown && HasAllClues())
         {
-            UIManager.Instance.PromptUI.ShowPrompt("이 책들은 여기 없는데?", 2f);
+            UIManager.Instance.PromptUI.ShowPrompt_2("이 책들은 여기 없는데?", "책장을 잘 살펴보자");
             promptShown = true;
         }
         
