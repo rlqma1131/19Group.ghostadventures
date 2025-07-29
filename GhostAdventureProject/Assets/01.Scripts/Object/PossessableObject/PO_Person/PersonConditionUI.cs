@@ -11,10 +11,11 @@ public enum PersonCondition
     Unknown // 알 수 없음(빙의 불가)
 }
 
-public class Person : MonoBehaviour
+public class PersonConditionUI : MonoBehaviour
 {
     public PersonCondition currentCondition;
     private PersonCondition lastCondition;
+    public PersonConditionHandler conditionHandler;
     [SerializeField] private float yPos_UI = 2.5f; // UI의 y포지션 (오브젝트마다 알맞게 설정해주세요)
     public GameObject UI;
     public GameObject vitalUI; // 활력UI
@@ -24,12 +25,13 @@ public class Person : MonoBehaviour
     void Start()
     {   
         currentCondition = PersonCondition.Vital;
+        conditionHandler = new VitalConditionHandler();
         ShowConditionUI();
     }
     
     void Update()
     {
-        // UI는 컨디션이 바뀔때만 갱신
+        // UI컨디션이 갱신될 때만 표시
         if (currentCondition != lastCondition)
             {
                 ShowConditionUI();
@@ -39,9 +41,10 @@ public class Person : MonoBehaviour
         // UI 위치는 매 프레임 갱신 (움직이는 캐릭터)
         if (UI != null)
             UI.transform.position = transform.position + Vector3.up * yPos_UI;
-    }    
+    }
 
-    void ShowConditionUI()
+    // 컨디션 UI 보여주는 함수
+    public void ShowConditionUI()
     {
         vitalUI.SetActive(false);
         normalUI.SetActive(false);
@@ -59,6 +62,26 @@ public class Person : MonoBehaviour
         UI.transform.position = uiPos;
 
         UI.SetActive(true);
+    }
+
+    // 컨디션벌 QTE 달라지게 만드는 함수.
+    public void SetCondition(PersonCondition condition)
+    {
+        currentCondition = condition;
+        switch (condition)
+        {
+            case PersonCondition.Vital:
+                conditionHandler = new VitalConditionHandler();
+                break;
+            case PersonCondition.Normal:
+                conditionHandler = new NormalConditionHandler();
+                break;
+            case PersonCondition.Tired:
+                conditionHandler = new TiredConditionHandler();
+                break;
+        }
+        QTESettings qteSettings = conditionHandler.GetQTESettings();
+        UIManager.Instance.QTE_UI_3.ApplySettings(qteSettings);
     }
 }
 
