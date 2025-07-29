@@ -24,18 +24,17 @@ public class Ch1_Sofa : HideArea
         TutorialManager.Instance.Show(TutorialStep.HideArea_Interact);
     }
     
-    protected override void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D collision)
     {
-        base.OnTriggerEnter2D(other);
-        if(!PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
+        if(collision.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
         {
             hasActivated = false;
-        }
 
-        if(PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
+        }
+        if(collision.CompareTag("Player")  && PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
         {
             hasActivated = true;
         }
-    }
 
+    }
 }

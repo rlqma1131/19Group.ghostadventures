@@ -20,10 +20,8 @@ public enum TutorialStep
     Cake_Prompt // 
 
 }
-public class TutorialManager : MonoBehaviour
+public class TutorialManager : Singleton<TutorialManager>
 {
-    public static TutorialManager Instance;
-
     private HashSet<TutorialStep> completedSteps = new HashSet<TutorialStep>(); // 완료된 튜토리얼
     private Action OnAction;
     private UIManager uimanager;
@@ -33,13 +31,6 @@ public class TutorialManager : MonoBehaviour
 
     // Ch1 Tutorial
     [SerializeField] private Ch1_CelebrityBox celebrityBox;
-
-    
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
 
     private void Start()
     {
