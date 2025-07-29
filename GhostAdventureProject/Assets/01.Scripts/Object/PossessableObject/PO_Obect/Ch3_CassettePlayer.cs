@@ -5,14 +5,38 @@ using UnityEngine;
 public class Ch3_CassettePlayer : BasePossessable
 {
     [Header("소리 목록")]
+    [SerializeField] private AudioClip buttonPush;
     [SerializeField] private AudioClip talkingSound; // 대화 소리
     [SerializeField] private AudioClip glitchSound; // 퍼즐 해결 후 소리
+
+    [Header("오디오 퍼즐 셋팅")]
+    [SerializeField] private float minCutoff = 300f;
+    [SerializeField] private float maxCutoff = 5000f;
+    [SerializeField] private float minPitch = 0.5f;
+    [SerializeField] private float maxPitch = 2f;
 
     private bool isPlaying = false; // 재생 여부
     private bool isSolved = false; // 문제 해결 여부
 
     private float answerValue; // 정답 주파수 조정값
     private float answerSpeed; // 정답 재생 속도
+
+    private AudioLowPassFilter lowPassFilter;
+    private AudioSource audioSource;
+    private float cutoffFrequency = 500f; // 초기값
+    private float playbackSpeed = 1f;     // 초기 재생속도 (pitch)
+
+    protected override void Start()
+    {
+        base.Start();
+
+        audioSource = SoundManager.Instance.GetComponent<AudioSource>();
+
+        lowPassFilter = audioSource.GetComponent<AudioLowPassFilter>();
+
+        lowPassFilter.cutoffFrequency = cutoffFrequency;
+        audioSource.pitch = playbackSpeed;
+    }
 
     protected override void Update()
     {
@@ -26,6 +50,8 @@ public class Ch3_CassettePlayer : BasePossessable
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
+            SoundManager.Instance.PlaySFX(buttonPush);
+
             if (isSolved)
             {
                 // 퍼즐 해결 후
@@ -35,57 +61,77 @@ public class Ch3_CassettePlayer : BasePossessable
             else
             {
                 // 퍼즐 해결 전
-                PlayTalkingSound();
+                if (!isPlaying)
+                {
+                    PlayTalkingSound();
+                }
+                else
+                {
+                    StopTalkingSound();
+                }
             }
         }
 
         if (!isPlaying)
             return;
 
+        // 재생 중 일때만
         if (Input.GetKeyDown(KeyCode.A))
         {
-            //cutoffFrequency 증가
+            cutoffFrequency += 200f;
+            cutoffFrequency = Mathf.Clamp(cutoffFrequency, minCutoff, maxCutoff);
+            lowPassFilter.cutoffFrequency = cutoffFrequency;
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            //cutoffFrequency 감소
+            cutoffFrequency -= 200f;
+            cutoffFrequency = Mathf.Clamp(cutoffFrequency, minCutoff, maxCutoff);
+            lowPassFilter.cutoffFrequency = cutoffFrequency;
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            // 재생 속도 증가
+            playbackSpeed += 0.1f;
+            playbackSpeed = Mathf.Clamp(playbackSpeed, minPitch, maxPitch);
+            audioSource.pitch = playbackSpeed;
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            // 재생 속도 감소
+            playbackSpeed -= 0.1f;
+            playbackSpeed = Mathf.Clamp(playbackSpeed, minPitch, maxPitch);
+            audioSource.pitch = playbackSpeed;
         }
 
         CheckSolved();
     }
 
-    void PlayTalkingSound() // 토글
+    void PlayTalkingSound()
     {
         isPlaying = true;
         SoundManager.Instance.ChangeBGM(talkingSound);
+    }
 
-        // 혹은 SoundManager.Instance.StopBGM();
-        // isPlaying = false;
+    void StopTalkingSound()
+    {
+        isPlaying = false;
+        SoundManager.Instance.StopBGM();
     }
 
     void CheckSolved()
     {
-        //if(cutoffFrequency == answerValue && 재생 속도 == answerSpeed)
-        //{ 
-        //    hasActivated = false; // 빙의 불가
+        if (Mathf.Abs(cutoffFrequency - answerValue) < 50f && Mathf.Abs(playbackSpeed - answerSpeed) < 0.05f)
+        {
+            hasActivated = false;
+            isPlaying = false;
+            isSolved = true;
 
-        //    isPlaying = false; // 재생 중지
-        //    isSolved = true;
-        //    SoundManager.Instance.StopBGM();
-        //    SoundManager.Instance.PlaySFX(talkingSound);
+            SoundManager.Instance.StopBGM();
+            SoundManager.Instance.PlaySFX(talkingSound);
 
-        //    // 재생 끝나면
-        //    SoundManager.Instance.ChangeBGM(glitchSound);
-        //    // 종이 
-        //}
+            // 재생 끝났다고 가정하고 다음 처리
+            //SoundManager.Instance.ChangeBGM(glitchSound);
+            //화면에 단서 출력
+            //UIManager.Instance.PromptUI.ShowPrompt("카세트테이프 단서", 5f);
+        }
     }
 }
 

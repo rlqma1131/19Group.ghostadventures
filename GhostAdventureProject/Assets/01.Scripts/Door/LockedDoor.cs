@@ -122,12 +122,10 @@ public class LockedDoor : BaseDoor
 
     private void PlaySound(AudioClip clip)
     {
-      
-
         if (audioSource != null && clip != null)
         {
          
-            audioSource.PlayOneShot(clip);
+            SoundManager.Instance.PlaySFX(clip);
         }
         
     }
