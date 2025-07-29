@@ -23,6 +23,13 @@ public class Ch3_Locker : BasePossessable
 
     protected override void Update()
     {
+        if (isOpened || lockerSelector.IsPenaltyActive)
+        {
+            hasActivated = false;
+            q_Key.SetActive(false);
+            return;
+        }
+        
         hasActivated = lockerSelector.HasAllClues();
         
         if (!hasActivated)
@@ -73,6 +80,8 @@ public class Ch3_Locker : BasePossessable
 
         openObj.SetActive(true);
         hasActivated = false;
+        
+        lockerSelector.RegisterOpenedLocker(this);
 
         if (isCorrectBody)
         {
@@ -105,6 +114,17 @@ public class Ch3_Locker : BasePossessable
 
     public override void CantPossess()
     {
-        UIManager.Instance.PromptUI.ShowPrompt("단서가 더 필요해",2f);
+        if (isOpened) return;
+
+        // 단서가 부족할 때만 메시지
+        if (!lockerSelector.HasAllClues())
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("단서가 더 필요해", 2f);
+        }
+        
+        if (lockerSelector.IsSolved)
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("정말 끔찍해...", 2f);
+        }
     }
 }
