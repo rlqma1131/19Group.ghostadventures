@@ -30,8 +30,8 @@ public class Ch3_Nurse : MoveBasePossessable
     {
         base.Start();
         moveSpeed = 2f;
-        condition.currentCondition = PersonCondition.Tired;
         conditionHandler = new VitalConditionHandler();
+        condition = GetComponent<PersonConditionUI>();
     }
 
     protected override void Update()
