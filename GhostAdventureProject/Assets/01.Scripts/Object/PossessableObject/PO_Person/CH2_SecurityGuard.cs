@@ -79,6 +79,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 if (restTimer >= restDuration)
                 {
                     targetPerson.currentCondition = PersonCondition.Vital;
+                    TutorialManager.Instance.Show(TutorialStep.SecurityGuard_AfterRest);
                     state = GuardState.MovingToOffice;
                 }
                 break;
@@ -188,6 +189,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         {
             if(!isPossessed)
             {
+                TutorialManager.Instance.Show(TutorialStep.SecurityGuard_InOffice);
                 Vector3 targetPos = transform.position;
                 targetPos.x = OfficeDoor_Inside.position.x;
                 transform.position = targetPos;
@@ -220,6 +222,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         else
         {
             MoveTo(Radio.position);
+            TutorialManager.Instance.Show(TutorialStep.SecurityGuard_GoToRadio);
         }
     }
     
