@@ -73,19 +73,19 @@ public class Ch3_CassettePlayer : BasePossessable
 
     void CheckSolved()
     {
-        if(cutoffFrequency == answerValue && 재생 속도 == answerSpeed)
-        { 
-            hasActivated = false; // 빙의 불가
+        //if(cutoffFrequency == answerValue && 재생 속도 == answerSpeed)
+        //{ 
+        //    hasActivated = false; // 빙의 불가
 
-            isPlaying = false; // 재생 중지
-            isSolved = true;
-            SoundManager.Instance.StopBGM();
-            SoundManager.Instance.PlaySFX(talkingSound);
+        //    isPlaying = false; // 재생 중지
+        //    isSolved = true;
+        //    SoundManager.Instance.StopBGM();
+        //    SoundManager.Instance.PlaySFX(talkingSound);
 
-            // 재생 끝나면
-            SoundManager.Instance.ChangeBGM(glitchSound);
-            // 종이 
-        }
+        //    // 재생 끝나면
+        //    SoundManager.Instance.ChangeBGM(glitchSound);
+        //    // 종이 
+        //}
     }
 }
 
