@@ -84,6 +84,8 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Texture2D defaultCursor; // 기본
     [SerializeField] private Texture2D findClueCursor; // 단서
     [SerializeField] private Texture2D hideAreaCursor; // 은신처
+    [SerializeField] private Texture2D lockDoorCursor; // 잠긴문
+    [SerializeField] private Texture2D openDoorCursor; // 열린문
     [SerializeField] private Vector2 hotspot = Vector2.zero;
 
     // -------------------------------------------------------------------------------------------
@@ -116,24 +118,34 @@ public class UIManager : Singleton<UIManager>
         TutorialUI.SetActive(true);
     }
 
+
+    public void SetCursor(Texture2D cursor)
+    {
+        Cursor.SetCursor(cursor, hotspot, CursorMode.Auto);
+    }
     // 기본 커서
     public void SetDefaultCursor()
     {
         Cursor.SetCursor(defaultCursor, hotspot, CursorMode.Auto);
     }
-
     // 단서 커서
     public void FindClueCursor()
     {
         Cursor.SetCursor(findClueCursor, hotspot, CursorMode.Auto);
     }
-
     // 은신처 커서
     public void HideAreaCursor()
     {
         Cursor.SetCursor(hideAreaCursor, hotspot, CursorMode.Auto);
     }
-
+    public void LockDoorCursor()
+    {
+        Cursor.SetCursor(lockDoorCursor, hotspot, CursorMode.Auto);
+    }
+    public void OpenDoorCursor()
+    {
+        Cursor.SetCursor(openDoorCursor, hotspot, CursorMode.Auto);
+    }
 
     public void ClearCursor()
     {
