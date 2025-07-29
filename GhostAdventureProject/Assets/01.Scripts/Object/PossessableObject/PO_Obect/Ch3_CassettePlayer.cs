@@ -1,18 +1,18 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Ch3_CassettePlayer : BasePossessable
 {
-    [Header("¼Ò¸® ¸ñ·Ï")]
-    [SerializeField] private AudioClip talkingSound; // ´ëÈ­ ¼Ò¸®
-    [SerializeField] private AudioClip glitchSound; // ÆÛÁñ ÇØ°á ÈÄ ¼Ò¸®
+    [Header("ì†Œë¦¬ ëª©ë¡")]
+    [SerializeField] private AudioClip talkingSound; // ëŒ€í™” ì†Œë¦¬
+    [SerializeField] private AudioClip glitchSound; // í¼ì¦ í•´ê²° í›„ ì†Œë¦¬
 
-    private bool isPlaying = false; // Àç»ı ¿©ºÎ
-    private bool isSolved = false; // ¹®Á¦ ÇØ°á ¿©ºÎ
+    private bool isPlaying = false; // ì¬ìƒ ì—¬ë¶€
+    private bool isSolved = false; // ë¬¸ì œ í•´ê²° ì—¬ë¶€
 
-    private float answerValue; // Á¤´ä ÁÖÆÄ¼ö Á¶Á¤°ª
-    private float answerSpeed; // Á¤´ä Àç»ı ¼Óµµ
+    private float answerValue; // ì •ë‹µ ì£¼íŒŒìˆ˜ ì¡°ì •ê°’
+    private float answerSpeed; // ì •ë‹µ ì¬ìƒ ì†ë„
 
     protected override void Update()
     {
@@ -22,19 +22,19 @@ public class Ch3_CassettePlayer : BasePossessable
         if (Input.GetKeyDown(KeyCode.E))
         {
             Unpossess();
-            //SoundManager.Instance.ChangeBGM(Ã©ÅÍ3BGM);
+            //SoundManager.Instance.ChangeBGM(ì±•í„°3BGM);
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
             if (isSolved)
             {
-                // ÆÛÁñ ÇØ°á ÈÄ
+                // í¼ì¦ í•´ê²° í›„
                 SoundManager.Instance.StopBGM();
                 SoundManager.Instance.ChangeBGM(glitchSound);
             }
             else
             {
-                // ÆÛÁñ ÇØ°á Àü
+                // í¼ì¦ í•´ê²° ì „
                 PlayTalkingSound();
             }
         }
@@ -44,47 +44,47 @@ public class Ch3_CassettePlayer : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            //cutoffFrequency Áõ°¡
+            //cutoffFrequency ì¦ê°€
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            //cutoffFrequency °¨¼Ò
+            //cutoffFrequency ê°ì†Œ
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            // Àç»ı ¼Óµµ Áõ°¡
+            // ì¬ìƒ ì†ë„ ì¦ê°€
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            // Àç»ı ¼Óµµ °¨¼Ò
+            // ì¬ìƒ ì†ë„ ê°ì†Œ
         }
 
         CheckSolved();
     }
 
-    void PlayTalkingSound() // Åä±Û
+    void PlayTalkingSound() // í† ê¸€
     {
         isPlaying = true;
         SoundManager.Instance.ChangeBGM(talkingSound);
 
-        // È¤Àº SoundManager.Instance.StopBGM();
+        // í˜¹ì€ SoundManager.Instance.StopBGM();
         // isPlaying = false;
     }
 
     void CheckSolved()
     {
-        if(cutoffFrequency == answerValue && Àç»ı ¼Óµµ == answerSpeed)
+        if(cutoffFrequency == answerValue && ì¬ìƒ ì†ë„ == answerSpeed)
         { 
-            hasActivated = false; // ºùÀÇ ºÒ°¡
+            hasActivated = false; // ë¹™ì˜ ë¶ˆê°€
 
-            isPlaying = false; // Àç»ı ÁßÁö
+            isPlaying = false; // ì¬ìƒ ì¤‘ì§€
             isSolved = true;
             SoundManager.Instance.StopBGM();
             SoundManager.Instance.PlaySFX(talkingSound);
 
-            // Àç»ı ³¡³ª¸é
+            // ì¬ìƒ ëë‚˜ë©´
             SoundManager.Instance.ChangeBGM(glitchSound);
-            // Á¾ÀÌ 
+            // ì¢…ì´ 
         }
     }
 }
