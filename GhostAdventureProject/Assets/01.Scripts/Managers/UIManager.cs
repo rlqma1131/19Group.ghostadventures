@@ -128,6 +128,7 @@ public class UIManager : Singleton<UIManager>
         Cursor.SetCursor(findClueCursor, hotspot, CursorMode.Auto);
     }
 
+    // 은신처 커서
     public void HideAreaCursor()
     {
         Cursor.SetCursor(hideAreaCursor, hotspot, CursorMode.Auto);

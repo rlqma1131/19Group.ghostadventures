@@ -19,7 +19,8 @@ public class Ch1_Clock : BasePossessable
 
     protected override void Start()
     {
-        base.Start();
+        isPossessed = false;
+        hasActivated = false;
 
         // 확대UI 초기화
         //zoomPanel = GameObject.Find("ZoomPanel").GetComponent<Image>();
@@ -30,7 +31,7 @@ public class Ch1_Clock : BasePossessable
 
         // UI 초기화
         clockZoom.SetActive(false);
-        UI.SetActive(false); 
+        UI.SetActive(false);
 
         // 시곗바늘 위치 초기화
         UpdateHands();
@@ -38,8 +39,10 @@ public class Ch1_Clock : BasePossessable
 
     protected override void Update()
     {
+        if (!PuzzleStateManager.Instance.IsPuzzleSolved("편지")) return;
+        if (!PuzzleStateManager.Instance.IsPuzzleSolved("시계")) hasActivated = true;
         if (!isPossessed) return;
-
+        
         UI.SetActive(true); 
         // UIManager.Instance.Show_A_Key(hourHand.transform.position);
         // UIManager.Instance.Show_D_Key(minuteHand.transform.position);
@@ -127,13 +130,15 @@ public class Ch1_Clock : BasePossessable
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
-        if(collision.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
+        if(!PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
         {
-            UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 파란 빛을 띄는 오브젝트는 E키로 빙의할 수 있습니다.");
-
-            if(PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
+            if(PuzzleStateManager.Instance.IsPuzzleSolved("편지"))
             {
                 UIManager.Instance.PromptUI.ShowPrompt("시간을 떠올릴만한 숫자를 본 거 같은데");
+                if(hasActivated)
+                {
+                    UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 파란 빛을 띄는 오브젝트는 E키로 빙의할 수 있습니다.");
+                }
             }
             else
             {

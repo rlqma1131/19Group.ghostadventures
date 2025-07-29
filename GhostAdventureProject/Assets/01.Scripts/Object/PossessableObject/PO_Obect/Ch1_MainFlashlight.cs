@@ -21,18 +21,12 @@ public class Ch1_MainFlashlight : BasePossessable
     private float timeRemaining;
     private bool timerActive = false;
     private bool timerExpired = false;
-    private bool noticeTimePopup = false;
 
     protected override void Update()
     {
         // 타이머 실행
         if (timerActive && !puzzleCompleted && !timerExpired)
         {
-            if(noticeTimePopup == false)
-            {   
-                UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 제한 시간: 60초");
-                noticeTimePopup = true;
-            }
             timeRemaining -= Time.deltaTime;
 
             if (timeRemaining <= 0f)
@@ -41,11 +35,12 @@ public class Ch1_MainFlashlight : BasePossessable
                 timerExpired = true;
                 timerActive = false;
 
-                UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 제한 시간이 종료되었습니다.");
+                // UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 제한 시간이 종료되었습니다.");
 
                 if (isControlMode)
                 {
                     isControlMode = false;
+                    // UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 제한 시간: 60초");
                     UIManager.Instance.PlayModeUI_CloseAll();
                     zoomCamera.Priority = 20;
                 }
