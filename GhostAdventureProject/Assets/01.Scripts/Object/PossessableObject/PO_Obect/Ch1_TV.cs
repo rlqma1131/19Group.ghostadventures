@@ -14,7 +14,7 @@ public class Ch1_TV : BasePossessable
     [SerializeField] private LockedDoor Door;
     [SerializeField] private GameObject spaceBar;
     [SerializeField] private GameObject UI;
-
+    [SerializeField] private AudioClip glitchSound;
     private Ch1_MemoryFake_01_BirthdayHat birthdayHat;
 
     private Collider2D col;
@@ -62,6 +62,8 @@ public class Ch1_TV : BasePossessable
                 isControlMode = false;
                 isPossessed = false;
                 UIManager.Instance.PlayModeUI_OpenAll();
+                //SoundManager.Instance.ChangeBGM(1챕터BGM);
+
                 spaceBar.SetActive(false);
                 UI.SetActive(false);
 
@@ -135,7 +137,9 @@ public class Ch1_TV : BasePossessable
         // 4. 빙의 해제
         isPossessed = false;
         isControlMode = false;
+
         UIManager.Instance.PlayModeUI_OpenAll();
+        //SoundManager.Instance.ChangeBGM(1챕터BGM);
         spaceBar.SetActive(false);
         UI.SetActive(false);
         zoomCamera.Priority = 5;
@@ -152,6 +156,7 @@ public class Ch1_TV : BasePossessable
         isPossessed = true;
         channelTxt.text = "01"; // 초기 채널 표시
         UpdateChannelDisplay();
+        SoundManager.Instance.ChangeBGM(glitchSound);
         UIManager.Instance.PromptUI.ShowPrompt("힌트를 살펴보자", 2.5f);
     }
 
