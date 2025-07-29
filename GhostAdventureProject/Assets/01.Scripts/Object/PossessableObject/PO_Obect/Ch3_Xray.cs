@@ -64,7 +64,7 @@ public class Ch3_Xray : BasePossessable
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
-            SoundManager.Instance.PlaySFX(scan);
+            SoundManager.Instance.PlaySFX(scan, 1f);
             Scan();
         }
     }

@@ -81,11 +81,10 @@ public class Ch3_CassettePlayer : BasePossessable
             isSolved = true;
             SoundManager.Instance.StopBGM();
             SoundManager.Instance.PlaySFX(talkingSound);
-            //화면에 정답 타이핑 효과
 
             // 재생 끝나면
             SoundManager.Instance.ChangeBGM(glitchSound);
-            UIManager.Instance.PromptUI.ShowPrompt("카세트테이프 단서", 5f);
+            // 종이 
         }
     }
 }
