@@ -5,28 +5,23 @@ using DG.Tweening;
 using System;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+
+// 튜토리얼은 1회만 작동됩니다. 
 public enum TutorialStep
 {
-    LivingRoomIntro_Start,
-    ShowControlKey_And_HighLightBithdayBox,
-    Q_key_Interact,
-    HideArea_Interact,
-    HideArea_QTE,
-    Mouse_Possesse,
+    LivingRoomIntro_Start, // CH1 씬 시작시 대화
+    ShowControlKey_And_HighLightBithdayBox, // 조직키 보여주고 깜짝상자에 행동강제
+    Q_key_Interact, // Q_key 빙의후행동 안내
+    HideArea_Interact, // 은신처 상호작용 안내
+    HideArea_QTE, // 은신처 QTE 안내
+    Mouse_Possesse, // 쥐 빙의 후 안내
     LaundryRoom,
-    FirstClue,
-    ScanGuide,
-    HideGuide,
-    FakeMemory,
-    HealingLamp,
-    WarehouseHint,
-    InputName,
-    TrueMemory
-}
-public class TutorialManager : MonoBehaviour
-{
-    public static TutorialManager Instance;
+    EnergyRestoreZone, // 에너지회복존 안내
+    Cake_Prompt // 
 
+}
+public class TutorialManager : Singleton<TutorialManager>
+{
     private HashSet<TutorialStep> completedSteps = new HashSet<TutorialStep>(); // 완료된 튜토리얼
     private Action OnAction;
     private UIManager uimanager;
@@ -36,13 +31,6 @@ public class TutorialManager : MonoBehaviour
 
     // Ch1 Tutorial
     [SerializeField] private Ch1_CelebrityBox celebrityBox;
-
-    
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
 
     private void Start()
     {
@@ -87,6 +75,14 @@ public class TutorialManager : MonoBehaviour
             case TutorialStep.LaundryRoom:
                 prompt.ShowPrompt("…여긴… 잠깐, 문이… 닫혔어?");
                 notice.FadeInAndOut("※ 제한 시간 내에 퍼즐을 해결하지 못하면 나갈 수 없습니다.");
+                break;
+
+            case TutorialStep.EnergyRestoreZone:
+                notice.FadeInAndOut("※ 빛이 나는 곳 근처에서 에너지가 회복됩니다.");
+                break;
+
+            case TutorialStep.Cake_Prompt:
+                prompt.ShowPrompt_2("쥐는 어디로 갔을라나?", "아무튼 이제 케잌을 살펴보자");
                 break;
             // case TutorialStep.HideGuide:
             //     ToastUI.Instance.Show("※ 특정 오브젝트 빙의는 쉽지 않을 수 있습니다.\n숨을 수 있어!", 3f);
