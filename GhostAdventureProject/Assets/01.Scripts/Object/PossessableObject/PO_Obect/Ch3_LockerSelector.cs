@@ -22,6 +22,8 @@ public class Ch3_LockerSelector : MonoBehaviour
     [SerializeField] private float cameraReturnDelay = 2f;
     
     [SerializeField] private List<ClueData> requiredClues;
+    private List<Ch3_Locker> openedLockers = new List<Ch3_Locker>();
+    public bool IsPenaltyActive { get; private set; } = false;
 
     public void OnCorrectBodySelected()
     {
@@ -88,30 +90,35 @@ public class Ch3_LockerSelector : MonoBehaviour
             spriteRenderer.DOFade(1f, dropDuration);
         }
     }
-
+    
     public void OnWrongBodySelected()
     {
         if (RemainingOpens <= 0)
         {
             // 실패 처리
-            Debug.Log("패널티 발생");
             StartCoroutine(ResetLockersAfterPenalty());
         }
     }
 
     private IEnumerator ResetLockersAfterPenalty()
     {
-        // 패널티 연출 (사신 등장, 알람, 이펙트 등)
-        yield return new WaitForSeconds(3f);
-
-        RemainingOpens = 2; // 기회 리셋
+        IsPenaltyActive = true;
 
         var lockers = FindObjectsOfType<Ch3_Locker>();
         foreach (var locker in lockers)
+            locker.SetActivateState(false);
+
+        yield return new WaitForSeconds(5f);
+
+        foreach (var locker in openedLockers)
         {
-            locker.SetActivateState(true);
-            locker.TryClose(); // 혹시 열린 문 닫기
+            locker.TryClose();
+            locker.SetActivateState(HasAllClues());
         }
+
+        openedLockers.Clear();
+        RemainingOpens = 2;
+        IsPenaltyActive = false;
     }
     
     public bool HasAllClues()
@@ -127,5 +134,11 @@ public class Ch3_LockerSelector : MonoBehaviour
     private void ConsumeClue(List<ClueData> clues)
     {
         UIManager.Instance.Inventory_PlayerUI.RemoveClue(clues.ToArray());
+    }
+
+    public void RegisterOpenedLocker(Ch3_Locker locker)
+    {
+        if (!openedLockers.Contains(locker))
+            openedLockers.Add(locker);
     }
 }
