@@ -8,7 +8,7 @@ public class Ch1_CelebrityBox : BasePossessable
     [SerializeField] private GameObject birthdayLetter;
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject q_Key;
-    
+
 
     protected override void Update()
     {
