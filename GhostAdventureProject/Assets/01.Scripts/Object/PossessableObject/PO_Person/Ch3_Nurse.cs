@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 enum NurseState
 {
@@ -33,7 +31,6 @@ public class Ch3_Nurse : MoveBasePossessable
     protected override void Start()
     {
         base.Start();
-        moveSpeed = 2f;
         conditionHandler = new VitalConditionHandler();
         condition = GetComponent<PersonConditionUI>();
     }
@@ -90,7 +87,6 @@ public class Ch3_Nurse : MoveBasePossessable
                 // 다음 일하는 지점으로 이동
                 condition.currentCondition = PersonCondition.Normal;
 
-                Debug.Log($"간호사 이동 중: {currentWorkIndex}");
                 isWaiting = false;
                 hasWorked = false;
                 currentWorkIndex = (currentWorkIndex + 1) % workPositions.Length;
@@ -100,7 +96,6 @@ public class Ch3_Nurse : MoveBasePossessable
                 // 일하기
                 condition.currentCondition = PersonCondition.Tired;
 
-                Debug.Log($"간호사 대기 중: {waitTimer}");
                 SetMoveAnimation(false);
                 if (!hasWorked)
                 {
@@ -184,6 +179,7 @@ public class Ch3_Nurse : MoveBasePossessable
                 conditionHandler = new TiredConditionHandler();
                 break;
         }
+
         QTESettings qteSettings = conditionHandler.GetQTESettings();
         UIManager.Instance.QTE_UI_3.ApplySettings(qteSettings);
     }
