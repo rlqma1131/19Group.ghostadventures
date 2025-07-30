@@ -11,6 +11,7 @@ public class HideArea : BasePossessable
 
     private Coroutine consumeCoroutine;
     protected bool isHiding = false;
+    private bool firstHiding = false;
 
     protected override void Update()
     {
@@ -19,9 +20,14 @@ public class HideArea : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            if(firstHiding == false)
+            {
+                UIManager.Instance.NoticePopupUI.FadeInAndOut("※특정 오브젝트 빙의는 쉽지않을 수 있습니다.");
+            }
             isHiding = false;
             Unpossess();
         }
+
     }
 
     public override void OnQTESuccess()
@@ -30,6 +36,11 @@ public class HideArea : BasePossessable
 
         // 은신 효과음 (바스락)
         //SoundManager.Instance.PlaySFX(hideAreaEnterSFX);
+        if(firstHiding == false)
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("숨을 수 있어");
+            firstHiding = true;
+        }
 
         isHiding = true;
 
@@ -57,12 +68,6 @@ public class HideArea : BasePossessable
         base.Unpossess();
     }
 
-    public void OnMouseEnter() 
-    {
-        UIManager.Instance.HideAreaCursor();
-    }
-    public void OnMouseExit()
-    {
-        UIManager.Instance.SetDefaultCursor();
-    }
+
+
 }

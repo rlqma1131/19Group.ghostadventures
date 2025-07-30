@@ -8,7 +8,7 @@ public class Ch1_CelebrityBox : BasePossessable
     [SerializeField] private GameObject birthdayLetter;
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject q_Key;
-
+    
 
     protected override void Update()
     {
@@ -67,15 +67,14 @@ public class Ch1_CelebrityBox : BasePossessable
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        if (!hasActivated)
-            return;
-
-        if (other.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
+        base.OnTriggerEnter2D(other);
+        if(!PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
         {
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
             UIManager.Instance.TutorialUI_CloseAll();
             UIManager.Instance.PromptUI.ShowPrompt("…상자? 왜 여기에 이런 게…");
             UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 파란 빛을 띄는 오브젝트는 E키로 빙의할 수 있습니다.");
+            // UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 반응하는 오브젝트에 가까이 가면 [E키]로 상호작용할 수 있습니다");
         }
     }
+
 }

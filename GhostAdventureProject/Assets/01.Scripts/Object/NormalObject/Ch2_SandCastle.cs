@@ -10,7 +10,7 @@ public class Ch2_SandCastle : BaseInteractable
     [SerializeField] GameObject SandCastle_crumble; // 무너진 모래성
     [SerializeField] GameObject q_key;
     [SerializeField] Ch2_Raven raven; // 까마귀
-    public bool crumbleAble = false; // 모래성을 무너뜨릴 수 있는 범위에 있는지 확인
+    private bool crumbleAble = false; // 모래성을 무너뜨릴 수 있는 범위에 있는지 확인
     private bool crumbled = false; // 모래성을 무너뜨렸는지 확인
 
 
@@ -38,7 +38,6 @@ public class Ch2_SandCastle : BaseInteractable
                 q_key.SetActive(false);
                 cluepickup.PickupClue();
                 crumbled = true;
-                UIManager.Instance.PromptUI.ShowPrompt("무너뜨릴까?");
             }
 
         }

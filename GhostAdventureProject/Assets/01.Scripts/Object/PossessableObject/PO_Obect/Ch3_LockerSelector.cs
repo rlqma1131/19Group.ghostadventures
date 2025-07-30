@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using System.Linq;
 
 public class Ch3_LockerSelector : MonoBehaviour
 {
@@ -20,16 +19,11 @@ public class Ch3_LockerSelector : MonoBehaviour
     [SerializeField] private Cinemachine.CinemachineVirtualCamera rewardCam;
 
     [SerializeField] private float cameraReturnDelay = 2f;
-    
-    [SerializeField] private List<ClueData> requiredClues;
-    private List<Ch3_Locker> openedLockers = new List<Ch3_Locker>();
-    public bool IsPenaltyActive { get; private set; } = false;
 
     public void OnCorrectBodySelected()
     {
         b1fDoor.SetActive(true);
         IsSolved = true;
-        ConsumeClue(requiredClues);
 
         var lockers = FindObjectsOfType<Ch3_Locker>();
         foreach (var locker in lockers)
@@ -90,55 +84,34 @@ public class Ch3_LockerSelector : MonoBehaviour
             spriteRenderer.DOFade(1f, dropDuration);
         }
     }
-    
+
     public void OnWrongBodySelected()
     {
         if (RemainingOpens <= 0)
         {
             // 실패 처리
+            Debug.Log("패널티 발생");
             StartCoroutine(ResetLockersAfterPenalty());
         }
     }
 
     private IEnumerator ResetLockersAfterPenalty()
     {
-        IsPenaltyActive = true;
+        // 패널티 연출 (사신 등장, 알람, 이펙트 등)
+        yield return new WaitForSeconds(3f);
+
+        RemainingOpens = 2; // 기회 리셋
 
         var lockers = FindObjectsOfType<Ch3_Locker>();
         foreach (var locker in lockers)
-            locker.SetActivateState(false);
-
-        yield return new WaitForSeconds(5f);
-
-        foreach (var locker in openedLockers)
         {
-            locker.TryClose();
-            locker.SetActivateState(HasAllClues());
+            locker.SetActivateState(true);
+            locker.TryClose(); // 혹시 열린 문 닫기
         }
-
-        openedLockers.Clear();
-        RemainingOpens = 2;
-        IsPenaltyActive = false;
     }
     
-    public bool HasAllClues()
-    {
-        foreach (var clue in requiredClues)
-        {
-            if (!UIManager.Instance.Inventory_PlayerUI.collectedClues.Contains(clue))
-                return false;
-        }
-        return true;
-    }
-    
-    private void ConsumeClue(List<ClueData> clues)
-    {
-        UIManager.Instance.Inventory_PlayerUI.RemoveClue(clues.ToArray());
-    }
-
-    public void RegisterOpenedLocker(Ch3_Locker locker)
-    {
-        if (!openedLockers.Contains(locker))
-            openedLockers.Add(locker);
-    }
+    // public bool HasAllClues()
+    // {
+    //     // 단서 획득 여부 확인 로직
+    // }
 }

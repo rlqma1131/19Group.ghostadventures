@@ -29,8 +29,6 @@ public class Ch2_BookShelf : BasePossessable
 
     protected override void Update()
     {
-        CheckCollectedAllClue();
-        
         if (!isPossessed || !hasActivated)
         {
             //q_Key.SetActive(false);
@@ -39,7 +37,7 @@ public class Ch2_BookShelf : BasePossessable
         
         if (!promptShown && HasAllClues())
         {
-            UIManager.Instance.PromptUI.ShowPrompt_2("이 책들은 여기 없는데?", "책장을 잘 살펴보자");
+            UIManager.Instance.PromptUI.ShowPrompt("이 책들은 여기 없는데?", 2f);
             promptShown = true;
         }
         
@@ -180,17 +178,5 @@ public class Ch2_BookShelf : BasePossessable
                 return false;
         }
         return true;
-    }
-
-    private void CheckCollectedAllClue()
-    {
-        if(
-        PuzzleStateManager.Instance.IsPuzzleSolved("“닫힌 문... 잃어버린 무언가... 계속 이어지는 느낌이야.”") &&
-        PuzzleStateManager.Instance.IsPuzzleSolved("“혹시 나도 잃어버린 존재...?”") &&
-        PuzzleStateManager.Instance.IsPuzzleSolved("책 제목같아... 무슨의미일까?") &&
-        PuzzleStateManager.Instance.IsPuzzleSolved("메모3"))
-        {
-            TutorialManager.Instance.Show(TutorialStep.CollectedAllMemoClue);
-        }
     }
 }

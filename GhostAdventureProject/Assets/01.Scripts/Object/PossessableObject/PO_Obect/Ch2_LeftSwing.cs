@@ -75,7 +75,7 @@ public class Ch2_LeftSwing : BasePossessable
                 targetComputer.Activate();
             
             Unpossess();
-            UIManager.Instance.PromptUI.ShowPrompt_Random("이 그네가…발전기…?", "어디선가... 전원이 켜지는 소리가 났어");
+            UIManager.Instance.PromptUI.ShowPrompt("이 그네가…발전기…?",2f);
             isQTESequenceRunning = false;
             hasActivated = false;
         }

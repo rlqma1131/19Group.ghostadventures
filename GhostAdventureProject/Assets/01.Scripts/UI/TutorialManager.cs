@@ -5,28 +5,28 @@ using DG.Tweening;
 using System;
 using UnityEngine.UI;
 using System.Threading.Tasks;
-
-// 튜토리얼은 1회만 작동됩니다. 
 public enum TutorialStep
 {
-    LivingRoomIntro_Start, // CH1 씬 시작시 대화
-    ShowControlKey_And_HighLightBithdayBox, // 조직키 보여주고 깜짝상자에 행동강제
-    Q_key_Interact, // Q_key 빙의후행동 안내
-    HideArea_Interact, // 은신처 상호작용 안내
-    HideArea_QTE, // 은신처 QTE 안내
-    Mouse_Possesse, // 쥐 빙의 후 안내
+    LivingRoomIntro_Start,
+    ShowControlKey_And_HighLightBithdayBox,
+    Q_key_Interact,
+    HideArea_Interact,
+    HideArea_QTE,
+    Mouse_Possesse,
     LaundryRoom,
-    EnergyRestoreZone, // 에너지회복존 안내
-    Cake_Prompt, //
-    SecurityGuard_GoToRadio,
-    SecurityGuard_AfterRest,
-    SecurityGuard_InOffice,
-    BlackShadow,
-    CollectedAllMemoClue
-
+    FirstClue,
+    ScanGuide,
+    HideGuide,
+    FakeMemory,
+    HealingLamp,
+    WarehouseHint,
+    InputName,
+    TrueMemory
 }
-public class TutorialManager : Singleton<TutorialManager>
+public class TutorialManager : MonoBehaviour
 {
+    public static TutorialManager Instance;
+
     private HashSet<TutorialStep> completedSteps = new HashSet<TutorialStep>(); // 완료된 튜토리얼
     private Action OnAction;
     private UIManager uimanager;
@@ -36,6 +36,13 @@ public class TutorialManager : Singleton<TutorialManager>
 
     // Ch1 Tutorial
     [SerializeField] private Ch1_CelebrityBox celebrityBox;
+
+    
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
 
     private void Start()
     {
@@ -81,32 +88,6 @@ public class TutorialManager : Singleton<TutorialManager>
                 prompt.ShowPrompt("…여긴… 잠깐, 문이… 닫혔어?");
                 notice.FadeInAndOut("※ 제한 시간 내에 퍼즐을 해결하지 못하면 나갈 수 없습니다.");
                 break;
-
-            case TutorialStep.EnergyRestoreZone:
-                notice.FadeInAndOut("※ 빛이 나는 곳 근처에서 에너지가 회복됩니다.");
-                break;
-
-            case TutorialStep.Cake_Prompt:
-                prompt.ShowPrompt_2("쥐는 어디로 갔을라나?", "아무튼 이제 케잌을 살펴보자");
-                break;
-            case TutorialStep.SecurityGuard_GoToRadio:
-                prompt.ShowPrompt("나왔다... 지금이 기회야");
-                notice.FadeInAndOut("※ 사람은 컨디션이 좋을수록 빙의가 어려워집니다.");
-                break;
-            case TutorialStep.SecurityGuard_AfterRest:
-                prompt.ShowPrompt("컨디션이 너무 좋아서 힘들겠어..");
-                break;
-            case TutorialStep.SecurityGuard_InOffice:
-                prompt.ShowPrompt("관리실에 들어가버렸어. 다시 유도해야 해.");
-                break;
-            case TutorialStep.BlackShadow:
-                prompt.ShowPrompt_2("방금... 그림자가...?", "여기… 무언가가 떨어져 있어. 살펴보자.");
-                break;
-            case TutorialStep.CollectedAllMemoClue:
-                CollectedAllMemoClue();
-                break;
-
-
             // case TutorialStep.HideGuide:
             //     ToastUI.Instance.Show("※ 특정 오브젝트 빙의는 쉽지 않을 수 있습니다.\n숨을 수 있어!", 3f);
             //     break;
@@ -125,12 +106,6 @@ public class TutorialManager : Singleton<TutorialManager>
         notice.FadeInAndOut("※ 목표: 이 집 안에 흩어진 기억 조각을 찾아 수집하세요.");
         await Task.Delay(3000);
         WaitTimeAfterShowTutorial(0f, TutorialStep.ShowControlKey_And_HighLightBithdayBox);
-    }
-
-    public async void CollectedAllMemoClue()
-    {
-        await Task.Delay(2000);
-        prompt.ShowPrompt("이 제목들, 뭔가 의미가 있어... \n책장을 찾으면 알 수 있을까.");
     }
     
 

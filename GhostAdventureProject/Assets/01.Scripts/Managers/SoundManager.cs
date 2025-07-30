@@ -108,7 +108,6 @@ public class SoundManager : Singleton<SoundManager>
     //}
 
     // BGM 전환 (자동 페이드)
-
     public void ChangeBGM(AudioClip newClip, float fadeDuration = 1f, float targetVolume = 0.8f)
     {
         if (bgmFadeCoroutine != null)
@@ -132,7 +131,6 @@ public class SoundManager : Singleton<SoundManager>
 
         bgmSource.Stop();
         bgmSource.clip = newClip;
-        bgmSource.loop = true;
         bgmSource.Play();
 
         // 페이드 인

@@ -21,7 +21,8 @@ public class MoveScene : MonoBehaviour
 
     private void Awake()
     {
-        skip.fillAmount = 1f;
+        if (skip != null)
+            skip.fillAmount = 1f;
     }
     private void Start()
     {
@@ -37,7 +38,8 @@ public class MoveScene : MonoBehaviour
 
             isHolding = true;
             skipTimer += Time.unscaledDeltaTime;
-            skip.fillAmount = 1.0f - (skipTimer / SKIP_DURATION);
+            if (skip != null)
+                skip.fillAmount = 1.0f - (skipTimer / SKIP_DURATION);
 
             if (skipTimer >= SKIP_DURATION)
             {
@@ -85,12 +87,13 @@ public class MoveScene : MonoBehaviour
     {
         while (!isHolding)
         {
-            space1.enabled = true;
-            space2.enabled = false;
+            if (space1 != null) space1.enabled = true;
+            if (space2 != null) space2.enabled = false;
+
             yield return new WaitForSeconds(0.7f);
 
-            space1.enabled = false;
-            space2.enabled = true;
+            if (space1 != null) space1.enabled = false;
+            if (space2 != null) space2.enabled = true;
             yield return new WaitForSeconds(0.7f);
         }
     }
@@ -100,7 +103,7 @@ public class MoveScene : MonoBehaviour
         if (flashingCoroutine != null)
             StopCoroutine(flashingCoroutine);
 
-        space1.enabled = false;
-        space2.enabled = true;
+        if (space1 != null) space1.enabled = false;
+        if (space2 != null) space2.enabled = true;
     }
 }

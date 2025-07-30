@@ -198,6 +198,10 @@ public class EnemyAI : MonoBehaviour
         {
             movement.SetTarget(Player.position);
             movement.MoveToTarget(movement.chaseSpeed);
+
+            // null 체크 추가
+            if (Ch1_HideAreaEventManager.Instance != null)
+                Ch1_HideAreaEventManager.Instance.RemoveHideAreaComponent();
         }
     }
 
@@ -333,6 +337,7 @@ public class EnemyAI : MonoBehaviour
             yield return null;
         }
 
+        Ch1_HideAreaEventManager.Instance?.AddHideAreaComponent();
         ChangeState(AIState.LostTarget);
     }
 

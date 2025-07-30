@@ -26,21 +26,23 @@ public class PixelExploder : MonoBehaviour
 
     private List<GameObject> pixelPieces = new List<GameObject>();
     private Transform playerTransform;
-
+    [Header("Rigidbody Settings")]
+    public float rigidbodyMass = 0.05f;
+    public float rigidbodyDrag = 0.3f;
     void Awake()
     {
         
         DOTween.SetTweensCapacity(500, 125);
     }
 
-    // 테스트용 Update 함수
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        Explode();
-    //    }
-    //}
+    //// 테스트용 Update 함수
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            RadialFallExplosion();
+        }
+    }
 
 
     public void Explode()
@@ -159,4 +161,134 @@ public class PixelExploder : MonoBehaviour
 
         sr.enabled = false;
     }
+
+    public void RadialFallExplosion()
+    {
+        if (pixelParticleShader == null)
+        {
+            Debug.LogError("Pixel Particle Shader 없음 Inspector에서 할당해주세요.");
+            return;
+        }
+
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr == null || sr.sprite == null)
+        {
+            Debug.LogError("SpriteRenderer 또는 Sprite가 없습니다.");
+            return;
+        }
+
+        Sprite sprite = sr.sprite;
+        Rect spriteRect = sprite.rect;
+        Vector2 pivotOffset = sprite.pivot / sprite.pixelsPerUnit;
+
+        Texture2D tex = sprite.texture;
+        if (!tex.isReadable)
+        {
+            Debug.LogError("Sprite 텍스처의 Read/Write Enable을 켜주세요.");
+            return;
+        }
+
+        // 파란 색상 (원하는 색으로 변경 가능)
+        Color baseColor = new Color32(0x2D, 0x72, 0xBF, 255);
+        Color emissionColor = baseColor.linear;
+        float luminance = emissionColor.r * 0.2126f + emissionColor.g * 0.7152f + emissionColor.b * 0.0722f;
+        float correction = ColorValue / Mathf.Max(luminance, 0.001f);
+        emissionColor *= correction;
+
+        // 투명하지 않은 픽셀 위치 수집
+        List<Vector2Int> validPixels = new List<Vector2Int>();
+        for (int x = 0; x < spriteRect.width; x++)
+        {
+            for (int y = 0; y < spriteRect.height; y++)
+            {
+                int texX = (int)(spriteRect.x + x);
+                int texY = (int)(spriteRect.y + y);
+                Color color = tex.GetPixel(texX, texY);
+                if (color.a > 0.1f)
+                {
+                    validPixels.Add(new Vector2Int(x, y));
+                }
+            }
+        }
+
+        if (validPixels.Count == 0)
+        {
+            Debug.LogWarning("유효한 픽셀이 없습니다.");
+            return;
+        }
+
+        // 한 픽셀당 몇 개 파편 생성할지
+        int fragmentsPerPixel = 10;
+
+        // 최대 생성 파편 개수 (원하는 만큼 조절)
+        int maxFragments = 50;
+
+        int totalFragments = Mathf.Min(maxFragments, validPixels.Count * fragmentsPerPixel);
+
+        for (int i = 0; i < totalFragments; i++)
+        {
+            // 픽셀 인덱스 선택 (모듈로 연산으로 반복 선택)
+            Vector2Int pos = validPixels[i / fragmentsPerPixel];
+
+            // 파편 위치에 작은 랜덤 오프셋 추가 (0.01f 단위 조절 가능)
+            Vector3 offset = new Vector3(
+                Random.Range(-0.02f, 0.02f),
+                Random.Range(-0.02f, 0.02f),
+                0f);
+
+            Vector3 localPos = new Vector3(pos.x, pos.y, 0f) / sprite.pixelsPerUnit - (Vector3)pivotOffset + offset;
+            Vector3 worldPos = transform.position + transform.TransformDirection(localPos);
+
+            GameObject pixelObj = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            Destroy(pixelObj.GetComponent<Collider>()); // 기본 콜라이더 제거
+            pixelObj.AddComponent<BoxCollider>();      // 3D 리지드바디용 콜라이더 추가
+
+            float randomSize = Random.Range(minPixelSize, maxPixelSize);
+            pixelObj.transform.localScale = Vector3.one * randomSize;
+
+            pixelObj.transform.position = worldPos;
+            pixelObj.transform.rotation = transform.rotation;
+
+            Material mat = new Material(pixelParticleShader);
+            var renderer = pixelObj.GetComponent<MeshRenderer>();
+            renderer.material = mat;
+            renderer.sortingLayerName = "Front";
+            renderer.sortingOrder = sr.sortingOrder;
+
+            mat.SetColor("_BaseColor", baseColor);
+            mat.SetColor("_EmissionColor", emissionColor);
+            mat.EnableKeyword("_EMISSION");
+
+            pixelPieces.Add(pixelObj);
+
+            // Rigidbody (3D) 추가
+            var rb = pixelObj.AddComponent<Rigidbody>();
+            rb.mass = rigidbodyMass;
+            rb.drag = rigidbodyDrag;
+            rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
+
+            Vector3 randomDir = Random.onUnitSphere.normalized;
+            float force = Random.Range(15f, 30f);
+            rb.AddForce(randomDir * force);
+            rb.AddTorque(Random.onUnitSphere * Random.Range(-30f, 30f));
+
+            // 사라짐 연출
+            var fadeSeq = DOTween.Sequence();
+            fadeSeq.AppendInterval(delayBeforeAbsorb + 1.0f);
+            fadeSeq.Append(mat.DOColor(new Color(baseColor.r, baseColor.g, baseColor.b, 0), "_BaseColor", 3f));
+            fadeSeq.Join(mat.DOColor(new Color(emissionColor.r, emissionColor.g, emissionColor.b, 0), "_EmissionColor", 3f));
+            fadeSeq.OnComplete(() =>
+            {
+                fadeSeq.Kill();
+                Destroy(pixelObj);
+            });
+        }
+
+        sr.enabled = false;
+    }
+
+
+
+
 }

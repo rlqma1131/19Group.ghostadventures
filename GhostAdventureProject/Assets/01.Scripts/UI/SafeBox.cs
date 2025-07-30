@@ -34,12 +34,12 @@ public class SafeBox : BaseInteractable
                 
                 if(inventory == null)
                 {
-                    UIManager.Instance.PromptUI.ShowPrompt("잠겨있어. 열쇠가 필요해");
+                    UIManager.Instance.PromptUI.ShowPrompt("금고를 열 수 없습니다", 1.5f);
                     return;
                 }
                 if(needItem == inventory.selectedItem() && needItem != null && safeBoxOpenAble)
                 {
-                    // UIManager.Instance.PromptUI.ShowPrompt("금고를 열었습니다.", 1.5f);
+                    UIManager.Instance.PromptUI.ShowPrompt("금고를 열었습니다.", 1.5f);
                     StartCoroutine(OpenSafeBox());
                     return;
                 }

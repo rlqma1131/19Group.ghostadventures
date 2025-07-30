@@ -53,6 +53,7 @@ MonoBehaviour:
   hasActivated: 0
   possessionSFX: {fileID: 0}
   isPossessed: 0
+  q_Key: {fileID: 28425975719173344}
   kioskPanel: {fileID: 0}
   hintNoteObject: {fileID: 0}
   hiddenDoorObject: {fileID: 0}
@@ -85,7 +86,6 @@ MonoBehaviour:
   confirmButton: {fileID: 0}
   resetButton: {fileID: 0}
   inputTextUI: {fileID: 0}
-  safeBox: {fileID: 0}
 --- !u!61 &6960086293045520559
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8f6d3c6e4250e84192f5b34ce9e71bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  glowColor: {r: 0.02745098, g: 0.30980393, b: 1, a: 1}
+  glowColor: {r: 0.34901962, g: 0.5372549, b: 1, a: 1}
   glowBrightness: 2
   outlineWidth: 1
   alphaThreshold: 0.01
@@ -549,6 +549,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18c9eed3608b245e79caec5c3d2609c4, type: 3}
+--- !u!1 &28425975719173344 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5572799781116765957, guid: 18c9eed3608b245e79caec5c3d2609c4, type: 3}
+  m_PrefabInstance: {fileID: 5562634494515903461}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7715616899817694921 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2747497215987948844, guid: 18c9eed3608b245e79caec5c3d2609c4, type: 3}

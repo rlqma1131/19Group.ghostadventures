@@ -6,12 +6,6 @@ using UnityEngine;
 
 public class Ch1_Sofa : HideArea
 {
-    protected override void Start()
-    {
-        isPossessed = false;
-        hasActivated = false;
-    }
-
     protected override void Update()
     {
         if (!isPossessed)
@@ -30,18 +24,22 @@ public class Ch1_Sofa : HideArea
         TutorialManager.Instance.Show(TutorialStep.HideArea_Interact);
     }
     
-    protected override void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
-        base.OnTriggerEnter2D(collision);
-        if(collision.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
+        base.OnTriggerEnter2D(other);
+        if(!PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
         {
             hasActivated = false;
-
         }
-        if(collision.CompareTag("Player")  && PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
+
+        if(PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
         {
             hasActivated = true;
         }
-
     }
+
+    // public override void CantPossess() 
+    // { 
+    //     TutorialManager.Instance.Show(TutorialStep.HideArea_QTE);
+    // }
 }

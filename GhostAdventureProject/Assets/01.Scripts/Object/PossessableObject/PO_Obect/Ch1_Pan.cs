@@ -75,7 +75,7 @@ public class Ch1_Pan : BasePossessable
     protected override void OnTriggerEnter2D(Collider2D collision)
     {   
         base.OnTriggerEnter2D(collision);
-        if(collision.CompareTag("Player"))
+        if(collision.CompareTag("Person") && hasActivated)
         {
             UIManager.Instance.PromptUI.ShowPrompt_2("후라이팬이네", "떨어뜨려 볼까?");
         }
