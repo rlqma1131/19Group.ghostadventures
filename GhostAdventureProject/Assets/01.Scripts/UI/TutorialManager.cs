@@ -21,7 +21,8 @@ public enum TutorialStep
     SecurityGuard_GoToRadio,
     SecurityGuard_AfterRest,
     SecurityGuard_InOffice,
-    BlackShadow
+    BlackShadow,
+    CollectedAllMemoClue
 
 }
 public class TutorialManager : Singleton<TutorialManager>
@@ -101,6 +102,9 @@ public class TutorialManager : Singleton<TutorialManager>
             case TutorialStep.BlackShadow:
                 prompt.ShowPrompt_2("방금... 그림자가...?", "여기… 무언가가 떨어져 있어. 살펴보자.");
                 break;
+            case TutorialStep.CollectedAllMemoClue:
+                CollectedAllMemoClue();
+                break;
 
 
             // case TutorialStep.HideGuide:
@@ -121,6 +125,12 @@ public class TutorialManager : Singleton<TutorialManager>
         notice.FadeInAndOut("※ 목표: 이 집 안에 흩어진 기억 조각을 찾아 수집하세요.");
         await Task.Delay(3000);
         WaitTimeAfterShowTutorial(0f, TutorialStep.ShowControlKey_And_HighLightBithdayBox);
+    }
+
+    public async void CollectedAllMemoClue()
+    {
+        await Task.Delay(2000);
+        prompt.ShowPrompt("이 제목들, 뭔가 의미가 있어... \n책장을 찾으면 알 수 있을까.");
     }
     
 
