@@ -13,7 +13,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // 일반 버튼 선택할 경우  나머지 키설정 버튼은 Setactivefalse
     
     //=======================
-
+    public static ESCMenu Instance {get; private set;}
     [SerializeField] private GameObject escMenuUI; // ESCMenu Canvas
     // [SerializeField] private SoundMenu soundMenu;
     [SerializeField] private GameObject general;
@@ -33,7 +33,16 @@ public class ESCMenu : MonoBehaviour, IUIClosable
 
     private bool isPaused = false;
     
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
 
+        // 기본 키 설정 (Clue1~5)
+        for (int i = 0; i < 5; i++)
+        {
+            clueKeyBindings[i] = KeyCode.Alpha1 + i;
+        }
+    }    
     void Start()
     {
         escMenuUI.SetActive(false);
@@ -191,16 +200,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
 
     public Dictionary<int, KeyCode> clueKeyBindings = new Dictionary<int, KeyCode>();
 
-    private void Awake()
-    {
-        // if (Instance == null) Instance = this;
 
-        // 기본 키 설정 (Clue1~5)
-        for (int i = 0; i < 5; i++)
-        {
-            clueKeyBindings[i] = KeyCode.Alpha1 + i;
-        }
-    }
 
     public void SetKey(int clueIndex, KeyCode key)
     {

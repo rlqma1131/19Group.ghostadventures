@@ -14,13 +14,13 @@ public class KeyBindButton : MonoBehaviour
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(OnClick);
-        UpdateKeyText();
+        // UpdateKeyText();
     }
 
     void OnClick()
     {
         isWaitingForKey = true;
-        keyText.text = "Press key...";
+        keyText.text = "PressKey";
     }
 
     private void Update()
