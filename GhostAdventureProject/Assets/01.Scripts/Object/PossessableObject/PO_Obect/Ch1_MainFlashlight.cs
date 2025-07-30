@@ -21,18 +21,12 @@ public class Ch1_MainFlashlight : BasePossessable
     private float timeRemaining;
     private bool timerActive = false;
     private bool timerExpired = false;
-    private bool noticeTimePopup = false;
 
     protected override void Update()
     {
         // 타이머 실행
         if (timerActive && !puzzleCompleted && !timerExpired)
         {
-            if(noticeTimePopup == false)
-            {   
-                UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 제한 시간: 60초");
-                noticeTimePopup = true;
-            }
             timeRemaining -= Time.deltaTime;
 
             if (timeRemaining <= 0f)
@@ -102,28 +96,28 @@ public class Ch1_MainFlashlight : BasePossessable
         }
     }
 
-    public override void OnQTESuccess()
-    {
-        base.OnQTESuccess();
+    // public override void OnQTESuccess()
+    // {
+    //     base.OnQTESuccess();
 
-        // 퍼즐이 성공했거나 실패하지 않았으면 기존 흐름 유지
-        if (puzzleCompleted)
-            return;
+    //     // 퍼즐이 성공했거나 실패하지 않았으면 기존 흐름 유지
+    //     if (puzzleCompleted)
+    //         return;
 
-        // 실패 이후 재빙의 가능하게 만들기
-        if (!timerActive)
-        {
-            // 타이머 상태 초기화
-            timeRemaining = timeLimit;
-            timerActive = true;
-            timerExpired = false;
+    //     // 실패 이후 재빙의 가능하게 만들기
+    //     if (!timerActive)
+    //     {
+    //         // 타이머 상태 초기화
+    //         timeRemaining = timeLimit;
+    //         timerActive = true;
+    //         timerExpired = false;
 
-            if (timerPanel != null)
-                timerPanel.SetActive(true);
+    //         if (timerPanel != null)
+    //             timerPanel.SetActive(true);
 
-            UpdateTimerText();
-        }
-    }
+    //         UpdateTimerText();
+    //     }
+    // }
 
     private void UpdateTimerText()
     {
@@ -177,6 +171,7 @@ public class Ch1_MainFlashlight : BasePossessable
                 Unpossess();
 
                 Door.SolvePuzzle();
+                UIManager.Instance.NoticePopupUI.FadeInAndOut("퍼즐을 해결했습니다. 출구가 열렸습니다.");
                 UIManager.Instance.PromptUI.ShowPrompt("N", 3f);
             }
         }
@@ -188,5 +183,24 @@ public class Ch1_MainFlashlight : BasePossessable
         isControlMode = true;
         UIManager.Instance.PlayModeUI_CloseAll();
         zoomCamera.Priority = 20;
+        
+        // 퍼즐이 성공했거나 실패하지 않았으면 기존 흐름 유지
+        if (puzzleCompleted)
+            return;
+
+        // 실패 이후 재빙의 가능하게 만들기
+        if (!timerActive)
+        {
+            UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 제한 시간: 60초");
+            // 타이머 상태 초기화
+            timeRemaining = timeLimit;
+            timerActive = true;
+            timerExpired = false;
+
+            if (timerPanel != null)
+                timerPanel.SetActive(true);
+
+            UpdateTimerText();
+        }
     }
 }

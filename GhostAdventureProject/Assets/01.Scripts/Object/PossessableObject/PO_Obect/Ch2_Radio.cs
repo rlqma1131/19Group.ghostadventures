@@ -80,7 +80,7 @@ public class Ch2_Radio : BasePossessable
         {
             triggerSound_Person.Play();
             hasTriggered_Person = true;
-            guard.SetCondition(PersonCondition.Tired);
+            guard.targetPerson.SetCondition(PersonCondition.Tired);
             Debug.Log(guard.conditionHandler);
             // AttractPerson();
         }
@@ -99,6 +99,8 @@ public class Ch2_Radio : BasePossessable
             SoundTriggerer.TriggerSound(guard.transform.position);
             Debug.Log(guard.conditionHandler);
             // AttractPerson();
+            UIManager.Instance.PromptUI.ShowPrompt("음악이 나왔어. 누군가 반응할지도 몰라.");
+            
         }
         // needle의 위치가 트리거 위치에 멀어지면 사운드 중지.
         if (hasTriggered_Enemy && Mathf.Abs(needle.transform.localPosition.x - triggerX_Enemy) >= 0.01f)

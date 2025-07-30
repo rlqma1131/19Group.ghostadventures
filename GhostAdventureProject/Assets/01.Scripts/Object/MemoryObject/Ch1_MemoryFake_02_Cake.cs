@@ -26,6 +26,7 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
         anim.SetTrigger("Show");
         Invoke(nameof(AfterScanEffect), 8f); // 애니메이션 재생 후 효과 실행
         isScannable = false;
+        highlight.SetActive(false); // 하이라이트 비활성화
         ChapterEndingManager.Instance.CollectCh1Clue("H");
     }
 
@@ -49,7 +50,7 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
         }
         else if(other.CompareTag("Player") && PuzzleStateManager.Instance.IsPuzzleSolved("후라이팬"))
         {
-            UIManager.Instance.PromptUI.ShowPrompt_2("쥐는 어디로 갔을라나?", "아무튼 이제 케잌을 살펴보자");
+            TutorialManager.Instance.Show(TutorialStep.Cake_Prompt);
         } 
     }
 }

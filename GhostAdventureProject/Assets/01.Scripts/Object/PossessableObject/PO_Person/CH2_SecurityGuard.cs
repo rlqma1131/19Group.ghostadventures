@@ -24,24 +24,15 @@ public class CH2_SecurityGuard : MoveBasePossessable
     private float roadingTimer = 0f;
     private float roadingDuration = 5f; // 로딩시간
 
-    public Person targetPerson;
+    public PersonConditionUI targetPerson;
     public PersonConditionHandler conditionHandler;
     [SerializeField] private GameObject q_Key;
     private bool isNearDoor = false;
     private bool isInOffice;// 경비실 안에 있는지 확인
     private bool oneTimeShowClue = false; // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만)
     public bool isdoorLockOpen;
-    private GameObject player;
-    
-    
     public bool doorPass = false;
 
-
-    // 빙의되지 않았을 때 -> 라디오소리가 들리면 라디오를 따라감
-    // 빙의가 풀렸을 때 -> 라디오 소리가 들려도 confused 상태가 됨
-
-
-    
     // 처음 시작시 빙의불가(경비실안에 있음)
     protected override void Start()
     {
@@ -50,7 +41,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
         hasActivated = false;
         isInOffice = true;
         targetPerson.currentCondition = PersonCondition.Unknown;
-        player = FindObjectOfType<PlayerController>().gameObject;
     }
 
     protected override void Update()
@@ -60,11 +50,13 @@ public class CH2_SecurityGuard : MoveBasePossessable
             // anim.Play("Idle");
             state = GuardState.MovingToRadio;
         }
-
+        
+        
+        
         switch (state)
         {
             case GuardState.MovingToRadio:
-                CheckInOut();
+                CheckInOut_GoToRadio();
                 break;
 
             case GuardState.TurnOffRadio:
@@ -85,6 +77,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 if (restTimer >= restDuration)
                 {
                     targetPerson.currentCondition = PersonCondition.Vital;
+                    TutorialManager.Instance.Show(TutorialStep.SecurityGuard_AfterRest);
                     state = GuardState.MovingToOffice;
                 }
                 break;
@@ -113,6 +106,8 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 break;
         }
 
+        targetPerson.SetCondition(targetPerson.currentCondition);
+
         if (!isPossessed)
             return;
 
@@ -138,6 +133,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         {
             UIManager.Instance.InventoryExpandViewerUI.OnClueHidden += ShowText;
             oneTimeShowClue = true;
+            PuzzleStateManager.Instance.MarkPuzzleSolved("메모3");
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4))
@@ -192,6 +188,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         {
             if(!isPossessed)
             {
+                TutorialManager.Instance.Show(TutorialStep.SecurityGuard_InOffice);
                 Vector3 targetPos = transform.position;
                 targetPos.x = OfficeDoor_Inside.position.x;
                 transform.position = targetPos;
@@ -207,8 +204,8 @@ public class CH2_SecurityGuard : MoveBasePossessable
         }
     }
 
-    // 경비실 문으로 이동 후 라디오로 이동 
-    private void CheckInOut()
+    // 경비원이 있는 곳이 안인지 밖인지 확인 후 라디오로 가게만듬.
+    private void CheckInOut_GoToRadio()
     {
         if(isInOffice)
         {
@@ -224,26 +221,10 @@ public class CH2_SecurityGuard : MoveBasePossessable
         else
         {
             MoveTo(Radio.position);
+            TutorialManager.Instance.Show(TutorialStep.SecurityGuard_GoToRadio);
         }
     }
     
-    // QTE 관련 함수 (23일 이후 작업예정)  
-    public void SetCondition(PersonCondition condition)
-    {
-        targetPerson.currentCondition = condition;
-        switch (condition)
-        {
-            case PersonCondition.Vital:
-                conditionHandler = new VitalConditionHandler();
-                break;
-            case PersonCondition.Normal:
-                conditionHandler = new NormalConditionHandler();
-                break;
-            case PersonCondition.Tired:
-                conditionHandler = new TiredConditionHandler();
-                break;
-        }
-    }
 
     public override void OnQTESuccess()
     {
@@ -252,7 +233,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
         PossessionStateManager.Instance.StartPossessionTransition();
     }
 
-    // 문 근처에 있는지 확인
     // 경비원이 있는 곳이 경비실 안인지 밖인지 확인 (트리거)
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
@@ -277,8 +257,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
     //     }
     // }
     
-    
-    
     protected override void OnTriggerExit2D(Collider2D collision)
     {
         base.OnTriggerExit2D(collision);
@@ -290,19 +268,19 @@ public class CH2_SecurityGuard : MoveBasePossessable
         }
     }
 
+    // 문 앞에서 E키 눌렀을 때 빙의해제되는게 아니고 다른 문으로 이동
     protected override void OnDoorInteract()
     {
-        // 경비가 문을 통과함
         if(isPossessed && doorPass && isdoorLockOpen && !isInOffice)
         {
             Vector3 newPos = transform.position;
-            newPos.x = OfficeDoor_Inside.position.x; // 또는 원하는 포인트
+            newPos.x = OfficeDoor_Inside.position.x;
             transform.position = newPos;
         }
         else if(isPossessed && doorPass && isdoorLockOpen && isInOffice)
         {
             Vector3 newPos = transform.position;
-            newPos.x = OfficeDoor_Outside.position.x; // 또는 원하는 포인트
+            newPos.x = OfficeDoor_Outside.position.x;
             transform.position = newPos;
         }
     }
@@ -321,6 +299,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         base.OnPossessionEnterComplete();
     }
 
+    // 단서 획득시 대사 출력
     void ShowText()
     {
         UIManager.Instance.PromptUI.ShowPrompt("잃어버린 게 뭘까...? 사람일까, 기억일까.", 2f);

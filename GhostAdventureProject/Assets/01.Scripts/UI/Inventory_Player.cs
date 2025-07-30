@@ -148,7 +148,7 @@ public class Inventory_Player : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            KeyCode key = KeyBindingManager.Instance.GetKey(i);
+            KeyCode key = ESCMenu.Instance.GetKey(i);
             if (Input.GetKeyDown(key))
             {
                 int clueIndex = currentPage * cluesPerPage + i;

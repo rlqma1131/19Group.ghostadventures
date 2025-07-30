@@ -7,8 +7,6 @@ public class LockedDoor : BaseDoor
     [SerializeField] private string puzzleId = ""; // 퍼즐 식별자 (예: "LivingRoom_Kitchen")
     [SerializeField] private AudioClip lockedSound;
     [SerializeField] private AudioClip unlockSound;
-    [SerializeField] private GameObject lockIcon;
-    [SerializeField] private GameObject openIcon;
 
     [Header("Pair Door System")]
     [SerializeField] private LockedDoor pairedDoor; // 페어 문 (양방향 연결)
@@ -34,34 +32,12 @@ public class LockedDoor : BaseDoor
     {
         if (isLocked)
         {   
-            ShowLockIcon();
             Debug.Log("문이 잠겨있습니다!");
             PlaySound(lockedSound);
         }
         else
         {
             TeleportPlayer();
-        }
-    }
-
-    void ShowLockIcon()
-    {
-        if(lockIcon != null)
-        {
-            lockIcon.SetActive(true);
-
-            SpriteRenderer sr = lockIcon.GetComponent<SpriteRenderer>();
-            sr.color = new Color(1, 1, 1, 0); // 알파 0부터 시작
-
-            Sequence seq = DOTween.Sequence();
-            seq.Append(sr.DOFade(1f, 0.2f));
-            seq.AppendInterval(1.5f);
-            seq.Append(sr.DOFade(0f, 0.5f));
-            seq.OnComplete(() =>
-            {
-                if(lockIcon != null)
-                    lockIcon.SetActive(false);
-            });
         }
     }
 
@@ -122,12 +98,10 @@ public class LockedDoor : BaseDoor
 
     private void PlaySound(AudioClip clip)
     {
-      
-
         if (audioSource != null && clip != null)
         {
          
-            audioSource.PlayOneShot(clip);
+            SoundManager.Instance.PlaySFX(clip);
         }
         
     }
@@ -148,24 +122,17 @@ public class LockedDoor : BaseDoor
     // 퍼즐 매니저에서 사용할 수 있는 프로퍼티
     public string PuzzleId => puzzleId;
 
-    protected override void OnTriggerEnter2D(Collider2D collision)
-    {
-        base.OnTriggerEnter2D(collision);
-        if(!isLocked)
-        {
-            if(openIcon != null)
-                openIcon.SetActive(true);
-        }
-    }
 
-    protected override void OnTriggerExit2D(Collider2D other)
+    void OnMouseEnter()
     {
-        base.OnTriggerExit2D(other);
-        if(!isLocked)
-        {
-            if(openIcon != null)
-                openIcon.SetActive(false);
-        }
+        if(isLocked)
+            UIManager.Instance.LockDoorCursor();
+        else
+            UIManager.Instance.OpenDoorCursor();
+    }
+    void OnMouseExit() 
+    {
+        UIManager.Instance.SetDefaultCursor();    
     }
 
 }

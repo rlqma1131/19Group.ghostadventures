@@ -33,12 +33,12 @@ public class Ch2_DoorLock : BaseInteractable
                 
                 if(inventory == null || needItem != inventory.selectedItem())
                 {
-                    UIManager.Instance.PromptUI.ShowPrompt("문을 열 수 없습니다", 1.5f);
+                    UIManager.Instance.PromptUI.ShowPrompt_2("들어갈 수 없어...", "관리인을 나오게 해야 해", "근처에 뭐가 있을텐데");
                     return;
                 }
                 if(needItem == inventory.selectedItem() && needItem != null && doorOpenAble)
                 {
-                    UIManager.Instance.PromptUI.ShowPrompt("문이 열렸습니다.", 1.5f);
+                    // UIManager.Instance.PromptUI.ShowPrompt("문이 열렸습니다.", 1.5f);
                     q_Key.SetActive(false);
                     OpenDoorLock();
                     return;
@@ -49,7 +49,7 @@ public class Ch2_DoorLock : BaseInteractable
         }
     }
 
-    // 도어락 풀리고 문 열림 -> 도어락 오브젝트 삭제됨
+    // 도어락 풀리고 문 열림 -> 도어락 오브젝트 숨김
     private void OpenDoorLock()
     {
         doorOpen = true;

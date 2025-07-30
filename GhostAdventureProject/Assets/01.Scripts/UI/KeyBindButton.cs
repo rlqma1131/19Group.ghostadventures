@@ -6,7 +6,7 @@ public class KeyBindButton : MonoBehaviour
 {
     public int clueIndex;
     private Button button;
-    public Text keyText;
+    public TextMeshProUGUI keyText;
 
     private bool isWaitingForKey = false;
 
@@ -14,13 +14,13 @@ public class KeyBindButton : MonoBehaviour
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(OnClick);
-        UpdateKeyText();
+        // UpdateKeyText();
     }
 
     void OnClick()
     {
         isWaitingForKey = true;
-        keyText.text = "Press key...";
+        keyText.text = "PressKey";
     }
 
     private void Update()
@@ -37,7 +37,7 @@ public class KeyBindButton : MonoBehaviour
 
                 if (isAlphaKey || isFKey)
                 {
-                    KeyBindingManager.Instance.SetKey(clueIndex, key);
+                    UIManager.Instance.ESCMenuUI.SetKey(clueIndex, key);
                     isWaitingForKey = false;
                     UpdateKeyText();
                     NotifyInventoryToUpdateKey();
@@ -60,7 +60,7 @@ public class KeyBindButton : MonoBehaviour
 
     void UpdateKeyText()
     {
-        keyText.text = KeyBindingManager.Instance.GetKey(clueIndex).ToString();
+        keyText.text = UIManager.Instance.ESCMenuUI.GetKey(clueIndex).ToString();
     }
 
 

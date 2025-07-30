@@ -25,6 +25,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject soundManager;
     [SerializeField] private GameObject cutSceneManager;
     [SerializeField] private GameObject qteEffectManager;
+    [SerializeField] private GameObject tutorialManager;
     
     public GameObject playerPrefab;
 
@@ -88,6 +89,7 @@ public class GameManager : Singleton<GameManager>
         EnsureManagerExists<SoundManager>(soundManager);
         EnsureManagerExists<CutsceneManager>(cutSceneManager);
         EnsureManagerExists<QTEEffectManager>(qteEffectManager);
+        EnsureManagerExists<TutorialManager>(tutorialManager);
 
         Debug.Log($"씬 로드됨: {scene.name}");
 

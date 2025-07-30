@@ -7,6 +7,10 @@ public class Ch1_Drawing : BaseInteractable
     [SerializeField] private GameObject drawingZoom; // 확대용 드로잉 UI (Canvas 하위)
     [SerializeField] private RectTransform drawingPos; // 드로잉 UI의 시작 위치
     [SerializeField] private Image zoomPanel;        // 배경 패널 (알파 페이드용)
+
+    [Header("은신 퍼즐 오브젝트들")]
+    [SerializeField] private Ch2_HideAreaPuzzleObj[] PuzzleObj; // 은신처 오브젝트들
+
     private CluePickup cluePickup;
 
     private bool isPlayerInside = false;
@@ -70,7 +74,11 @@ public class Ch1_Drawing : BaseInteractable
 
                 if (!zoomActivatedOnce)
                 {
-                    Ch1_HideAreaEventManager.Instance.AddHideAreaComponent();
+                    Debug.Log("은신처 퍼즐 시작");
+                    foreach(var hideArea in PuzzleObj)
+                    {
+                        hideArea.HideAreaPuzzleActivate();
+                    }
                     zoomActivatedOnce = true;
                 }
 
@@ -82,7 +90,7 @@ public class Ch1_Drawing : BaseInteractable
         UIManager.Instance.PromptUI.ShowPrompt("숨바꼭질? 순서가 중요해보이는데", 3f);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
 
@@ -92,7 +100,7 @@ public class Ch1_Drawing : BaseInteractable
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    protected override void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
 
