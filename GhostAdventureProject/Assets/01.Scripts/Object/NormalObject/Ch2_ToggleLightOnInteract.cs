@@ -17,7 +17,6 @@ public class Ch2_ToggleLightOnInteract : MonoBehaviour
             if (lightToToggle != null)
             {
                 lightToToggle.enabled = !lightToToggle.enabled;
-                UIManager.Instance.PromptUI.ShowPrompt_Random("불이… 켜졌어? 여긴… 어디지?", "이곳이… 미로였던 거야…?");
             }
         }
     }

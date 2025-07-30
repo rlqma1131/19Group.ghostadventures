@@ -8,7 +8,6 @@ using System;
 public class InventorySlot_Player : MonoBehaviour
 {
     public Image icon;
-    public Image clearSlotIcon;
     public int clueIndex;
     public TMP_Text keyText;
 
@@ -31,13 +30,12 @@ public class InventorySlot_Player : MonoBehaviour
     private void Start()
     {
         UpdateKeyText();
-        icon.enabled = false;
     }
 
     public void UpdateKeyText()
     {
-        if (keyText == null || UIManager.Instance.ESCMenuUI == null) return;
-        KeyCode key = UIManager.Instance.ESCMenuUI.GetKey(clueIndex);
-        keyText.text = ESCMenu.KeyNameHelper.GetDisplayName(key);
+        if (keyText == null || KeyBindingManager.Instance == null) return;
+        KeyCode key = KeyBindingManager.Instance.GetKey(clueIndex);
+        keyText.text = KeyBindingManager.KeyNameHelper.GetDisplayName(key);
     }
 }

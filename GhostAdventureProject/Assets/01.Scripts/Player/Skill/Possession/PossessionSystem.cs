@@ -10,8 +10,8 @@ public class PossessionSystem : MonoBehaviour
     [SerializeField] private BasePossessable currentTarget; // 디버깅용
     private BasePossessable obssessingTarget;
     public BasePossessable CurrentTarget => currentTarget;
+
     private PlayerController Player => GameManager.Instance.PlayerController;
-    
     public bool CanMove { get; set; } = true;
 
     private void Awake()
@@ -78,7 +78,7 @@ public class PossessionSystem : MonoBehaviour
                 }
                 else
                 {
-                    PersonCondition condition = obssessingTarget.GetComponent<PersonConditionUI>().currentCondition;
+                    PersonCondition condition = obssessingTarget.GetComponent<Person>().currentCondition;
                     if(condition == PersonCondition.Vital)
                     {
                         SoulEnergySystem.Instance.Consume(-1);

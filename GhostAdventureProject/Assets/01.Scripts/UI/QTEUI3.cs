@@ -99,8 +99,8 @@ if (!isRunning) return;
 
     public void ShowQTEUI3()
     {
-        isRunning = true;
         gameObject.SetActive(true);
+        isRunning = true;
         timer = 0f;
         currentAngle = 0f;
         clearedZoneIndices.Clear();
@@ -206,28 +206,18 @@ if (!isRunning) return;
         gameObject.SetActive(false);
     }
 
-    bool ZonePassed(QTERingZone zone, float prev, float curr)
-    {
-        // 각도 보정 (wrap-around 방지)
-        if (curr < prev)
-            curr += 360f;
+bool ZonePassed(QTERingZone zone, float prev, float curr)
+{
+    // 각도 보정 (wrap-around 방지)
+    if (curr < prev)
+        curr += 360f;
 
-        float zStart = zone.startAngle;
-        float zEnd = zone.endAngle;
+    float zStart = zone.startAngle;
+    float zEnd = zone.endAngle;
 
-        if (zEnd < zStart)
-            zEnd += 360f;
+    if (zEnd < zStart)
+        zEnd += 360f;
 
-        // ✅ prev ~ curr 사이에 zone이 존재했다면 "통과한 것"
-        return prev < zEnd && curr >= zEnd;
-    }
-    public void ApplySettings(QTESettings settings)
-    {
-        rotationSpeed = settings.rotationSpeed;
-        timeLimit = settings.timeLimit;
-        successZoneCount = settings.successZoneCount;
-        minZoneSize = settings.minZoneSize;
-        maxZoneSize = settings.maxZoneSize;
-    }
-
-}
+    // ✅ prev ~ curr 사이에 zone이 존재했다면 "통과한 것"
+    return prev < zEnd && curr >= zEnd;
+}}

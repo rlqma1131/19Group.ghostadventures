@@ -25,7 +25,7 @@ public class NoticePopup : MonoBehaviour
     //    Vector2 startPos = new Vector2(startX, uiElement.anchoredPosition.y);
     //    uiElement.anchoredPosition = startPos;
 
-
+        
     //    Sequence sequence = DOTween.Sequence();
 
     //    //슬라이드 인 애니메이션
@@ -43,14 +43,10 @@ public class NoticePopup : MonoBehaviour
     //                 .SetEase(Ease.InQuad) 
     //    );
 
-
+        
     //    sequence.Play();
     //}
-    void Start()
-    {
-        gameObject.SetActive(false);
-    }
-    
+
     public void FadeInAndOut(string notice)
     {   
         if (canvasGroup == null || text == null)

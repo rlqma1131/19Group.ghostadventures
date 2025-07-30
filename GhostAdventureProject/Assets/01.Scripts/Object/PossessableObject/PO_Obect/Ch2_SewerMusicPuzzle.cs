@@ -13,8 +13,7 @@ public class Ch2_SewerMusicPuzzle : MonoBehaviour
     private bool isPlaying = false;
     private float songStartTime;
     private bool movedDuringPlay = false;
-    private int returnCount;
-
+    
     [SerializeField] private Transform returnPoint;
 
     public void StartPuzzle()
@@ -98,9 +97,10 @@ public class Ch2_SewerMusicPuzzle : MonoBehaviour
         "다시… 같은 공간…",
         "이 소리를… 무시하면 안돼.",
         "소리엔… 반응하면 안 돼.",
-        "소리에 뭔가 규칙이 있는거 같은데..",
-        "다시 처음부터...?",
-        "소리가 들리면… 가만히… 가만히…"
+        "들켰다... 다시 처음으로.",
+        "음악이 끝날 때까지 기다려야 해.",
+        "노랫 소리가 들리면 움직이면 안돼",
+        "전등을 따라 미로 끝까지 가보자"
     };
     
     private void TriggerPunishment()
@@ -109,20 +109,12 @@ public class Ch2_SewerMusicPuzzle : MonoBehaviour
         if (player != null && returnPoint != null)
         {
             player.transform.position = returnPoint.position;
-            returnCount ++;
         }
         
         if (UIManager.Instance != null && UIManager.Instance.PromptUI != null)
-        {   
-            if(returnCount >= 2)
-            {
-                string msg = punishmentMessages[Random.Range(0, punishmentMessages.Length)];
-                UIManager.Instance.PromptUI.ShowPrompt(msg, 2f);
-            }
-            else if(returnCount >= 5)
-            {   
-                UIManager.Instance.PromptUI.ShowPrompt_Random("노랫 소리가 들리면 움직이면 안돼", "전등을 따라 미로 끝까지 가보자");
-            }
+        {
+            string msg = punishmentMessages[Random.Range(0, punishmentMessages.Length)];
+            UIManager.Instance.PromptUI.ShowPrompt(msg, 2f);
         }
     }
 }

@@ -46,7 +46,5 @@ public class Ch2_BackStreetObj : MonoBehaviour
         //         memoryFragmentObject.ActivateBackStreetObj();
         //     }
         // });
-        TutorialManager.Instance.Show(TutorialStep.BlackShadow);
-        
     }
 }

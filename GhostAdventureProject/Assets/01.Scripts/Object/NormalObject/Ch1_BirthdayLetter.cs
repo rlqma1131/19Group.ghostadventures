@@ -88,7 +88,7 @@ public class Ch1_BirthdayLetter : MonoBehaviour
         PickupLetter = true;
         PuzzleStateManager.Instance.MarkPuzzleSolved("편지");
         UIManager.Instance.PromptUI.ShowPrompt("누구 생일이었지… 8월… 14일");
-        UIManager.Instance.NoticePopupUI.FadeInAndOut("숫자키 1~4: 인벤토리 단서 확인");
+        UIManager.Instance.NoticePopupUI.FadeInAndOut("1~4: 인벤토리 단서 확인"); // 수정될 수 있음
         
     }
 
@@ -98,7 +98,7 @@ public class Ch1_BirthdayLetter : MonoBehaviour
 
         isPlayerInside = true;
         
-        if (!isZoomActive && !PuzzleStateManager.Instance.IsPuzzleSolved("편지"))
+        if (!isZoomActive)
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }
 
@@ -108,16 +108,9 @@ public class Ch1_BirthdayLetter : MonoBehaviour
 
         isPlayerInside = false;
 
-        if (isZoomActive && !PuzzleStateManager.Instance.IsPuzzleSolved("편지"))
+        if (isZoomActive)
             HideLetterZoom();
 
-    }
-
-    private void OnTriggerStay2D(Collider2D other) 
-    {
-        if(isZoomActive && !PuzzleStateManager.Instance.IsPuzzleSolved("편지"))
-        {
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
-        }
+        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
     }
 }
