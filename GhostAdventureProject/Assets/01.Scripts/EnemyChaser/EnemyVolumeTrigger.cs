@@ -6,18 +6,19 @@ using UnityEngine.Rendering.Universal;
 
 public class EnemyVolumeTrigger : MonoBehaviour
 {
-    [SerializeField] private Volume globalVolume; // 글로벌 볼륨
+    public Volume globalVolume; // 글로벌 볼륨
     [SerializeField] private Transform player;
     [SerializeField] private float detectionRadius = 15f;
 
-    private bool PlayerInTrigger = false; // 트리거 감지
-    private bool PlayerFind = false; // 플레이어 찾음?
-    private ColorAdjustments colorAdjustments; // 글로벌 볼륨 색상 조정 컴포넌트
+    public bool PlayerInTrigger = false; // 트리거 감지
+    public bool PlayerFind = false; // 플레이어 찾음?
+    public ColorAdjustments colorAdjustments; // 글로벌 볼륨 색상 조정 컴포넌트
 
-    [SerializeField]private Color farColor; //원래 글로벌볼륨 컬러
+    public Color farColor; //원래 글로벌볼륨 컬러
     [SerializeField]private Color closeColor = new Color(108f / 255f, 0, 0); // 가까이 갈수록 컬러
 
     private float t = 0f; // 현재 색상 보간 값 (0 = 원래색, 1 = 빨간색)
+    public bool Ondead =false;
 
     void Start()
     {
@@ -53,7 +54,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
 
         float targetT = 0f;
 
-        if (PlayerInTrigger)
+        if (PlayerInTrigger && !Ondead)
         {
             float distance = Vector3.Distance(transform.position, player.position);
             targetT = Mathf.Clamp01(1 - (distance / detectionRadius));
