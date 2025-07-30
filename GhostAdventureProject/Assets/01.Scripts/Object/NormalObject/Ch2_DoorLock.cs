@@ -49,7 +49,7 @@ public class Ch2_DoorLock : BaseInteractable
         }
     }
 
-    // 도어락 풀리고 문 열림 -> 도어락 오브젝트 삭제됨
+    // 도어락 풀리고 문 열림 -> 도어락 오브젝트 숨김
     private void OpenDoorLock()
     {
         doorOpen = true;

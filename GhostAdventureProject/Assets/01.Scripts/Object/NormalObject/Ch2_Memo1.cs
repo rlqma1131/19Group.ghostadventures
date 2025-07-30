@@ -63,7 +63,8 @@ public class Ch2_Memo1 : MonoBehaviour
         if (!string.IsNullOrEmpty(promptMessage))
         {
             UIManager.Instance.PromptUI.ShowPrompt(promptMessage, 2f);
-            PuzzleStateManager.Instance.MarkPuzzleSolved("메모1");
+            PuzzleStateManager.Instance.MarkPuzzleSolved(promptMessage);
+            Debug.Log("퍼즐이 저장되었습니다" + promptMessage);
         }
     }
 
