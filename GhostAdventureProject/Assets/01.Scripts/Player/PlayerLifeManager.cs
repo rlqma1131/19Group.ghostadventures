@@ -1,5 +1,8 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Playables;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerLifeManager : MonoBehaviour
 {
@@ -15,7 +18,7 @@ public class PlayerLifeManager : MonoBehaviour
     public static event Action OnGameOver; // 게임오버 시
     public static event Action OnLifeLost; // 생명을 잃었을 때 (스턴 처리용)
     private Animator playerAnimator;
-
+    private EnemyVolumeTrigger volume; // EnemyVolumeTrigger 컴포넌트
     private void Awake()
     {
         if (Instance == null)
@@ -28,11 +31,13 @@ public class PlayerLifeManager : MonoBehaviour
             Destroy(this); // 컴포넌트만 제거
         }
         playerAnimator = GetComponentInChildren<Animator>();
+
     }
 
     private void Start()
     {
         currentPlayerLives = maxPlayerLives; // 생명 초기화
+        volume = GetComponentInChildren<EnemyVolumeTrigger>();
         OnLifeChanged?.Invoke(currentPlayerLives); // UI 업데이트용
     }
 
@@ -62,9 +67,36 @@ public class PlayerLifeManager : MonoBehaviour
     public void HandleGameOver()
     {
         Debug.Log("게임오버!");
-        OnGameOver?.Invoke(); // 게임오버 UI 등이 이 이벤트를 듣고 처리
+        //OnGameOver?.Invoke(); // 게임오버 UI 등이 이 이벤트를 듣고 처리
         UIManager.Instance.PlayModeUI_CloseAll();
-        UIManager.Instance.startEndingUI_OpenAll(); // 게임오버 UI 표시(테스트용)
+        GameObject player = GameManager.Instance.Player;
+        PlayableDirector director = player.GetComponentInChildren<PlayableDirector>();
+        if (volume != null)
+        {
+            volume.Ondead = true;
+        }
+        else
+        {
+            Debug.LogWarning("EnemyVolumeTrigger가 PlayerLifeManager에서 발견되지 않았습니다.");
+        }
+        if (volume != null && volume.globalVolume.profile != null)
+        {
+            if (volume.globalVolume.profile.TryGet<ColorAdjustments>(out var ca))
+            {
+                ca.colorFilter.value = volume.farColor; // EnemyVolumeTrigger에 정의된 farColor로 복원
+            }
+
+
+        }
+                director.Play();
+        
+;
+
+        if (volume != null)
+        {
+            volume.enabled = false; // 볼륨 효과 활성화
+        }
+        //UIManager.Instance.startEndingUI_OpenAll(); // 게임오버 UI 표시(테스트용)
         //추후 onGameOver 이벤트에 연결예정
 
         // 임시로 게임 일시정지
