@@ -252,7 +252,7 @@ public class PixelExploder : MonoBehaviour
             Material mat = new Material(pixelParticleShader);
             var renderer = pixelObj.GetComponent<MeshRenderer>();
             renderer.material = mat;
-            renderer.sortingLayerName = sr.sortingLayerName;
+            renderer.sortingLayerName = "Front";
             renderer.sortingOrder = sr.sortingOrder;
 
             mat.SetColor("_BaseColor", baseColor);

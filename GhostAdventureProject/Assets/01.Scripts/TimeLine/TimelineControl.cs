@@ -55,8 +55,12 @@ public class TimelineControl : MonoBehaviour
     }
     void Awake()
     {
-        // timeScale 0에서도 재생되도록 설정
+        if (director != null)
+        {
         director.timeUpdateMode = DirectorUpdateMode.UnscaledGameTime;
+       
+        }
+        // timeScale 0에서도 재생되도록 설정
         if (skip != null)
         {
             skip.fillAmount = 1f;
