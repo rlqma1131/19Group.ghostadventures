@@ -20,11 +20,15 @@ public class Ch3_Nurse : MoveBasePossessable
 
     private PersonConditionUI condition;
     private PersonConditionHandler conditionHandler;
+
     private NurseState state = NurseState.Work;
+
     private int currentWorkIndex = 0;
     private float waitTimer = 0f;
     private float stateTimer = 0f;
+
     private bool isWaiting = false;
+    private bool hasWorked = false;
 
     protected override void Start()
     {
@@ -65,11 +69,9 @@ public class Ch3_Nurse : MoveBasePossessable
         switch (state)
         {
             case NurseState.Work:
-                condition.currentCondition = PersonCondition.Tired;
                 HandleWork();
                 break;
             case NurseState.Rest:
-                condition.currentCondition = PersonCondition.Vital;
                 HandleRest();
                 break;
         }
@@ -85,15 +87,26 @@ public class Ch3_Nurse : MoveBasePossessable
             waitTimer += Time.deltaTime;
             if (waitTimer >= waitDuration)
             {
-                // 다음 지점으로 이동
+                // 다음 일하는 지점으로 이동
+                condition.currentCondition = PersonCondition.Normal;
+
+                Debug.Log($"간호사 이동 중: {currentWorkIndex}");
                 isWaiting = false;
+                hasWorked = false;
                 currentWorkIndex = (currentWorkIndex + 1) % workPositions.Length;
             }
             else
             {
                 // 일하기
+                condition.currentCondition = PersonCondition.Tired;
+
+                Debug.Log($"간호사 대기 중: {waitTimer}");
                 SetMoveAnimation(false);
-                anim.Play("Work");
+                if (!hasWorked)
+                {
+                    anim.SetTrigger("Work");
+                    hasWorked = true;
+                }
                 return;
             }
         }
@@ -106,10 +119,16 @@ public class Ch3_Nurse : MoveBasePossessable
     {
         if (Vector2.Distance(transform.position, restPosition.position) > 0.1f)
         {
+            // 쉬러 이동
+            condition.currentCondition = PersonCondition.Normal;
+
             MoveTo(restPosition.position);
         }
         else
         {
+            // 쉬는 중
+            condition.currentCondition = PersonCondition.Vital;
+
             SetMoveAnimation(false);
         }
     }
