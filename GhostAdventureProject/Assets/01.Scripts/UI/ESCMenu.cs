@@ -17,6 +17,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     [SerializeField] private GameObject escMenuUI; // ESCMenu Canvas
     // [SerializeField] private SoundMenu soundMenu;
     [SerializeField] private GameObject general;
+    [SerializeField] private GameObject optionMenu;
     [SerializeField] private GameObject sound;
     [SerializeField] private GameObject keybind;
     
@@ -79,6 +80,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     public void SoundButton()
     {
         general.SetActive(false);
+        optionMenu.SetActive(true);
         sound.SetActive(true);
         keybind.SetActive(false);
     }
@@ -86,6 +88,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     public void KeyBindButton()
     {
         general.SetActive(false);
+        optionMenu.SetActive(true);
         sound.SetActive(false);
         keybind.SetActive(true);
     }
@@ -103,6 +106,8 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     public void ESCMenu_Open()
     {
         escMenuUI.SetActive(true);
+        general.SetActive(true);
+        optionMenu.SetActive(false);
         Time.timeScale = 0f;
         isPaused = true;
     }
