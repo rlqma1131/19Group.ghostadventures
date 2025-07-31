@@ -54,10 +54,9 @@ public class Ch3_ConsoleAnswerButton : MonoBehaviour
     private void SelectAnswer()
     {
         Debug.Log("정답 버튼 선택됨: " + gameObject.name);
-        Debug.Log("부모 콘솔 버튼: " + parentConsoleButton.name);
+        isSelected = true;
         parentConsoleButton?.OnAnswerSelected(this); // 선택되었음을 부모에게 알림
         push.SetActive(false);
-        isSelected = true;
     }
 
     public void DeSelectAnswer()

@@ -56,6 +56,7 @@ public class Ch3_ConsoleButton : MonoBehaviour
 
     public void OnAnswerSelected(Ch3_ConsoleAnswerButton selectedBtn)
     {
+        Debug.Log("선택된 버튼은 " + selectedBtn);
         foreach (var btn in answerButtons)
         {
             if (btn != selectedBtn)
@@ -68,8 +69,8 @@ public class Ch3_ConsoleButton : MonoBehaviour
     private void CheckAnswer()
     {
         bool isCorrect = answerButtons[correctAnswerBtn].IsSelected;
-
-        Debug.Log("정답 확인: " + isCorrect);
+        
+        Debug.Log("정답 확인: " + isCorrect + "정답버튼은" + answerButtons[correctAnswerBtn].name);
         if (isCorrect)
             console.CheckAllAnswers(); // Console에서 전체 정답 여부 확인
     }
