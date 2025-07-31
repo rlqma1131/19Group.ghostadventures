@@ -10,16 +10,12 @@ public class BaseInteractable : MonoBehaviour
 
     void Start()
     {
-        if (highlight != null)
-            highlight.SetActive(false);
+        highlight?.SetActive(false);
     }
     
     public void SetHighlight(bool pop)
     {
-        if (highlight != null)
-        {
-            highlight.SetActive(pop);
-        }
+        highlight?.SetActive(pop);
     }
 
     // 은신처일때만 적용 (외에는 각 스크립트에서 override 중)

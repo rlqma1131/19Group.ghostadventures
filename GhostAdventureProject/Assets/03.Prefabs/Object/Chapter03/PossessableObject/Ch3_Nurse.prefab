@@ -64,7 +64,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.072844505, y: -0.10926676}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -75,7 +75,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.41, y: 4.78}
+  m_Size: {x: 1.8758059, y: 4.2700872}
   m_EdgeRadius: 0
 --- !u!1 &2151232586624717361
 GameObject:
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Follow: {fileID: 2187281753931354089}
   m_Lens:
     FieldOfView: 40
-    OrthographicSize: 10
+    OrthographicSize: 7
     NearClipPlane: 0.1
     FarClipPlane: 5000
     Dutch: 0
@@ -161,7 +161,8 @@ GameObject:
   - component: {fileID: 6518209991619540548}
   - component: {fileID: 1853766481925474514}
   - component: {fileID: 6602169413675090811}
-  - component: {fileID: 5752417443381532447}
+  - component: {fileID: 2162437129451409079}
+  - component: {fileID: 169670250032444289}
   m_Layer: 0
   m_Name: Ch3_Nurse
   m_TagString: Person
@@ -246,8 +247,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e8867a1f89b5810479df991d1ecf9a0e, type: 2}
   - {fileID: 11400000, guid: ef001025c04f9464c9c8a0ab9e32dc32, type: 2}
   inventorySlots: []
---- !u!70 &5752417443381532447
-CapsuleCollider2D:
+--- !u!61 &2162437129451409079
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -261,7 +262,7 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -278,9 +279,46 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.01, y: -0.12}
-  m_Size: {x: 3.3, y: 5.69}
-  m_Direction: 0
+  m_Offset: {x: 0.084985495, y: 0.09712601}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.481174, y: 4.885047}
+  m_EdgeRadius: 0
+--- !u!50 &169670250032444289
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2187419007584197709}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &5750088865963523970
 GameObject:
   m_ObjectHideFlags: 0
