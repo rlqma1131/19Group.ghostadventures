@@ -196,9 +196,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2683932917448715784}
-  - component: {fileID: 8991723082538685637}
   - component: {fileID: 104665482373711099}
-  - component: {fileID: 2110594882809652903}
+  - component: {fileID: 2422184519517937769}
   m_Layer: 0
   m_Name: Ch1_HideArea_Chair
   m_TagString: Untagged
@@ -223,20 +222,6 @@ Transform:
   - {fileID: 8197578684813553216}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8991723082538685637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8707333857864612301}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: beec2a0599d1a4545a2025509e589db8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlight: {fileID: 0}
-  areaID: "\uC758\uC790"
 --- !u!58 &104665482373711099
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -272,7 +257,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 1.05
---- !u!114 &2110594882809652903
+--- !u!114 &2422184519517937769
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -281,7 +266,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8707333857864612301}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e47825f7985b2044a8c6868d38b369f, type: 3}
+  m_Script: {fileID: 11500000, guid: bbe792bc6539bfc4e98dbecd3bc11df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   highlight: {fileID: 6760625305307168068}
@@ -292,3 +277,4 @@ MonoBehaviour:
   hideAreaEnterSFX: {fileID: 0}
   energyConsumeCycle: 2
   energyCost: 1
+  areaID: "\uC758\uC790"
