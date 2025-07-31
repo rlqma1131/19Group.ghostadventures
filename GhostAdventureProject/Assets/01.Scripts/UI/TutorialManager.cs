@@ -60,6 +60,7 @@ public class TutorialManager : Singleton<TutorialManager>
             case TutorialStep.ShowControlKey_And_HighLightBithdayBox: // 튜토리얼 키 보여주기, 깜짝상자 하이라이트
                 PossessionSystem.Instance.CanMove = true;
                 uimanager.TutorialUI_OpenAll();
+                celebrityBox = FindObjectOfType<Ch1_CelebrityBox>();
                 celebrityBox.highlight.SetActive(true); 
                 break;
 
