@@ -1,17 +1,21 @@
 ﻿using Cinemachine;
 using UnityEngine;
+using DG.Tweening;
 
 public class Ch3_Console : BaseInteractable
 {
     [SerializeField] private GameObject qKey;
     [SerializeField] private ItemData cardKey;
+    [SerializeField] private AudioClip correctSFX; // 하이라이트 오브젝트
 
     [Header("줌 화면")]
     [SerializeField] private CinemachineVirtualCamera zoomCamera; // 줌 카메라
+    [SerializeField] private GameObject zoomPos; // 줌 효과음
 
     [Header("퍼즐 버튼")]
     [SerializeField] private Ch3_ConsoleButton[] buttons;
-    
+    [SerializeField] private GameObject correctBtn; // 버튼 하이라이트
+
 
     [Header("단서 종이")]
     [SerializeField] private GameObject paper;
@@ -22,6 +26,17 @@ public class Ch3_Console : BaseInteractable
     private bool isZoomed = false;
 
     private Ch3_ConsoleButton currentActiveButton;
+
+    void Start()
+    {
+        // 처음에는 종이를 위에 올려둠
+        if (paper != null)
+        {
+            Vector3 startPos = paper.transform.localPosition;
+            paper.transform.localPosition = new Vector3(startPos.x, 0.1f, startPos.z);
+            paper.SetActive(false);
+        }
+    }
 
     void Update()
     {
@@ -56,17 +71,21 @@ public class Ch3_Console : BaseInteractable
 
         if (Input.GetKeyDown(KeyCode.E) && isZoomed)
         {
-            UIManager.Instance.PlayModeUI_OpenAll();
-            zoomCamera.Priority = 5;
-            isZoomed = false;
-            qKey.SetActive(true);
-
-            foreach (var button in buttons)
-            {
-                button.HideQuestion();
-            }
-            currentActiveButton = null;
+            ExitZoom();
         }
+    }
+    private void ExitZoom()
+    {
+        UIManager.Instance.PlayModeUI_OpenAll();
+        zoomCamera.Priority = 5;
+        isZoomed = false;
+        qKey.SetActive(true);
+
+        foreach (var button in buttons)
+        {
+            button.HideQuestion();
+        }
+        currentActiveButton = null;
     }
 
     public void CheckAllAnswers()
@@ -74,10 +93,57 @@ public class Ch3_Console : BaseInteractable
         foreach (var btn in buttons)
         {
             if (!btn.IsCorrectlyAnswered())
-                return; // 하나라도 정답 아니면 중단
+                return;
         }
 
-        Debug.Log("정답!");
+        SoundManager.Instance.PlaySFX(correctSFX);
+
+        // 버튼 비활성화
+        foreach (var btn in buttons)
+        {
+            btn.canClick = false;
+            btn.HideQuestion();
+        }
+
+        correctBtn.SetActive(true);
+
+        if (paper != null && zoomPos != null)
+        {
+            paper.SetActive(true);
+            paper.transform.DOKill();
+
+            // 종이 초기 위치
+            paper.transform.localPosition = new Vector3(
+                paper.transform.localPosition.x,
+                0.1f,
+                paper.transform.localPosition.z);
+
+            Sequence seq = DOTween.Sequence();
+
+            // 카메라 내려주기
+            Vector3 pos = zoomPos.transform.localPosition;
+            Vector3 target = new Vector3(pos.x, -0.16f, pos.z);
+            seq.Append(zoomPos.transform.DOLocalMoveY(target.y, 0.5f).SetEase(Ease.InOutQuad));
+
+            seq.AppendInterval(0.2f); // 멈칫
+
+            // 종이 출력 애니메이션
+            float[] steps = { -0.4f, -0.8f, -1.2f, -1.6f, -2.0f };
+            float stepTime = 0.25f;
+
+            foreach (float y in steps)
+            {
+                seq.Append(paper.transform.DOLocalMoveY(y, stepTime).SetEase(Ease.OutQuad));
+                seq.AppendInterval(0.1f);
+            }
+
+            seq.AppendInterval(2f);
+
+            seq.AppendCallback(() =>
+            {
+                ExitZoom();
+            });
+        }
     }
 
     public void OnButtonClicked(Ch3_ConsoleButton clickedButton)

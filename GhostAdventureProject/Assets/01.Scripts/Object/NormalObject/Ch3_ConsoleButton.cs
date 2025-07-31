@@ -15,7 +15,7 @@ public class Ch3_ConsoleButton : MonoBehaviour
     private Ch3_Console console;
 
     private bool isMouseInRange = false;
-    private bool SelectActive = false;
+    public bool canClick = true;
 
     void Start()
     {
@@ -24,6 +24,9 @@ public class Ch3_ConsoleButton : MonoBehaviour
 
     void Update()
     {
+        if(!canClick)
+            return;
+
         if (Input.GetMouseButtonDown(0))
         {
             if (!isMouseInRange)
@@ -45,17 +48,16 @@ public class Ch3_ConsoleButton : MonoBehaviour
     private void OnMouseEnter()
     {
         isMouseInRange = true;
-        //highlight.SetActive(true);
     }
 
     private void OnMouseExit()
     {
         isMouseInRange = false;
-        //highlight.SetActive(false);
     }
 
     public void OnAnswerSelected(Ch3_ConsoleAnswerButton selectedBtn)
     {
+        Debug.Log("선택된 버튼은 " + selectedBtn);
         foreach (var btn in answerButtons)
         {
             if (btn != selectedBtn)
@@ -68,8 +70,8 @@ public class Ch3_ConsoleButton : MonoBehaviour
     private void CheckAnswer()
     {
         bool isCorrect = answerButtons[correctAnswerBtn].IsSelected;
-
-        Debug.Log("정답 확인: " + isCorrect);
+        
+        Debug.Log("정답 확인: " + isCorrect + "정답버튼은" + answerButtons[correctAnswerBtn].name);
         if (isCorrect)
             console.CheckAllAnswers(); // Console에서 전체 정답 여부 확인
     }
@@ -82,7 +84,7 @@ public class Ch3_ConsoleButton : MonoBehaviour
     public void ShowQuestion()
     {
         pushBtn.SetActive(true);
-        SelectActive = true;
+        //SelectActive = true;
         foreach (var button in answerButtons)
         {
             button.ActivateButton();
@@ -92,7 +94,7 @@ public class Ch3_ConsoleButton : MonoBehaviour
     public void HideQuestion()
     {
         pushBtn.SetActive(false);
-        SelectActive = false;
+        //SelectActive = false;
         foreach (var button in answerButtons)
         {
             button.DeActiveButton();
