@@ -7,45 +7,57 @@ public class AutoTeleport : MonoBehaviour
     [SerializeField] private Vector2 targetPos;
     [SerializeField] private float ignoreDuration = 1f; // 같은 포탈 재진입 무시 시간
 
-    private GameObject lastTeleportedPlayer;
+    private GameObject lastTeleportedObject;
     private float lastTeleportTime;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (GameManager.Instance == null || GameManager.Instance.Player == null) return;
-        if (other.gameObject != GameManager.Instance.Player) return;
-
-        // 최근 들어온 플레이어가 나 자신이라면 무시
-        if (other.gameObject == lastTeleportedPlayer && Time.time - lastTeleportTime < ignoreDuration)
+        if (other.gameObject == lastTeleportedObject && Time.time - lastTeleportTime < ignoreDuration)
         {
-            Debug.Log("[AutoTeleport] 재진입 방지 쿨타임 작동 중");
+            Debug.Log("[AutoTeleport] 재진입 방지 쿨타임");
             return;
         }
 
-        TeleportPlayer(other.gameObject);
-
-        // 대상 포탈에도 정보 전달
-        AutoTeleport targetPortal = targetTransform?.GetComponent<AutoTeleport>();
-        if (targetPortal != null)
+        if (IsTeleportable(other.gameObject))
         {
-            targetPortal.MarkRecentlyTeleported(other.gameObject);
+            TeleportObject(other.gameObject);
+
+            // 대상 포탈에도 최근 정보 전달
+            AutoTeleport targetPortal = targetTransform?.GetComponent<AutoTeleport>();
+            if (targetPortal != null)
+            {
+                targetPortal.MarkRecentlyTeleported(other.gameObject);
+            }
         }
     }
 
-    private void TeleportPlayer(GameObject player)
+    private bool IsTeleportable(GameObject obj)
+    {
+        // GameManager에 등록된 Player
+        if (GameManager.Instance != null && obj == GameManager.Instance.Player)
+            return true;
+
+        // Enemy AI
+        if (obj.GetComponent<EnemyAI>() != null)
+            return true;
+
+        return false;
+    }
+
+    private void TeleportObject(GameObject obj)
     {
         Vector3 destination = targetTransform != null
             ? targetTransform.position
-            : new Vector3(targetPos.x, targetPos.y, player.transform.position.z);
+            : new Vector3(targetPos.x, targetPos.y, obj.transform.position.z);
 
-        player.transform.position = destination;
+        obj.transform.position = destination;
 
-        Debug.Log($"[AutoTeleport] {player.name} 텔레포트 완료 → {destination}");
+        Debug.Log($"[AutoTeleport] {obj.name} 텔레포트 완료 → {destination}");
     }
 
-    public void MarkRecentlyTeleported(GameObject player)
+    public void MarkRecentlyTeleported(GameObject obj)
     {
-        lastTeleportedPlayer = player;
+        lastTeleportedObject = obj;
         lastTeleportTime = Time.time;
     }
 }

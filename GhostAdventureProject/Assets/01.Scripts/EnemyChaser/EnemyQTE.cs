@@ -25,7 +25,7 @@ public class EnemyQTE : MonoBehaviour
     {
         if (enemyAI == null || isQTERunning) return;
 
-        if (other.CompareTag("Player") && enemyAI.CurrentState == EnemyAI.AIState.Chasing)
+        if (other.CompareTag("Player") && enemyAI.CurrentState == EnemyAI.State.Chasing)
         {
             player = other.transform;
             StartQTE();
@@ -42,19 +42,17 @@ public class EnemyQTE : MonoBehaviour
         {
             Debug.Log("라이프 1 → QTE 없이 Enemy_QTEFail 애니메이션 강제 재생 후 게임오버");
 
-            enemyAI.ChangeState(EnemyAI.AIState.QTEAnimation);
-
+            enemyAI.ChangeState(EnemyAI.State.QTE);
             var anim = enemyAI.enemyAnimator;
 
             anim.ResetTrigger("QTEIn");
             anim.ResetTrigger("QTESuccess");
             anim.ResetTrigger("QTEFail");
 
-            anim.Play("Enemy_QTEFail", 0, 0f);  // 애니메이션 상태 직접 재생
-
+            anim.Play("Enemy_QTEFail", 0, 0f);
             GetComponent<EnemyMovement>().StopMoving();
-            StartCoroutine(DelayedGameOverAfterAnimation());
 
+            StartCoroutine(DelayedGameOverAfterAnimation());
             isQTERunning = true;
             return;
         }
@@ -62,7 +60,8 @@ public class EnemyQTE : MonoBehaviour
         // 일반 QTE 시작
         isQTERunning = true;
         enemyAI.enemyAnimator?.SetTrigger("QTEIn");
-        enemyAI.ChangeState(EnemyAI.AIState.CaughtPlayer);
+        enemyAI.ChangeState(EnemyAI.State.QTE);
+
         GetComponent<EnemyMovement>().StopMoving();
         StartCoroutine(HandleQTEFlow());
         PossessionSystem.Instance.CanMove = false; // 플레이어 이동 비활성화
@@ -102,13 +101,13 @@ public class EnemyQTE : MonoBehaviour
         }
 
         // 정상 QTE 성공 처리
-        enemyAI.ChangeState(EnemyAI.AIState.QTEAnimation);
+        enemyAI.ChangeState(EnemyAI.State.Stunned);
         enemyAI.enemyAnimator?.SetTrigger("QTESuccess");
 
         PlayerLifeManager.Instance.LosePlayerLife();
-        StartCoroutine(DelayedStunAfterQTE());
+        StartCoroutine(RecoverAfterStun());
 
-        PossessionSystem.Instance.CanMove = true; // 플레이어 이동 활성화
+        PossessionSystem.Instance.CanMove = true;
     }
 
     private void OnQTEFailure()
@@ -116,26 +115,20 @@ public class EnemyQTE : MonoBehaviour
         Debug.Log("QTE 실패! 플레이어가 잡혔습니다.");
         QTEEffectManager.Instance.EndQTEEffects();
 
-        enemyAI.ChangeState(EnemyAI.AIState.QTEAnimation);
+        enemyAI.ChangeState(EnemyAI.State.QTE);
         enemyAI.enemyAnimator?.SetTrigger("QTEFail");
 
         StartCoroutine(DelayedGameOverAfterAnimation());
     }
 
-    private IEnumerator DelayedStunAfterQTE()
+    private IEnumerator RecoverAfterStun()
     {
-        // QTESuccess 애니메이션이 5초 정도 재생되도록 대기
-        yield return new WaitForSeconds(5f);
-        enemyAI.ChangeState(EnemyAI.AIState.StunnedAfterQTE);
-        enemyAI.enemyAnimator?.SetBool("IsIdle", true);
-
-        yield return new WaitForSeconds(2f);
-        enemyAI.enemyAnimator?.SetBool("IsIdle", false);
+        yield return new WaitForSeconds(2f); // 짧은 스턴 후 복귀
 
         if (player != null && Vector2.Distance(transform.position, player.position) < enemyAI.detectionRange)
-            enemyAI.ChangeState(EnemyAI.AIState.Chasing);
+            enemyAI.ChangeState(EnemyAI.State.Chasing);
         else
-            enemyAI.ChangeState(EnemyAI.AIState.Patrolling);
+            enemyAI.ChangeState(EnemyAI.State.Patrolling);
 
         isQTERunning = false;
     }
