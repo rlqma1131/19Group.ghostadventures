@@ -53,13 +53,13 @@ public class Prompt : MonoBehaviour
     }
     
 
-    private void Update()
-    {
-        if(!isActive) return;
+    // private void Update()
+    // {
+    //     if(!isActive) return;
         
-        if(Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.F))
-            ShowNextLine();
-    }
+    //     if(Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.F))
+    //         ShowNextLine();
+    // }
 
     // ===================== 알림용 - 일정시간 후 자동사라짐 ============================
 
