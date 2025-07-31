@@ -15,7 +15,7 @@ public class Ch3_ConsoleButton : MonoBehaviour
     private Ch3_Console console;
 
     private bool isMouseInRange = false;
-    private bool SelectActive = false;
+    public bool canClick = true;
 
     void Start()
     {
@@ -24,6 +24,9 @@ public class Ch3_ConsoleButton : MonoBehaviour
 
     void Update()
     {
+        if(!canClick)
+            return;
+
         if (Input.GetMouseButtonDown(0))
         {
             if (!isMouseInRange)
@@ -45,13 +48,11 @@ public class Ch3_ConsoleButton : MonoBehaviour
     private void OnMouseEnter()
     {
         isMouseInRange = true;
-        //highlight.SetActive(true);
     }
 
     private void OnMouseExit()
     {
         isMouseInRange = false;
-        //highlight.SetActive(false);
     }
 
     public void OnAnswerSelected(Ch3_ConsoleAnswerButton selectedBtn)
@@ -83,7 +84,7 @@ public class Ch3_ConsoleButton : MonoBehaviour
     public void ShowQuestion()
     {
         pushBtn.SetActive(true);
-        SelectActive = true;
+        //SelectActive = true;
         foreach (var button in answerButtons)
         {
             button.ActivateButton();
@@ -93,7 +94,7 @@ public class Ch3_ConsoleButton : MonoBehaviour
     public void HideQuestion()
     {
         pushBtn.SetActive(false);
-        SelectActive = false;
+        //SelectActive = false;
         foreach (var button in answerButtons)
         {
             button.DeActiveButton();
