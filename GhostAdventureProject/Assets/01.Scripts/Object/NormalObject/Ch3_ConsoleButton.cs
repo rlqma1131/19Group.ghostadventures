@@ -69,6 +69,7 @@ public class Ch3_ConsoleButton : MonoBehaviour
     {
         bool isCorrect = answerButtons[correctAnswerBtn].IsSelected;
 
+        Debug.Log("정답 확인: " + isCorrect);
         if (isCorrect)
             console.CheckAllAnswers(); // Console에서 전체 정답 여부 확인
     }
