@@ -11,14 +11,14 @@ public class Ch3_Console : BaseInteractable
     [Header("줌 화면")]
     [SerializeField] private CinemachineVirtualCamera zoomCamera; // 줌 카메라
     [SerializeField] private GameObject zoomPos; // 줌 효과음
+    [SerializeField] private GameObject paper;
 
     [Header("퍼즐 버튼")]
     [SerializeField] private Ch3_ConsoleButton[] buttons;
     [SerializeField] private GameObject correctBtn; // 버튼 하이라이트
 
-
-    [Header("단서 종이")]
-    [SerializeField] private GameObject paper;
+    [Header("기억 조각")]
+    [SerializeField] private GameObject memoryFragment;
 
     Inventory_PossessableObject inventory; // 빙의 인벤토리(Item을 갖고 있는지 확인용)
 
@@ -26,9 +26,13 @@ public class Ch3_Console : BaseInteractable
     private bool isZoomed = false;
 
     private Ch3_ConsoleButton currentActiveButton;
+    private Ch3_MemoryNegative_02_Paper memoryPaper;
 
     void Start()
     {
+        memoryPaper = paper?.GetComponent<Ch3_MemoryNegative_02_Paper>();
+        memoryFragment.SetActive(false);
+        
         // 처음에는 종이를 위에 올려둠
         if (paper != null)
         {
@@ -45,7 +49,6 @@ public class Ch3_Console : BaseInteractable
             if (!canUse)
                 return;
 
-            Debug.Log("Q키 눌림");
             inventory = Inventory_PossessableObject.Instance;
             
             Debug.Log("인벤토리: " + inventory);
@@ -58,7 +61,7 @@ public class Ch3_Console : BaseInteractable
                 return;
             }
 
-            if (cardKey == inventory.selectedItem() && cardKey != null)
+            if (cardKey == inventory.selectedItem() && cardKey != null && !isZoomed)
             {
                 UIManager.Instance.PlayModeUI_CloseAll();
                 qKey.SetActive(false);
@@ -66,7 +69,15 @@ public class Ch3_Console : BaseInteractable
                 isZoomed = true;
                 return;
             }
-            return;
+            else if (cardKey == inventory.selectedItem() && cardKey != null && isZoomed)
+            {
+                UIManager.Instance.PlayModeUI_OpenAll();
+                qKey.SetActive(true);
+                zoomCamera.Priority = 5;
+                isZoomed = false;
+                return;
+            }
+                return;
         }
 
         if (Input.GetKeyDown(KeyCode.E) && isZoomed)
@@ -106,6 +117,8 @@ public class Ch3_Console : BaseInteractable
         }
 
         correctBtn.SetActive(true);
+        memoryFragment.SetActive(true);
+        memoryPaper.ActivatePaper();
 
         if (paper != null && zoomPos != null)
         {
