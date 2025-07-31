@@ -36,13 +36,13 @@ public class PixelExploder : MonoBehaviour
     }
 
     //// 테스트용 Update 함수
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            RadialFallExplosion();
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        RadialFallExplosion();
+    //    }
+    //}
 
 
     public void Explode()

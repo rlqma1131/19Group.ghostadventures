@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2561193274736065236}
   - component: {fileID: 8526014870872934319}
   - component: {fileID: 5339061907774619273}
-  - component: {fileID: 2009912379627774277}
+  - component: {fileID: 5817068636575157308}
   m_Layer: 3
   m_Name: TimelineManager
   m_TagString: Untagged
@@ -83,7 +83,7 @@ MonoBehaviour:
           m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 2009912379627774277}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: MoveScene, Assembly-CSharp
           m_MethodName: GoScene
           m_Mode: 5
@@ -95,7 +95,7 @@ MonoBehaviour:
             m_StringArgument: Ch01_House
             m_BoolArgument: 0
           m_CallState: 2
---- !u!114 &2009912379627774277
+--- !u!114 &5817068636575157308
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -104,13 +104,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3210772685548555}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7b89cafb83b5c143813de0dc6244147, type: 3}
+  m_Script: {fileID: 11500000, guid: 7fbf35378c4955945a68b4f8e70307f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skip: {fileID: 0}
-  nextSceneName: StartScene
-  space1: {fileID: 0}
-  space2: {fileID: 0}
 --- !u!1 &207487314148586197
 GameObject:
   m_ObjectHideFlags: 0
@@ -634,8 +630,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 2009912379627774277}
-          m_TargetAssemblyTypeName: MoveScene, Assembly-CSharp
+        - m_Target: {fileID: 5817068636575157308}
+          m_TargetAssemblyTypeName: GameOver, Assembly-CSharp
           m_MethodName: GoScene
           m_Mode: 5
           m_Arguments:
@@ -11208,7 +11204,7 @@ MonoBehaviour:
   - {x: 0.32, y: -0.28, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 105262
+  m_InstanceId: 657400
   m_LocalBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0.32, y: 0.28, z: 0}
