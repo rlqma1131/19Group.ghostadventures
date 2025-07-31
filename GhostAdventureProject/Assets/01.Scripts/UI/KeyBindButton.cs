@@ -60,7 +60,8 @@ public class KeyBindButton : MonoBehaviour
 
     void UpdateKeyText()
     {
-        keyText.text = UIManager.Instance.ESCMenuUI.GetKey(clueIndex).ToString();
+        string keyName = UIManager.Instance.ESCMenuUI.GetKey(clueIndex).ToString();        
+        keyText.text = keyName.Replace("Alpha", "");
     }
 
 
