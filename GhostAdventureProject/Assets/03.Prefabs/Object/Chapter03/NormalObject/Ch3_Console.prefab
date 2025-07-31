@@ -3880,8 +3880,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8417048712579866376, guid: e53e131817d166648afbdc8a0c0a31a3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8442739900647285127, guid: e53e131817d166648afbdc8a0c0a31a3, type: 3}
+      propertyPath: data
+      value: 
+      objectReference: {fileID: 11400000, guid: 417c727db9ac21f43b10c764c69e4ce2, type: 2}
     - target: {fileID: 8515789519218438037, guid: e53e131817d166648afbdc8a0c0a31a3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.28
@@ -3925,7 +3929,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8417048712579866376, guid: e53e131817d166648afbdc8a0c0a31a3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 689990991299478248}
   m_SourcePrefab: {fileID: 100100000, guid: e53e131817d166648afbdc8a0c0a31a3, type: 3}
 --- !u!4 &2735302218990255428 stripped
 Transform:
@@ -3937,6 +3944,51 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8417048712579866376, guid: e53e131817d166648afbdc8a0c0a31a3, type: 3}
   m_PrefabInstance: {fileID: 6042589981711667921}
   m_PrefabAsset: {fileID: 0}
+--- !u!61 &689990991299478248
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2816098488527965657}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.95, y: 2.22}
+  m_EdgeRadius: 0
 --- !u!1001 &8852602722478133997
 PrefabInstance:
   m_ObjectHideFlags: 0

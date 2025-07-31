@@ -30,7 +30,7 @@ public class Ch3_Console : BaseInteractable
 
     void Start()
     {
-        memoryPaper = paper?.GetComponent<Ch3_MemoryNegative_02_Paper>();
+        memoryPaper = memoryFragment?.GetComponent<Ch3_MemoryNegative_02_Paper>();
         memoryFragment.SetActive(false);
         
         // 처음에는 종이를 위에 올려둠
@@ -77,7 +77,7 @@ public class Ch3_Console : BaseInteractable
                 isZoomed = false;
                 return;
             }
-                return;
+            return;
         }
 
         if (Input.GetKeyDown(KeyCode.E) && isZoomed)
@@ -118,7 +118,7 @@ public class Ch3_Console : BaseInteractable
 
         correctBtn.SetActive(true);
         memoryFragment.SetActive(true);
-        //memoryPaper.ActivatePaper();
+        memoryPaper.ActivatePaper();
 
         if (paper != null && zoomPos != null)
         {
