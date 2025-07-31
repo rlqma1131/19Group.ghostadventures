@@ -88,6 +88,7 @@ public class TimelineControl : MonoBehaviour
     }
     public void CloseScene()
     {
+        Debug.Log("씬 닫기");
         string currentSceneName = gameObject.scene.name; //연출되고있는 씬이름 저장
         Time.timeScale = 1;
         UIManager.Instance.PlayModeUI_OpenAll(); // 플레이모드 UI 열기
