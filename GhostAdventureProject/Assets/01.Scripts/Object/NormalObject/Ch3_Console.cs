@@ -118,7 +118,7 @@ public class Ch3_Console : BaseInteractable
 
         correctBtn.SetActive(true);
         memoryFragment.SetActive(true);
-        memoryPaper.ActivatePaper();
+        //memoryPaper.ActivatePaper();
 
         if (paper != null && zoomPos != null)
         {
