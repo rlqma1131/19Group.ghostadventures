@@ -66,8 +66,10 @@ public class PlayerLifeManager : MonoBehaviour
 
     public void HandleGameOver()
     {
-        Debug.Log("게임오버!");
-        //OnGameOver?.Invoke(); // 게임오버 UI 등이 이 이벤트를 듣고 처리
+        var qteUI = FindObjectOfType<QTEUI2>();
+        if (qteUI != null)
+            qteUI.gameObject.SetActive(false);
+        
         UIManager.Instance.PlayModeUI_CloseAll();
         GameObject player = GameManager.Instance.Player;
         PlayableDirector director = player.GetComponentInChildren<PlayableDirector>();
@@ -85,12 +87,9 @@ public class PlayerLifeManager : MonoBehaviour
             {
                 ca.colorFilter.value = volume.farColor; // EnemyVolumeTrigger에 정의된 farColor로 복원
             }
-
-
         }
-                director.Play();
         
-;
+        director.Play();
 
         if (volume != null)
         {
