@@ -4,7 +4,7 @@ public class PlayerController_Ball : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private ParticleSystem moveParticle; // <- 파티클 시스템 추가
-
+    [SerializeField] private GameObject player;
     private void Awake()
     {
         if(moveParticle == null)
@@ -49,6 +49,15 @@ public class PlayerController_Ball : MonoBehaviour
             if (moveParticle.isPlaying)
                 moveParticle.Stop();
         }
+    }
+
+
+    public void changeSpedd()
+    {
+        transform.position = player.transform.position; // 플레이어 위치로 이동
+        // 속도 변경 로직
+        moveSpeed = 20f; 
+        Debug.Log("Player speed changed to: " + moveSpeed);
     }
 
 }
