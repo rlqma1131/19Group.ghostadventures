@@ -96,7 +96,7 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
     [SerializeField] private Sprite[] pageTurnSprites; // 프레임 순서대로 넣기
     [SerializeField] private float frameInterval = 0.05f; // 프레임 간 간격
 
-private bool isFlipping = false;
+    private bool isFlipping = false;
 
     [SerializeField] private Button nextPageButton;
     [SerializeField] private Button prevPageButton;
