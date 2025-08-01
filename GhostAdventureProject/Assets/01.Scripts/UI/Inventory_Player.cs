@@ -148,6 +148,8 @@ public class Inventory_Player : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
+            if(ESCMenu.Instance != null)
+            {
             KeyCode key = ESCMenu.Instance.GetKey(i);
             if (Input.GetKeyDown(key))
             {
@@ -161,7 +163,7 @@ public class Inventory_Player : MonoBehaviour
                 {
                     InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
                 }
-            }
+            }}
         }
     }
 }

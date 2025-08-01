@@ -52,9 +52,8 @@ public class PossessionSystem : MonoBehaviour
 
         switch (obssessingTarget.tag)
         {
+            case "Scanner":
             case "Cat":
-                // 고양이는 풀 충전
-                Debug.Log("고양이덕에 풀충전입니다옹");
                 break;
             
             case "Animal":

@@ -9,9 +9,9 @@ public class EnemySearch : MonoBehaviour
     public int searchLaps = 2;
 
     private Vector3 searchCenter;
-    private int currentSearchLap = 0;
-    private bool searchingRight = true;
-    private bool isSearchWaiting = false;
+    private int currentLap = 0;
+    private bool movingRight = true;
+    private bool isWaiting = false;
     private float waitTimer = 0f;
 
     private EnemyMovement movement;
@@ -22,41 +22,33 @@ public class EnemySearch : MonoBehaviour
         movement = GetComponent<EnemyMovement>();
         enemyAI = GetComponent<EnemyAI>();
     }
-
+    
     public void SetupSearchPattern()
     {
         searchCenter = transform.position;
-
-        if (movement.lockYPosition)
-        {
-            Vector3 center = searchCenter;
-            center.y = movement.fixedYPosition;
-            searchCenter = center;
-        }
-
-        currentSearchLap = 0;
-        searchingRight = true;
-        isSearchWaiting = false;
-        SetNextSearchTarget();
+        currentLap = 0;
+        movingRight = true;
+        isWaiting = false;
+        SetNextTarget();
     }
-
+    
     public void UpdateSearching()
     {
-        if (isSearchWaiting)
+        if (isWaiting)
         {
             waitTimer += Time.deltaTime;
-            if (waitTimer >= 1f)
+            if (waitTimer >= searchWaitTime)
             {
-                isSearchWaiting = false;
+                isWaiting = false;
                 waitTimer = 0f;
-                SetNextSearchTarget();
+                SetNextTarget();
             }
             return;
         }
 
         if (movement.HasReachedTarget())
         {
-            isSearchWaiting = true;
+            isWaiting = true;
             waitTimer = 0f;
         }
         else
@@ -64,29 +56,32 @@ public class EnemySearch : MonoBehaviour
             movement.MoveToTarget(movement.moveSpeed * 0.6f);
         }
     }
-
+    
     public void UpdateSearchComplete()
     {
         if (Vector3.Distance(transform.position, searchCenter) > 0.3f)
+        {
             movement.MoveToTarget(movement.moveSpeed * 0.6f);
+        }
+        else
+        {
+            enemyAI.ChangeState(EnemyAI.State.Patrolling);
+        }
     }
-
-    private void SetNextSearchTarget()
+    
+    private void SetNextTarget()
     {
-        if (currentSearchLap >= searchLaps)
+        if (currentLap >= searchLaps)
         {
             movement.SetTarget(searchCenter);
-            enemyAI.ChangeState(EnemyAI.AIState.SearchComplete);
             return;
         }
 
-        Vector3 next = searchingRight
-            ? searchCenter + Vector3.right * searchDistance
-            : searchCenter + Vector3.left * searchDistance;
+        Vector3 nextPos = searchCenter + (movingRight ? Vector3.right : Vector3.left) * searchDistance;
+        movingRight = !movingRight;
 
-        searchingRight = !searchingRight;
-        if (!searchingRight) currentSearchLap++;
-        movement.SetTarget(next);
+        if (!movingRight) currentLap++; // 왕복 1회로 계산
+        movement.SetTarget(nextPos);
     }
 
     public float GetSearchWaitTime() => searchWaitTime;

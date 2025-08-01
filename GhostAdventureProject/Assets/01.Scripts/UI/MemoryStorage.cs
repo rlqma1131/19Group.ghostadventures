@@ -103,6 +103,8 @@ private bool isFlipping = false;
     [SerializeField] private Button closeButton;
 
     private List<MemoryData> collectedMemories = new();
+    public List<MemoryData> CollectedMemories => collectedMemories;
+
     private int currentPageIndex = 0; // 0: 첫 페이지, 1: 다음 페이지...
 
     private void OnEnable()

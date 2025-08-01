@@ -13,15 +13,19 @@ public class QTEEffectManager : MonoBehaviour
     [Header("카메라 연출")]
     public Camera mainCamera;
     public float zoomFOV = 30f;
-    private float initialFOV;
-    private Vector3 initialCamPosition;
-
     public float zoomDuration = 0.5f;
     public float moveDuration = 0.5f;
+
+    private float initialFOV;
+    private Vector3 initialCamPosition;
 
     [Header("QTE 대상")]
     public Transform playerTarget;
     public Transform enemyTarget;
+
+    private Coroutine fadeCoroutine;
+    private Coroutine zoomCoroutine;
+    private Coroutine moveCoroutine;
 
     private void Awake()
     {
@@ -37,36 +41,39 @@ public class QTEEffectManager : MonoBehaviour
         if (mainCamera == null)
             mainCamera = Camera.main;
 
-        // 최초 시작 시 기준값 저장
         initialFOV = mainCamera.fieldOfView;
         initialCamPosition = mainCamera.transform.position;
     }
 
     public void StartQTEEffects()
     {
-     
-        zoomDuration = 5f;
+        StopRunningCoroutines();
 
-        StartCoroutine(FadeToAlphaRange(0f, 0.9f, fadeDuration));
-        StartCoroutine(ZoomTo(zoomFOV, zoomDuration));
+        fadeCoroutine = StartCoroutine(FadeToAlphaRange(darkOverlay.alpha, 0.9f, fadeDuration));
+        zoomCoroutine = StartCoroutine(ZoomTo(zoomFOV, zoomDuration));
 
         if (playerTarget != null && enemyTarget != null)
         {
             Vector3 mid = (playerTarget.position + enemyTarget.position) / 2f;
             Vector3 camPos = new Vector3(mid.x, mid.y, mainCamera.transform.position.z);
-            StartCoroutine(MoveCameraTo(camPos, zoomDuration));
+            moveCoroutine = StartCoroutine(MoveCameraTo(camPos, moveDuration));
         }
     }
 
     public void EndQTEEffects()
     {
-  
-        StopAllCoroutines(); // 모든 코루틴 중지 !!! 
-        zoomDuration = 0.5f;
+        StopRunningCoroutines();
 
-        StartCoroutine(FadeToAlphaRange(darkOverlay.alpha, 0f, fadeDuration));
-        StartCoroutine(ZoomTo(initialFOV, zoomDuration));
-        StartCoroutine(MoveCameraTo(initialCamPosition, zoomDuration));
+        fadeCoroutine = StartCoroutine(FadeToAlphaRange(darkOverlay.alpha, 0f, fadeDuration));
+        zoomCoroutine = StartCoroutine(ZoomTo(initialFOV, zoomDuration));
+        moveCoroutine = StartCoroutine(MoveCameraTo(initialCamPosition, moveDuration));
+    }
+
+    private void StopRunningCoroutines()
+    {
+        if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
+        if (zoomCoroutine != null) StopCoroutine(zoomCoroutine);
+        if (moveCoroutine != null) StopCoroutine(moveCoroutine);
     }
 
     private IEnumerator FadeToAlphaRange(float fromAlpha, float toAlpha, float duration)

@@ -40,9 +40,9 @@ public class InventoryExpandViewer : MonoBehaviour
 
             clueImage.rectTransform.sizeDelta = new Vector2(calculatedWidth, fixedHeight);
 
-            cluePanel.SetActive(true);
-            isShowing = true;
         }
+        cluePanel.SetActive(true);
+        isShowing = true;
     }
 
     // 단서패널 닫기
