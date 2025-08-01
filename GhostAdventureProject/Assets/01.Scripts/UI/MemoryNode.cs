@@ -4,10 +4,18 @@ using TMPro;
 //using UnityEditor.SearchService;
 using UnityEngine.SceneManagement;
 
+public enum MemoryState
+{
+    None,
+    Selected,
+    Correct,
+    Wrong
+}
+
 public class MemoryNode : MonoBehaviour
 {
     [Header("퍼즐 선택시 켜짐")]
-    [SerializeField] private Outline outline;
+    [SerializeField] private Image overlay;
 
     public RectTransform targetImage;
     public CanvasGroup canvasGroup; // ⬅ 페이드 아웃용
@@ -28,19 +36,6 @@ public class MemoryNode : MonoBehaviour
         icon.sprite = memory.MemoryCutSceneImage;
         memoryName.text = memory.memoryTitle;
         sceneName = memory.CutSceneName;
-
-    //     switch (memory.type)
-    //     {
-    //         case MemoryData.MemoryType.Positive:
-    //             icon.sprite = memory.PositiveFragmentSprite;
-    //             break;
-    //         case MemoryData.MemoryType.Negative:
-    //             icon.sprite = memory.NegativeFragmentSprite;
-    //             break;
-    //         case MemoryData.MemoryType.Fake:
-    //             icon.sprite = memory.FakeFragmentSprite;
-    //             break;
-    //     }
     }
 
     public void GoToCutScene()
@@ -50,10 +45,23 @@ public class MemoryNode : MonoBehaviour
         SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
     }
 
-    public void SetSelected(bool isSelected)
+    public void SetStateEffect(MemoryState state)
     {
-        if (outline != null)
-            outline.enabled = isSelected;
+        if (overlay == null) return;
+
+        overlay.enabled = true;
+
+        switch (state)
+        {
+            case MemoryState.Selected:
+                overlay.color = new Color(1f, 1f, 1f, 0.2f); break;
+            case MemoryState.Correct:
+                overlay.color = new Color(0f, 1f, 0f, 0.4f); break;
+            case MemoryState.Wrong:
+                overlay.color = new Color(1f, 0f, 0f, 0.4f); break;
+            case MemoryState.None:
+                overlay.enabled = false; break;
+        }
     }
 
     // using UnityEngine;
