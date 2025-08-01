@@ -6,7 +6,7 @@ public class DissolveController : MonoBehaviour
 {
     public float dissolveAmount;
     public float dissolveSpeed;
-    public bool isDissolving;
+    public bool isDissolving =false;
     [ColorUsageAttribute(true,true)]
     public Color outColor;
     [ColorUsageAttribute(true, true)]
