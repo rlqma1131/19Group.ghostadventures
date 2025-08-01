@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 //using UnityEditor.Build;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public interface IUIClosable
@@ -88,6 +89,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Texture2D openDoorCursor; // 열린문
     private GameObject lastHovered;
     [SerializeField] private Vector2 hotspot = Vector2.zero;
+    [SerializeField] private EventSystem eventSystem;
 
     // -------------------------------------------------------------------------------------------
     
@@ -106,24 +108,68 @@ public class UIManager : Singleton<UIManager>
         {
             PlayModeUI_CloseAll();
         }
+        eventSystem = FindObjectOfType<EventSystem>();
     
     }
     private void Update() {
 
-    // if (Input.GetMouseButtonDown(0)) // 클릭 시 확인
-    // {
-    //     Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //     RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
+    if (Input.GetMouseButtonDown(0)) // 클릭 시 확인
+    {
+        // Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
 
-    //     if (hit.collider != null)
-    //     {
-    //         Debug.Log("감지됨: " + hit.collider.gameObject.name);
-    //     }
-    //     else
-    //     {
-    //         Debug.Log("히트 안 됨!");
-    //     }
-    // }
+        // if (hit.collider != null)
+        // {
+        //     Debug.Log("감지됨: " + hit.collider.gameObject.name);
+        // }
+        // else
+        // {
+        //     Debug.Log("히트 안 됨!");
+        // }
+
+        //=================================
+        //   PointerEventData pointerData = new PointerEventData(eventSystem)
+        //     {
+        //         position = Input.mousePosition
+        //     };
+
+        //     List<RaycastResult> results = new List<RaycastResult>();
+        //     EventSystem.current.RaycastAll(pointerData, results);
+
+        //     if (results.Count > 0)
+        //     {
+        //         GameObject uiObject = results[0].gameObject;
+        //         Canvas parentCanvas = uiObject.GetComponentInParent<Canvas>();
+
+        //         Debug.Log($"✅ 감지된 UI 오브젝트: {uiObject.name}");
+
+        //         if (parentCanvas != null)
+        //         {
+        //             Debug.Log($"↳ 이 오브젝트는 Canvas '{parentCanvas.name}' 소속입니다.");
+        //         }
+        //         else
+        //         {
+        //             Debug.Log("⚠ 감지된 UI는 Canvas에 속해 있지 않습니다.");
+        //         }
+
+        //         return; // UI 감지되었으면 여기서 종료
+        //     }
+
+        //     // 2D 오브젝트 감지
+        //     Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //     RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
+
+        //     if (hit.collider != null)
+        //     {
+        //         Debug.Log("🎯 2D 오브젝트 감지됨: " + hit.collider.gameObject.name);
+        //     }
+        //     else
+        //     {
+        //         Debug.Log("❌ 아무것도 감지되지 않음!");
+        //     }
+        
+    
+    }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         TryCloseTopUI();
