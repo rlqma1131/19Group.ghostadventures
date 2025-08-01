@@ -5,26 +5,43 @@ using UnityEngine.UI;
 
 public class MemoryManager : MonoBehaviour
 {
-   // 기억 수집 및 상태 관리
-   public static MemoryManager Instance;
+    // 기억 수집 및 상태 관리
+    public static MemoryManager Instance;
 
-   public List<string> collectedMemoryIDs = new List<string>();
-   private Dictionary<string, MemoryData> memoryDataDict = new();
+    public List<string> collectedMemoryIDs = new List<string>();
+    private Dictionary<string, MemoryData> memoryDataDict = new();
 
-   private List<MemoryData> scannedMemoryList = new();
+    private List<MemoryData> scannedMemoryList = new();
     public IReadOnlyList<MemoryData> ScannedMemories => scannedMemoryList;
 
-   public event Action<MemoryData> OnMemoryCollected;
-   public Button closeMemoryStorage;
+    public event Action<MemoryData> OnMemoryCollected;
+    public Button closeMemoryStorage;
 
-   private void Awake()
-   {
-       if (Instance == null) Instance = this;
-       else Destroy(gameObject);
-       LoadAllMemoryData();
-       closeMemoryStorage.gameObject.SetActive(false);
-   }
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+        LoadAllMemoryData();
+        closeMemoryStorage.gameObject.SetActive(false);
+    }
 
+#if UNITY_EDITOR
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log("[디버그] 모든 MemoryData 수집 시도");
+
+            var allMemories = Resources.LoadAll<MemoryData>("MemoryData");
+            foreach (var memory in allMemories)
+            {
+                TryCollect(memory);
+            }
+
+            Debug.Log($"[디버그] 총 수집된 기억 개수: {collectedMemoryIDs.Count}");
+        }
+    }
+#endif
     private void LoadAllMemoryData()
     {
         var all = Resources.LoadAll<MemoryData>("MemoryData"); // Resources 폴더 사용 시

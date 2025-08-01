@@ -49,6 +49,7 @@ public class MemoryNode : MonoBehaviour
         UIManager.Instance.PlayModeUI_CloseAll();
         SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
     }
+
     public void SetSelected(bool isSelected)
     {
         if (outline != null)

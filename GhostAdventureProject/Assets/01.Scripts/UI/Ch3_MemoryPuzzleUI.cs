@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,6 +18,11 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
 
     private int maxSelections = 3;
     private List<MemoryData> selectedMemories = new();
+
+    void Awake()
+    {
+        Close();
+    }
 
     public void StartFlow(List<MemoryData> memories)
     {
@@ -52,7 +56,7 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
 
             nodeMap[memory] = node;
 
-            Button btn = go.GetComponent<Button>();
+            Button btn = go.GetComponentInChildren<Button>();
             btn.onClick.AddListener(() =>
             {
                 if (selected.Contains(memory))
@@ -102,5 +106,14 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     {
         current.SetActive(false);
         next.SetActive(true);
+    }
+
+    public void Close()
+    {
+        gameObject.SetActive(false);
+        chapter1Panel.SetActive(false);
+        chapter2Panel.SetActive(false);
+        chapter3Panel.SetActive(false);
+        donePanel.SetActive(false);
     }
 }

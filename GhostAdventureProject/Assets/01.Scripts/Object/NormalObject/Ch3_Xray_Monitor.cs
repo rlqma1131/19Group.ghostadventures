@@ -69,7 +69,7 @@ public class Ch3_Xray_Monitor : BaseInteractable
             });
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
 
@@ -79,7 +79,7 @@ public class Ch3_Xray_Monitor : BaseInteractable
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    protected override void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
 
