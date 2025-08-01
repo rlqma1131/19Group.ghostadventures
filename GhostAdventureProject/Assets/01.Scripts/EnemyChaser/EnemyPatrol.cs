@@ -1,31 +1,23 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class EnemyPatrol : MonoBehaviour
 {
-    [Header("순찰 설정")]
-    public float patrolRadius = 3f;
-    public float patrolWaitTime = 1f;
-    public float patrolSpeed = 2f;
-    public float targetReachThreshold = 0.5f;
+    public float minRoomStayTime = 5f;
+    public float doorCooldown = 5f;
 
-    [Header("문 탈출 설정")]
-    public float doorEscapeTime = 7f;
-    public float doorSearchRadius = 15f;
-    public float doorCooldownTime = 30f;
-    public int nearDoorCandidates = 3;
-
-    private Vector3 patrolCenter;
-    private Vector3 currentTarget;
-    private float patrolTimer = 0f;
-    private bool isWaiting = false;
-    private float waitTimer = 0f;
-
-    private GameObject targetDoor;
-    private Dictionary<GameObject, float> usedDoors = new();
+    [Range(0f, 1f)] public float enterDoorChance = 0.3f;
+    [Range(0f, 1f)] public float exitDoorChance = 0.6f;
 
     private EnemyMovement movement;
     private EnemyAI enemyAI;
+    private int currentWaypointIndex = 0;
+    private int savedWaypointIndex;
+
+    private bool insideRoom = false;
+    private float roomStayTimer = 0f;
+    private float lastDoorUseTime = 0f;
 
     private void Awake()
     {
@@ -33,124 +25,119 @@ public class EnemyPatrol : MonoBehaviour
         enemyAI = GetComponent<EnemyAI>();
     }
 
-    private void Start()
+    private void Update()
     {
-        patrolCenter = transform.position;
-        SetNewTarget();
-    }
-
-    public void UpdatePatrolling()
-    {
-        if (enemyAI.CurrentState != EnemyAI.State.Patrolling) return;
-
-        patrolTimer += Time.deltaTime;
-
-        if (patrolTimer >= doorEscapeTime)
+        if (enemyAI.CurrentState == EnemyAI.State.QTE)
         {
-            TryEscapeToDoor();
+            movement.Stop();
             return;
         }
 
-        if (isWaiting)
+        if (insideRoom)
         {
-            waitTimer += Time.deltaTime;
-            if (waitTimer >= patrolWaitTime)
-            {
-                isWaiting = false;
-                SetNewTarget();
-            }
-            return;
-        }
-
-        if (movement.HasReachedTarget(targetReachThreshold))
-        {
-            movement.StopMoving();
-            isWaiting = true;
-            waitTimer = 0f;
+            HandleRoomStay();
         }
         else
         {
-            movement.SetTarget(currentTarget);
-            movement.MoveToTarget(patrolSpeed);
+            Patrol();
         }
     }
 
-    private void SetNewTarget()
+    private void Patrol()
     {
-        float randomX = patrolCenter.x + Random.Range(-patrolRadius, patrolRadius);
-        currentTarget = new Vector3(randomX, transform.position.y, transform.position.z);
-        movement.SetTarget(currentTarget);
-    }
+        if (WaypointManager.waypoints == null || WaypointManager.waypoints.Length == 0) return;
 
-    private void TryEscapeToDoor()
-    {
-        GameObject nearestDoor = FindNearestDoor();
-        if (nearestDoor == null)
+        Transform targetWaypoint = WaypointManager.waypoints[currentWaypointIndex];
+        Vector2 dir = (targetWaypoint.position - transform.position).normalized;
+
+        movement.Move(dir, false);
+        movement.FlipSprite(targetWaypoint.position);
+
+        // Waypoint 도착 시
+        if (Vector2.Distance(transform.position, targetWaypoint.position) < 0.2f)
         {
-            patrolTimer = 0f;
-            return;
-        }
+            // ✅ 문 입출 여부를 여기서만 판단
+            if (!insideRoom && Time.time - lastDoorUseTime > doorCooldown && Random.value <= enterDoorChance)
+            {
+                BaseDoor door = FindNearbyDoor();
+                if (door != null)
+                {
+                    EnterRoom();
+                    TeleportToRoom(door);
+                    return;
+                }
+            }
 
-        targetDoor = nearestDoor;
-        movement.SetTarget(targetDoor.transform.position);
-        StartCoroutine(MoveToDoorAndTeleport());
+            currentWaypointIndex = (currentWaypointIndex + 1) % WaypointManager.waypoints.Length;
+        }
     }
 
-    private System.Collections.IEnumerator MoveToDoorAndTeleport()
+    private void HandleRoomStay()
     {
-        while (!movement.HasReachedTarget(targetReachThreshold))
+        roomStayTimer += Time.deltaTime;
+
+        if (roomStayTimer >= minRoomStayTime)
         {
-            movement.MoveToTarget(patrolSpeed * 1.5f);
-            yield return null;
+            // 방에서 나올 확률
+            if (Random.value <= exitDoorChance)
+            {
+                BaseDoor door = FindNearbyDoor();
+                if (door != null)
+                {
+                    ExitRoom();
+                    TeleportToHallway(door);
+                    return;
+                }
+            }
+            else
+            {
+                Vector2 randomDir = Random.insideUnitCircle.normalized;
+                movement.Move(randomDir * 0.3f, false);
+            }
         }
-
-        BaseDoor doorScript = targetDoor.GetComponent<BaseDoor>();
-        if (doorScript != null)
-        {
-            usedDoors[targetDoor] = Time.time;
-
-            Vector3 teleportPosition = (doorScript.GetTargetDoor() != null)
-                ? doorScript.GetTargetDoor().position
-                : (Vector3)doorScript.GetTargetPos();
-
-            transform.position = teleportPosition;
-            patrolCenter = teleportPosition;
-        }
-
-        patrolTimer = 0f;
-        SetNewTarget();
     }
 
-    private GameObject FindNearestDoor()
+    public void EnterRoom()
     {
-        GameObject[] allDoors = GameObject.FindGameObjectsWithTag("Door");
-        List<GameObject> availableDoors = new();
-
-        foreach (GameObject door in allDoors)
-        {
-            if (usedDoors.ContainsKey(door) && Time.time - usedDoors[door] < doorCooldownTime)
-                continue;
-
-            if (Vector3.Distance(transform.position, door.transform.position) <= doorSearchRadius)
-                availableDoors.Add(door);
-        }
-
-        if (availableDoors.Count == 0) return null;
-
-        availableDoors.Sort((a, b) =>
-            Vector3.Distance(transform.position, a.transform.position)
-            .CompareTo(Vector3.Distance(transform.position, b.transform.position)));
-
-        int candidateCount = Mathf.Min(nearDoorCandidates, availableDoors.Count);
-        return availableDoors[Random.Range(0, candidateCount)];
+        insideRoom = true;
+        roomStayTimer = 0f;
+        savedWaypointIndex = currentWaypointIndex;
+        lastDoorUseTime = Time.time;
     }
 
-    private void OnDrawGizmosSelected()
+    public void ExitRoom()
     {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(patrolCenter, patrolRadius);
-
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(currentTarget, 0.2f);
+        insideRoom = false;
+        roomStayTimer = 0f;
+        currentWaypointIndex = savedWaypointIndex; // 복귀 후 기존 목표 이어감
+        lastDoorUseTime = Time.time;
     }
+
+    private BaseDoor FindNearbyDoor()
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1.5f);
+        foreach (var col in colliders)
+        {
+            BaseDoor door = col.GetComponent<BaseDoor>();
+            if (door != null)
+                return door;
+        }
+        return null;
+    }
+
+    private void TeleportToRoom(BaseDoor door)
+    {
+        transform.position = (door.GetTargetDoor() != null)
+            ? door.GetTargetDoor().position
+            : (Vector3)door.GetTargetPos();
+    }
+
+    private void TeleportToHallway(BaseDoor door)
+    {
+        transform.position = (door.GetTargetDoor() != null)
+            ? door.GetTargetDoor().position
+            : (Vector3)door.GetTargetPos();
+    }
+
+    public bool IsInsideRoom => insideRoom;
 }

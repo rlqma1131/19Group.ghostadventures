@@ -4,103 +4,72 @@ using UnityEngine;
 [RequireComponent(typeof(EnemyMovement))]
 [RequireComponent(typeof(EnemyPatrol))]
 [RequireComponent(typeof(EnemyDoorInteraction))]
-[RequireComponent(typeof(EnemySearch))]
 [RequireComponent(typeof(EnemyQTE))]
 public class EnemyAI : MonoBehaviour
 {
-    public enum State
-    {
-        Patrolling,
-        Chasing,
-        Searching,
-        QTE,
-        Stunned
-    }
+    public enum State { Patrolling, Chasing, QTE }
 
-    [Header("Detection")]
-    public Transform player;
-    public float detectionRange = 5f;
+    [Header("감지 설정")]
+    public float detectionRange = 4f;
     [Range(0, 360)] public float viewAngle = 60f;
 
-    [Header("Animation")]
-    public Animator enemyAnimator;
-
-    private State currentState;
+    private Transform player;
     private EnemyMovement movement;
-    private EnemyPatrol patrol;
-    private EnemyDoorInteraction doorInteraction;
-    private EnemySearch search;
-    private EnemyQTE qteHandler;
-
-    // 전역 감지
-    private bool isAlerted = false;
-    private float alertTimer = 0f;
-    public float alertDuration = 5f;
-    public float alertChaseSpeed = 5f;
-
-    // 호환용 프로퍼티 (기존 스크립트 사용)
-    public State CurrentState => currentState;
-    public Transform Player => player;
+    private State currentState;
+    private Animator animator;
+    public State CurrentState { get; set; }
+    private Vector3 originalPosition;
 
     private void Awake()
     {
         movement = GetComponent<EnemyMovement>();
-        patrol = GetComponent<EnemyPatrol>();
-        doorInteraction = GetComponent<EnemyDoorInteraction>();
-        search = GetComponent<EnemySearch>();
-        qteHandler = GetComponent<EnemyQTE>();
-
-        if (enemyAnimator == null)
-            enemyAnimator = GetComponentInChildren<Animator>();
+        animator = GetComponent<Animator>(); // 애니메이터 추가
     }
 
     private void Start()
     {
-        if (player == null && GameManager.Instance != null)
-            player = GameManager.Instance.Player?.transform;
-
-        qteHandler.SetPlayer(player);
+        if (GameManager.Instance != null && GameManager.Instance.Player != null)
+        {
+            player = GameManager.Instance.Player.transform;
+        }
+        
+        originalPosition = transform.position;
         ChangeState(State.Patrolling);
     }
 
     private void Update()
     {
-        HandleAlertMode();
-
-        if (isAlerted) return;
-
         switch (currentState)
         {
             case State.Patrolling:
-                patrol.UpdatePatrolling();
+                PatrolBehavior();
                 DetectPlayer();
                 break;
-
             case State.Chasing:
                 ChasePlayer();
                 break;
-
-            case State.Searching:
-                search.UpdateSearching();
-                DetectPlayer();
-                break;
-
             case State.QTE:
-                break;
-
-            case State.Stunned:
+                movement.Stop();
                 break;
         }
+    }
+
+    private void PatrolBehavior()
+    {
+        // EnemyPatrol에서 제어 예정
+        animator.SetBool("IsWalking", true);
     }
 
     private void DetectPlayer()
     {
         if (player == null) return;
 
-        Vector2 dir = player.position - transform.position;
-        float angle = Vector2.Angle(transform.right, dir);
+        Vector2 dirToPlayer = player.position - transform.position;
+        float distance = dirToPlayer.magnitude;
+        Vector2 facingDir = transform.localScale.x >= 0 ? Vector2.right : Vector2.left;
+        float angle = Vector2.Angle(facingDir, dirToPlayer);
 
-        if (dir.magnitude <= detectionRange && angle <= viewAngle / 2f)
+        if (distance <= detectionRange && angle <= viewAngle / 2f)
         {
             ChangeState(State.Chasing);
         }
@@ -114,29 +83,30 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
-        movement.SetTarget(player.position);
-        movement.MoveToTarget(movement.chaseSpeed);
+        Vector2 dir = (player.position - transform.position).normalized;
+        movement.Move(dir, true);
+        movement.FlipSprite(player.position);
+        animator.SetBool("IsWalking", true);
 
-        Vector2 dir = player.position - transform.position;
-        float angle = Vector2.Angle(transform.right, dir);
+        Vector2 facingDir = transform.localScale.x >= 0 ? Vector2.right : Vector2.left;
+        float angle = Vector2.Angle(facingDir, player.position - transform.position);
 
-        if (dir.magnitude > detectionRange * 1.5f || angle > viewAngle)
+        if (Vector2.Distance(transform.position, player.position) > detectionRange * 1.5f || angle > viewAngle)
         {
-            search.SetupSearchPattern();
-            ChangeState(State.Searching);
+            ChangeState(State.Patrolling);
         }
     }
 
     public void OnCaughtPlayer()
     {
         ChangeState(State.QTE);
-        movement.StopMoving();
+        movement.Stop();
+        animator.SetBool("IsWalking", false);
     }
 
     public void OnQTESuccess()
     {
-        ChangeState(State.Stunned);
-        StartCoroutine(RecoverFromStun());
+        ChangeState(State.Patrolling);
     }
 
     public void OnQTEFail()
@@ -144,65 +114,48 @@ public class EnemyAI : MonoBehaviour
         PlayerLifeManager.Instance.HandleGameOver();
     }
 
-    private IEnumerator RecoverFromStun()
-    {
-        yield return new WaitForSeconds(2f);
-        ChangeState(State.Patrolling);
-    }
-
-    public void GetDistractedBy(Transform soundSource)
-    {
-        isAlerted = true;
-        alertTimer = alertDuration;
-        ChangeState(State.Chasing);
-        Debug.Log($"[EnemyAI] 사운드 감지 - {alertDuration}초 동안 전역 추격 모드!");
-    }
-
-    private void HandleAlertMode()
-    {
-        if (!isAlerted) return;
-
-        alertTimer -= Time.deltaTime;
-
-        if (player != null)
-        {
-            movement.SetTarget(player.position);
-            movement.MoveToTarget(alertChaseSpeed);
-        }
-
-        if (alertTimer <= 0f)
-        {
-            isAlerted = false;
-            ChangeState(State.Patrolling);
-            Debug.Log("[EnemyAI] 전역 추격 모드 종료");
-        }
-    }
-
     public void ChangeState(State newState)
     {
         currentState = newState;
-        UpdateAnimation();
+        animator.SetBool("IsWalking", newState != State.QTE);
+    }
+    
+    public void TriggerTeleportChase(Transform playerTransform)
+    {
+        if (currentState == State.QTE) return;
+
+        transform.position = playerTransform.position + (Vector3)(Random.insideUnitCircle.normalized * 1.5f); 
+        ChangeState(State.Chasing);
+        StartCoroutine(ChaseAndReturn(playerTransform, 5f));
     }
 
-    private void UpdateAnimation()
+    private IEnumerator ChaseAndReturn(Transform playerTransform, float duration)
     {
-        if (enemyAnimator == null) return;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            Vector2 dir = (playerTransform.position - transform.position).normalized;
+            movement.Move(dir, true);
+            movement.FlipSprite(playerTransform.position);
 
-        enemyAnimator.SetBool("IsWalking",
-            currentState == State.Patrolling ||
-            currentState == State.Chasing);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // 원래 위치로 돌아감
+        transform.position = originalPosition;
+        ChangeState(State.Patrolling);
     }
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
+        Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 
-        Vector3 rightBoundary = Quaternion.Euler(0, 0, viewAngle / 2f) * transform.right;
-        Vector3 leftBoundary = Quaternion.Euler(0, 0, -viewAngle / 2f) * transform.right;
+        Vector3 leftDir = Quaternion.Euler(0, 0, viewAngle / 2) * transform.right;
+        Vector3 rightDir = Quaternion.Euler(0, 0, -viewAngle / 2) * transform.right;
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, transform.position + rightBoundary * detectionRange);
-        Gizmos.DrawLine(transform.position, transform.position + leftBoundary * detectionRange);
+        Gizmos.DrawLine(transform.position, transform.position + leftDir * detectionRange);
+        Gizmos.DrawLine(transform.position, transform.position + rightDir * detectionRange);
     }
 }
