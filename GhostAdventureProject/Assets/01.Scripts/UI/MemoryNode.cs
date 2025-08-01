@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System;
 //using UnityEditor.SearchService;
 using UnityEngine.SceneManagement;
 
 public class MemoryNode : MonoBehaviour
 {
+    [Header("퍼즐 선택시 켜짐")]
+    [SerializeField] private Outline outline;
 
     public RectTransform targetImage;
     public CanvasGroup canvasGroup; // ⬅ 페이드 아웃용
@@ -50,63 +49,68 @@ public class MemoryNode : MonoBehaviour
         UIManager.Instance.PlayModeUI_CloseAll();
         SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
     }
-    
-// using UnityEngine;
-// using UnityEngine.UI;
-// using UnityEngine.SceneManagement;
-// using System.Collections;
+    public void SetSelected(bool isSelected)
+    {
+        if (outline != null)
+            outline.enabled = isSelected;
+    }
 
-// public class ImageZoomTransition : MonoBehaviour
-// {
-//     public RectTransform targetImage;
-//     public CanvasGroup canvasGroup; // ⬅ 페이드 아웃용
-//     public float zoomDuration = 0.5f;
-//     public float fadeDuration = 0.5f;
-//     public string nextSceneName = "NextScene";
+    // using UnityEngine;
+    // using UnityEngine.UI;
+    // using UnityEngine.SceneManagement;
+    // using System.Collections;
 
-//     private bool isZooming = false;
-//     private Vector3 originalScale;
-//     private Vector3 targetScale;
+    // public class ImageZoomTransition : MonoBehaviour
+    // {
+    //     public RectTransform targetImage;
+    //     public CanvasGroup canvasGroup; // ⬅ 페이드 아웃용
+    //     public float zoomDuration = 0.5f;
+    //     public float fadeDuration = 0.5f;
+    //     public string nextSceneName = "NextScene";
 
-//     private void Start()
-//     {
-//         originalScale = targetImage.localScale;
-//         targetScale = Vector3.one * 10f; // 확대 크기 조정
-//         if (canvasGroup != null)
-//             canvasGroup.alpha = 1f;
-//     }
+    //     private bool isZooming = false;
+    //     private Vector3 originalScale;
+    //     private Vector3 targetScale;
 
-//     public void OnClickZoomAndLoad()
-//     {
-//         if (!isZooming)
-//             StartCoroutine(ZoomAndFadeOut());
-//     }
+    //     private void Start()
+    //     {
+    //         originalScale = targetImage.localScale;
+    //         targetScale = Vector3.one * 10f; // 확대 크기 조정
+    //         if (canvasGroup != null)
+    //             canvasGroup.alpha = 1f;
+    //     }
 
-//     private IEnumerator ZoomAndFadeOut()
-//     {
-//         isZooming = true;
-//         float elapsed = 0f;
+    //     public void OnClickZoomAndLoad()
+    //     {
+    //         if (!isZooming)
+    //             StartCoroutine(ZoomAndFadeOut());
+    //     }
 
-//         while (elapsed < zoomDuration)
-//         {
-//             elapsed += Time.deltaTime;
-//             float t = elapsed / zoomDuration;
+    //     private IEnumerator ZoomAndFadeOut()
+    //     {
+    //         isZooming = true;
+    //         float elapsed = 0f;
 
-//             // 확대
-//             targetImage.localScale = Vector3.Lerp(originalScale, targetScale, t);
+    //         while (elapsed < zoomDuration)
+    //         {
+    //             elapsed += Time.deltaTime;
+    //             float t = elapsed / zoomDuration;
 
-//             // 페이드 아웃 (0.5초 동안 동시에 진행)
-//             if (canvasGroup != null)
-//                 canvasGroup.alpha = Mathf.Lerp(1f, 0f, t);
+    //             // 확대
+    //             targetImage.localScale = Vector3.Lerp(originalScale, targetScale, t);
 
-//             yield return null;
-//         }
+    //             // 페이드 아웃 (0.5초 동안 동시에 진행)
+    //             if (canvasGroup != null)
+    //                 canvasGroup.alpha = Mathf.Lerp(1f, 0f, t);
 
-//         targetImage.localScale = targetScale;
-//         if (canvasGroup != null) canvasGroup.alpha = 0f;
+    //             yield return null;
+    //         }
 
-//         // 씬 전환
-//         SceneManager.LoadScene(nextSceneName);
-//     }
-// }
+    //         targetImage.localScale = targetScale;
+    //         if (canvasGroup != null) canvasGroup.alpha = 0f;
+
+    //         // 씬 전환
+    //         SceneManager.LoadScene(nextSceneName);
+    //     }
+    // }
 }

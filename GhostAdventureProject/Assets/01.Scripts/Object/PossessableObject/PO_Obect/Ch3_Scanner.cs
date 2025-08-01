@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Ch3_Scanner : BasePossessable
 {
+    [SerializeField] private Ch3_MemoryPuzzleUI memoryPuzzleUI;
     private MemoryStorage memoryStorage;
     private List<MemoryData> memories;
 
@@ -17,7 +18,7 @@ public class Ch3_Scanner : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
-        memories = memoryStorage.CollectedMemories;
+        memoryPuzzleUI.StartFlow(MemoryManager.Instance.GetCollectedMemories());
 
         // UI 띄우기
     }

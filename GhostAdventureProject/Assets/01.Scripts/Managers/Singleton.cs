@@ -12,7 +12,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                 _instance = (T)FindObjectOfType(typeof(T));
                 if (_instance == null)
                 {
-                    Debug.Log($"{typeof(T)} 인스턴스가 없습니다! 씬에 배치되어 있어야 합니다.");
+                    Debug.Log($"{typeof(T)} 인스턴스가 없습니다. 씬에 배치 합니다.");
                 }
             }
             return _instance;
