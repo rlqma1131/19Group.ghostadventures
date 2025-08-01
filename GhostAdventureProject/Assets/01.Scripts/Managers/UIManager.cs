@@ -127,7 +127,7 @@ public class UIManager : Singleton<UIManager>
         //     Debug.Log("히트 안 됨!");
         // }
 
-        //=================================
+        //============================================================================
         //   PointerEventData pointerData = new PointerEventData(eventSystem)
         //     {
         //         position = Input.mousePosition
@@ -167,6 +167,7 @@ public class UIManager : Singleton<UIManager>
         //     {
         //         Debug.Log("❌ 아무것도 감지되지 않음!");
         //     }
+        //============================================================================
         
     
     }
