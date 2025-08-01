@@ -16,7 +16,7 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     [SerializeField] private Transform chapter3Slot;
     [SerializeField] private GameObject memoryNodePrefab;
 
-    private int maxSelections = 3;
+    //private int maxSelections = 3;
     private List<MemoryData> selectedMemories = new();
 
     void Awake()
@@ -50,6 +50,7 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         foreach (var memory in chapterMemories)
         {
             var go = Instantiate(memoryNodePrefab, slot);
+            go.name = $"MemoryNode_{memory.memoryID}";
             var node = go.GetComponent<MemoryNode>();
             node.Initialize(memory);
             node.SetSelected(false);
