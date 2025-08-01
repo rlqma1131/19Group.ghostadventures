@@ -28,9 +28,15 @@ public class ExampleSceneLink : MonoBehaviour
 public class MemoryData : ScriptableObject
 {
     public enum MemoryType { Positive, Negative, Fake }
+    public enum Chapter { Chapter1, Chapter2, Chapter3, Chapter4 }
 
-    public string memoryID;
+    [Header("기억 타입")]
+    public Chapter chapter;
     public MemoryType type;
+    public bool isCorrectAnswer;
+
+    [Header("기억 내용")]
+    public string memoryID;
 
     // 스캔오브젝트 스프라이트
     public Sprite MemoryObjectSprite;
