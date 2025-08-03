@@ -11,76 +11,83 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     [SerializeField] private GameObject chapter2Panel;
     [SerializeField] private GameObject chapter3Panel;
 
-    [Header("슬롯들")]
-    [SerializeField] private Transform chapter1Slot;
-    [SerializeField] private Transform chapter2Slot;
-    [SerializeField] private Transform chapter3Slot;
+    [Header("슬롯 래퍼")]
+    [SerializeField] private Transform chapter1SlotWrapper;
+    [SerializeField] private Transform chapter2SlotWrapper;
+    [SerializeField] private Transform chapter3SlotWrapper;
 
     [Header("기타 셋팅")]
     [SerializeField] private GameObject memoryNodePrefab;
+    [SerializeField] private GameObject rowPrefab; // HorizontalLayoutGroup 프리팹
     [SerializeField] private GameObject Skip;
     [SerializeField] private CanvasGroup overallCanvasGroup;
     [SerializeField] private float uiFadeDuration = 0.5f;
+    [SerializeField] private int maxColumnsPerRow = 4;
 
     private List<MemoryData> selectedMemories = new();
     private bool isInteractable = true;
 
-    void Awake()
-    {
-        Close();
-    }
+    void Awake() => Close();
 
     public void StartFlow(List<MemoryData> memories)
     {
         gameObject.SetActive(true);
         selectedMemories.Clear();
-
         overallCanvasGroup.alpha = 0;
-        chapter1Panel.SetActive(false);
-        chapter2Panel.SetActive(false);
-        chapter3Panel.SetActive(false);
 
-        // 연출 후 등장
-        StartCoroutine(StartUIRoutine(memories));
-    }
-    IEnumerator StartUIRoutine(List<MemoryData> memories)
-    {
-        yield return StartCoroutine(FadeCanvas(overallCanvasGroup, 0f, 1f, uiFadeDuration));
-
+        // ✅ 정렬용으로 먼저 모두 활성화
         chapter1Panel.SetActive(true);
+        chapter2Panel.SetActive(true);
+        chapter3Panel.SetActive(true);
+
+        SetupChapter(memories, MemoryData.Chapter.Chapter1, chapter1SlotWrapper, chapter1Panel, chapter2Panel);
+        SetupChapter(memories, MemoryData.Chapter.Chapter2, chapter2SlotWrapper, chapter2Panel, chapter3Panel);
+        SetupChapter(memories, MemoryData.Chapter.Chapter3, chapter3SlotWrapper, chapter3Panel, null);
+
+        // ✅ 다시 가릴 것들 감추기
         chapter2Panel.SetActive(false);
         chapter3Panel.SetActive(false);
 
-        SetupChapter(memories, MemoryData.Chapter.Chapter1, chapter1Slot, chapter1Panel, chapter2Panel);
-        SetupChapter(memories, MemoryData.Chapter.Chapter2, chapter2Slot, chapter2Panel, chapter3Panel);
-        SetupChapter(memories, MemoryData.Chapter.Chapter3, chapter3Slot, chapter3Panel, null);
-
-        Button skipButton = Skip.GetComponent<Button>();
+        // ✅ 스킵 버튼 등록
+        var skipButton = Skip.GetComponent<Button>();
         skipButton.onClick.RemoveAllListeners();
-        skipButton.onClick.AddListener(() => OnClickSkip());
+        skipButton.onClick.AddListener(OnClickSkip);
+
+        // ✅ 연출 시작
+        StartCoroutine(FadeCanvas(overallCanvasGroup, 0f, 1f, uiFadeDuration));
     }
 
     void SetupChapter(List<MemoryData> all,
                       MemoryData.Chapter chapterType,
-                      Transform slot,
+                      Transform slotWrapper,
                       GameObject currentPanel,
                       GameObject nextPanel)
     {
-        foreach (Transform t in slot) Destroy(t.gameObject);
+        foreach (Transform t in slotWrapper) Destroy(t.gameObject);
 
         var chapterMemories = all.FindAll(m => m.chapter == chapterType);
         List<MemoryData> selected = new();
         Dictionary<MemoryData, MemoryNode> nodeMap = new();
 
+        GameObject currentRow = null;
+        int columnCount = 0;
+
         foreach (var memory in chapterMemories)
         {
-            var go = Instantiate(memoryNodePrefab, slot);
+            if (columnCount == 0 || columnCount >= maxColumnsPerRow)
+            {
+                currentRow = Instantiate(rowPrefab, slotWrapper);
+                columnCount = 0;
+            }
+
+            var go = Instantiate(memoryNodePrefab, currentRow.transform);
             go.name = $"MemoryNode_{memory.memoryID}";
             var node = go.GetComponent<MemoryNode>();
             node.Initialize(memory);
             node.SetStateEffect(MemoryState.None);
 
             nodeMap[memory] = node;
+            columnCount++;
 
             Button btn = go.GetComponentInChildren<Button>();
             btn.onClick.AddListener(() =>
@@ -116,6 +123,9 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
                 }
             });
         }
+
+        // ✅ 강제로 레이아웃 리빌드
+        LayoutRebuilder.ForceRebuildLayoutImmediate(slotWrapper.GetComponent<RectTransform>());
     }
 
     private void OnClickSkip()
@@ -123,49 +133,35 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         if (!isInteractable) return;
         isInteractable = false;
 
-        List<MemoryNode> chapter3Nodes = new();
-        foreach (Transform t in chapter3Slot)
-        {
-            if (t.TryGetComponent<MemoryNode>(out var node))
-                chapter3Nodes.Add(node);
-        }
-
+        var chapter3Nodes = chapter3SlotWrapper.GetComponentsInChildren<MemoryNode>().ToList();
         StartCoroutine(SkipFinalEffect(chapter3Nodes, chapter3Panel));
     }
 
     IEnumerator CorrectEffect(List<MemoryNode> nodes, GameObject currentPanel, GameObject nextPanel)
     {
         isInteractable = false;
-
-        foreach (var node in nodes)
-            node.SetStateEffect(MemoryState.Correct);
-
+        foreach (var node in nodes) node.SetStateEffect(MemoryState.Correct);
         yield return new WaitForSeconds(1f);
 
-        CanvasGroup currentGroup = currentPanel.GetComponent<CanvasGroup>();
-        if (currentGroup != null)
-            yield return StartCoroutine(FadeCanvas(currentGroup, 1f, 0f, 0.5f));
-
+        var currentGroup = currentPanel.GetComponent<CanvasGroup>();
+        if (currentGroup) yield return FadeCanvas(currentGroup, 1f, 0f, 0.5f);
         currentPanel.SetActive(false);
 
         if (nextPanel != null)
         {
             nextPanel.SetActive(true);
-
-            CanvasGroup nextGroup = nextPanel.GetComponent<CanvasGroup>();
-            if (nextGroup != null)
+            var nextGroup = nextPanel.GetComponent<CanvasGroup>();
+            if (nextGroup)
             {
-                nextGroup.alpha = 0f;
-                yield return StartCoroutine(FadeCanvas(nextGroup, 0f, 1f, 0.5f));
+                nextGroup.alpha = 0;
+                yield return FadeCanvas(nextGroup, 0f, 1f, 0.5f);
             }
-
             isInteractable = true;
         }
         else
         {
-            // 마지막 챕터면 전체 UI 종료
             yield return new WaitForSeconds(0.5f);
-            yield return StartCoroutine(FadeCanvas(overallCanvasGroup, 1f, 0f, uiFadeDuration));
+            yield return FadeCanvas(overallCanvasGroup, 1f, 0f, uiFadeDuration);
             gameObject.SetActive(false);
         }
     }
@@ -173,35 +169,23 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     IEnumerator WrongEffect(List<MemoryNode> nodes)
     {
         isInteractable = false;
-
-        foreach (var node in nodes)
-            node.SetStateEffect(MemoryState.Wrong);
-
+        foreach (var node in nodes) node.SetStateEffect(MemoryState.Wrong);
         yield return new WaitForSeconds(2f);
-
-        foreach (var node in nodes)
-            node.SetStateEffect(MemoryState.None);
-
+        foreach (var node in nodes) node.SetStateEffect(MemoryState.None);
         isInteractable = true;
     }
 
     IEnumerator SkipFinalEffect(List<MemoryNode> nodes, GameObject currentPanel)
     {
-        foreach (var node in nodes)
-            node.SetStateEffect(MemoryState.Correct);
-
+        foreach (var node in nodes) node.SetStateEffect(MemoryState.Correct);
         yield return new WaitForSeconds(1f);
 
-        CanvasGroup currentGroup = currentPanel.GetComponent<CanvasGroup>();
-        if (currentGroup != null)
-            yield return StartCoroutine(FadeCanvas(currentGroup, 1f, 0f, 0.5f));
-
+        var currentGroup = currentPanel.GetComponent<CanvasGroup>();
+        if (currentGroup) yield return FadeCanvas(currentGroup, 1f, 0f, 0.5f);
         currentPanel.SetActive(false);
-        gameObject.SetActive(false);
 
         yield return new WaitForSeconds(0.5f);
-        yield return StartCoroutine(FadeCanvas(overallCanvasGroup, 1f, 0f, uiFadeDuration));
-
+        yield return FadeCanvas(overallCanvasGroup, 1f, 0f, uiFadeDuration);
         gameObject.SetActive(false);
     }
 
