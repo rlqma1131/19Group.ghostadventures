@@ -15,7 +15,10 @@ public class EnemyQTETrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            enemyAI.StartQTEFromTrigger();
+            if (enemyAI != null)
+            {
+                enemyAI.ChangeState(enemyAI.QTEState);
+            }
         }
     }
 }
