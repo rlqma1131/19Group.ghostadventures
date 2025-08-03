@@ -24,6 +24,9 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     [SerializeField] private float uiFadeDuration = 0.5f;
     [SerializeField] private int maxColumnsPerRow = 4;
 
+    [Header("문")]
+    [SerializeField] private Ch3_ClearDoor clearDoor;
+
     private List<MemoryData> selectedMemories = new();
     private bool isInteractable = true;
 
@@ -35,7 +38,6 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         selectedMemories.Clear();
         overallCanvasGroup.alpha = 0;
 
-        // ✅ 정렬용으로 먼저 모두 활성화
         chapter1Panel.SetActive(true);
         chapter2Panel.SetActive(true);
         chapter3Panel.SetActive(true);
@@ -44,16 +46,13 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         SetupChapter(memories, MemoryData.Chapter.Chapter2, chapter2SlotWrapper, chapter2Panel, chapter3Panel);
         SetupChapter(memories, MemoryData.Chapter.Chapter3, chapter3SlotWrapper, chapter3Panel, null);
 
-        // ✅ 다시 가릴 것들 감추기
         chapter2Panel.SetActive(false);
         chapter3Panel.SetActive(false);
 
-        // ✅ 스킵 버튼 등록
         var skipButton = Skip.GetComponent<Button>();
         skipButton.onClick.RemoveAllListeners();
         skipButton.onClick.AddListener(OnClickSkip);
 
-        // ✅ 연출 시작
         StartCoroutine(FadeCanvas(overallCanvasGroup, 0f, 1f, uiFadeDuration));
     }
 
@@ -124,7 +123,6 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
             });
         }
 
-        // ✅ 강제로 레이아웃 리빌드
         LayoutRebuilder.ForceRebuildLayoutImmediate(slotWrapper.GetComponent<RectTransform>());
     }
 
@@ -187,6 +185,10 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         yield return FadeCanvas(overallCanvasGroup, 1f, 0f, uiFadeDuration);
         gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(0.5f);
+
+        clearDoor.OpenDoor();
     }
 
     IEnumerator FadeCanvas(CanvasGroup group, float from, float to, float duration)
