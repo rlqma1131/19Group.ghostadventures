@@ -6,6 +6,7 @@ public class PlayerRoomTracker : MonoBehaviour
 {
     [SerializeField] private UITweenAnimator uITweenAnimator; // UI 애니메이션 컴포넌트
     [SerializeField] private TextMeshProUGUI text; // 프롬프트 컴포넌트
+    public string roomName_RoomTracker;
 
     private void Start()
     {
@@ -28,6 +29,7 @@ public class PlayerRoomTracker : MonoBehaviour
                 Debug.Log($"Entered {room.roomName}, count: {room.roomCount}");
 
                     //맵이름 두두둥장
+                    roomName_RoomTracker = room.roomName;
                     text.text = $"{room.roomName}";
                     //uITweenAnimator.SlideInAndOut();
                     uITweenAnimator.FadeInAndOut();

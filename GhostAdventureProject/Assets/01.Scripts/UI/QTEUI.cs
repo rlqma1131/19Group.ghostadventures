@@ -24,6 +24,7 @@ public class QTEUI : MonoBehaviour
     {
         ShowQTEUI(null);
     }
+    
     public void ShowQTEUI(Action<bool> callback)
     {
         currentAngle = 0f;
