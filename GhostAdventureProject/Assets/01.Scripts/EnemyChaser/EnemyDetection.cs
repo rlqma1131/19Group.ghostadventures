@@ -4,36 +4,35 @@ using UnityEngine;
 
 public class EnemyDetection : MonoBehaviour
 {
+    [Header("Detection Settings")]
     public float detectionRange = 4f;
     public float detectionAngle = 60f;
-    private Transform player;
+    private Transform enemyTransform;
 
-    private void Start()
+    private void Awake()
     {
-        player = GameManager.Instance.Player.transform;
+        enemyTransform = transform.root;
     }
 
     public bool CanSeePlayer()
     {
-        Vector2 dirToPlayer = player.position - transform.position;
-         float angle = (transform.localScale.x > 0)
-             ? Vector2.Angle(Vector2.right, dirToPlayer)
-             : Vector2.Angle(Vector2.left, dirToPlayer);
+        if (GameManager.Instance.Player == null) return false;
 
-         return dirToPlayer.magnitude <= detectionRange && angle <= detectionAngle / 2;
+        Vector2 directionToPlayer = (GameManager.Instance.Player.transform.position - enemyTransform.position).normalized;
+        float distance = Vector2.Distance(enemyTransform.position, GameManager.Instance.Player.transform.position);
+
+        if (distance > detectionRange) return false;
+
+        float angle = Vector2.Angle(enemyTransform.right * enemyTransform.localScale.x, directionToPlayer);
+
+        return angle <= detectionAngle * 0.5f;
     }
-    
+
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected()
-     {
-         Gizmos.color = Color.red;
-         Gizmos.DrawWireSphere(transform.position, detectionRange);
-
-         // 좌우 시야 각도 시각화
-         Vector3 rightDir = Quaternion.Euler(0, 0, detectionAngle / 2) * (transform.localScale.x > 0 ? Vector3.right : Vector3.left);
-         Vector3 leftDir = Quaternion.Euler(0, 0, -detectionAngle / 2) * (transform.localScale.x > 0 ? Vector3.right : Vector3.left);
-
-         Gizmos.color = Color.yellow;
-         Gizmos.DrawLine(transform.position, transform.position + rightDir * detectionRange);
-         Gizmos.DrawLine(transform.position, transform.position + leftDir * detectionRange);
-     }
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+#endif
 }

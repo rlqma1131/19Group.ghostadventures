@@ -63,7 +63,7 @@ public class Ch1_Bottle : BasePossessable
         panSequence.Append(transform.DOLocalRotateQuaternion(startLocalRotation, 0.2f).SetEase(Ease.OutBounce));
 
         // 4. 0.05초 후 관련 이벤트 실행
-        panSequence.AppendInterval(0.5f);
+        panSequence.AppendInterval(0.05f);
         panSequence.AppendCallback(() =>
         {
             hasActivated = false;

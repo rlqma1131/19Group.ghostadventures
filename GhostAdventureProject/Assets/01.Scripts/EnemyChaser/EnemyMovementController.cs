@@ -16,6 +16,9 @@ public class EnemyMovementController : MonoBehaviour
     private float startTime;
     public float doorBlockDuration = 20f;
     
+    private float teleportDoorIgnoreTime = 1f;   // 텔레포트 후 문 무시 시간
+    private float lastTeleportTime = -10f;       // 초기값 멀리 설정
+    
     private Vector2? forcedTarget = null;
 
     private void Awake()
@@ -56,12 +59,14 @@ public class EnemyMovementController : MonoBehaviour
 
     public void PatrolMove()
     {
+        if (enemy.isTeleporting) return;
         rb.MovePosition(rb.position + moveDir * patrolSpeed * Time.fixedDeltaTime);
         UpdateFlip();
     }
 
     public void ChasePlayer()
     {
+        if (enemy.isTeleporting) return;
         if (player != null)
         {
             Vector2 targetPos = forcedTarget ?? player.position;
@@ -70,16 +75,6 @@ public class EnemyMovementController : MonoBehaviour
             moveDir = dir;
             UpdateFlip();
         }
-    }
-    
-    public void SetTargetPosition(Vector2 target)
-    {
-        forcedTarget = target;
-    }
-
-    public void ClearTargetPosition()
-    {
-        forcedTarget = null;
     }
 
     private void UpdateFlip()
@@ -101,6 +96,8 @@ public class EnemyMovementController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (Time.time - lastTeleportTime < teleportDoorIgnoreTime) return;
+        
         if (enemy.CurrentStateIsPatrol())
         {
             BaseDoor door = other.GetComponent<BaseDoor>();
@@ -133,5 +130,10 @@ public class EnemyMovementController : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         enemy.ChangeState(enemy.PatrolState);
+    }
+    
+    public void MarkTeleported()
+    {
+        lastTeleportTime = Time.time;
     }
 }

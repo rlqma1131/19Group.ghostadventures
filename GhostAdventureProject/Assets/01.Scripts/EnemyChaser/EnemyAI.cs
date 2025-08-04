@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using DG.Tweening;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -9,7 +10,6 @@ public class EnemyAI : MonoBehaviour
     public EnemyMovementController Movement { get; private set; }
     public EnemyDetection Detection { get; private set; }
     public EnemyQTEHandler QTEHandler { get; private set; }
-    public SoundTeleportState SoundTeleportState { get; private set; }
 
     public IdleState IdleState { get; private set; }
     public PatrolState PatrolState { get; private set; }
@@ -20,6 +20,15 @@ public class EnemyAI : MonoBehaviour
     public Vector3 startPosition;
     public static bool IsAnyQTERunning = false;
 
+    private Coroutine soundChaseCoroutine;
+    public bool isTeleporting { get; private set; }
+    
+    [SerializeField] private float normalDetectionRange = 4f;
+    [SerializeField] private float soundDetectionRange = 8f;
+
+    [SerializeField] private float normalDetectionAngle = 60f;
+    [SerializeField] private float soundDetectionAngle = 360f;
+    
     private void Awake()
     {
         Animator = GetComponent<Animator>();
@@ -31,9 +40,14 @@ public class EnemyAI : MonoBehaviour
         PatrolState = new PatrolState(this);
         ChaseState = new ChaseState(this);
         QTEState = new QTEState(this);
-        SoundTeleportState = null;
 
         startPosition = transform.position;
+        
+        if (Detection != null)
+        {
+            Detection.detectionRange = normalDetectionRange;
+            Detection.detectionAngle = normalDetectionAngle;
+        }
     }
 
     protected virtual void Start()
@@ -62,60 +76,69 @@ public class EnemyAI : MonoBehaviour
 
     public bool CurrentStateIsPatrol() => currentState == PatrolState;
 
-    public Vector3 GetStartPosition() => startPosition;
-    
-    public void OnQTEStart()
-    {
-        IsAnyQTERunning = true;
-    }
-
-    // QTE 종료 시 호출
-    public void OnQTEEnd(bool success)
-    {
-        IsAnyQTERunning = false;
-
-        if (success)
-        {
-            StartCoroutine(ReturnToOriginalPosition());
-        }
-    }
-
-    private IEnumerator ReturnToOriginalPosition()
-    {
-        // 🔥 텔레포트 애니메이션 재생
-        Animator.SetTrigger("Teleport");
-
-        // 애니메이션이 끝날 때까지 대기
-        yield return new WaitForSeconds(Animator.GetCurrentAnimatorStateInfo(0).length);
-
-        // 원래 자리로 순간이동
-        transform.position = startPosition;
-
-        // Patrol 상태로 복귀
-        // ChangeState(PatrolState);
-    }
-
-    // 사운드 추격 기능 추가
-    private Coroutine soundChaseCoroutine;
-
     public void StartSoundTeleport(Vector3 playerPos, float offsetDistance, float chaseDuration)
     {
-        float facing = GameManager.Instance.Player.transform.localScale.x;
-        Vector3 targetPos = playerPos + new Vector3(facing * offsetDistance, 0, 0);
+        if (soundChaseCoroutine != null)
+            StopCoroutine(soundChaseCoroutine);
+        soundChaseCoroutine = StartCoroutine(SoundTeleportRoutine(playerPos, offsetDistance, chaseDuration));
+    }
 
-        // 새 State를 생성해서 현재 값 반영
-        SoundTeleportState = new SoundTeleportState(this, targetPos, chaseDuration);
-        ChangeState(SoundTeleportState);
-    }
-    
-    public void OnSoundTeleportAnimationEnd()
+    private IEnumerator SoundTeleportRoutine(Vector3 playerPos, float offsetDistance, float chaseDuration)
     {
-        // 애니메이션 이벤트에서 호출
-        if (currentState is SoundTeleportState teleportState)
-        {
-            teleportState.OnTeleportAnimationEnd();
-        }
+        isTeleporting = true;
+        
+        float originalRange = Detection.detectionRange;
+        float originalAngle = Detection.detectionAngle;
+
+        Detection.detectionRange = soundDetectionRange;
+        Detection.detectionAngle = soundDetectionAngle;
+
+        float facing = GameManager.Instance.Player.transform.localScale.x;
+        Vector3 targetPos = playerPos + new Vector3(facing * offsetDistance, 2f, 0);
+        transform.position = targetPos;
+
+        Animator.SetTrigger("SoundTeleport");
+        
+        float animLength = Animator.runtimeAnimatorController.animationClips
+                                   .FirstOrDefault(c => c.name == "Enemy_SoundTeleport")?.length ?? 1f;
+
+        yield return new WaitForSeconds(animLength);
+
+        Movement.MarkTeleported();
+        isTeleporting = false;
+        ChangeState(ChaseState);
+
+        yield return new WaitForSeconds(chaseDuration);
+
+        isTeleporting = true;
+
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        yield return sr.DOFade(0f, 1f).WaitForCompletion();
+        transform.position = startPosition;
+        yield return sr.DOFade(1f, 0.5f).WaitForCompletion();
+        
+        Detection.detectionRange = originalRange;
+        Detection.detectionAngle = originalAngle;
+
+        isTeleporting = false;
+        ChangeState(PatrolState);
     }
+    // public void StartSoundTeleport(Vector3 playerPos, float offsetDistance, float chaseDuration)
+    // {
+    //     float facing = GameManager.Instance.Player.transform.localScale.x;
+    //     Vector3 targetPos = playerPos + new Vector3(facing * offsetDistance, 0, 0);
+    //
+    //     SoundTeleportState = new SoundTeleportState(this, targetPos, chaseDuration);
+    //     ChangeState(SoundTeleportState);
+    // }
+    //
+    // public void OnSoundTeleportAnimationEnd()
+    // {
+    //     if (currentState is SoundTeleportState teleportState)
+    //     {
+    //         teleportState.OnTeleportAnimationEnd();
+    //     }
+    // }
 
     // private IEnumerator SoundTeleportRoutine(Vector3 playerPos, float offsetDistance)
     // {
