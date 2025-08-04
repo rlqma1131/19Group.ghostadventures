@@ -11,14 +11,17 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     [SerializeField] private GameObject chapter1Panel;
     [SerializeField] private GameObject chapter2Panel;
     [SerializeField] private GameObject chapter3Panel;
+    [SerializeField] private Transform clickedSlotPanel;
 
     [Header("슬롯 래퍼")]
     [SerializeField] private Transform chapter1SlotWrapper;
     [SerializeField] private Transform chapter2SlotWrapper;
     [SerializeField] private Transform chapter3SlotWrapper;
+    [SerializeField] private Transform answerWrapper;
 
     [Header("기타 셋팅")]
     [SerializeField] private GameObject memoryNodePrefab;
+    [SerializeField] private GameObject clickedSlotPrefab;
     [SerializeField] private GameObject rowPrefab;
     [SerializeField] private CanvasGroup overallCanvasGroup;
     [SerializeField] private float uiFadeDuration = 0.5f;
@@ -28,7 +31,9 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     [SerializeField] private Ch3_ClearDoor clearDoor;
     [SerializeField] private Ch3_Scanner scanner;
 
-    private List<MemoryData> selectedMemories = new();
+    private List<MemoryData> selectedMemories = new(); // 선택지에 나타나는 기억들
+    private List<GameObject> clickedSlots = new(); // 위에 늘어나는 기억 슬롯들
+
     private bool isInteractable = true;
     public bool puzzlecompleted = false;
 
@@ -104,6 +109,10 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
                     selected.Add(memory);
                     node.SetStateEffect(MemoryState.Selected);
 
+                    var clickedUI = Instantiate(clickedSlotPrefab, clickedSlotPanel);
+                    clickedUI.name = $"ClickedSlot_{memory.memoryID}";
+                    clickedSlots.Add(clickedUI);
+
                     if (selected.Count == 3)
                     {
                         var selectedNodes = selected.Select(m => nodeMap[m]).ToList();
@@ -111,6 +120,7 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
                         if (selected.All(m => m.isCorrectAnswer))
                         {
                             selectedMemories.AddRange(selected);
+                            clickedSlots.Clear();
 
                             if (nextPanel != null)
                             {
@@ -218,6 +228,10 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
 
         foreach (var node in nodes)
             node.SetStateEffect(MemoryState.None);
+
+        foreach (var slot in clickedSlots)
+            Destroy(slot);
+        clickedSlots.Clear();
 
         isInteractable = true;
     }
