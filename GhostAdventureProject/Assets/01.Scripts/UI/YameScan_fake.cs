@@ -17,6 +17,8 @@ public class YameScan_fake : MonoBehaviour
     private bool isScanning = false;
     private bool isNearMemory = false;
     [SerializeField] private GameObject currentScanObject; // 현재 스캔 대상 오브젝트
+    
+    [SerializeField] private SoundEventConfig soundConfig;
 
     private Camera mainCamera;
 
@@ -131,9 +133,7 @@ public class YameScan_fake : MonoBehaviour
         scanPanel?.SetActive(false);
         scanCircleUI?.gameObject.SetActive(false);
 
-        SoundTriggerer.TriggerSound(player.transform.position);
-        Debug.Log("사운드 트리거 발동");
-
+        SoundTrigger.TriggerSound(transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
     }
 
     private void CancleScan(string reason)

@@ -19,6 +19,7 @@ public class Ch2_Radio : BasePossessable
     [SerializeField] private GameObject musicalNoteOn; // 음표 애니메이션 재생용
     [SerializeField] private CH2_SecurityGuard guard;
     public bool IsPlaying=> triggerSound_Person.isPlaying; // 사운드 재생중 여부 - 사람
+    [SerializeField] private SoundEventConfig soundConfig;
 
 
     protected override void Start()
@@ -96,7 +97,7 @@ public class Ch2_Radio : BasePossessable
         {
             triggerSound_Enemy.Play();
             hasTriggered_Enemy = true;
-            SoundTriggerer.TriggerSound(guard.transform.position);
+            SoundTrigger.TriggerSound(transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
             Debug.Log(guard.conditionHandler);
             // AttractPerson();
             UIManager.Instance.PromptUI.ShowPrompt("음악이 나왔어. 누군가 반응할지도 몰라.");

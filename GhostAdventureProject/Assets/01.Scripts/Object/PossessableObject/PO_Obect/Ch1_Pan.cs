@@ -16,6 +16,8 @@ public class Ch1_Pan : BasePossessable
 
     [SerializeField] private GameObject q_Key;
     private bool isFalling = false;
+    
+    [SerializeField] private SoundEventConfig soundConfig;
 
     protected override void Start()
     {
@@ -53,7 +55,7 @@ public class Ch1_Pan : BasePossessable
         panSequence.AppendCallback(() =>
         {
             SoundManager.Instance.PlaySFX(isFall);
-            SoundTriggerer.TriggerSound(transform.position);
+            SoundTrigger.TriggerSound(transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
         });
 
         panSequence.Append(transform.DOLocalRotateQuaternion(startLocalRotation, 0.2f).SetEase(Ease.OutBounce));

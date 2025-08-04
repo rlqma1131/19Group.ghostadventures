@@ -21,6 +21,8 @@ public class Ch1_MainFlashlight : BasePossessable
     private float timeRemaining;
     private bool timerActive = false;
     private bool timerExpired = false;
+    
+    [SerializeField] private SoundEventConfig soundConfig;
 
     protected override void Update()
     {
@@ -54,7 +56,7 @@ public class Ch1_MainFlashlight : BasePossessable
                 PossessionSystem.Instance.CanMove = false;
 
                 // 적 호출 - SoundTriggerObject 사용
-                SoundTriggerer.TriggerSound(transform.position);
+                SoundTrigger.TriggerSound(transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
             }
 
             UpdateTimerText();
