@@ -84,7 +84,7 @@ public class TimelineControl : MonoBehaviour
     {
 
         Debug.Log("타임라인 재생");
-        director.Play();
+        director.Resume();
     }
     public void CloseScene()
     {

@@ -3,61 +3,59 @@
 public class PlayerController_Ball : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 10f;
-    [SerializeField] private ParticleSystem moveParticle; // <- 파티클 시스템 추가
+    [SerializeField] private ParticleSystem moveParticle;
     [SerializeField] private GameObject player;
+
+    private Rigidbody2D rb; // Rigidbody2D 변수 추가
+    private Vector2 moveInput;
+
     private void Awake()
     {
-        if(moveParticle == null)
+        rb = GetComponent<Rigidbody2D>(); // Rigidbody2D 가져오기
+
+        if (moveParticle == null)
         {
             Debug.LogError("Move Particle System is not assigned in the inspector.");
         }
     }
+     
     private void Update()
     {
-        HandleMovement();
-    }
-
-    private void HandleMovement()
-    {
+        // 키 입력은 여기서 받고
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        Vector3 move = new Vector3(h, v, 0);
-        transform.position += move * moveSpeed * Time.deltaTime;
+        moveInput = new Vector2(h, v);
 
-        // 회전 방향 계산 (좌우 반전은 유지할지 선택 가능)
-        if (move.magnitude > 0.01f)
+        // 파티클 회전
+        if (moveInput.magnitude > 0.01f)
         {
-            // 이동 방향 각도 계산 (2D 평면 기준)
-            float angle = Mathf.Atan2(v, h) * Mathf.Rad2Deg;
-
-            // 파티클 shape 회전 적용
+            float angle = Mathf.Atan2(moveInput.y, moveInput.x) * Mathf.Rad2Deg;
             var shape = moveParticle.shape;
             shape.rotation = new Vector3(0, 0, angle);
         }
 
-        // 움직임 여부 판단
-        bool isMoving = move.magnitude > 0.01f;
-
-        // 파티클 제어
-        if (isMoving && moveParticle != null)
+        // 파티클 재생/정지
+        if (moveInput.magnitude > 0.01f)
         {
-            if (!moveParticle.isPlaying)
-                moveParticle.Play();
+            if (!moveParticle.isPlaying) moveParticle.Play();
         }
         else
         {
-            if (moveParticle.isPlaying)
-                moveParticle.Stop();
+            if (moveParticle.isPlaying) moveParticle.Stop();
         }
     }
 
+    private void FixedUpdate()
+    {
+
+        Vector2 newPos = rb.position + moveInput.normalized * moveSpeed * Time.fixedDeltaTime;
+        rb.MovePosition(newPos);
+    }
 
     public void changeSpedd()
     {
-        transform.position = player.transform.position; // 플레이어 위치로 이동
-        // 속도 변경 로직
-        moveSpeed = 20f; 
-        Debug.Log("Player speed changed to: " + moveSpeed);
-    }
+        transform.position = player.transform.position;
+        moveSpeed = 20f;
 
+    }
 }
