@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Col_LivingRoom_HallWay : MonoBehaviour
 {
-    BoxCollider2D col;
+    BoxCollider2D[] cols;
     [SerializeField] private GameObject icon;
 
     void Start()
     {
-        col = GetComponent<BoxCollider2D>();
+        cols = GetComponentsInChildren<BoxCollider2D>();
         icon.SetActive(false);
     }
 
@@ -17,7 +17,10 @@ public class Col_LivingRoom_HallWay : MonoBehaviour
     {
         if(PuzzleStateManager.Instance.IsPuzzleSolved("티비"))
         {
-            col.isTrigger = true;   // 트리거로 변경
+            foreach (var col in cols)
+            {
+                col.isTrigger = true;
+            }
         }
     }
     void OnTriggerEnter2D(Collider2D collision)
