@@ -19,14 +19,14 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
 
     [Header("기타 셋팅")]
     [SerializeField] private GameObject memoryNodePrefab;
-    [SerializeField] private GameObject rowPrefab; // HorizontalLayoutGroup 프리팹
-    [SerializeField] private GameObject Skip;
+    [SerializeField] private GameObject rowPrefab;
     [SerializeField] private CanvasGroup overallCanvasGroup;
     [SerializeField] private float uiFadeDuration = 0.5f;
     [SerializeField] private int maxColumnsPerRow = 4;
 
-    [Header("문")]
+    [Header("문 & 스캐너")]
     [SerializeField] private Ch3_ClearDoor clearDoor;
+    [SerializeField] private Ch3_Scanner scanner;
 
     private List<MemoryData> selectedMemories = new();
     private bool isInteractable = true;
@@ -50,10 +50,6 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         chapter2Panel.SetActive(false);
         chapter3Panel.SetActive(false);
 
-        var skipButton = Skip.GetComponent<Button>();
-        skipButton.onClick.RemoveAllListeners();
-        skipButton.onClick.AddListener(OnClickSkip);
-
         StartCoroutine(FadeCanvas(overallCanvasGroup, 0f, 1f, uiFadeDuration));
     }
 
@@ -63,7 +59,8 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
                       GameObject currentPanel,
                       GameObject nextPanel)
     {
-        foreach (Transform t in slotWrapper) Destroy(t.gameObject);
+        foreach (Transform t in slotWrapper)
+            Destroy(t.gameObject);
 
         var chapterMemories = all.FindAll(m => m.chapter == chapterType);
         List<MemoryData> selected = new();
@@ -111,7 +108,15 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
                         if (selected.All(m => m.isCorrectAnswer))
                         {
                             selectedMemories.AddRange(selected);
-                            StartCoroutine(CorrectEffect(selectedNodes, currentPanel, nextPanel));
+
+                            if (nextPanel != null)
+                            {
+                                StartCoroutine(CorrectEffect(selectedNodes, currentPanel, nextPanel));
+                            }
+                            else
+                            {
+                                StartCoroutine(CompletePuzzleFlow(selectedNodes, currentPanel));
+                            }
                         }
                         else
                         {
@@ -127,70 +132,71 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(slotWrapper.GetComponent<RectTransform>());
     }
 
-    private void OnClickSkip()
-    {
-        if (!isInteractable) return;
-        isInteractable = false;
-
-        var chapter3Nodes = chapter3SlotWrapper.GetComponentsInChildren<MemoryNode>().ToList();
-        StartCoroutine(SkipFinalEffect(chapter3Nodes, chapter3Panel));
-    }
-
     IEnumerator CorrectEffect(List<MemoryNode> nodes, GameObject currentPanel, GameObject nextPanel)
     {
         isInteractable = false;
-        foreach (var node in nodes) node.SetStateEffect(MemoryState.Correct);
+
+        foreach (var node in nodes)
+            node.SetStateEffect(MemoryState.Correct);
+
         yield return new WaitForSeconds(1f);
 
         var currentGroup = currentPanel.GetComponent<CanvasGroup>();
-        if (currentGroup) yield return FadeCanvas(currentGroup, 1f, 0f, 0.5f);
+        if (currentGroup != null)
+            yield return FadeCanvas(currentGroup, 1f, 0f, 0.5f);
+
         currentPanel.SetActive(false);
 
-        if (nextPanel != null)
+        nextPanel.SetActive(true);
+        var nextGroup = nextPanel.GetComponent<CanvasGroup>();
+        if (nextGroup != null)
         {
-            nextPanel.SetActive(true);
-            var nextGroup = nextPanel.GetComponent<CanvasGroup>();
-            if (nextGroup)
-            {
-                nextGroup.alpha = 0;
-                yield return FadeCanvas(nextGroup, 0f, 1f, 0.5f);
-            }
-            isInteractable = true;
+            nextGroup.alpha = 0;
+            yield return FadeCanvas(nextGroup, 0f, 1f, 0.5f);
         }
-        else
-        {
-            yield return new WaitForSeconds(0.5f);
-            yield return FadeCanvas(overallCanvasGroup, 1f, 0f, uiFadeDuration);
-            gameObject.SetActive(false);
-        }
+
+        isInteractable = true;
+    }
+
+    IEnumerator CompletePuzzleFlow(List<MemoryNode> nodes, GameObject currentPanel)
+    {
+        isInteractable = false;
+
+        foreach (var node in nodes)
+            node.SetStateEffect(MemoryState.Correct);
+
+        yield return new WaitForSeconds(1f);
+
+        var currentGroup = currentPanel.GetComponent<CanvasGroup>();
+        if (currentGroup != null)
+            yield return FadeCanvas(currentGroup, 1f, 0f, 0.5f);
+
+        currentPanel.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        yield return FadeCanvas(overallCanvasGroup, 1f, 0f, uiFadeDuration);
+
+        CutsceneManager.Instance.StartCoroutine(CutsceneManager.Instance.PlayCutscene());
+        SceneManager.LoadScene("Ch03_End", LoadSceneMode.Additive);
+        clearDoor.OpenDoor();
+
+        yield return new WaitForSeconds(0.5f);
+        scanner.InactiveScanner();
+
+        gameObject.SetActive(false);
     }
 
     IEnumerator WrongEffect(List<MemoryNode> nodes)
     {
         isInteractable = false;
-        foreach (var node in nodes) node.SetStateEffect(MemoryState.Wrong);
+        foreach (var node in nodes)
+            node.SetStateEffect(MemoryState.Wrong);
+
         yield return new WaitForSeconds(2f);
-        foreach (var node in nodes) node.SetStateEffect(MemoryState.None);
+
+        foreach (var node in nodes)
+            node.SetStateEffect(MemoryState.None);
+
         isInteractable = true;
-    }
-
-    IEnumerator SkipFinalEffect(List<MemoryNode> nodes, GameObject currentPanel)
-    {
-        foreach (var node in nodes) node.SetStateEffect(MemoryState.Correct);
-        yield return new WaitForSeconds(1f);
-
-        var currentGroup = currentPanel.GetComponent<CanvasGroup>();
-        if (currentGroup) yield return FadeCanvas(currentGroup, 1f, 0f, 0.5f);
-        currentPanel.SetActive(false);
-
-        yield return new WaitForSeconds(0.5f);
-        yield return FadeCanvas(overallCanvasGroup, 1f, 0f, uiFadeDuration);
-        CutsceneManager.Instance.StartCoroutine(CutsceneManager.Instance.PlayCutscene());
-        SceneManager.LoadScene("Ch03_End", LoadSceneMode.Additive);
-        clearDoor.OpenDoor();
-        gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.5f);
-
     }
 
     IEnumerator FadeCanvas(CanvasGroup group, float from, float to, float duration)
