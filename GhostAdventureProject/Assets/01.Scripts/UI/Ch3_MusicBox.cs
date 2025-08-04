@@ -12,26 +12,27 @@ public class Ch3_MusicBox : BaseInteractable
     // 상호작용키
     // 완료했을 때 더이상 상호작용 되지 않게
     
-    private bool playAble; // 오르골을 플레이 할 수 있는 영역에 있는지 확인
+    
      [SerializeField] private GameObject arrowPrefab; //생성될 프리팹
     [SerializeField] private Transform arrowContainer; //프리팹 생성 위치
     [SerializeField] private Sprite leftArrow, rightArrow, upArrow, downArrow; //화살표 방향(생성된 프리팹 Sprite 바꿈)
-    [SerializeField] private Image highlightImage; // 화살표 하이라이트 이미지
-    [SerializeField] private Image timeBar;
+    [SerializeField] private Image highlightImage; // 하이라이트 이미지
+    [SerializeField] private Image timeBar; // 제한시간 타임바
     [SerializeField] private int arrowCount = 5; // 생성될 프리팹 개수
     [SerializeField] private float timeLimit = 6f; // 제한 시간
-    public static int musicBox_FailCount; // 오르골 실패 카운트
-    private List<KeyCode> targetSequence = new List<KeyCode>(); // 방향키 순서를 정해두고 사용자 키 입력과 맞는지 확인용
-    KeyCode[] possibleKeys = { KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.DownArrow };
-    //입력 가능한 키
-    private int currentIndex = 0;
     private float timer;
-    private bool isRunning;
+    private int currentIndex = 0; 
+    public static int musicBox_FailCount; // 오르골 실패 카운트
+    private bool isRunning; // QTE가 실행되고 있는지
+    private bool isQTESuccess = false; // QTE를 성공했는지
+    private bool playAble; // 오르골과 상호작용할 수 있는 영역에 있는지
 
-    private bool isQTESuccess = false; //QTE를 성공했는지
-    public CryEnemy linkedEnemy; // Inspector에서 지정 or 자동 연결
+    private List<KeyCode> targetSequence = new List<KeyCode>(); // 방향키 순서를 정해두고 사용자 키 입력과 맞는지 확인용
+    KeyCode[] possibleKeys = { KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.DownArrow }; //입력 가능한 키
 
-    [SerializeField] private GameObject QTEUI_MusicBox;
+    public CryEnemy linkedEnemy; // CryEnemy에서 정보 넣어줌(인스펙터연결x)
+    [SerializeField] private GameObject QTEUI_MusicBox; // QTE UI Canvas
+
 
     void Start()
     {
@@ -54,16 +55,17 @@ public class Ch3_MusicBox : BaseInteractable
 
         if(!isRunning) return;
         
+        // isRunning일 때 실행
         timer -= Time.deltaTime;
         timeBar.fillAmount = timer / timeLimit;
 
         if (timer <= 0f)
         {
             Debug.Log("실패: 시간 초과"); // 울보에게 정보 전달
+            // FailQTE();
             return;
-            
         }
-
+        
         if (Input.anyKeyDown)
         {
             if (Input.GetKeyDown(targetSequence[currentIndex]))
@@ -76,7 +78,7 @@ public class Ch3_MusicBox : BaseInteractable
                 {
                     Debug.Log("QTE 성공!");
                     isQTESuccess = true;
-                    StopQTE();
+                    SuccessQTE();
                 }
             }
             else
@@ -101,17 +103,20 @@ public class Ch3_MusicBox : BaseInteractable
     void StopQTE()
     {
         QTEUI_MusicBox.SetActive(false);
-        musicBox_FailCount ++;
+        // isRunning()
+        // musicBox_FailCount ++;
         
+    }
+    void SuccessQTE()
+    {
+        QTEUI_MusicBox.SetActive(false);
+        // isRunning = false;
     }
     void FailQTE()
     {
         // QTEUI_MusicBox.SetActive(false);
         musicBox_FailCount ++;
-    }
-    private KeyCode GetRandomArrowKey()
-    {
-        return possibleKeys[UnityEngine.Random.Range(0, possibleKeys.Length)];
+        // isRunning = false;
     }
 
     private void GenerateRandomSequence(int count)
@@ -130,7 +135,10 @@ public class Ch3_MusicBox : BaseInteractable
 
         UpdateHighlight();
     }
-
+    private KeyCode GetRandomArrowKey()
+    {
+        return possibleKeys[UnityEngine.Random.Range(0, possibleKeys.Length)];
+    }
     Sprite GetSpriteForKey(KeyCode key)
     {
         switch (key)
@@ -143,6 +151,7 @@ public class Ch3_MusicBox : BaseInteractable
         }
     }
 
+    // 화살표(arrow)를 하이라이트 이미지가 따라다니도록 만듬
     void UpdateHighlight()
     {
         if (currentIndex < arrowContainer.childCount)
@@ -153,9 +162,9 @@ public class Ch3_MusicBox : BaseInteractable
         }
     }
 
-        protected override void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && !isQTESuccess)
         {
             //SetHighlight(true);
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
@@ -165,9 +174,10 @@ public class Ch3_MusicBox : BaseInteractable
 
     protected override void OnTriggerExit2D(Collider2D other)
     {
-        base.OnTriggerExit2D(other);
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !isQTESuccess)
         {
+            SetHighlight(false);
+            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
             playAble = false;
         }
     }
