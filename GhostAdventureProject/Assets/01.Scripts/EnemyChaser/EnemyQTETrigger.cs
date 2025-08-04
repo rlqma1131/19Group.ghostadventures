@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class EnemyQTETrigger : MonoBehaviour
 {
-    private EnemyQTE parentQTE;
+    private EnemyAI enemyAI;
 
     private void Awake()
     {
-        parentQTE = GetComponentInParent<EnemyQTE>();
+        enemyAI = GetComponentInParent<EnemyAI>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            parentQTE.TryStartQTE(other.transform);
+            enemyAI.StartQTEFromTrigger();
         }
     }
 }
