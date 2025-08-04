@@ -30,6 +30,7 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
 
     private List<MemoryData> selectedMemories = new();
     private bool isInteractable = true;
+    public bool puzzlecompleted = false;
 
     void Awake() => Close();
 
@@ -189,6 +190,7 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         SceneManager.LoadScene("Ch03_End", LoadSceneMode.Additive);
         clearDoor.OpenDoor();
         gameObject.SetActive(false);
+        puzzlecompleted = true;
         yield return new WaitForSeconds(0.5f);
 
     }
