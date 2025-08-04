@@ -19,40 +19,98 @@ using UnityEngine;
 //함수 - 큰울음 (사운드 플레이, 변신애니메이션)
 //함수 - 공격(방 안에 있는 플레이어를 공격함)
 //오르골 QTE작동 - 오르골과 연결하기 (QTE성공,실패여부에 따라 울보의 상태변경)
+//
 
 
 // ?울보가 원하는 아이템을 찾으러 다닐 때 문 앞에 대기하고 있는 사신에게 죽는건 아닌지
 
 public class CryEnemy : MonoBehaviour
 {
-    [SerializeField] ClueData needClue; // 원하는 단서
-    [SerializeField] AudioClip cry_small; // 기본울음
-    [SerializeField] AudioClip cry_big; // 큰울음
-    [SerializeField] Ch3_MusicBox musicBox;
+    [SerializeField] private ClueData needClue; // 원하는 단서
+    [SerializeField] private AudioClip cry_small; // 기본울음
+    [SerializeField] private AudioClip cry_big; // 큰울음
+    [SerializeField] private AudioSource cryMusic;
+    [SerializeField] private Ch3_MusicBox musicBox;
     private GameObject player;
     private SoundManager soundManager;
+    [SerializeField] string cryRoomName; // 울보가 있는 방의 이름
+    private string roomName; // 플레이어가 있는 방의 이름
+    [SerializeField] private List<Ch3_MusicBox> myMusicBoxes; // 연결된 3개의 오르골
+    private HashSet<Ch3_MusicBox> clearedBoxes = new HashSet<Ch3_MusicBox>(); // QTE 성공한 오르골
+
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        Debug.Log(player);
         soundManager = SoundManager.Instance;
+        roomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
     }
-    private void StartCrying()
+
+    void Update()
     {
-        soundManager.PlaySFX(cry_small);
+        if(cryRoomName == roomName) StartCrying();
+
+        if(Ch3_MusicBox.musicBox_FailCount == 3)
+        {
+            StartBigCrying();
+        }
     }
+
+    // 울보가 있는 방과 플레이어가 있는 방이 같으면 울기 시작
+    public void StartCrying()
+    {
+        if(cryRoomName == roomName)
+        {
+            soundManager.PlaySFX(cry_small);
+        }
+
+        clearedBoxes.Clear();
+        soundManager.PlaySFX(cry_small);
+
+        // 오르골들에게 자신을 연결
+        foreach (var box in myMusicBoxes)
+        {
+            box.linkedEnemy = this;
+        }
+    }
+
+
     private void StopCrying()
     {
         soundManager.StopSFX();
     }
 
+    private void StartBigCrying()
+    {
+        soundManager.StopSFX();
+        soundManager.PlaySFX(cry_big);
+    }
+
     private void ChangeState()
     {
+        //오르골 QTE가 실패하면
         //애니메이션
     }
 
     private void Attack()
     {
         //플레이어를 쫓아가서 공격함.
+    }
+
+
+
+    public void OnMusicBoxSuccess(Ch3_MusicBox box)
+    {
+        if (!clearedBoxes.Contains(box))
+        {
+            clearedBoxes.Add(box);
+            Debug.Log($"울보 오르골 {clearedBoxes.Count}개 해제됨");
+
+            if (clearedBoxes.Count >= 3)
+            {
+                StopCrying();
+            }
+        }
     }
 }
