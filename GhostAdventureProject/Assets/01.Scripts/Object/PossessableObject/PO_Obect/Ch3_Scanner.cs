@@ -14,6 +14,7 @@ public class Ch3_Scanner : BasePossessable
 
         memoryStorage = UIManager.Instance.GetComponentInChildren<MemoryStorage>();
     }
+
     protected override void Update()
     {
         if (!isPossessed)
@@ -25,6 +26,12 @@ public class Ch3_Scanner : BasePossessable
             UIManager.Instance.PlayModeUI_OpenAll();
             Unpossess();
         }
+    }
+
+    public void InactiveScanner()
+    {
+        hasActivated = false;
+        Unpossess();
     }
 
     public override void OnPossessionEnterComplete() 
