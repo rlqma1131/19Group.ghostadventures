@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Ch3_MemoryPuzzleUI : MonoBehaviour
@@ -184,11 +185,12 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
         yield return FadeCanvas(overallCanvasGroup, 1f, 0f, uiFadeDuration);
+        CutsceneManager.Instance.StartCoroutine(CutsceneManager.Instance.PlayCutscene());
+        SceneManager.LoadScene("Ch03_End", LoadSceneMode.Additive);
+        clearDoor.OpenDoor();
         gameObject.SetActive(false);
-
         yield return new WaitForSeconds(0.5f);
 
-        clearDoor.OpenDoor();
     }
 
     IEnumerator FadeCanvas(CanvasGroup group, float from, float to, float duration)
