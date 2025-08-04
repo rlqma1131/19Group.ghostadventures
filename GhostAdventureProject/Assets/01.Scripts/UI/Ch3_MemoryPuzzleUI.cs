@@ -196,6 +196,9 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
 
         MemoryManager.Instance.TryCollect(memoryData); // 기억 조각 수집
 
+        clearDoor.OpenDoor();
+        gameObject.SetActive(false);
+        puzzlecompleted = true;
 
         SaveData data = new SaveData
         {
@@ -212,9 +215,6 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         };
 
         SaveManager.SaveGame(data);
-        clearDoor.OpenDoor();
-        gameObject.SetActive(false);
-        puzzlecompleted = true;
         yield return new WaitForSeconds(0.5f);
 
     }
