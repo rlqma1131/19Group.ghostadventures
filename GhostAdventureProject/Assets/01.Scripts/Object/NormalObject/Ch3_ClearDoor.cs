@@ -4,9 +4,10 @@ using UnityEngine.SceneManagement;
 public class Ch3_ClearDoor : MonoBehaviour
 {
     public GameObject openDoor;
+    public GameObject closeDoor; // 닫힌 문 오브젝트
     [SerializeField] private PlayableDirector playableDirector; 
-    bool isPlayerNear = false;
-    bool isOpen = false;
+    [SerializeField] private bool isPlayerNear = false;
+    [SerializeField] private bool isOpen = false;
 
     private void Update()
     {
@@ -14,8 +15,11 @@ public class Ch3_ClearDoor : MonoBehaviour
         {
             // 컷씬 연결해주세여 혁준상
             //openDoor.SetActive(true);
-            //gameObject.SetActive(false);
+            closeDoor.SetActive(false);
+            openDoor.SetActive(true); // 문 오브젝트 비활성화
+            GameManager.Instance.Player.SetActive(false); // 플레이어 비활성화
             playableDirector.Play();
+            UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
 
 
         }
