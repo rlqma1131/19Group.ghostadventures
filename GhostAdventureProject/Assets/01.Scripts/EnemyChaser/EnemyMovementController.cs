@@ -15,6 +15,8 @@ public class EnemyMovementController : MonoBehaviour
     private float directionChangeTimer = 0f;
     private float startTime;
     public float doorBlockDuration = 20f;
+    
+    private Vector2? forcedTarget = null;
 
     private void Awake()
     {
@@ -62,11 +64,22 @@ public class EnemyMovementController : MonoBehaviour
     {
         if (player != null)
         {
-            Vector2 dir = (player.position - transform.position).normalized;
+            Vector2 targetPos = forcedTarget ?? player.position;
+            Vector2 dir = (targetPos - (Vector2)transform.position).normalized;
             rb.MovePosition(rb.position + dir * chaseSpeed * Time.fixedDeltaTime);
             moveDir = dir;
             UpdateFlip();
         }
+    }
+    
+    public void SetTargetPosition(Vector2 target)
+    {
+        forcedTarget = target;
+    }
+
+    public void ClearTargetPosition()
+    {
+        forcedTarget = null;
     }
 
     private void UpdateFlip()

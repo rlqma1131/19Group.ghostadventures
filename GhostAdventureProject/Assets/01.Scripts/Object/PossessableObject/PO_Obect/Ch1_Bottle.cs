@@ -12,6 +12,7 @@ public class Ch1_Bottle : BasePossessable
     [SerializeField] private Quaternion startLocalRotation = Quaternion.identity;
     [SerializeField] private float dropYPos = -1.5f;
     [SerializeField] private GameObject q_Key;
+    [SerializeField] private SoundEventConfig soundConfig;
     
     protected override void Start()
     {
@@ -55,7 +56,7 @@ public class Ch1_Bottle : BasePossessable
             anim.SetTrigger("Fall"); // 깨짐
             SoundManager.Instance.PlaySFX(isFall);
 
-            SoundTriggerer.TriggerSound(transform.position);
+            SoundTrigger.TriggerSound(transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
         });
 
         // 3. 회전 원래대로 복귀 (0.2초)

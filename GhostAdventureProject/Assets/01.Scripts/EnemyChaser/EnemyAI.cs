@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour
     public EnemyMovementController Movement { get; private set; }
     public EnemyDetection Detection { get; private set; }
     public EnemyQTEHandler QTEHandler { get; private set; }
+    public SoundTeleportState SoundTeleportState { get; private set; }
 
     public IdleState IdleState { get; private set; }
     public PatrolState PatrolState { get; private set; }
@@ -16,7 +17,8 @@ public class EnemyAI : MonoBehaviour
     public QTEState QTEState { get; private set; }
 
     private EnemyState currentState;
-    private Vector3 startPosition;
+    public Vector3 startPosition;
+    public static bool IsAnyQTERunning = false;
 
     private void Awake()
     {
@@ -29,23 +31,24 @@ public class EnemyAI : MonoBehaviour
         PatrolState = new PatrolState(this);
         ChaseState = new ChaseState(this);
         QTEState = new QTEState(this);
+        SoundTeleportState = null;
 
         startPosition = transform.position;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         ChangeState(IdleState);
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         currentState?.Update();
     }
 
     private void FixedUpdate()
     {
-        if (QTEHandler.IsRunning()) return;
+        if (IsAnyQTERunning || (QTEHandler != null && QTEHandler.IsRunning())) return;
         
         currentState?.FixedUpdate();
     }
@@ -60,6 +63,89 @@ public class EnemyAI : MonoBehaviour
     public bool CurrentStateIsPatrol() => currentState == PatrolState;
 
     public Vector3 GetStartPosition() => startPosition;
+    
+    public void OnQTEStart()
+    {
+        IsAnyQTERunning = true;
+    }
+
+    // QTE 종료 시 호출
+    public void OnQTEEnd(bool success)
+    {
+        IsAnyQTERunning = false;
+
+        if (success)
+        {
+            StartCoroutine(ReturnToOriginalPosition());
+        }
+    }
+
+    private IEnumerator ReturnToOriginalPosition()
+    {
+        // 🔥 텔레포트 애니메이션 재생
+        Animator.SetTrigger("Teleport");
+
+        // 애니메이션이 끝날 때까지 대기
+        yield return new WaitForSeconds(Animator.GetCurrentAnimatorStateInfo(0).length);
+
+        // 원래 자리로 순간이동
+        transform.position = startPosition;
+
+        // Patrol 상태로 복귀
+        // ChangeState(PatrolState);
+    }
+
+    // 사운드 추격 기능 추가
+    private Coroutine soundChaseCoroutine;
+
+    public void StartSoundTeleport(Vector3 playerPos, float offsetDistance, float chaseDuration)
+    {
+        float facing = GameManager.Instance.Player.transform.localScale.x;
+        Vector3 targetPos = playerPos + new Vector3(facing * offsetDistance, 0, 0);
+
+        // 새 State를 생성해서 현재 값 반영
+        SoundTeleportState = new SoundTeleportState(this, targetPos, chaseDuration);
+        ChangeState(SoundTeleportState);
+    }
+    
+    public void OnSoundTeleportAnimationEnd()
+    {
+        // 애니메이션 이벤트에서 호출
+        if (currentState is SoundTeleportState teleportState)
+        {
+            teleportState.OnTeleportAnimationEnd();
+        }
+    }
+
+    // private IEnumerator SoundTeleportRoutine(Vector3 playerPos, float offsetDistance)
+    // {
+    //     
+    //     // 위치 순간이동
+    //     float facing = GameManager.Instance.Player.transform.localScale.x;
+    //     Vector3 targetPos = playerPos + new Vector3(facing * offsetDistance, 0, 0);
+    //     transform.position = targetPos;
+    //     // 텔레포트 애니메이션 재생
+    //     Animator.SetTrigger("SoundTeleport");
+    //
+    //     // 애니메이션 이벤트가 끝날 때까지 대기
+    //     // while (isSoundTeleporting)
+    //     //     yield return null;
+    //
+    //
+    //     // 추격 모드로 전환
+    //     ChangeState(ChaseState);
+    //
+    //     // 일정 시간 후 Patrol 복귀
+    //     yield return new WaitForSeconds(soundChaseDuration);
+    //     
+    // }
+    //
+    // public void OnTeleportAnimationEnd()
+    // {
+    //     // 애니메이션 이벤트에서 호출
+    //     //isSoundTeleporting = false;
+    //     ChangeState(PatrolState);
+    // }
 }
 
 // public class EnemyAI : MonoBehaviour

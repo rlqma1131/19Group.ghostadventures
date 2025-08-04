@@ -33,7 +33,7 @@ public class Ch3_MirrorRoomManager : MonoBehaviour
     {
         if (player == null || playerMovePoint == null) yield break;
 
-        SpriteRenderer[] playerSprites = player.GetComponentsInChildren<SpriteRenderer>();
+        SpriteRenderer[] playerSprites = player.GetComponents<SpriteRenderer>();
         
         foreach (var sr in playerSprites)
         {

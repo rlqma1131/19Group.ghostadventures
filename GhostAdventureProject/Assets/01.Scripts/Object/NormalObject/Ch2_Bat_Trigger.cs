@@ -8,6 +8,7 @@ public class Ch2_Bat_Trigger : MonoBehaviour
     private bool triggerOn = false;
     private float moveSpeed = 2f;
     private SpriteRenderer sr;
+    [SerializeField] private SoundEventConfig soundConfig;
 
     void Start()
     {
@@ -27,7 +28,7 @@ public class Ch2_Bat_Trigger : MonoBehaviour
         {
             ani.SetBool("Move", true);
             triggerOn = true;
-            SoundTriggerer.TriggerSound(collision.transform.position);
+            SoundTrigger.TriggerSound(collision.transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
             Debug.Log("박쥐에 부딪혔습니다. 사운드트리거 발생");
         }
     }
