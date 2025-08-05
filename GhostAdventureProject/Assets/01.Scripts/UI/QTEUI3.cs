@@ -24,7 +24,7 @@ public class QTEUI3 : MonoBehaviour
     private HashSet<int> clearedZoneIndices = new();
 
     private bool isRunning = false;
-    private bool wasSuccess = false;
+    // private bool wasSuccess = false;
     private Action<bool> resultCallback;
     private float previousAngle = 0f;
     private HashSet<int> pendingZoneIndices = new();

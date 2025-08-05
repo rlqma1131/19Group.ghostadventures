@@ -42,11 +42,12 @@ public class TutorialManager : Singleton<TutorialManager>
         uimanager = UIManager.Instance;
         notice = uimanager.NoticePopupUI;
         prompt = uimanager.PromptUI;
-        canMove = PossessionSystem.Instance.CanMove;
+        
     }
     
     public void Show(TutorialStep step)
     {
+        canMove = PossessionSystem.Instance.CanMove;
         if (completedSteps.Contains(step)) return;
 
         completedSteps.Add(step);
