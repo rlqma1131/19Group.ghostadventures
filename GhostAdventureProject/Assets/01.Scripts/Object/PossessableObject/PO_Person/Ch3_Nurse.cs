@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cinemachine;
+using UnityEngine;
 
 enum NurseState
 {
@@ -230,6 +231,7 @@ public class Ch3_Nurse : MoveBasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        zoomCamera.Priority = 20;
         anim.SetBool("Move", false);
     }
 }
