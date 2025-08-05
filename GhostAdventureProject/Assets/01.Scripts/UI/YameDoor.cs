@@ -10,13 +10,10 @@ public class YameDoor : MonoBehaviour
 
     private bool moveAble = false;
 
-
      void Start()
     {
         player = FindObjectOfType<PlayerController>().gameObject;
-        // e_key.SetActive(false);    
     }
-
 
     void Update()
     {
@@ -27,36 +24,16 @@ public class YameDoor : MonoBehaviour
                 Vector3 targetDoorPos = player.transform.position;
                 targetDoorPos.x = targetDoor.transform.position.x;   
                 player.transform.position = targetDoorPos;
-
             }
         }
     }
-
-    // void OnTriggerEnter2D(Collider2D collision)
-    // {
-    //     if (collision.CompareTag("Person") || collision.CompareTag("Player"))
-    //     {
-    //         // if (guard != null && guard.isPossessed)
-    //         // {
-    //             guard.doorPass = true;
-    //             // e_key.SetActive(true);
-    //             moveAble = true;
-    //             Debug.Log("관리인 야매문과 충돌");
-    //         // }
-    //     }
-    // }
 
     private void OnTriggerStay2D(Collider2D other) 
     {
         if (other.CompareTag("Person") || other.CompareTag("Player"))
         {
-            // if (guard != null && guard.isPossessed)
-            // {
-                guard.doorPass = true;
-                // e_key.SetActive(true);
-                moveAble = true;
-                Debug.Log("관리인 야매문과 충돌");
-            // }
+            guard.doorPass = true;
+            moveAble = true;
         }
     }
 
@@ -64,13 +41,8 @@ public class YameDoor : MonoBehaviour
     {
         if (collision.CompareTag("Person") || collision.CompareTag("Player"))
         {
-            // if (guard != null && guard.isPossessed)
-            // {
-                guard.doorPass = false;
-                // e_key.SetActive(false);
-                moveAble = false;
-                Debug.Log("관리인 야매문과 충돌해제");
-            // }
+            guard.doorPass = false;
+            moveAble = false;
         }
     }
 }
