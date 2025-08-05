@@ -23,7 +23,7 @@ using UnityEngine;
 
 
 // ?울보가 원하는 아이템을 찾으러 다닐 때 문 앞에 대기하고 있는 사신에게 죽는건 아닌지
-
+public enum CryEnemyState { Known, Chase, Attack }
 public class CryEnemy : MonoBehaviour
 {
     [SerializeField] private ClueData needClue; // 원하는 단서
@@ -32,41 +32,70 @@ public class CryEnemy : MonoBehaviour
     [SerializeField] private AudioSource cryMusic;
     [SerializeField] private Ch3_MusicBox musicBox;
     private GameObject player;
+    private Rigidbody2D rb;
     private SoundManager soundManager;
-    [SerializeField] string cryRoomName; // 울보가 있는 방의 이름
-    private string roomName; // 플레이어가 있는 방의 이름
     [SerializeField] private List<Ch3_MusicBox> myMusicBoxes; // 연결된 3개의 오르골
     private HashSet<Ch3_MusicBox> clearedBoxes = new HashSet<Ch3_MusicBox>(); // QTE 성공한 오르골
+    private Animator anim;
+
+    [SerializeField] string cryRoomName; // 울보가 있는 방의 이름
+    private string roomName; // 플레이어가 있는 방의 이름
+
+
+    private bool isCrying = false; // 울고 있는지 확인용
+    private int failCount = 0;
+    private int successCount = 0;
+
+    private CryEnemyState currentState;
+
+    [Header("울보 설정")]
+    [SerializeField] private float moveSpeed; // 스피드
+    [SerializeField] private float chaseRange; // 추격 범위
+    [SerializeField] private float attackRange; // 공격 범위
+
+    private Vector2 lastDirection;
 
 
     void Start()
-    {
+    {   
         player = GameObject.FindGameObjectWithTag("Player");
+        rb = GetComponent<Rigidbody2D>();
         Debug.Log(player);
         soundManager = SoundManager.Instance;
         roomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
+        anim = GetComponentInChildren<Animator>();
+        currentState = CryEnemyState.Known;
+        StartCrying();
     }
 
     void Update()
     {
-        if(cryRoomName == roomName) StartCrying();
+        roomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
 
-        if(Ch3_MusicBox.musicBox_FailCount == 3)
+        if (cryRoomName == roomName && !isCrying)
         {
-            StartBigCrying();
+            StartCrying();
+        }
+
+        switch(currentState)
+        {
+            case CryEnemyState.Chase:
+            ChasePlayer();
+            break;
+
+            case CryEnemyState.Attack:
+            break;
+
         }
     }
 
     // 울보가 있는 방과 플레이어가 있는 방이 같으면 울기 시작
     public void StartCrying()
     {
-        if(cryRoomName == roomName)
-        {
-            soundManager.PlaySFX(cry_small);
-        }
+        isCrying = true;
 
         clearedBoxes.Clear();
-        soundManager.PlaySFX(cry_small);
+        soundManager.PlayLoopingSFX(cry_small);
 
         // 오르골들에게 자신을 연결
         foreach (var box in myMusicBoxes)
@@ -75,27 +104,73 @@ public class CryEnemy : MonoBehaviour
         }
     }
 
-
+    // 울음 멈춤
     private void StopCrying()
     {
         soundManager.StopSFX();
     }
 
+    // 큰 울음 소리
     private void StartBigCrying()
     {
         soundManager.StopSFX();
         soundManager.PlaySFX(cry_big);
+        StartCoroutine(WaitAndChangeState(cry_big.length));
     }
-
+    private IEnumerator WaitAndChangeState(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ChangeState();
+    }
+    // 상태 변경
     private void ChangeState()
     {
-        //오르골 QTE가 실패하면
-        //애니메이션
+        anim.SetBool("ChangeState", true);
+        currentState = CryEnemyState.Chase;
+    }
+    private void ChasePlayer()
+    {
+        if (roomName == cryRoomName)
+        {
+            // isChasing = true;
+
+            Vector2 direction = (player.transform.position - transform.position).normalized;
+            lastDirection = direction;
+
+            // 이동
+            rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
+
+            if (Mathf.Abs(transform.position.x - player.transform.position.x) < 0.1f)
+            {
+                currentState = CryEnemyState.Attack;
+            }
+            // 애니메이션 업데이트
+            // anim.SetBool("isChasing", true);
+            // animator.SetFloat("moveX", direction.x);
+            // animator.SetFloat("moveY", direction.y);
+        }
+        else
+        {
+            // 방이 다르면 추적하지 않음
+            StopChase();
+        }
+    }
+
+    private void StopChase()
+    {
+        // if (!isChasing) return;
+
+        // isChasing = false;
+
+        rb.velocity = Vector2.zero;
+
+        // 애니메이션 정지 또는 Idle 전환
+        anim.Play("CryEnemy_Idle");
     }
 
     private void Attack()
     {
-        //플레이어를 쫓아가서 공격함.
+        
     }
 
 
@@ -111,6 +186,26 @@ public class CryEnemy : MonoBehaviour
             {
                 StopCrying();
             }
+        }
+    }
+
+    
+
+    public void OnMusicBoxFail()
+    {
+        failCount++;
+        if (failCount >= 3)
+        {
+            StartBigCrying();
+        }
+    }
+
+    public void OnMusicBoxSuccess()
+    {
+        successCount++;
+        if(successCount >=3)
+        {
+            StopCrying();
         }
     }
 }

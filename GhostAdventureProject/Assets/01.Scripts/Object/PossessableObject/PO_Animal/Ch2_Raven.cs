@@ -12,8 +12,8 @@ public class Ch2_Raven : MoveBasePossessable
     private bool isNearDoor = false;
     private bool sandCastleBreakAble = false;
 
-    [SerializeField] private float flyForce = 5f;
-    [SerializeField] private float diveSpeed = 5f;
+    // [SerializeField] private float flyForce = 5f;
+    // [SerializeField] private float diveSpeed = 5f;
 
     protected override void Start()
     {

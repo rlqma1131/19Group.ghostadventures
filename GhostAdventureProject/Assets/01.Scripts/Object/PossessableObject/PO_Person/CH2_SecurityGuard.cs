@@ -27,7 +27,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     public PersonConditionUI targetPerson;
     public PersonConditionHandler conditionHandler;
     [SerializeField] private GameObject q_Key;
-    private bool isNearDoor = false;
+    // private bool isNearDoor = false;
     private bool isInOffice;// 경비실 안에 있는지 확인
     private bool oneTimeShowClue = false; // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만)
     public bool isdoorLockOpen;
