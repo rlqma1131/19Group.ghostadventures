@@ -1,20 +1,23 @@
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Ch3_MusicBox : BaseInteractable
 {
-    [Header("화살표 생성")]
-     [SerializeField] private GameObject arrowPrefab; //생성될 프리팹
+    [Header("UI")]
+    [SerializeField] private GameObject arrowPrefab; //생성될 프리팹
     [SerializeField] private Transform arrowContainer; //프리팹 생성 위치
     [SerializeField] private Sprite leftArrow, rightArrow, upArrow, downArrow; //화살표 방향(생성된 프리팹 Sprite 바꿈)
     [SerializeField] private Image highlightImage; // 하이라이트 이미지
     [SerializeField] private Transform highlightTransform; // 하이라이트 오브젝트가 있을 위치
     [SerializeField] private int arrowCount = 5; // 생성될 프리팹 개수
-    [SerializeField] private float timeLimit = 6f; // 제한 시간
+    [SerializeField] private float timeLimit = 5f; // 제한 시간
     [SerializeField] private Image timeBar; // 제한시간 타임바
     private float timer; // 타이머
     private int currentIndex = 0;
+    [SerializeField] private TextMeshProUGUI text;
 
     [Header("오르골 QTE")]
     private bool playAble; // 오르골과 상호작용할 수 있는 영역에 있는지
@@ -26,11 +29,9 @@ public class Ch3_MusicBox : BaseInteractable
     [SerializeField] private GameObject QTEUI_MusicBox; // QTE UI Canvas
     private List<Image> arrowImages = new List<Image>();
 
-
-        //     if (linkedEnemy != null)
-        // {
-        //     linkedEnemy.OnMusicBoxFail();
-        // }
+    [Header("오르골 사운드")]
+    [SerializeField] private AudioClip successArrow_Sound;
+    [SerializeField] private AudioClip successQTE_Sound;
 
 
     void Start()
@@ -38,6 +39,7 @@ public class Ch3_MusicBox : BaseInteractable
         playAble = false;
         isRunning = false;
         timer = timeLimit;
+        QTEUI_MusicBox.SetActive(false);
     }
 
     private void Update()
@@ -46,95 +48,114 @@ public class Ch3_MusicBox : BaseInteractable
 
         if(!isRunning)
         {
-            if(Input.GetKeyDown(KeyCode.E))
-            {
-                StartQTE();
-                isRunning = true;
-            }
+            if(Input.GetKeyDown(KeyCode.E)) StartQTE();
         }
 
         if(!isRunning) return;
         
-        // isRunning일 때 실행
         timer -= Time.deltaTime;
         timeBar.fillAmount = timer / timeLimit;
 
         if (timer <= 0f)
         {
-            Debug.Log("실패: 시간 초과"); // 울보에게 정보 전달
             FailQTE();
+            return;
+        }
+
+        if(linkedEnemy.failCount >= 3)
+        {
+            StopQTE();
             return;
         }
 
         if (Input.anyKeyDown)
         {
             if(Input.GetKeyDown(KeyCode.E)) return; // 임시
-    
+
             if (Input.GetKeyDown(targetSequence[currentIndex]))
             {
-                Debug.Log("성공 입력");
-                // 🔵 성공 → 파란색
-                arrowImages[currentIndex].color = Color.green;
-
-                currentIndex++;
-                UpdateHighlight();
-
-                if (currentIndex >= targetSequence.Count)
-                {
-                    Debug.Log("QTE 성공!");
-                    arrowImages[currentIndex].color = Color.green;
-                    isQTESuccess = true;
-                    SuccessQTE();
-                }
+                SuccessArrow();
             }
             else
             {
-                Debug.Log("실패: 틀린 키");
-                arrowImages[currentIndex].color = Color.red;
-                currentIndex++;
-                Plus_FailCount();
-                UpdateHighlight();
+                FailArrow();
             }
+
+            if(linkedEnemy.failCount >= 3)
+            {
+                StopQTE();
+                return;
+            }
+
+            if (currentIndex >= targetSequence.Count) SuccessQTE();
         }
     }
 
-    
+    // QTE 시작
     void StartQTE()
     {
-        currentIndex = 0;
-        GameObject highlight = GameObject.Find("ArrowHighlight");
+        // currentIndex = 0;
+        isRunning = true;
         PossessionSystem.Instance.CanMove = false;
         QTEUI_MusicBox.SetActive(true);
         GenerateRandomSequence(arrowCount);
     }
 
-    void StopQTE()
-    {
-        QTEUI_MusicBox.SetActive(false);
-        // isRunning()
-        // musicBox_FailCount ++;
-        
+    // 화살표 입력 성공
+    void SuccessArrow()
+    {   
+        arrowImages[currentIndex].color = Color.green;
+        currentIndex++;
+        UpdateHighlight();
     }
+
+    // 화살표 입력 실패
+    void FailArrow()
+    {
+        arrowImages[currentIndex].color = Color.red;
+        currentIndex++;
+        linkedEnemy.OnMusicBoxFail();
+        text.text = (linkedEnemy.failCount + " / 3").ToString();
+        UpdateHighlight();
+    }
+
+    // QTE 성공
     void SuccessQTE()
     {
-        QTEUI_MusicBox.SetActive(false);
-        isRunning = false;
-        PossessionSystem.Instance.CanMove = true;
+        SoundManager.Instance.PlaySFX(successArrow_Sound);
+        StopQTE();
         linkedEnemy.OnMusicBoxSuccess();
     }
 
-    void Plus_FailCount()
-    {
-        if (linkedEnemy != null) linkedEnemy.OnMusicBoxFail();
-    }
+    // QTE 실패
     void FailQTE()
     {
+        linkedEnemy.OnMusicBoxFail();
+        text.text = (linkedEnemy.failCount + " / 3").ToString();
+        StopQTE();
+        linkedEnemy.OnMusicBoxFail();
+    }
+
+    // QTE 멈춤
+    void StopQTE()
+    {   
+        highlightImage.transform.SetParent(highlightTransform);
+        StartCoroutine(DelayedQTEStop());
+    }
+    IEnumerator DelayedQTEStop()
+    {
+        yield return new WaitForSeconds(0.2f); // 짧게 보여주기
+        foreach (Transform child in arrowContainer)
+        {
+            Destroy(child.gameObject);
+        }
+        arrowImages.Clear(); // 리스트도 초기화
         QTEUI_MusicBox.SetActive(false);
         isRunning = false;
-        if (linkedEnemy != null) linkedEnemy.OnMusicBoxFail();
         PossessionSystem.Instance.CanMove = true;
     }
 
+    // 랜덤으로 화살표 생성
     private void GenerateRandomSequence(int count)
     {
         targetSequence.Clear();
@@ -149,7 +170,6 @@ public class Ch3_MusicBox : BaseInteractable
             img.sprite = GetSpriteForKey(randomKey);
             arrowImages.Add(img); 
         }
-
         UpdateHighlight();
     }
     private KeyCode GetRandomArrowKey()
@@ -180,15 +200,11 @@ public class Ch3_MusicBox : BaseInteractable
             highlightImage.transform.SetParent(target);
             highlightImage.transform.localPosition = Vector3.zero;
         }
-        if(currentIndex >= arrowContainer.childCount)
-        {
-            highlightImage.transform.SetParent(highlightTransform);
-            // currentIndex = 0;
-        }
     }
+    
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && !isQTESuccess)
+        if (collision.CompareTag("Player") && !isQTESuccess && linkedEnemy.failCount < 3)
         {
             //SetHighlight(true);
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
@@ -197,24 +213,13 @@ public class Ch3_MusicBox : BaseInteractable
     }
     protected override void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !isQTESuccess)
+        if (other.CompareTag("Player"))
         {
             SetHighlight(false);
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
             playAble = false;
         }
     }
-
-        // public void Interact()
-    // {
-    //     if (isQTESuccess) return;
-
-    //     QTEManager.Instance.StartQTE(() => {
-    //         isQTESuccess = true;
-    //         linkedEnemy.OnMusicBoxSuccess(this);
-    //     });
-    // }
-
 
 }
 

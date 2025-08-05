@@ -12,10 +12,14 @@ using UnityEngine;
 public enum CryEnemyState { Known, Chase, Attack }
 public class CryEnemy : MonoBehaviour
 {
-    [SerializeField] private ClueData needClue; // 원하는 단서
+    [Header("사운드")]
     [SerializeField] private AudioClip cry_small; // 기본울음
     [SerializeField] private AudioClip cry_big; // 큰울음
+    [SerializeField] private AudioClip smile; // 웃음
+    [SerializeField] private AudioClip successQTE_Sound; // 오르골소리(3개 모두 작동시)
     [SerializeField] private AudioSource cryMusic;
+
+    [SerializeField] private ClueData needClue; // 원하는 단서
     [SerializeField] private Ch3_MusicBox musicBox;
     private GameObject player;
     private Rigidbody2D rb;
@@ -30,7 +34,7 @@ public class CryEnemy : MonoBehaviour
 
 
     private bool isCrying = false; // 울고 있는지 확인용
-    private int failCount = 0;
+    public int failCount = 0;
     private int successCount = 0;
 
     private CryEnemyState currentState;
@@ -48,23 +52,20 @@ public class CryEnemy : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
-        Debug.Log(player);
-        soundManager = SoundManager.Instance;
-        roomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
         anim = GetComponentInChildren<Animator>();
+        soundManager = SoundManager.Instance;
+
         currentState = CryEnemyState.Known;
-        StartCrying();
+        StartCrying(); // 임시
     }
 
     void Update()
     {
-        roomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
-
-        if (cryRoomName == roomName && !isCrying)
-        {
-            StartCrying();
-        }
-
+        // roomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
+        // if (cryRoomName == roomName && !isCrying)
+        // {
+        //     StartCrying();
+        // }
     }
 
     void FixedUpdate()
@@ -72,13 +73,12 @@ public class CryEnemy : MonoBehaviour
         switch(currentState)
         {
             case CryEnemyState.Chase:
-            ChasePlayer();
-            break;
+                ChasePlayer();
+                break;
 
             case CryEnemyState.Attack:
-            Attack();
-            break;
-
+                AttackPlayer();
+                break;
         }
     }
 
@@ -86,7 +86,6 @@ public class CryEnemy : MonoBehaviour
     public void StartCrying()
     {
         isCrying = true;
-
         clearedBoxes.Clear();
         soundManager.PlayLoopingSFX(cry_small);
 
@@ -98,15 +97,18 @@ public class CryEnemy : MonoBehaviour
     }
 
     // 울음 멈춤
-    private void StopCrying()
+    private void StopCryingAndSmile()
     {
-        soundManager.StopSFX();
+        soundManager.StopLoopingSFX();
+        soundManager.PlaySFX(smile);
+        soundManager.PlaySFX(successQTE_Sound);
+        anim.SetBool("Jump", true);
     }
 
-    // 큰 울음 소리
+    // 오르골3개 실패시 - 큰 울음 소리
     private void StartBigCrying()
     {
-        soundManager.StopSFX();
+        soundManager.StopLoopingSFX();
         soundManager.PlaySFX(cry_big);
         StartCoroutine(WaitAndChangeState(cry_big.length));
     }
@@ -115,54 +117,68 @@ public class CryEnemy : MonoBehaviour
         yield return new WaitForSeconds(delay);
         ChangeState();
     }
+    
     // 상태 변경
     private void ChangeState()
     {
         anim.SetBool("ChangeState", true);
     }
+
+    // ChangeState 애니메이션 종료시 작동
     public void OnChangeStateAnimationEnd()
-{
-    currentState = CryEnemyState.Chase;
-}
+    {
+        anim.SetBool("ChangeState", false);
+        currentState = CryEnemyState.Chase;
+    }
+
     private void ChasePlayer()
     {
-        // if (roomName == cryRoomName)
+    // if (roomName == cryRoomName)
+        
+        anim.SetBool("Chase", true);
+        Vector2 direction = (player.transform.position - transform.position).normalized;
+        lastDirection = direction;
+        // 이동
+        rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
+        
+        if(transform.position.x - player.transform.position.x >0)
+            sr.flipX = true;
+        else
+            sr.flipX = false;
 
-            Debug.Log("추격 시작!");
-            Vector2 direction = (player.transform.position - transform.position).normalized;
-            lastDirection = direction;
-
-            // 이동
-            rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
-            if (Mathf.Abs(transform.position.x - player.transform.position.x) < 0.5f)
-            {
-                currentState = CryEnemyState.Attack;
-            }
-        // else
-        // {
-        //     // 방이 다르면 추적하지 않음
-        //     StopChase();
-        // }
+        if (Mathf.Abs(transform.position.x - player.transform.position.x) < 0.5f)
+        {
+            currentState = CryEnemyState.Attack;
+        }
+    // else
+    // {
+    //     // 방이 다르면 추적하지 않음
+    //     StopChase();
+    // }
     }
     
-
     private void StopChase()
     {
         rb.velocity = Vector2.zero;
         anim.Play("CryEnemy_Idle");
     }
 
-    private void Attack()
+    private void AttackPlayer()
     {
-        Debug.Log("Attack애니메이션 작동");
         anim.SetBool("Attack", true);
-    }
-    public void AfterAttack()
-    {
-        if (Mathf.Abs(transform.position.x - player.transform.position.x) >= 0.5f)
+        Debug.Log("AfterAttack");
+        if (Mathf.Abs(transform.position.x - player.transform.position.x) >= 0.2f)
         {
+            anim.SetBool("Attack", false);
             currentState = CryEnemyState.Chase;
         }
+        else anim.SetBool("Attack", true);
+    }
+
+    // Attack 애니메이션 종료시 작동
+    public void AfterAttack()
+    {   
+        
     }
 
     public void OnMusicBoxSuccess(Ch3_MusicBox box)
@@ -174,7 +190,7 @@ public class CryEnemy : MonoBehaviour
 
             if (clearedBoxes.Count >= 3)
             {
-                StopCrying();
+                StopCryingAndSmile();
             }
         }
     }
@@ -195,7 +211,7 @@ public class CryEnemy : MonoBehaviour
         successCount++;
         if(successCount >=3)
         {
-            StopCrying();
+            StopCryingAndSmile();
         }
     }
 }
