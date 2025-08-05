@@ -35,6 +35,8 @@ public class Ch2_Computer : BasePossessable
     private bool isPanelOpen = false;
     private float lastClickTime;
     private const float doubleClickDelay = 0.3f;
+    
+    private Inventory_Player _inventory;
 
     protected override void Start()
     {
@@ -52,6 +54,8 @@ public class Ch2_Computer : BasePossessable
         {
             closePasswordButton.onClick.AddListener(ClosePasswordPanel);
         }
+
+        _inventory = UIManager.Instance.Inventory_PlayerUI;
     }
 
     protected override void Update()
@@ -97,6 +101,8 @@ public class Ch2_Computer : BasePossessable
     private void ClosePasswordPanel()
     {
         passwordPanel.SetActive(false);
+        
+        if (_inventory != null) _inventory.enabled = true;
     }
     
     public void OnFileIconClick()
@@ -114,6 +120,8 @@ public class Ch2_Computer : BasePossessable
         passwordPanel.SetActive(true);
         passwordInput.text = "";
         passwordInput.ActivateInputField();
+        
+        if (_inventory != null) _inventory.enabled = false;
     }
 
     private void SubmitPassword()
@@ -140,6 +148,7 @@ public class Ch2_Computer : BasePossessable
         yield return new WaitForSeconds(2f);
         doorToOpen.SolvePuzzle();
         ClosePanel();
+        Unpossess();
     }
     
     private IEnumerator WrongFeedback()
