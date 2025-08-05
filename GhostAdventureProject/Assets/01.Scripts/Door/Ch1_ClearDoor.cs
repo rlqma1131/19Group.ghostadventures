@@ -11,7 +11,7 @@ public class Ch1_ClearDoor : BaseInteractable
     [SerializeField] private PlayableDirector playable;
     Inventory_Player inventory_Player;
     private bool canOpenDoor = false;
-    public bool testing = true; // 테스트용 변수
+    //public bool testing = true; // 테스트용 변수
 
 
 
@@ -28,17 +28,17 @@ public class Ch1_ClearDoor : BaseInteractable
         if (Input.GetKeyDown(KeyCode.E))
         {
             // 이름 안맞췄을 때
-            if (!garageEvent.Answer.correct && !testing)
+            if (!garageEvent.Answer.correct)
             {
                 UIManager.Instance.PromptUI.ShowPrompt("...잠겨 있다.", 2f);
             }
             // 이름 맞췄는데, 기억조각을 안 모았을 때
-            else if (!TeddyBear.Completed_TeddyBear && !testing)
+            else if (!TeddyBear.Completed_TeddyBear)
             {
                 UIManager.Instance.PromptUI.ShowPrompt("곰인형을 살펴봐야 해..", 2f);
             }
             // 이름 맞추고, 기억조각도 모았을 때
-            else if (TeddyBear.Completed_TeddyBear || testing)
+            else if (TeddyBear.Completed_TeddyBear)
             {
                 PossessionSystem.Instance.CanMove = false;
                 playable.Play();
