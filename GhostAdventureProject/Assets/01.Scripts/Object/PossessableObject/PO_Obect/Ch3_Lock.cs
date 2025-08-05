@@ -1,11 +1,13 @@
 ﻿using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Ch3_Lock : BasePossessable
 {
     public enum ButtonType { None, Top, Bottom, Num }
-
+    [SerializeField] private AudioClip open;
+    [SerializeField] private GameObject mainSprite;
     [Header("확대 UI")]
     [SerializeField] private GameObject lockZoom;
     [SerializeField] private RectTransform lockPos;
@@ -22,6 +24,9 @@ public class Ch3_Lock : BasePossessable
 
     [Header("숫자 스프라이트")]
     [SerializeField] private Sprite[] nums; // 0~9
+
+    [Header("기억 조각 서랍장")]
+    [SerializeField] private Ch3_Shelf shelf;
 
     // 상태 관리
     [HideInInspector] public ButtonType selectedType = ButtonType.None;
@@ -108,13 +113,27 @@ public class Ch3_Lock : BasePossessable
         Debug.Log($"현재 상태: {IsCorrectAnswer()} Top ={topIndex}, Bottom={bottomIndex}, Num1={numValues[0]}, Num2={numValues[1]}, Num3={numValues[2]}");
         if (IsCorrectAnswer())
         {
-            Debug.Log("자물쇠가 풀렸습니다");
             isSolved = true;
             hasActivated = false;
 
-
-            // 여기서 퍼즐 완료 처리 가능 (예: 문 열림, UI 비활성화 등)
+            StartCoroutine(RevealMemory());
         }
+    }
+
+    IEnumerator RevealMemory()
+    {
+        HideLockZoom();
+        Unpossess();
+        hasActivated = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        mainSprite.SetActive(false);
+        yield return new WaitForSeconds(0.3f);
+
+        SoundManager.Instance.PlaySFX(open);
+        shelf.OpenShelf();
+        gameObject.SetActive(false);
     }
 
     private bool IsCorrectAnswer()
