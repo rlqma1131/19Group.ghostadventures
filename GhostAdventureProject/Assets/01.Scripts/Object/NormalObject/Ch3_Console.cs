@@ -85,6 +85,7 @@ public class Ch3_Console : BaseInteractable
             ExitZoom();
         }
     }
+
     private void ExitZoom()
     {
         UIManager.Instance.PlayModeUI_OpenAll();

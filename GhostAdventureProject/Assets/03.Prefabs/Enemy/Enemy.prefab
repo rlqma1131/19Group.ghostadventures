@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6594921194536100913}
   - component: {fileID: 6732659173030894760}
   - component: {fileID: 4023864899423169641}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,6 +152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bfad675e03d41145bba2bf2b3f74ba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPosition: {x: 0, y: 0, z: 0}
+  normalDetectionRange: 4
+  soundDetectionRange: 8
+  normalDetectionAngle: 60
+  soundDetectionAngle: 360
 --- !u!50 &9101718303206831572
 Rigidbody2D:
   serializedVersion: 4
@@ -254,7 +259,7 @@ GameObject:
   - component: {fileID: 771114697018743907}
   - component: {fileID: 1889343780234014023}
   - component: {fileID: 8732939577487538311}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Volume Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -353,7 +358,7 @@ GameObject:
   - component: {fileID: 4919487582834723112}
   - component: {fileID: 3316929349516380567}
   - component: {fileID: 1040076477385328295}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Particle System (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5241,7 +5246,7 @@ GameObject:
   - component: {fileID: 38690322006865315}
   - component: {fileID: 2935159324186770453}
   - component: {fileID: 7364671062414179271}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10129,7 +10134,7 @@ GameObject:
   - component: {fileID: 2463012626714470295}
   - component: {fileID: 4906057592482087114}
   - component: {fileID: 6843484399659370010}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: InteractionCol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
