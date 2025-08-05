@@ -16,6 +16,10 @@ public class Ch3_Nurse : MoveBasePossessable
     [SerializeField] private float waitDuration = 3f;   // 각 지점 대기 시간
     [SerializeField] private float stateChangeInterval = 15f; // 상태 변경 주기
 
+    [Header("하이라이트 셋업")]
+    [SerializeField] private SpriteRenderer highlightSprite;
+    [SerializeField] private Animator highlightAnimator;
+
     private PersonConditionUI condition;
     private PersonConditionHandler conditionHandler;
 
@@ -27,6 +31,7 @@ public class Ch3_Nurse : MoveBasePossessable
 
     private bool isWaiting = false;
     private bool hasWorked = false;
+    private bool isAnimatingWork = false;
 
     protected override void Start()
     {
@@ -89,6 +94,7 @@ public class Ch3_Nurse : MoveBasePossessable
 
                 isWaiting = false;
                 hasWorked = false;
+                isAnimatingWork = false;
                 currentWorkIndex = (currentWorkIndex + 1) % workPositions.Length;
             }
             else
@@ -100,11 +106,18 @@ public class Ch3_Nurse : MoveBasePossessable
                 if (!hasWorked)
                 {
                     anim.SetTrigger("Work");
+
+                    if (highlightAnimator != null)
+                        highlightAnimator.SetTrigger("Work");
+
+                    isAnimatingWork = true;
                     hasWorked = true;
                 }
                 return;
             }
         }
+
+        if (isAnimatingWork) return;
 
         Transform target = workPositions[currentWorkIndex];
         MoveTo(target.position);
@@ -136,6 +149,7 @@ public class Ch3_Nurse : MoveBasePossessable
         SetMoveAnimation(true);
         if (spriteRenderer != null)
             spriteRenderer.flipX = direction.x < 0;
+        highlightSprite.flipX = direction.x < 0;
 
         if (Vector2.Distance(transform.position, target) < 0.1f)
         {
@@ -148,6 +162,9 @@ public class Ch3_Nurse : MoveBasePossessable
     {
         if (anim != null)
             anim.SetBool("Move", isMoving);
+
+        if (highlightAnimator != null && highlightAnimator.runtimeAnimatorController != null && highlightAnimator.isActiveAndEnabled)
+            highlightAnimator.SetBool("Move", isMoving);
     }
 
     private void ToggleState()
@@ -182,5 +199,37 @@ public class Ch3_Nurse : MoveBasePossessable
 
         QTESettings qteSettings = conditionHandler.GetQTESettings();
         UIManager.Instance.QTE_UI_3.ApplySettings(qteSettings);
+    }
+
+    protected override void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!hasActivated)
+            return;
+
+        if (other.CompareTag("Player"))
+        {
+            SyncHighlightAnimator();
+            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+        }
+
+        SyncHighlightAnimator();
+    }
+
+    public void SyncHighlightAnimator()
+    {
+        if (highlightAnimator == null || anim == null) return;
+
+        AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+
+        // 현재 상태 이름을 Hash로 가져오기
+        int currentStateHash = stateInfo.shortNameHash;
+
+        // 하이라이트 Animator에 동일한 상태 강제 재생
+        highlightAnimator.Play(currentStateHash, 0, stateInfo.normalizedTime);
+    }
+
+    public override void OnPossessionEnterComplete() 
+    {
+        anim.SetBool("Move", false);
     }
 }

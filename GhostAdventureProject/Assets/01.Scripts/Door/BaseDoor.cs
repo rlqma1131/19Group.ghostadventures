@@ -21,7 +21,7 @@ public abstract class BaseDoor : BaseInteractable
         spriteRenderer = GetComponent<SpriteRenderer>();
         UpdateDoorVisual();
     }
-
+    
     protected virtual void Update()
     {
         if (PlayerInteractSystem.Instance.CurrentClosest != gameObject)
@@ -39,7 +39,7 @@ public abstract class BaseDoor : BaseInteractable
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Person"))
+        if (other.CompareTag("Player"))
         {
             playerNearby = true;
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
@@ -48,7 +48,7 @@ public abstract class BaseDoor : BaseInteractable
 
     protected override void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Person"))
+        if (other.CompareTag("Player"))
         {
             playerNearby = false;
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);

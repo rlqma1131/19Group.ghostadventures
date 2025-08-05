@@ -8,4 +8,9 @@ public class Ch3_MemoryNegative_02_Paper : MemoryFragment
     {
         isScannable = true;
     }
+
+    public override void AfterScan()
+    {
+        isScannable = false;
+    }
 }

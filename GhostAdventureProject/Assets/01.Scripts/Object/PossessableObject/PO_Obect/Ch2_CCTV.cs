@@ -13,7 +13,7 @@ public class Ch2_CCTV : BasePossessable
     [SerializeField] private GameObject dKey;
 
     [Header("하이라이트 애니메이터")]
-    [SerializeField] private Animator highlightanim;
+    [SerializeField] private Animator highlightAnimator;
 
     protected override void Start()
     {
@@ -44,7 +44,9 @@ public class Ch2_CCTV : BasePossessable
         else if (Input.GetKeyDown(KeyCode.D))
         {
             anim.SetBool("Right", true);
-            highlightanim.SetBool("Right", true);
+
+            if (highlightAnimator != null && highlightAnimator.runtimeAnimatorController != null && highlightAnimator.isActiveAndEnabled)
+                highlightAnimator.SetBool("Right", true);
 
             monitor?.SetMonitorAnimBool(index, "Right", true);
             CheckSolvedPrompt();
@@ -52,7 +54,9 @@ public class Ch2_CCTV : BasePossessable
         else if (Input.GetKeyDown(KeyCode.A))
         {
             anim.SetBool("Right", false);
-            highlightanim.SetBool("Right", false);
+
+            if (highlightAnimator != null && highlightAnimator.runtimeAnimatorController != null && highlightAnimator.isActiveAndEnabled)
+                highlightAnimator.SetBool("Right", false);
 
             monitor?.SetMonitorAnimBool(index, "Right", false);
             CheckSolvedPrompt();
@@ -81,6 +85,33 @@ public class Ch2_CCTV : BasePossessable
     { 
         aKey.SetActive(true);
         dKey.SetActive(true);
+    }
+
+    protected override void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!hasActivated)
+            return;
+
+        if (other.CompareTag("Player"))
+        {
+            SyncHighlightAnimator();
+            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+        }
+
+        SyncHighlightAnimator();
+    }
+
+    public void SyncHighlightAnimator()
+    {
+        if (highlightAnimator == null || anim == null) return;
+
+        AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+
+        // 현재 상태 이름을 Hash로 가져오기
+        int currentStateHash = stateInfo.shortNameHash;
+
+        // 하이라이트 Animator에 동일한 상태 강제 재생
+        highlightAnimator.Play(currentStateHash, 0, stateInfo.normalizedTime);
     }
 
     public override void CantPossess()
