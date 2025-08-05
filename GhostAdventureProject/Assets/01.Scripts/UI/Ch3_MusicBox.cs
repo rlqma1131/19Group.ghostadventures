@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public class Ch3_MusicBox : BaseInteractable
@@ -26,6 +24,7 @@ public class Ch3_MusicBox : BaseInteractable
     KeyCode[] possibleKeys = { KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.DownArrow }; //입력 가능한 키
     public CryEnemy linkedEnemy; // CryEnemy에서 정보 넣어줌(인스펙터연결x)
     [SerializeField] private GameObject QTEUI_MusicBox; // QTE UI Canvas
+    private List<Image> arrowImages = new List<Image>();
 
 
         //     if (linkedEnemy != null)
@@ -70,16 +69,20 @@ public class Ch3_MusicBox : BaseInteractable
         if (Input.anyKeyDown)
         {
             if(Input.GetKeyDown(KeyCode.E)) return; // 임시
-
+    
             if (Input.GetKeyDown(targetSequence[currentIndex]))
             {
                 Debug.Log("성공 입력");
+                // 🔵 성공 → 파란색
+                arrowImages[currentIndex].color = Color.green;
+
                 currentIndex++;
                 UpdateHighlight();
 
                 if (currentIndex >= targetSequence.Count)
                 {
                     Debug.Log("QTE 성공!");
+                    arrowImages[currentIndex].color = Color.green;
                     isQTESuccess = true;
                     SuccessQTE();
                 }
@@ -87,6 +90,7 @@ public class Ch3_MusicBox : BaseInteractable
             else
             {
                 Debug.Log("실패: 틀린 키");
+                arrowImages[currentIndex].color = Color.red;
                 currentIndex++;
                 Plus_FailCount();
                 UpdateHighlight();
@@ -143,6 +147,7 @@ public class Ch3_MusicBox : BaseInteractable
             GameObject arrow = Instantiate(arrowPrefab, arrowContainer);
             Image img = arrow.GetComponent<Image>();
             img.sprite = GetSpriteForKey(randomKey);
+            arrowImages.Add(img); 
         }
 
         UpdateHighlight();
