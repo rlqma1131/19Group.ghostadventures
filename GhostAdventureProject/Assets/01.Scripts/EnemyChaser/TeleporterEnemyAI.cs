@@ -15,13 +15,14 @@ public class TeleporterEnemyAI : EnemyAI
     private bool initialDelayPassed = false;
     
     private Transform player;
-    // private Vector2 cachedTeleportPos;
+    private BoxCollider2D col;
 
     protected override void Start()
     {
         base.Start();
         teleportTimer = teleportInterval;
         player = GameManager.Instance.Player.transform;
+        col = GetComponent<BoxCollider2D>();
     }
 
     protected override void Update()
@@ -72,12 +73,14 @@ public class TeleporterEnemyAI : EnemyAI
             targetTeleportPos += Vector2.up * 1f;
         
         transform.position = targetTeleportPos;
+        col.isTrigger = true;
         Animator.SetTrigger("Teleport");
     }
     
     public void OnTeleportAnimationEnd()
     {
         ChangeState(ChaseState);
+        col.isTrigger = false;
         isTeleporting = false;
     }
 

@@ -9,7 +9,7 @@ public class YameScan_correct : BaseInteractable
     [SerializeField] private GameObject scanPanel; //스캔 패널
     [SerializeField] private Image scanCircleUI; //스캔 원 UI
     [SerializeField] private GameObject player;
-    [SerializeField] private GameObject door; // 지하수로와 연결된 문
+    [SerializeField] private LockedDoor door; // 지하수로와 연결된 문
     [SerializeField] private GameObject shelf; // 문 막고 있는 책장
     // [SerializeField] private GameObject e_key;
 
@@ -134,7 +134,7 @@ public class YameScan_correct : BaseInteractable
         scanPanel?.SetActive(false);
         scanCircleUI?.gameObject.SetActive(false);
 
-        door.SetActive(true);
+        door.SolvePuzzle();
         // Animator doorani = door.GetComponent<Animator>();
         // doorani.SetBool("Open", true);
         Vector3 shelfPos = shelf.transform.position;
