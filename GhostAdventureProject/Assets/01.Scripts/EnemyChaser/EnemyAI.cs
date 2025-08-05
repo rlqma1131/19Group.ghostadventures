@@ -21,7 +21,7 @@ public class EnemyAI : MonoBehaviour
     public static bool IsAnyQTERunning = false;
 
     private Coroutine soundChaseCoroutine;
-    public bool isTeleporting { get; private set; }
+    public bool isTeleporting { get; private protected set; }
     
     [SerializeField] private float normalDetectionRange = 4f;
     [SerializeField] private float soundDetectionRange = 8f;
