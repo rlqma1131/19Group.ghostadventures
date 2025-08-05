@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -26,6 +27,7 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     [Header("기타 셋팅")]
     [SerializeField] private GameObject memoryNodePrefab;
     [SerializeField] private GameObject rowPrefab;
+    [SerializeField] private Button nextBtn;
     [SerializeField] private CanvasGroup overallCanvasGroup;
     [SerializeField] private float uiFadeDuration = 0.5f;
     [SerializeField] private int maxColumnsPerRow = 4;
@@ -34,11 +36,17 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     [SerializeField] private Ch3_ClearDoor clearDoor;
     [SerializeField] private Ch3_Scanner scanner;
 
-    private List<MemoryData> selectedMemories = new(); // 선택지에 나타나는 기억들
+    private List<MemoryData> selectedMemories = new();
+    private List<MemoryData> currentSelected = new();
+    private Dictionary<MemoryData, MemoryNode> currentNodeMap = new();
+    private List<MemoryData> currentChapterMemories = new();
+    private GameObject currentPanel = null;
+    private GameObject nextPanel = null;
 
     private GameObject currentClickedRow;
     private int clickedColumnCount = 0;
     private List<GameObject> clickedSlots = new();
+    private List<MemoryData> allMemories;
 
     private bool isInteractable = true;
     public bool puzzlecompleted = false;
@@ -49,6 +57,8 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
 
     public void StartFlow(List<MemoryData> memories)
     {
+        allMemories = memories;
+
         gameObject.SetActive(true);
         selectedMemories.Clear();
         overallCanvasGroup.alpha = 0;
@@ -57,12 +67,13 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         chapter2Panel.SetActive(true);
         chapter3Panel.SetActive(true);
 
-        SetupChapter(memories, MemoryData.Chapter.Chapter1, chapter1SlotWrapper, chapter1Panel, chapter2Panel);
-        SetupChapter(memories, MemoryData.Chapter.Chapter2, chapter2SlotWrapper, chapter2Panel, chapter3Panel);
-        SetupChapter(memories, MemoryData.Chapter.Chapter3, chapter3SlotWrapper, chapter3Panel, null);
+        SetupChapter(memories, MemoryData.Chapter.Chapter1, chapter1SlotWrapper, chapter1Panel, chapter2Panel, GetColumnsPerRow(MemoryData.Chapter.Chapter1));
 
         chapter2Panel.SetActive(false);
         chapter3Panel.SetActive(false);
+
+        nextBtn.onClick.RemoveAllListeners();
+        nextBtn.onClick.AddListener(CheckAnswer);
 
         StartCoroutine(FadeCanvas(overallCanvasGroup, 0f, 1f, uiFadeDuration));
     }
@@ -70,22 +81,25 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     void SetupChapter(List<MemoryData> all,
                   MemoryData.Chapter chapterType,
                   Transform slotWrapper,
-                  GameObject currentPanel,
-                  GameObject nextPanel)
+                  GameObject panel,
+                  GameObject next,
+                  int columnsPerRow)
     {
         foreach (Transform t in slotWrapper)
             Destroy(t.gameObject);
 
-        var chapterMemories = all.FindAll(m => m.chapter == chapterType);
-        List<MemoryData> selected = new();
-        Dictionary<MemoryData, MemoryNode> nodeMap = new();
+        currentSelected = new();
+        currentNodeMap = new();
+        currentChapterMemories = all.FindAll(m => m.chapter == chapterType);
+        currentPanel = panel;
+        nextPanel = next;
 
         GameObject currentRow = null;
         int columnCount = 0;
 
-        foreach (var memory in chapterMemories)
+        foreach (var memory in currentChapterMemories)
         {
-            if (columnCount == 0 || columnCount >= maxColumnsPerRow)
+            if (columnCount == 0 || columnCount >= columnsPerRow)
             {
                 currentRow = Instantiate(rowPrefab, slotWrapper);
                 columnCount = 0;
@@ -97,7 +111,7 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
             node.Initialize(memory);
             node.SetStateEffect(MemoryState.None);
 
-            nodeMap[memory] = node;
+            currentNodeMap[memory] = node;
             columnCount++;
 
             Button btn = go.GetComponentInChildren<Button>();
@@ -105,14 +119,22 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
             {
                 if (!isInteractable) return;
 
-                if (selected.Contains(memory))
+                if (currentSelected.Contains(memory))
                 {
-                    selected.Remove(memory);
+                    currentSelected.Remove(memory);
                     node.SetStateEffect(MemoryState.None);
+
+                    var slotToRemove = clickedSlots.FirstOrDefault(slot => slot.name == $"ClickedSlot_{memory.memoryID}");
+                    if (slotToRemove != null)
+                    {
+                        clickedSlots.Remove(slotToRemove);
+                        Destroy(slotToRemove);
+                        clickedColumnCount = Mathf.Max(0, clickedColumnCount - 1);
+                    }
                 }
-                else if (selected.Count < 3)
+                else
                 {
-                    selected.Add(memory);
+                    currentSelected.Add(memory);
                     node.SetStateEffect(MemoryState.Selected);
 
                     if (currentClickedRow == null || clickedColumnCount >= maxClickedPerRow)
@@ -124,35 +146,61 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
                     var clickedUI = Instantiate(clickedSlotPrefab, currentClickedRow.transform);
                     clickedUI.name = $"ClickedSlot_{memory.memoryID}";
                     clickedSlots.Add(clickedUI);
-                    var roundClickedSlots = new List<GameObject> { clickedUI };
-
                     clickedColumnCount++;
 
-                    if (selected.Count == 3)
+                    var image = clickedUI.GetComponentInChildren<Image>();
+                    if (image != null && memory.MemoryCutSceneImage != null)
                     {
-                        var selectedNodes = selected.Select(m => nodeMap[m]).ToList();
-
-                        if (selected.All(m => m.isCorrectAnswer))
-                        {
-                            selectedMemories.AddRange(selected);
-
-                            if (nextPanel != null)
-                                StartCoroutine(CorrectEffect(selectedNodes, currentPanel, nextPanel));
-                            else
-                                StartCoroutine(CompletePuzzleFlow(selectedNodes, currentPanel));
-                        }
-                        else
-                        {
-                            Debug.Log("틀림!");
-                            StartCoroutine(WrongEffect(selectedNodes, roundClickedSlots));
-                            selected.Clear();
-                        }
+                        image.sprite = memory.MemoryCutSceneImage;
                     }
                 }
             });
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(slotWrapper.GetComponent<RectTransform>());
+    }
+
+    void CheckAnswer()
+    {
+        if (!isInteractable) return;
+
+        var correctAnswers = currentChapterMemories.Where(m => m.isCorrectAnswer).ToList();
+        var selectedNodes = currentSelected
+            .Where(m => currentNodeMap.ContainsKey(m))
+            .Select(m => currentNodeMap[m])
+            .ToList();
+
+        bool allCorrectSelected =
+            correctAnswers.All(c => currentSelected.Contains(c)) &&
+            currentSelected.All(s => s.isCorrectAnswer);
+
+        if (allCorrectSelected)
+        {
+            selectedMemories.AddRange(correctAnswers);
+
+            foreach (var correct in correctAnswers)
+            {
+                if (!selectedMemories.Contains(correct))
+                    selectedMemories.Add(correct);
+            }
+
+            if (nextPanel != null)
+                StartCoroutine(CorrectEffect(selectedNodes, currentPanel, nextPanel));
+            else
+                StartCoroutine(CompletePuzzleFlow(selectedNodes, currentPanel));
+        }
+        else
+        {
+            Debug.Log("틀림!");
+
+            var roundClicked = currentSelected
+                .Select(m => clickedSlots.FirstOrDefault(slot => slot.name == $"ClickedSlot_{m.memoryID}"))
+                .Where(slot => slot != null)
+                .ToList();
+
+            StartCoroutine(WrongEffect(selectedNodes, roundClicked));
+            currentSelected.Clear();
+        }
     }
 
     IEnumerator CorrectEffect(List<MemoryNode> nodes, GameObject currentPanel, GameObject nextPanel)
@@ -178,7 +226,53 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
             yield return FadeCanvas(nextGroup, 0f, 1f, 0.5f);
         }
 
+        MemoryData.Chapter nextChapter = GetNextChapter();
+        Transform nextSlotWrapper = GetSlotWrapper(nextChapter);
+
+
+        SetupChapter(allMemories, nextChapter, nextSlotWrapper, nextPanel, GetNextPanel(nextChapter), GetColumnsPerRow(nextChapter));
+
         isInteractable = true;
+    }
+
+    int GetColumnsPerRow(MemoryData.Chapter chapter)
+    {
+        return chapter switch
+        {
+            MemoryData.Chapter.Chapter1 => 4,
+            MemoryData.Chapter.Chapter2 => 3,
+            MemoryData.Chapter.Chapter3 => 3,
+            _ => maxColumnsPerRow
+        };
+    }
+
+    MemoryData.Chapter GetNextChapter()
+    {
+        if (currentPanel == chapter1Panel) return MemoryData.Chapter.Chapter2;
+        if (currentPanel == chapter2Panel) return MemoryData.Chapter.Chapter3;
+        return MemoryData.Chapter.Chapter3;
+    }
+
+    Transform GetSlotWrapper(MemoryData.Chapter chapter)
+    {
+        return chapter switch
+        {
+            MemoryData.Chapter.Chapter1 => chapter1SlotWrapper,
+            MemoryData.Chapter.Chapter2 => chapter2SlotWrapper,
+            MemoryData.Chapter.Chapter3 => chapter3SlotWrapper,
+            _ => null
+        };
+    }
+
+    GameObject GetNextPanel(MemoryData.Chapter chapter)
+    {
+        return chapter switch
+        {
+            MemoryData.Chapter.Chapter1 => chapter2Panel,
+            MemoryData.Chapter.Chapter2 => chapter3Panel,
+            MemoryData.Chapter.Chapter3 => null,
+            _ => null
+        };
     }
 
     IEnumerator CompletePuzzleFlow(List<MemoryNode> nodes, GameObject currentPanel)
@@ -190,6 +284,15 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
+        foreach (var slot in clickedSlots)
+        {
+            // 진동
+            if (slot != null)
+                StartCoroutine(ShakeIntensifying(slot.transform, 0.8f, 25f)); // 0.8초간 점점 세게
+        }
+
+        yield return new WaitForSeconds(0.8f);
+
         var currentGroup = currentPanel.GetComponent<CanvasGroup>();
         if (currentGroup != null)
             yield return FadeCanvas(currentGroup, 1f, 0f, 0.5f);
@@ -198,13 +301,12 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         yield return FadeCanvas(overallCanvasGroup, 1f, 0f, uiFadeDuration);
 
-        //페이드인
         CutsceneManager.Instance.StartCoroutine(CutsceneManager.Instance.PlayCutscene());
         yield return new WaitForSeconds(2f);
         SceneManager.LoadScene("Ch03_End", LoadSceneMode.Additive);
-        Inventory_Player _inventory = GameManager.Instance.Player.GetComponent<Inventory_Player>(); // 플레이어 오브젝트 설정
 
-        MemoryManager.Instance.TryCollect(memoryData); // 기억 조각 수집
+        Inventory_Player _inventory = GameManager.Instance.Player.GetComponent<Inventory_Player>();
+        MemoryManager.Instance.TryCollect(memoryData);
 
         clearDoor.OpenDoor();
         gameObject.SetActive(false);
@@ -215,17 +317,35 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
             checkpointId = "3챕터 최종 퍼즐",
             sceneName = "Ch03_Hospital",
             playerPosition = GameManager.Instance.Player.transform.position,
-
-
             collectedClueNames = _inventory.collectedClues.Select(c => c.clue_Name).ToList(),
-
             collectedMemoryIDs = MemoryManager.Instance.collectedMemoryIDs.ToList(),
-
             scannedMemoryTitles = MemoryManager.Instance.ScannedMemories.Select(m => m.memoryTitle).ToList()
         };
 
         SaveManager.SaveGame(data);
         yield return new WaitForSeconds(0.5f);
+    }
+
+    // 정답 진동 효과
+    IEnumerator ShakeIntensifying(Transform target, float duration = 0.8f, float maxMagnitude = 20f)
+    {
+        Vector3 originalPos = target.localPosition;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float progress = elapsed / duration;
+            float magnitude = Mathf.Lerp(2f, maxMagnitude, progress); // 점점 강해지는 진동
+            float x = Random.Range(-1f, 1f) * magnitude;
+            float y = Random.Range(-1f, 1f) * magnitude * 0.3f;
+
+            target.localPosition = originalPos + new Vector3(x, y, 0f);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        target.localPosition = originalPos;
     }
 
     IEnumerator WrongEffect(List<MemoryNode> nodes, List<GameObject> roundClickedSlots)
