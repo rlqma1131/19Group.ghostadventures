@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class YameScan_correct : MonoBehaviour
+public class YameScan_correct : BaseInteractable
 {
 
     [Header("Scan Settings")]
@@ -11,7 +11,7 @@ public class YameScan_correct : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject door; // 지하수로와 연결된 문
     [SerializeField] private GameObject shelf; // 문 막고 있는 책장
-    [SerializeField] private GameObject e_key;
+    // [SerializeField] private GameObject e_key;
 
 
 
@@ -154,28 +154,28 @@ public class YameScan_correct : MonoBehaviour
         scanCircleUI?.gameObject.SetActive(false);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             isNearMemory = true;
             currentScanObject = collision.gameObject;
-
-            Vector3 e_keyPos = transform.position; 
-            e_keyPos.y += 0.3f;
-            e_key.transform.position = e_keyPos;
-            e_key.SetActive(true);
+            PlayerInteractSystem.Instance.AddInteractable(gameObject);  
+            // Vector3 e_keyPos = transform.position; 
+            // e_keyPos.y += 0.3f;
+            // e_key.transform.position = e_keyPos;
+            // e_key.SetActive(true);
 
             // currentMemoryFragment = currentScanObject.GetComponent<MemoryFragment>();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected override void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             isNearMemory = false;
-
+            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
             // 스캔 중에 범위를 벗어났다면 스캔을 취소
             if (isScanning)
             {

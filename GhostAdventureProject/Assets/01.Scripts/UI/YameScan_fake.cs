@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class YameScan_fake : MonoBehaviour
+public class YameScan_fake : BaseInteractable
 {
     [Header("Scan Settings")]
     [SerializeField] private float scan_duration = 2f; //스캔 시간
     [SerializeField] private GameObject scanPanel; //스캔 패널
     [SerializeField] private Image scanCircleUI; //스캔 원 UI
     [SerializeField] private GameObject player;
-    [SerializeField] private GameObject e_key;
+    // [SerializeField] private GameObject e_key;
 
     // 내부 상태 변수
     private float scanTime = 0f;
@@ -30,7 +31,7 @@ public class YameScan_fake : MonoBehaviour
         scanCircleUI = UIManager.Instance.scanUI.transform.Find("CircleUI")?.GetComponent<Image>();
         scanCircleUI?.gameObject.SetActive(false);
         player = FindObjectOfType<PlayerController>().gameObject;
-        e_key.SetActive(false);
+        // e_key.SetActive(false);
     }
 
     void Update()
@@ -146,27 +147,28 @@ public class YameScan_fake : MonoBehaviour
         scanCircleUI?.gameObject.SetActive(false);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             isNearMemory = true;
             currentScanObject = collision.gameObject;
-            Vector3 e_keyPos = transform.position; 
-            e_keyPos.y += 0.3f;
-            e_key.transform.position = e_keyPos;
-            e_key.SetActive(true);
+            // Vector3 e_keyPos = transform.position; 
+            // e_keyPos.y += 0.3f;
+            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            // e_key.transform.position = e_keyPos;
+            // e_key.SetActive(true);
             // currentMemoryFragment = currentScanObject.GetComponent<MemoryFragment>();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected override void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             isNearMemory = false;
-            e_key.SetActive(false);
-
+            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            // e_key.SetActive(false);
             // 스캔 중에 범위를 벗어났다면 스캔을 취소
             if (isScanning)
             {
