@@ -75,7 +75,23 @@ public class EnemyVolumeTrigger : MonoBehaviour
             PlayerInTrigger = true;
             globalVolume.enabled = true;
         }
+
+        if (collision.CompareTag("Volume"))
+        {
+            globalVolume = collision.GetComponentInChildren<Volume>();
+            if (globalVolume.profile.TryGet<ColorAdjustments>(out var ca))
+            {
+                colorAdjustments = ca;
+                farColor = ca.colorFilter.value;
+            }
+
+            Debug.Log("박스볼륨 충돌");
+        }
+
+
     }
+
+
 
     private void OnTriggerExit2D(Collider2D collision)
     {
