@@ -44,6 +44,7 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
         string sceneName = SceneManager.GetActiveScene().name;
+        Application.runInBackground = true;
     }
 
     private void OnEnable()

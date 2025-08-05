@@ -88,8 +88,12 @@ public class PlayerLifeManager : MonoBehaviour
                 ca.colorFilter.value = volume.farColor; // EnemyVolumeTrigger에 정의된 farColor로 복원
             }
         }
-        
-        director.Play();
+
+        if (director != null)
+        {
+            director.stopped += ResetIsdead; 
+            director.Play();
+        }
 
         if (volume != null)
         {
@@ -153,4 +157,10 @@ public class PlayerLifeManager : MonoBehaviour
         playerAnimator?.SetTrigger("StruggleOut");
     }
 
+    public void ResetIsdead(PlayableDirector director)
+    {
+        UIManager.Instance.QTE_UI_2.isdead = false; // QTE UI 상태 초기화
+
+    }
+    
 }

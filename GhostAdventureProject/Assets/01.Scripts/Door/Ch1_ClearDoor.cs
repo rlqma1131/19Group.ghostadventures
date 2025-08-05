@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEditor.Timeline;
+//using UnityEditor.Timeline;
 using UnityEngine.Playables;
-using UnityEditor.Rendering.LookDev;
+//using UnityEditor.Rendering.LookDev;
 
 public class Ch1_ClearDoor : BaseInteractable
 {

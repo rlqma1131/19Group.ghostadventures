@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using DG.Tweening;
-using Microsoft.Unity.VisualStudio.Editor;
+//using Microsoft.Unity.VisualStudio.Editor;
 
 public class NoticePopup : MonoBehaviour
 {
