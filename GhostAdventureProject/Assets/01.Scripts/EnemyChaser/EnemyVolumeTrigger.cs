@@ -19,6 +19,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
 
     private float t = 0f; // 현재 색상 보간 값 (0 = 원래색, 1 = 빨간색)
     public bool Ondead =false;
+    
 
     void Start()
     {
@@ -34,6 +35,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
 
         globalVolume.enabled = true;
         farColor= colorAdjustments.colorFilter.value; // 초기 색상 설정
+        
     }
 
     void Update()
@@ -49,22 +51,26 @@ public class EnemyVolumeTrigger : MonoBehaviour
         }
 
         if (player == null || colorAdjustments == null) return;
-
         if (!PlayerInTrigger && Mathf.Approximately(t, 0f)) return;
 
         float targetT = 0f;
 
-        if (PlayerInTrigger && !Ondead)
+        if (UIManager.Instance.QTE_UI_2.isdead)
+        {
+            targetT = 0f;
+        }
+        else if (PlayerInTrigger && !Ondead)
         {
             float distance = Vector3.Distance(transform.position, player.position);
             targetT = Mathf.Clamp01(1 - (distance / detectionRadius));
             targetT = Mathf.Pow(targetT, 0.5f);
-            SoundManager.Instance.EnemySource.volume = Mathf.Lerp(0.01f, 0.3f, targetT); // 볼륨 조정
+            SoundManager.Instance.EnemySource.volume = Mathf.Lerp(0.01f, 0.3f, targetT);
         }
 
         t = Mathf.Lerp(t, targetT, Time.deltaTime * 2f);
         colorAdjustments.colorFilter.value = Color.Lerp(farColor, closeColor, t);
     }
+
 
 
     private void OnTriggerEnter2D(Collider2D collision)

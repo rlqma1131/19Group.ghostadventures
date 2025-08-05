@@ -20,6 +20,7 @@ public class QTEUI2 : MonoBehaviour
     private float currentTime = 0f;
     private bool isRunning = false;
     private bool isSuccess;
+    public bool isdead = false;
 
     private CinemachineVirtualCamera camera;
     private float currentSize;
@@ -93,6 +94,7 @@ public class QTEUI2 : MonoBehaviour
             DOTween.To(() => camera.m_Lens.OrthographicSize, x => camera.m_Lens.OrthographicSize = x, currentSize, 0.3f);
             fail.gameObject.SetActive(true);
             isSuccess = false;
+            isdead = true;
         }
         
         isRunning = false;
