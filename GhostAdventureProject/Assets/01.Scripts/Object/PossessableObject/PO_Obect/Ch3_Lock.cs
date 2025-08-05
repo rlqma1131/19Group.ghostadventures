@@ -26,6 +26,7 @@ public class Ch3_Lock : BasePossessable
     // 상태 관리
     [HideInInspector] public ButtonType selectedType = ButtonType.None;
     [HideInInspector] public int selectedNumIndex = -1;
+    private Ch3_LockButtons buttons;
 
     private Image topImage;
     private Image bottomImage;
@@ -104,6 +105,7 @@ public class Ch3_Lock : BasePossessable
     // 정답은 눈, 거미줄 / 412 일 때
     private void CheckAnswer()
     {
+        Debug.Log($"현재 상태: {IsCorrectAnswer()} Top ={topIndex}, Bottom={bottomIndex}, Num1={numValues[0]}, Num2={numValues[1]}, Num3={numValues[2]}");
         if (IsCorrectAnswer())
         {
             Debug.Log("자물쇠가 풀렸습니다");
@@ -118,10 +120,10 @@ public class Ch3_Lock : BasePossessable
     private bool IsCorrectAnswer()
     {
         return topImage.sprite == tops[1] &&
-               bottomImage.sprite == bottoms[1] &&
-               numImages[0].sprite == nums[3] &&
-               numImages[1].sprite == nums[0] &&
-               numImages[2].sprite == nums[1];
+       bottomImage.sprite == bottoms[2] &&
+       numImages[0].sprite == nums[4] &&
+       numImages[1].sprite == nums[1] &&
+       numImages[2].sprite == nums[2];
     }
 
     public void OnButtonClicked(ButtonType type, int idx)
