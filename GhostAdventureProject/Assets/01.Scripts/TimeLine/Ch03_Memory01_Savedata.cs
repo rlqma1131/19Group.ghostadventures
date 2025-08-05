@@ -11,9 +11,8 @@ public class Ch03_Memory01_Savedata : MonoBehaviour
     void Start()
     {
         MemoryManager.Instance.TryCollect(memoryData); // 기억 조각 수집
-        Inventory_Player _inventory = GameManager.Instance.Player.GetComponent<Inventory_Player>(); 
-
-
+        //Inventory_Player _inventory = GameManager.Instance.Player.GetComponent<Inventory_Player>(); 
+        
     }
 
 }

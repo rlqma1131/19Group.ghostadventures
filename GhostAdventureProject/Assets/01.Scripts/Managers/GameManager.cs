@@ -66,7 +66,7 @@ public class GameManager : Singleton<GameManager>
         string sceneName = scene.name;
 
         if (sceneName != "StartScene" && sceneName != "IntroScene_Real" 
-            && mode != LoadSceneMode.Additive && sceneName != "Ch01_To_Ch02" && sceneName != "Ch02_To_Ch03" && sceneName != "Ch03_To_Ch04")
+            && mode != LoadSceneMode.Additive && sceneName != "Ch01_To_Ch02" && sceneName != "Ch02_To_Ch03" && sceneName != "Ch03_To_Ch04" && sceneName != "Ch03_Memory01")
         {
             // 플레이모드 UI 열기
             if (UIManager.Instance != null)
