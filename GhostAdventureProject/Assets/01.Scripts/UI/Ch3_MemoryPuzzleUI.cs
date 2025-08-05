@@ -11,17 +11,20 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     [SerializeField] private GameObject chapter1Panel;
     [SerializeField] private GameObject chapter2Panel;
     [SerializeField] private GameObject chapter3Panel;
-    [SerializeField] private Transform clickedSlotPanel;
 
     [Header("슬롯 래퍼")]
     [SerializeField] private Transform chapter1SlotWrapper;
     [SerializeField] private Transform chapter2SlotWrapper;
     [SerializeField] private Transform chapter3SlotWrapper;
-    [SerializeField] private Transform answerWrapper;
+
+    [Header("선택 슬롯 셋팅")]
+    [SerializeField] private Transform clickedSlotWrapper;
+    [SerializeField] private GameObject clickedSlotPrefab;
+    [SerializeField] private GameObject clickedSlotRowPrefab;
+    [SerializeField] private int maxClickedPerRow = 8;
 
     [Header("기타 셋팅")]
     [SerializeField] private GameObject memoryNodePrefab;
-    [SerializeField] private GameObject clickedSlotPrefab;
     [SerializeField] private GameObject rowPrefab;
     [SerializeField] private CanvasGroup overallCanvasGroup;
     [SerializeField] private float uiFadeDuration = 0.5f;
@@ -32,7 +35,10 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     [SerializeField] private Ch3_Scanner scanner;
 
     private List<MemoryData> selectedMemories = new(); // 선택지에 나타나는 기억들
-    private List<GameObject> clickedSlots = new(); // 위에 늘어나는 기억 슬롯들
+
+    private GameObject currentClickedRow;
+    private int clickedColumnCount = 0;
+    private List<GameObject> clickedSlots = new();
 
     private bool isInteractable = true;
     public bool puzzlecompleted = false;
@@ -62,10 +68,10 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     }
 
     void SetupChapter(List<MemoryData> all,
-                      MemoryData.Chapter chapterType,
-                      Transform slotWrapper,
-                      GameObject currentPanel,
-                      GameObject nextPanel)
+                  MemoryData.Chapter chapterType,
+                  Transform slotWrapper,
+                  GameObject currentPanel,
+                  GameObject nextPanel)
     {
         foreach (Transform t in slotWrapper)
             Destroy(t.gameObject);
@@ -109,9 +115,18 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
                     selected.Add(memory);
                     node.SetStateEffect(MemoryState.Selected);
 
-                    var clickedUI = Instantiate(clickedSlotPrefab, clickedSlotPanel);
+                    if (currentClickedRow == null || clickedColumnCount >= maxClickedPerRow)
+                    {
+                        currentClickedRow = Instantiate(clickedSlotRowPrefab, clickedSlotWrapper);
+                        clickedColumnCount = 0;
+                    }
+
+                    var clickedUI = Instantiate(clickedSlotPrefab, currentClickedRow.transform);
                     clickedUI.name = $"ClickedSlot_{memory.memoryID}";
                     clickedSlots.Add(clickedUI);
+                    var roundClickedSlots = new List<GameObject> { clickedUI };
+
+                    clickedColumnCount++;
 
                     if (selected.Count == 3)
                     {
@@ -120,21 +135,16 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
                         if (selected.All(m => m.isCorrectAnswer))
                         {
                             selectedMemories.AddRange(selected);
-                            clickedSlots.Clear();
 
                             if (nextPanel != null)
-                            {
                                 StartCoroutine(CorrectEffect(selectedNodes, currentPanel, nextPanel));
-                            }
                             else
-                            {
                                 StartCoroutine(CompletePuzzleFlow(selectedNodes, currentPanel));
-                            }
                         }
                         else
                         {
                             Debug.Log("틀림!");
-                            StartCoroutine(WrongEffect(selectedNodes));
+                            StartCoroutine(WrongEffect(selectedNodes, roundClickedSlots));
                             selected.Clear();
                         }
                     }
@@ -218,9 +228,10 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
     }
 
-    IEnumerator WrongEffect(List<MemoryNode> nodes)
+    IEnumerator WrongEffect(List<MemoryNode> nodes, List<GameObject> roundClickedSlots)
     {
         isInteractable = false;
+
         foreach (var node in nodes)
             node.SetStateEffect(MemoryState.Wrong);
 
@@ -229,9 +240,15 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         foreach (var node in nodes)
             node.SetStateEffect(MemoryState.None);
 
-        foreach (var slot in clickedSlots)
+        foreach (var slot in roundClickedSlots)
+        {
+            if (clickedSlots.Contains(slot))
+                clickedSlots.Remove(slot);
             Destroy(slot);
-        clickedSlots.Clear();
+        }
+
+        currentClickedRow = null;
+        clickedColumnCount = 0;
 
         isInteractable = true;
     }
