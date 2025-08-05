@@ -92,6 +92,7 @@ public class TimelineControl : MonoBehaviour
         string currentSceneName = gameObject.scene.name; //연출되고있는 씬이름 저장
         Time.timeScale = 1;
         UIManager.Instance.PlayModeUI_OpenAll(); // 플레이모드 UI 열기
+        EnemyAI.ResumeAllEnemies();
         PossessionSystem.Instance.CanMove = true; // 플레이어 이동 가능하게 설정
         SceneManager.UnloadSceneAsync(currentSceneName); //연출씬 닫고 원래 씬 이동
     }

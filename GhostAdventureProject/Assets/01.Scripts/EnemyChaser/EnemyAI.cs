@@ -29,6 +29,10 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float normalDetectionAngle = 60f;
     [SerializeField] private float soundDetectionAngle = 360f;
     
+    public static bool IsPaused { get; private set; } = false;
+    public static void PauseAllEnemies()  => IsPaused = true;
+    public static void ResumeAllEnemies() => IsPaused = false;
+    
     private void Awake()
     {
         Animator = GetComponent<Animator>();
@@ -57,11 +61,13 @@ public class EnemyAI : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (IsPaused) return;
         currentState?.Update();
     }
 
     private void FixedUpdate()
     {
+        if (IsPaused) return;
         if (IsAnyQTERunning || (QTEHandler != null && QTEHandler.IsRunning())) return;
         
         currentState?.FixedUpdate();

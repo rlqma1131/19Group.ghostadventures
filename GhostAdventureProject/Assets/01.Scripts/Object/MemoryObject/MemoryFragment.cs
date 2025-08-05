@@ -102,6 +102,7 @@ public class MemoryFragment : BaseInteractable
         if (player == null) yield break;
 
         Vector3 startPos = drop.transform.position;
+        EnemyAI.PauseAllEnemies();
         PossessionSystem.Instance.CanMove = false; // 플레이어 이동 비활성화
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
          // === 1. 튕기기 애니메이션 ===
