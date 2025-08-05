@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 //Ch3 울보
@@ -33,6 +34,7 @@ public class CryEnemy : MonoBehaviour
     [SerializeField] private Ch3_MusicBox musicBox;
     private GameObject player;
     private Rigidbody2D rb;
+    private SpriteRenderer sr;
     private SoundManager soundManager;
     [SerializeField] private List<Ch3_MusicBox> myMusicBoxes; // 연결된 3개의 오르골
     private HashSet<Ch3_MusicBox> clearedBoxes = new HashSet<Ch3_MusicBox>(); // QTE 성공한 오르골
@@ -49,7 +51,7 @@ public class CryEnemy : MonoBehaviour
     private CryEnemyState currentState;
 
     [Header("울보 설정")]
-    [SerializeField] private float moveSpeed; // 스피드
+    [SerializeField] private float moveSpeed = 4; // 스피드
     [SerializeField] private float chaseRange; // 추격 범위
     [SerializeField] private float attackRange; // 공격 범위
 
@@ -60,6 +62,7 @@ public class CryEnemy : MonoBehaviour
     {   
         player = GameObject.FindGameObjectWithTag("Player");
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponentInChildren<SpriteRenderer>();
         Debug.Log(player);
         soundManager = SoundManager.Instance;
         roomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
@@ -77,6 +80,10 @@ public class CryEnemy : MonoBehaviour
             StartCrying();
         }
 
+    }
+
+    void FixedUpdate()
+    {
         switch(currentState)
         {
             case CryEnemyState.Chase:
@@ -130,31 +137,46 @@ public class CryEnemy : MonoBehaviour
     }
     private void ChasePlayer()
     {
-        if (roomName == cryRoomName)
-        {
+        // if (roomName == cryRoomName)
+        // {
             // isChasing = true;
-
+        // Debug.Log("추격 시작!");
+        //     Vector3 targetPos = player.transform.position;
+        //     transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+        //     if(transform.position.x - targetPos.x >0)
+        //         sr.flipX = true;
+        //     else
+        //         sr.flipX = false;
+        //     if (Mathf.Abs(transform.position.x - targetPos.x) < 0.1f)
+        //     {
+        //         currentState = CryEnemyState.Attack;
+            Debug.Log("추격 시작!");
             Vector2 direction = (player.transform.position - transform.position).normalized;
             lastDirection = direction;
 
             // 이동
-            rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
+            rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);        
+        //     }
+    }
+            
+            // 이동
+            // rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
 
-            if (Mathf.Abs(transform.position.x - player.transform.position.x) < 0.1f)
-            {
-                currentState = CryEnemyState.Attack;
-            }
+            // if (Mathf.Abs(transform.position.x - player.transform.position.x) < 0.1f)
+            // {
+            //     currentState = CryEnemyState.Attack;
+            // }
             // 애니메이션 업데이트
             // anim.SetBool("isChasing", true);
             // animator.SetFloat("moveX", direction.x);
             // animator.SetFloat("moveY", direction.y);
-        }
-        else
-        {
-            // 방이 다르면 추적하지 않음
-            StopChase();
-        }
-    }
+        // }
+        // else
+        // {
+        //     // 방이 다르면 추적하지 않음
+        //     StopChase();
+        // }
+    
 
     private void StopChase()
     {
