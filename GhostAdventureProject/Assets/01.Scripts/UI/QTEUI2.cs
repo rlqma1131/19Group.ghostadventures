@@ -95,6 +95,9 @@ public class QTEUI2 : MonoBehaviour
             fail.gameObject.SetActive(true);
             isSuccess = false;
             isdead = true;
+            UIManager.Instance.HideQTEEffectCanvas(); 
+            UIManager.Instance.PlayModeUI_CloseAll();
+            UIManager.Instance.QTE_UI_2.gameObject.SetActive(false);
         }
         
         isRunning = false;

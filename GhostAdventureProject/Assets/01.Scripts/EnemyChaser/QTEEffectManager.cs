@@ -45,6 +45,14 @@ public class QTEEffectManager : MonoBehaviour
         initialCamPosition = mainCamera.transform.position;
     }
 
+    private void Update()
+    {
+        if(UIManager.Instance.QTE_UI_2.isdead)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
     public void StartQTEEffects()
     {
         StopRunningCoroutines();
