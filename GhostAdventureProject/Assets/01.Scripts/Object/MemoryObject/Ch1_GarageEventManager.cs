@@ -53,8 +53,8 @@ public class    Ch1_GarageEventManager : BaseInteractable
         if (!isCutscenePlaying2 && answer.correct)
         {
             // [컷씬] 정답 이벤트
-            UIManager.Instance.PlayModeUI_CloseAll();
             UIManager.Instance.Inventory_PlayerUI.RemoveCluesByStage(GameManager.GetStageForCurrentChapter());
+            UIManager.Instance.PlayModeUI_CloseAll();
             cutsceneDirector_correct.Play();
             SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드아웃
             EnemyAI.PauseAllEnemies();
