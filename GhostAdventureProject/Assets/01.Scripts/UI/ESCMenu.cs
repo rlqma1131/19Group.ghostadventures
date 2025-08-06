@@ -53,6 +53,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         // 초기화
         if (masterVolumeSlider != null)
         {
+            masterVolumeSlider.value = AudioListener.volume;
             // masterVolumeSlider.onValueChanged.AddListener(OnVolumeChanged);
             masterVolumeSlider.onValueChanged.AddListener(value => AudioListener.volume = value);
         }
