@@ -14,6 +14,7 @@ public class QTEUI2 : MonoBehaviour
     public TextMeshProUGUI fail;
 
     [Header("QTE Settings")]
+    public AudioClip escape;
     public int requiredPresses = 15;
     public float timeLimit = 3f;
     private int currentPressCount = 0;
@@ -87,6 +88,8 @@ public class QTEUI2 : MonoBehaviour
             DOTween.To(() => camera.m_Lens.OrthographicSize, x => camera.m_Lens.OrthographicSize = x, currentSize, 0.3f);
             success.gameObject.SetActive(true);
             isSuccess = true;
+
+            SoundManager.Instance.PlaySFX(escape);
         }
         
         // 탈출 실패시

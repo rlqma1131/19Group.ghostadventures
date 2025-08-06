@@ -27,6 +27,9 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField] private AudioClip bgm_Ch02_PlayGround;
     [SerializeField] private AudioClip bgm_Ch03_Hospital;
 
+    [Header("SFX List")]
+    public AudioClip cluePickUP;
+
     public float BGMVolume => bgmSource.volume;
     public float SFXVolume => sfxSource.volume;
     public AudioSource EnemySource => enemySource;

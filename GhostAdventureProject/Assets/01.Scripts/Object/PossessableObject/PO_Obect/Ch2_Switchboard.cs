@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Ch2_Switchboard : BasePossessable
 {
+    [SerializeField] private AudioClip electricSFX;
+
     [Header("줌 카메라")]
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
 
@@ -45,6 +47,7 @@ public class Ch2_Switchboard : BasePossessable
 
     public void SolvedPuzzle()
     {
+        SoundManager.Instance.PlaySFX(electricSFX);
         UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("CCTV 전력이 연결됐어!", 1f);
         StartCoroutine(SolvedPuzzleRoutine());
     }
