@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Ch1_Clock : BasePossessable
 {
+    [SerializeField] private AudioClip ticktock;
     [SerializeField] private Image zoomPanel;
     [SerializeField] private RectTransform clockPos; // 두트윈 시작 위치
     [SerializeField] private GameObject clockZoom; // 고해상도 시계 UI
@@ -64,11 +65,13 @@ public class Ch1_Clock : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.A))
         {
+            SoundManager.Instance.PlaySFX(ticktock);
             hour = (hour + 1) % 12;
             UpdateHands();
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
+            SoundManager.Instance.PlaySFX(ticktock);
             minute = (minute + 1) % 60;
             UpdateHands();
         }
