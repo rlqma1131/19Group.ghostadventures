@@ -30,8 +30,13 @@ public static class Ch2_SwichboardPuzzleSolver
     static bool EndVisited(Ch2_SwitchboardButton[] buttons, bool[] visited)
     {
         for (int i = 0; i < buttons.Length; i++)
+        {
             if (buttons[i].id == 5 && visited[i])
-                return true;
+            {
+                // 5번 오른쪽이 열려 있는지 확인
+                return buttons[i].connection.right;
+            }
+        }
         return false;
     }
 
