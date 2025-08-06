@@ -31,6 +31,9 @@ public class TeleporterEnemyAI : EnemyAI
 
         if (QTEHandler != null && QTEHandler.IsRunning())
             return;
+        
+        if (currentState == InvestigateState)
+            return;
 
         teleportTimer -= Time.deltaTime;
 

@@ -56,6 +56,11 @@ public class EnemyMovementController : MonoBehaviour
             PickRandomDirection();
         }
     }
+    
+    public void SetForcedTarget(Vector2? target)
+    {
+        forcedTarget = target;
+    }
 
     public void PatrolMove()
     {
