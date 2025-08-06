@@ -198,7 +198,7 @@ public class Inventory_PossessableObject : MonoBehaviour
         isPlacing = false;
     }
 
-    private void SelectSlot(int index)
+    public void SelectSlot(int index)
     {
         if (selectedSlotIndex == index)
         {
@@ -217,7 +217,7 @@ public class Inventory_PossessableObject : MonoBehaviour
             // 선택된 슬롯 시각적 강조 (옵션)
             HighlightSlot(index);
         }
-        if(selectedSlot.item.Item_Type == ItemType.Clue)
+        if(selectedSlot.item != null && selectedSlot.item.Item_Type == ItemType.Clue)
         {
             UseOrPlaceItem(selectedSlot.item);
         }
@@ -283,15 +283,29 @@ public class Inventory_PossessableObject : MonoBehaviour
         {
             slot.UseItem(amount);
 
-            if (slot.IsEmpty())
+            if (slot.IsEmpty() && HaveItem.Instance.inventorySlots != null)
             {
                 slot.DestroySlotUI(); // 슬롯에 연결된 UI 제거
-                HaveItem.Instance.inventorySlots.Remove(slot);   // 슬롯 리스트에서도 제거
+                HaveItem.Instance.inventorySlots.Remove(slot);
+                HaveItem.Instance.inventorySlots = null;   // 슬롯 리스트에서도 제거
             }
 
             // UpdateUI(); // UI 새로고침 (선택사항: 자동 갱신되면 생략 가능)
         }
     }
+
+    public void ClearAllSlotHighlights()
+{
+    foreach (GameObject slotObj in spawnedSlots)
+    {
+        var slot = slotObj.GetComponent<InventorySlot_PossessableObject>();
+        if (slot != null)
+            slot.keyText_PO.gameObject.SetActive(false);
+    }
+
+    selectedSlot = null;
+    selectedSlotIndex = -1;
+}
 
     public ItemData selectedItem() => selectedSlot != null ? selectedSlot.item : null;
 }

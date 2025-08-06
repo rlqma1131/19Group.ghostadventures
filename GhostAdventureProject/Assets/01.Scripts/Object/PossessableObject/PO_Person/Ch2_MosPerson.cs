@@ -5,6 +5,22 @@ using UnityEngine;
 public class Ch2_MosPerson : BasePossessable
 {
     [SerializeField] GameObject q_key;
+    private HaveItem haveitem;
+
+    protected override void Start()
+    {
+        base.Start();
+        haveitem = GetComponent<HaveItem>();
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        if(haveitem.inventorySlots == null)
+        {
+            hasActivated = false;
+        }
+    }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
