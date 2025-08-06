@@ -77,6 +77,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드 아웃
             SoundManager.Instance.FadeInLoopingSFX(SoundManager.Instance.EnemySource.clip, 1f, 0.5f);
             PlayerInTrigger = true;
             globalVolume.enabled = true;
@@ -101,9 +102,12 @@ public class EnemyVolumeTrigger : MonoBehaviour
         {
             if (!collision.gameObject.activeInHierarchy)
                 return;
-            
+
             PlayerInTrigger = false;
             SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
+
+            // 이전 BGM 복원
+            SoundManager.Instance.RestoreLastBGM(1f);
             // globalVolume.enabled = false;
 
         }

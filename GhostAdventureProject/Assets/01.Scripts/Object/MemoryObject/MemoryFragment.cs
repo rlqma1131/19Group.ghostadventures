@@ -177,6 +177,9 @@ public class MemoryFragment : BaseInteractable
         Destroy(drop);
         StartCoroutine(CutsceneManager.Instance.PlayCutscene()); // 페이드인 줌인
         yield return new WaitForSeconds(5f); // 흡수 될때까지 기다림
+
+        SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드아웃
+
         SceneManager.LoadScene(data.CutSceneName, LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
         Time.timeScale = 0;

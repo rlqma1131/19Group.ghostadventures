@@ -38,6 +38,10 @@ public class SoundManager : Singleton<SoundManager>
 
     private Coroutine bgmFadeCoroutine;
 
+    // Enemy 음악이랑 교체될 때 필요
+    private AudioClip lastBGMClip;
+    private float lastBGMVolume = 0.3f;
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -93,6 +97,11 @@ public class SoundManager : Singleton<SoundManager>
 
     public void ChangeBGM(AudioClip newClip, float fadeDuration = 1f, float targetVolume = 0.3f)
     {
+        if (newClip == null) return;
+
+        lastBGMClip = newClip;
+        lastBGMVolume = targetVolume;
+
         if (bgmFadeCoroutine != null)
             StopCoroutine(bgmFadeCoroutine);
 
@@ -160,6 +169,15 @@ public class SoundManager : Singleton<SoundManager>
     {
         if (bgmSource != null)
             bgmSource.Stop();
+    }
+
+    // 재생되던 BGM으로 복귀
+    public void RestoreLastBGM(float fadeDuration = 1f)
+    {
+        if (lastBGMClip != null)
+        {
+            ChangeBGM(lastBGMClip, fadeDuration, lastBGMVolume);
+        }
     }
 
     // 효과음 재생
