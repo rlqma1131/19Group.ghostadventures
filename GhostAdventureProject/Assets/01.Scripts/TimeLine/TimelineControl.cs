@@ -95,6 +95,10 @@ public class TimelineControl : MonoBehaviour
         EnemyAI.ResumeAllEnemies();
         PossessionSystem.Instance.CanMove = true; // 플레이어 이동 가능하게 설정
         SceneManager.UnloadSceneAsync(currentSceneName); //연출씬 닫고 원래 씬 이동
+
+        // 이전 BGM 복원
+        SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
+        SoundManager.Instance.RestoreLastBGM(1f);
     }
 
     private IEnumerator FlashImages()
