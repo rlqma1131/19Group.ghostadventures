@@ -9,7 +9,7 @@ public class CluePickup : MonoBehaviour
 
     private AudioClip pickSFX;
 
-    private void Awake()
+    private void Start()
     {
         pickSFX = SoundManager.Instance.cluePickUP;
     }
