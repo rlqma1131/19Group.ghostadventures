@@ -24,7 +24,7 @@ public class Ch3_MusicBox : BaseInteractable
     private bool isRunning; // QTE가 실행되고 있는지
     private bool isQTESuccess = false; // QTE를 성공했는지
     private List<KeyCode> targetSequence = new List<KeyCode>(); // 방향키 순서를 정해두고 사용자 키 입력과 맞는지 확인용
-    KeyCode[] possibleKeys = { KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.DownArrow }; //입력 가능한 키
+    KeyCode[] possibleKeys = { KeyCode.A, KeyCode.D, KeyCode.W, KeyCode.S }; //입력 가능한 키
     public CryEnemy linkedEnemy; // CryEnemy에서 정보 넣어줌(인스펙터연결x)
     [SerializeField] private GameObject QTEUI_MusicBox; // QTE UI Canvas
     private List<Image> arrowImages = new List<Image>();
@@ -180,10 +180,10 @@ public class Ch3_MusicBox : BaseInteractable
     {
         switch (key)
         {
-            case KeyCode.LeftArrow: return leftArrow;
-            case KeyCode.RightArrow: return rightArrow;
-            case KeyCode.UpArrow: return upArrow;
-            case KeyCode.DownArrow: return downArrow;
+            case KeyCode.A: return leftArrow;
+            case KeyCode.D: return rightArrow;
+            case KeyCode.W: return upArrow;
+            case KeyCode.S: return downArrow;
             default: return null;
         }
     }

@@ -28,7 +28,7 @@ public class Ch2_SandCastle : BaseInteractable
 
     void Update()
     {
-        if(crumbleAble && !crumbled)
+        if(crumbleAble && !crumbled && raven.isPossessed)
         {
             if(Input.GetKeyDown(KeyCode.Q))
             {
@@ -66,7 +66,7 @@ public class Ch2_SandCastle : BaseInteractable
             raven = other.GetComponent<Ch2_Raven>();
         }
 
-        if(other.CompareTag("Animal") && raven.isPossessed && !crumbled)
+        if(other.CompareTag("Animal") && !crumbled)
         {
             crumbleAble = true;
             q_key.SetActive(false);
