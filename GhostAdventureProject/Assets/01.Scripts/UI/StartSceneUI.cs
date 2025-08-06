@@ -1,11 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class StartSceneUI : MonoBehaviour
 {
+    private Text surveyText;
+
+    private void Start()
+    {
+
+    }
     // Start is called before the first frame update
     public void introScenestart()
     {
@@ -44,7 +52,9 @@ public class StartSceneUI : MonoBehaviour
     }
     public void OpenURL()
     {
+        surveyText = GetComponentInChildren<Text>();
         Application.OpenURL("https://docs.google.com/forms/d/e/1FAIpQLSetE6cy2Iu6odXTSfW-ym8_2uxIw4b539wSyZo0Io8N3jNoeg/viewform?usp=dialog");
+        surveyText.text = "감사합니다!";
     }
     public void ExitGameButton()
     {
