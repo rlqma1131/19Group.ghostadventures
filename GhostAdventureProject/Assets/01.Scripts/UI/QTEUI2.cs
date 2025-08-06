@@ -37,8 +37,9 @@ public class QTEUI2 : MonoBehaviour
     }
     public void StartQTE()
     {
-        // if(!canStartQTE || isRunning)
-        //     return;
+        if (isRunning) // 중복 방지
+            return;
+        
         qteUI.SetActive(true);
         currentPressCount = 0;
         currentTime = 0f;
