@@ -22,8 +22,8 @@ public enum TutorialStep
     SecurityGuard_AfterRest,
     SecurityGuard_InOffice,
     BlackShadow,
-    CollectedAllMemoClue
-
+    CollectedAllMemoClue,
+    Test
 }
 public class TutorialManager : Singleton<TutorialManager>
 {
@@ -63,6 +63,9 @@ public class TutorialManager : Singleton<TutorialManager>
                 uimanager.TutorialUI_OpenAll();
                 celebrityBox = FindObjectOfType<Ch1_CelebrityBox>();
                 celebrityBox.highlight.SetActive(true); 
+                break;
+            case TutorialStep.Test:
+                uimanager.TutorialUI_OpenAll();
                 break;
 
             case TutorialStep.Q_key_Interact:

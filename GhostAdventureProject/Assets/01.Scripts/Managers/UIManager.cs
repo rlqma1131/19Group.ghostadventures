@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 //using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -106,7 +107,7 @@ public class UIManager : Singleton<UIManager>
     {
         SetDefaultCursor();
         if(SceneManager.GetActiveScene().name == "IntroScene_Real" || SceneManager.GetActiveScene().name =="Ch01_To_Ch02"
-            || SceneManager.GetActiveScene().name == "Ch02_To_Ch03" || SceneManager.GetActiveScene().name == "Ch03_To_Ch04")
+            || SceneManager.GetActiveScene().name == "Ch02_To_Ch03" || SceneManager.GetActiveScene().name == "Ch03_To_Ch04" || SceneManager.GetActiveScene().name == "StartScene")
         {
             PlayModeUI_CloseAll();
         }
@@ -188,6 +189,12 @@ public class UIManager : Singleton<UIManager>
     public void TutorialUI_OpenAll()
     {
         TutorialUI.SetActive(true);
+        StartCoroutine(CloseAfterDelay(3f));
+    }
+    IEnumerator CloseAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        TutorialUI.SetActive(false);
     }
 
 

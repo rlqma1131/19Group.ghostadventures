@@ -51,7 +51,7 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
     private bool isInteractable = true;
     public bool puzzlecompleted = false;
 
-    [SerializeField] private MemoryData memoryData;
+   // [SerializeField] private MemoryData memoryData;
 
     void Awake() => Close();
 
@@ -301,28 +301,28 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         yield return FadeCanvas(overallCanvasGroup, 1f, 0f, uiFadeDuration);
 
-        CutsceneManager.Instance.StartCoroutine(CutsceneManager.Instance.PlayCutscene());
-        yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene("Ch03_End", LoadSceneMode.Additive);
+       // CutsceneManager.Instance.StartCoroutine(CutsceneManager.Instance.PlayCutscene());
+        //yield return new WaitForSeconds(2f);
+        //SceneManager.LoadScene("Ch03_End", LoadSceneMode.Additive);
 
-        Inventory_Player _inventory = GameManager.Instance.Player.GetComponent<Inventory_Player>();
-        MemoryManager.Instance.TryCollect(memoryData);
+        //Inventory_Player _inventory = GameManager.Instance.Player.GetComponent<Inventory_Player>();
+       // MemoryManager.Instance.TryCollect(memoryData);
 
         clearDoor.OpenDoor();
         gameObject.SetActive(false);
         puzzlecompleted = true;
 
-        SaveData data = new SaveData
-        {
-            checkpointId = "3챕터 최종 퍼즐",
-            sceneName = "Ch03_Hospital",
-            playerPosition = GameManager.Instance.Player.transform.position,
-            collectedClueNames = _inventory.collectedClues.Select(c => c.clue_Name).ToList(),
-            collectedMemoryIDs = MemoryManager.Instance.collectedMemoryIDs.ToList(),
-            scannedMemoryTitles = MemoryManager.Instance.ScannedMemories.Select(m => m.memoryTitle).ToList()
-        };
+        //SaveData data = new SaveData
+        //{
+        //    checkpointId = "3챕터 최종 퍼즐",
+        //    sceneName = "Ch03_Hospital",
+        //    playerPosition = GameManager.Instance.Player.transform.position,
+        //    collectedClueNames = _inventory.collectedClues.Select(c => c.clue_Name).ToList(),
+        //    collectedMemoryIDs = MemoryManager.Instance.collectedMemoryIDs.ToList(),
+        //    scannedMemoryTitles = MemoryManager.Instance.ScannedMemories.Select(m => m.memoryTitle).ToList()
+        //};
 
-        SaveManager.SaveGame(data);
+        //SaveManager.SaveGame(data);
         yield return new WaitForSeconds(0.5f);
     }
 
