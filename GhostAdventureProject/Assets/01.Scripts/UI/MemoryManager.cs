@@ -97,6 +97,14 @@ public class MemoryManager : MonoBehaviour
         }
     }
 
+    public void TryCollectAll(List<MemoryData> memoryDataList)
+    {
+        foreach (var memoryData in memoryDataList)
+        {
+            TryCollect(memoryData);
+        }
+    }
+
     // ✅ 디버깅용 초기화
     public void ClearScannedDebug()
     {

@@ -17,6 +17,7 @@ public class StartSceneUI : MonoBehaviour
     // Start is called before the first frame update
     public void introScenestart()
     {
+        MemoryManager.Instance.ClearScannedDebug(); // 디버그용 초기화
         Debug.Log("Play버튼 클릭");
         SceneManager.LoadScene("IntroScene_Real");
         if(UIManager.Instance != null)
@@ -29,7 +30,7 @@ public class StartSceneUI : MonoBehaviour
 
     public void Ch02Start()
     {
-
+        //MemoryManager.Instance.ClearScannedDebug(); // 디버그용 초기화
         Debug.Log("Ch02Start버튼 클릭");
         SceneManager.LoadScene("Ch01_To_Ch02");
         if (UIManager.Instance != null)
@@ -41,7 +42,7 @@ public class StartSceneUI : MonoBehaviour
 
     public void Ch03Start()
     {
-
+        //MemoryManager.Instance.ClearScannedDebug(); // 디버그용 초기화
         Debug.Log("Ch03Start버튼 클릭");
         SceneManager.LoadScene("Ch02_To_Ch03");
         if (UIManager.Instance != null)
