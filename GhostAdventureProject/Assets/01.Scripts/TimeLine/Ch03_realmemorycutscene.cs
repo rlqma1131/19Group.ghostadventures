@@ -21,12 +21,13 @@ public class Ch03_realmemorycutscene : MonoBehaviour
             PossessionSystem.Instance.CanMove = false;
             UIManager.Instance.PlayModeUI_CloseAll();
             cutsceneDirector.Play();
+            EnemyAI.PauseAllEnemies();
         }
     }
 
     void OnCutsceneStopped(PlayableDirector d)
     {
-
+        EnemyAI.ResumeAllEnemies();
         PossessionSystem.Instance.CanMove = true;
         UIManager.Instance.PlayModeUI_OpenAll();
         isCutsceneActive = true;
