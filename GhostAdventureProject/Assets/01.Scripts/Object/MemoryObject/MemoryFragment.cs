@@ -13,6 +13,8 @@ public class MemoryFragment : BaseInteractable
     [SerializeField] private bool canStore = false;
     public bool CanStore => canStore;
 
+    public AudioClip audioSource1; // 스캔 사운드 재생용
+    public AudioClip audioSource2; // 스캔 사운드 재생용
     [Header("드랍 조각 프리팹")]
     [SerializeField] private GameObject fragmentDropPrefab;
 
@@ -102,7 +104,7 @@ public class MemoryFragment : BaseInteractable
         if (player == null) yield break;
 
         SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드아웃
-
+        SoundManager.Instance.PlaySFX(audioSource1); // 스캔 사운드 재생
         Vector3 startPos = drop.transform.position;
         EnemyAI.PauseAllEnemies();
         PossessionSystem.Instance.CanMove = false; // 플레이어 이동 비활성화
@@ -173,7 +175,7 @@ public class MemoryFragment : BaseInteractable
         }, targetAngle, rotateTime).SetEase(Ease.InOutSine);
         yield return rotate.WaitForCompletion();
         rotate.Kill();
-
+        SoundManager.Instance.PlaySFX(audioSource2); // 스캔 사운드 재생
         drop.GetComponent<PixelExploder>()?.Explode(); // 픽셀 폭발 효과 적용
 
         Destroy(drop);
