@@ -9,13 +9,14 @@ public static class Ch2_SwitchboardSlotConnectionData
         public bool top, bottom, left, right;
     }
 
+
     private static Dictionary<int, SlotConnection[]> map = new Dictionary<int, SlotConnection[]>
     {
         { 0, new SlotConnection[]
             {
                 new SlotConnection { left = true, right = true },                          // 0도: 없음
                 new SlotConnection { right = true, bottom = true },                          // 90도: 없음
-                new SlotConnection { left = true, bottom = true },// 180도
+                new SlotConnection { left = true, bottom = true, right = true },// 180도
                 new SlotConnection { left = true, bottom = true } // 270도
             }
         },
