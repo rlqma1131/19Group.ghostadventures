@@ -28,6 +28,7 @@ public class Ch03_EndMemory : MonoBehaviour
 
         Inventory_Player _inventory = GameManager.Instance.Player.GetComponent<Inventory_Player>();
         MemoryManager.Instance.TryCollect(memoryData);
+        SoundManager.Instance.FadeOutAndStopLoopingSFX();
         SceneManager.LoadScene("Ch03_End", LoadSceneMode.Additive);
     }
 }
