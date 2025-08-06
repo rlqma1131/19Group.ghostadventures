@@ -15,8 +15,9 @@ public class EnemyAI : MonoBehaviour
     public PatrolState PatrolState { get; private set; }
     public ChaseState ChaseState { get; private set; }
     public QTEState QTEState { get; private set; }
+    public InvestigateState InvestigateState { get; private set; }
 
-    private EnemyState currentState;
+    private protected EnemyState currentState;
     public Vector3 startPosition;
     public static bool IsAnyQTERunning = false;
 
@@ -44,6 +45,7 @@ public class EnemyAI : MonoBehaviour
         PatrolState = new PatrolState(this);
         ChaseState = new ChaseState(this);
         QTEState = new QTEState(this);
+        InvestigateState = new InvestigateState(this);
 
         startPosition = transform.position;
         
@@ -129,6 +131,38 @@ public class EnemyAI : MonoBehaviour
         isTeleporting = false;
         ChangeState(PatrolState);
     }
+    
+    /// <summary>오브젝트 활성화 시 호출</summary>
+    public void StartInvestigate(Transform target)
+    {
+        transform.position = target.position;
+
+        // InvestigateState에 목표 위치 전달 (필요 시)
+        InvestigateState.Setup(target.position);
+
+        // 상태 변경
+        ChangeState(InvestigateState);
+    }
+
+    /// <summary>오브젝트 비활성화 시 호출</summary>
+    public void StopInvestigate()
+    {
+        // 맵 경계나 텔레포트 막힌 상태에서 Patrol로 복귀
+        ChangeState(PatrolState);
+        // (필요하다면) 원위치 복귀 코루틴 호출
+        StartCoroutine(ReturnToStart());
+    }
+
+    private IEnumerator ReturnToStart()
+    {
+        transform.position = startPosition;
+
+        // 약간의 대기(선택사항) 후 Patrol 상태로 복귀
+        yield return null;
+
+        ChangeState(PatrolState);
+    }
+    
     // public void StartSoundTeleport(Vector3 playerPos, float offsetDistance, float chaseDuration)
     // {
     //     float facing = GameManager.Instance.Player.transform.localScale.x;
