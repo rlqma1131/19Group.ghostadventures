@@ -22,6 +22,7 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField] private AudioSource sfxSource;
     [SerializeField] private AudioSource sfxLoopSource;
     [SerializeField] private AudioSource enemySource;
+    private AudioClip currentClip;
 
     //[Header("BGM Clips")]
     //[SerializeField] private AudioClip bgm_Title;
@@ -158,6 +159,11 @@ public class SoundManager : Singleton<SoundManager>
     public void PlaySFX(AudioClip clip, float volume = 0.6f)
     {
         if (clip == null || sfxSource == null) return;
+
+        if (sfxSource.isPlaying && clip == currentClip)
+        return;
+
+        currentClip = clip;
         sfxSource.PlayOneShot(clip, volume);
     }
 

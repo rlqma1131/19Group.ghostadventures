@@ -124,7 +124,7 @@ public class TutorialManager : Singleton<TutorialManager>
         await Task.Delay(2000);
         prompt.ShowPrompt_2("나도 모르게 여기로 들어왔어..", "여기서 기억을 찾을 수 있을까?");
         await Task.Delay(3000);
-        notice.FadeInAndOut("※ 목표: 이 집 안에 흩어진 기억 조각을 찾아 수집하세요.");
+        notice.FadeInAndOut("※ 이 집 안에 흩어진 기억 조각을 찾아 수집하세요.");
         await Task.Delay(3000);
         WaitTimeAfterShowTutorial(0f, TutorialStep.ShowControlKey_And_HighLightBithdayBox);
     }

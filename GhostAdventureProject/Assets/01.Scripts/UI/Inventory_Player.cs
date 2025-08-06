@@ -14,6 +14,7 @@ public class Inventory_Player : MonoBehaviour
 
     public void AddClue(ClueData clue)
     {
+        if(clue == null) return;
         // 그림일기라면 기존 것 교체
         if (clue.clueType == ClueType.DrawingClue)
         {
