@@ -33,6 +33,8 @@ public class CH2_File : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if(fileClue == null) return;
+        
         uimanager.Inventory_PlayerUI.AddClue(fileClue);
         uimanager.InventoryExpandViewerUI.ShowClue(fileClue);
         uimanager.InventoryExpandViewerUI.OnClueHidden += CloseViewer;

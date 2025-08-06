@@ -11,7 +11,7 @@ public class PlayerLifeManager : MonoBehaviour
 
     [Header("생명 시스템 설정")]
     public int maxPlayerLives = 2; //  이것만 바꿔주면 , 판당 목숨도 알아서 조절되고 QTE 시스템도 알아서 작동할것입니다. 
-    private int currentPlayerLives;
+    public int currentPlayerLives;
 
     // 이벤트 시스템 - 다른 스크립트들이 구독할 수 있음
     public static event Action<int> OnLifeChanged; // 생명이 변경될 때
@@ -48,8 +48,8 @@ public class PlayerLifeManager : MonoBehaviour
     public void LosePlayerLife()
     {
         SubtractionLife();
-
         OnLifeChanged?.Invoke(currentPlayerLives);
+        // PossessionSystem.Instance.CanMove = false;
 
         // TODO: 피격 애니메이션 재생
        // playerAnimator?.SetTrigger("StruggleIn");  // <- Animator에 "StruggleIn" 트리거 설정 필요
