@@ -198,6 +198,18 @@ public class GameManager : Singleton<GameManager>
             Debug.Log($"[{typeof(T).Name}] 자동 생성됨");
         }
     }
+    
+    public static ClueStage GetStageForCurrentChapter()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        switch (sceneName)
+        {
+            case "Ch01_House": return ClueStage.Stage1;
+            case "Ch02_PlayGround": return ClueStage.Stage2;
+            case "Ch03_Hospital": return ClueStage.Stage3;
+            default: return ClueStage.Stage4;
+        }
+    }
 
     //private void RunPlayer()
     //{

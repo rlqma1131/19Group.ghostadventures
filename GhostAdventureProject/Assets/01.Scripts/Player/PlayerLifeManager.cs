@@ -70,6 +70,7 @@ public class PlayerLifeManager : MonoBehaviour
         if (qteUI != null)
             qteUI.gameObject.SetActive(false);
         
+        UIManager.Instance.Inventory_PlayerUI.RemoveClueBeforeStage();
         UIManager.Instance.PlayModeUI_CloseAll();
         GameObject player = GameManager.Instance.Player;
         PlayableDirector director = player.GetComponentInChildren<PlayableDirector>();

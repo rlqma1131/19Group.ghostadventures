@@ -41,6 +41,21 @@ public class Inventory_Player : MonoBehaviour
             RefreshUI();
         }
     }
+    
+    public void RemoveCluesByStage(ClueStage stage)
+    {
+        collectedClues.RemoveAll(clue => clue.clue_Stage == stage);
+        RefreshUI();
+    }
+
+    public void RemoveClueBeforeStage()
+    {
+        if(collectedClues != null)
+        {
+            collectedClues.Clear();
+            RefreshUI();
+        }
+    }
 
     // 단서 삭제
     public void RemoveClue(ClueData clue)
@@ -65,18 +80,6 @@ public class Inventory_Player : MonoBehaviour
             }
         }
         RefreshUI();
-    }
-
-
-    
-    // 이전 스테이지 단서 모두 삭제
-    public void RemoveClueBeforeStage()
-    {
-        if(collectedClues != null)
-        {
-            collectedClues.Clear();
-            RefreshUI();
-        }
     }
 
     public void RefreshUI()
