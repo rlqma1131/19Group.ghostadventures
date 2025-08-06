@@ -69,11 +69,11 @@ public class CryEnemy : MonoBehaviour
         {
             StartCrying();
         }
-        // if (clearedBoxes.Count >= 3 && cryRoomName != roomName && playSound_successQTE)
-        // {
-        //     soundManager.StopSFX();
-        //     playSound_successQTE = false;
-        // }
+        if (successCount >= 3 && cryRoomName != roomName && playSound_successQTE)
+        {
+            soundManager.StopSFX();
+            playSound_successQTE = false;
+        }
         // else if(clearedBoxes.Count >= 3 && cryRoomName == roomName && !playSound_successQTE)
         // {
         //     soundManager.PlaySFX(successQTE_Sound);
