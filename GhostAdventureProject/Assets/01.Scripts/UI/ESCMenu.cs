@@ -53,7 +53,8 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         // 초기화
         if (masterVolumeSlider != null)
         {
-            masterVolumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+            // masterVolumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+            masterVolumeSlider.onValueChanged.AddListener(value => AudioListener.volume = value);
         }
 
         if (languageDropdown != null)
@@ -105,6 +106,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // ESC메뉴 열기
     public void ESCMenu_Open()
     {
+        UIManager.Instance.SetDefaultCursor();
         escMenuUI.SetActive(true);
         general.SetActive(true);
         optionMenu.SetActive(false);

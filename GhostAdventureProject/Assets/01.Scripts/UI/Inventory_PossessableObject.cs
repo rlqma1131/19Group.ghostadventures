@@ -50,15 +50,36 @@ public class Inventory_PossessableObject : MonoBehaviour
     // slotPrefab을 slotParent에 생성하고 spawnedSlots에 추가함
     public void ShowInventory(List<InventorySlot_PossessableObject> slots)
     {
+        // Clear();
+
+        // foreach (var slot in slots)
+        // {
+        //     GameObject obj = Instantiate(slotPrefab, slotParent);
+        //     obj.GetComponent<InventorySlot_PossessableObject>().SetSlot(slot);
+        //     spawnedSlots.Add(obj);
+        // }
+        // gameObject.SetActive(true);
+
         Clear();
 
-        foreach (var slot in slots)
+        for (int i = 0; i < slots.Count; i++)
         {
             GameObject obj = Instantiate(slotPrefab, slotParent);
-            obj.GetComponent<InventorySlot_PossessableObject>().SetSlot(slot);
+            var slotComponent = obj.GetComponent<InventorySlot_PossessableObject>();
+            slotComponent.SetSlot(slots[i]);
+
+            // 🔢 KeyCode 숫자 (예: 5,6,7...)
+            int keyNumber = 5 + i;
+            if (slotComponent.keyText_PO != null)
+            {
+                slotComponent.keyText_PO.text = keyNumber.ToString();
+                slotComponent.keyText_PO.gameObject.SetActive(true);
+            }
+
             spawnedSlots.Add(obj);
         }
-        gameObject.SetActive(true);
+
+        gameObject.SetActive(true);        
     }
 
     // Clear넣을 시 정보 저장이 안되려나?
