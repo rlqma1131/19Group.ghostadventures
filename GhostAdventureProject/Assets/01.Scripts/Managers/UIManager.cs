@@ -46,7 +46,6 @@ public class UIManager : Singleton<UIManager>
     public InventoryExpandViewer InventoryExpandViewerUI => inventoryExpandViewer;
     public ESCMenu ESCMenuUI => escMenu;
     public NoticePopup NoticePopupUI => noticePopup;
-    public KeyTutorial keyTutorial;
 
     // QTE 이펙트 캔버스 외부 접근용
     public GameObject QTEEffectCanvas => qteEffectCanvas;
