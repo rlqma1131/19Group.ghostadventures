@@ -17,7 +17,7 @@ public class YameDoor : MonoBehaviour
 
     void Update()
     {
-        if(moveAble && guard.isdoorLockOpen)
+        if(moveAble && guard.isdoorLockOpen && guard.isPossessed)
         {
             if(Input.GetKeyDown(KeyCode.E))
             {
