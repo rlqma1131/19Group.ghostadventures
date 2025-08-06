@@ -118,7 +118,7 @@ public class Ch1_Clock : BasePossessable
                 clockZoom.SetActive(false);
             });
         UIManager.Instance.PromptUI.ShowPrompt("어? 저 TV… 무언가 보여줄지도 몰라.");
-        UIManager.Instance.NoticePopupUI.FadeInAndOut("※목표 : TV 켜기 ");
+        // UIManager.Instance.NoticePopupUI.FadeInAndOut("※목표 : TV 켜기 ");
     }
 
     public override void OnPossessionEnterComplete()

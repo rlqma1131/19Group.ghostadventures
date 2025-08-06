@@ -32,7 +32,7 @@ public class SafeBox : BaseInteractable
             {
                 inventory = Inventory_PossessableObject.Instance;
                 
-                if(inventory == null)
+                if(inventory == null || needItem != inventory.selectedItem())
                 {
                     UIManager.Instance.PromptUI.ShowPrompt("잠겨있어. 열쇠가 필요해");
                     return;
