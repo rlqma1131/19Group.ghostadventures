@@ -43,8 +43,6 @@ public static class Ch2_SwichboardPuzzleSolver
     // 깊이우선탐색(연결된 버튼을 따라가면서 visited에 체크)
     static void DFS(Ch2_SwitchboardButton[] buttons, int index, bool[] visited)
     {
-        Debug.Log($"DFS: from id:{buttons[index].id}, grid:{buttons[index].gridPosition}");
-
         if (visited[index]) return;
         visited[index] = true;
         for (int i = 0; i < buttons.Length; i++)

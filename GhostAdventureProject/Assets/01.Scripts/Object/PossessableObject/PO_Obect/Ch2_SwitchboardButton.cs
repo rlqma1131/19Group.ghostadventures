@@ -14,6 +14,8 @@ public class Ch2_SwitchboardButton : MonoBehaviour
     private void Start()
     {
         puzzleManager = GetComponentInParent<Ch2_SwitchboardPuzzleManager>();
+
+        connection = Ch2_SwitchboardSlotConnectionData.GetConnectionFor(id, 0);
     }
 
     private void OnMouseDown()
@@ -34,5 +36,7 @@ public class Ch2_SwitchboardButton : MonoBehaviour
 
         // 퍼즐 정답 체크
         puzzleManager.CheckSolution();
+
+        Debug.Log($"[{id}] 회전 완료 → 회전: {currentRotation}, 연결 상태 R:{connection.right}");
     }
 }
