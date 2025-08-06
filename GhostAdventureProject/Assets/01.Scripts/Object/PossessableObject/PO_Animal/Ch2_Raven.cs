@@ -1,24 +1,20 @@
-using System.Collections;
 using UnityEngine;
-using DG.Tweening;
 
 public class Ch2_Raven : MoveBasePossessable
 {
 
-    [SerializeField] private LockedDoor underGroundDoor; // 지하창고 연결 문
     [SerializeField] private Animator highlightAnim;
-    [SerializeField] private GameObject SandCastle;
+    [SerializeField] private GameObject SandCastle; // 모래성
+    [SerializeField] private Transform startSpot; // 스타트지점 (빙의해제시 되돌아감)
 
-    private bool isNearDoor = false;
     private bool sandCastleBreakAble = false;
-
-    // [SerializeField] private float flyForce = 5f;
-    // [SerializeField] private float diveSpeed = 5f;
+    private Rigidbody2D rb;
 
     protected override void Start()
     {
         base.Start();
         hasActivated = true;
+        rb = GetComponent<Rigidbody2D>();        
     }
 
     protected override void Update()
@@ -27,14 +23,11 @@ public class Ch2_Raven : MoveBasePossessable
         {
             return;
         }
-        if (isNearDoor || sandCastleBreakAble)
+        if (sandCastleBreakAble)
         {
             Vector2 catPos = this.transform.position;
             catPos.y += 0.5f;
             // q_Key.SetActive(true);
-        }
-        else if (!isNearDoor)
-        {
         }
 
         base.Update();
@@ -45,21 +38,32 @@ public class Ch2_Raven : MoveBasePossessable
             {
                 anim.SetTrigger("Attack");
             }
-    
-            if(isNearDoor)
-            {
-                // underGroundDoor.SolvePuzzle();
-                // 문 열기
-                // StartCoroutine(CatAct());
-            }
-            // if(sandCastleBreakAble)
-            // {
-            //     // anim.SetBool("Attack", true);
-            //     underGroundDoor.SolvePuzzle();
-            //     Debug.Log("문이 열렸습니다");
-            // }
         }
-        // HandleFlight();
+    }
+
+    void FixedUpdate()
+    {
+        if (!isPossessed)
+        {
+            Vector2 direction = (startSpot.position - transform.position);
+            
+            // 거리가 충분히 가까우면 멈춤
+            if (direction.magnitude <= 0.05f)
+            {
+                anim.SetBool("Move", false);
+                rb.velocity = Vector2.zero; // 혹시 남아있는 물리속도가 있을 경우
+                return;
+            }
+
+            // 방향 벡터 정규화 후 이동
+            direction.Normalize();
+            rb.MovePosition(rb.position + direction * (moveSpeed-1) * Time.fixedDeltaTime);
+
+            anim.SetBool("Move", true);
+
+            // 방향에 따라 스프라이트 뒤집기
+            spriteRenderer.flipX = (startSpot.position.x < transform.position.x);
+        }
     }
 
     protected override void Move()
@@ -86,39 +90,6 @@ public class Ch2_Raven : MoveBasePossessable
         }
     }
 
-    // void HandleFlight()
-    // {
-    // if(isPossessed)
-    // {
-    // // 날기: 스페이스바
-    // if (Input.GetKey(KeyCode.Space))
-    // {
-    //     transform.position += Vector3.up * flyForce * Time.deltaTime;
-    //     // if (anim != null)
-    //         // anim.SetBool("Fly", true);
-    // }
-    // else
-    // {
-    //     // if (anim != null)
-    //         // anim.SetBool("Fly", false);
-    // }
-
-    // 급강하: S 키
-    // if (Input.GetKey(KeyCode.S))
-    // {
-    //     transform.position += Vector3.down * diveSpeed * Time.deltaTime;
-    //     // if (anim != null)
-    //     //     anim.SetTrigger("Dive"); // 애니메이션이 있다면
-    //     }
-    // }
-    // }
-
-    public override void Unpossess()
-    {
-        base.Unpossess();
-    }
-
-
     public override void OnQTESuccess()
     {
         SoulEnergySystem.Instance.RestoreAll();
@@ -131,11 +102,6 @@ public class Ch2_Raven : MoveBasePossessable
     {
         base.OnTriggerEnter2D(collision);
 
-        if (collision.GetComponent<LockedDoor>() == underGroundDoor)
-        {
-            isNearDoor = true;
-        }
-
         if(collision.gameObject == SandCastle)
         {
             sandCastleBreakAble = true;
@@ -146,58 +112,16 @@ public class Ch2_Raven : MoveBasePossessable
     {
         base.OnTriggerExit2D(collision);
 
-        if (collision.GetComponent<LockedDoor>() == underGroundDoor)
-        {
-            isNearDoor = false;
-        }
         if(collision.gameObject == SandCastle)
         {
-            Debug.Log("모래성파괴가능범위_탈출");
             sandCastleBreakAble = false;
         }
     }
 
-    public void Blink()
+    public override void Unpossess()
     {
-        // anim.SetTrigger("Blink");
+        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("빙의 해제", 2f);
+        isPossessed = false;
+        PossessionStateManager.Instance.StartUnpossessTransition();
     }
-
-    public void ActivateCat()
-    {
-        // 1. 점프 애니메이션
-        float jumpHeight = 1.5f;
-        float jumpDuration = 0.4f;
-
-        // 현재 위치 저장
-        Vector3 originalPos = transform.position;
-
-        // 2. 점프 시퀀스
-        Sequence jumpSequence = DOTween.Sequence();
-
-        // 위로 점프
-        jumpSequence.Append(transform.DOMoveY(originalPos.y + jumpHeight, jumpDuration * 0.5f).SetEase(Ease.OutQuad));
-
-        // 아래로 착지
-        jumpSequence.Append(transform.DOMoveY(originalPos.y, jumpDuration * 0.5f).SetEase(Ease.InQuad));
-
-        // 3. 착지 후 Idle 애니메이션으로 전환
-        jumpSequence.AppendCallback(() =>
-        {
-            hasActivated = true;
-            // anim.SetBool("Idle", true);
-        });
-    }
-
-    // IEnumerator CatAct()
-    // {
-    //     anim.SetTrigger("Open");
-    //     underGroundDoor.SolvePuzzle();
-
-    //     yield return new WaitForSeconds(2f); // 2초 기다림
-
-    //     zoomCamera.Priority = 5;
-    //     Unpossess();
-    //     anim.Play("Cat_Sleeping");
-    //     hasActivated = false;
-    // }
 }

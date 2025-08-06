@@ -104,6 +104,7 @@ public class InventorySlot_PossessableObject : MonoBehaviour
 
     // 아이콘 제거
     if (iconImage != null)
+        iconImage.enabled = false;
         iconImage.sprite = null;
 
     // 수량 텍스트 제거
