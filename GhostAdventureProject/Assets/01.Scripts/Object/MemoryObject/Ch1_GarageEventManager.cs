@@ -55,6 +55,7 @@ public class    Ch1_GarageEventManager : BaseInteractable
             // [컷씬] 정답 이벤트
             UIManager.Instance.PlayModeUI_CloseAll();
             cutsceneDirector_correct.Play();
+            EnemyAI.PauseAllEnemies();
             PossessionSystem.Instance.CanMove = false;
             // 기억조각 스캔 가능하도록 활성화
             bear.ActivateTeddyBear();
@@ -88,6 +89,7 @@ public class    Ch1_GarageEventManager : BaseInteractable
     void OnTimelineFinished2(PlayableDirector pd)
     {
         keyboard.Close();
+        EnemyAI.ResumeAllEnemies();
         PossessionSystem.Instance.CanMove = true;
         isCutscenePlaying2 = true;
         UIManager.Instance.PlayModeUI_OpenAll();

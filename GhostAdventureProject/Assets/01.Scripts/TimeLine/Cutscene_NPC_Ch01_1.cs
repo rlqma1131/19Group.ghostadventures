@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
-
 public class Cutscene_NPC : MonoBehaviour
 {
     [SerializeField] private PlayableDirector director;
@@ -17,6 +16,7 @@ public class Cutscene_NPC : MonoBehaviour
 
         // 타임라인 재생 끝났을 때 호출될 함수 등록
         director.stopped += OnTimelineStopped;
+        
     }
 
 
@@ -30,6 +30,7 @@ public class Cutscene_NPC : MonoBehaviour
         if (director != null)
         {
             director.Play();
+            EnemyAI.PauseAllEnemies();
             isCutscenePlaying = true;
             PossessionSystem.Instance.CanMove = false;
             UIManager.Instance.PlayModeUI_CloseAll();
@@ -54,5 +55,6 @@ public class Cutscene_NPC : MonoBehaviour
         GarageDoor.SetActive(false);
         PossessionSystem.Instance.CanMove = true;
         UIManager.Instance.PlayModeUI_OpenAll();
+        EnemyAI.ResumeAllEnemies();
     }
 }
