@@ -1,9 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Ch2_LeftSwing : BasePossessable
 {
+    [SerializeField] private AudioClip swingSFX;
     [SerializeField] private Ch2_Kiosk targetKiosk;
     [SerializeField] private Ch2_Computer targetComputer;
     [SerializeField] private GameObject q_Key;
@@ -68,6 +69,7 @@ public class Ch2_LeftSwing : BasePossessable
         if (qteSuccessCount >= totalQTECount)
         {
             anim.SetTrigger("LeftSwing");
+            SoundManager.Instance.PlaySFX(swingSFX);
             // 컴퓨터, 키오스크 hasActivated = true 포함된 매서드 추가
             if (targetKiosk != null)
                 targetKiosk.Activate();

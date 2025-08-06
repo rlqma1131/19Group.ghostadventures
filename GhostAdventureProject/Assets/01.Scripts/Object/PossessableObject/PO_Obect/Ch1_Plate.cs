@@ -5,8 +5,6 @@ public class Ch1_Plate : BasePossessable
 {
     [SerializeField] private AudioClip isShaking;
     [SerializeField] private GameObject q_Key;
-    [SerializeField] private SoundEventConfig soundConfig;
-    
 
     private Ch1_Cat cat;
 
@@ -42,8 +40,6 @@ public class Ch1_Plate : BasePossessable
         float durationPerShake = 0.05f;
 
         SoundManager.Instance.PlaySFX(isShaking);
-        Debug.Log("Plate is shaking!");
-        SoundTrigger.TriggerSound(transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
 
         for (int i = 0; i < shakeCount; i++)
         {

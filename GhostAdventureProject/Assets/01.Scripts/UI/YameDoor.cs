@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class YameDoor : MonoBehaviour
 {
@@ -17,7 +17,7 @@ public class YameDoor : MonoBehaviour
 
     void Update()
     {
-        if(moveAble && guard.isdoorLockOpen && guard.isPossessed)
+        if(moveAble && guard.isdoorLockOpen && !guard.isPossessed)
         {
             if(Input.GetKeyDown(KeyCode.E))
             {

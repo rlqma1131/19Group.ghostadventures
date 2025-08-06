@@ -54,7 +54,9 @@ public class    Ch1_GarageEventManager : BaseInteractable
         {
             // [컷씬] 정답 이벤트
             UIManager.Instance.PlayModeUI_CloseAll();
+            UIManager.Instance.Inventory_PlayerUI.RemoveCluesByStage(GameManager.GetStageForCurrentChapter());
             cutsceneDirector_correct.Play();
+            SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드아웃
             EnemyAI.PauseAllEnemies();
             PossessionSystem.Instance.CanMove = false;
             // 기억조각 스캔 가능하도록 활성화
@@ -88,6 +90,7 @@ public class    Ch1_GarageEventManager : BaseInteractable
 
     void OnTimelineFinished2(PlayableDirector pd)
     {
+        SoundManager.Instance.RestoreLastBGM(1f);
         keyboard.Close();
         EnemyAI.ResumeAllEnemies();
         PossessionSystem.Instance.CanMove = true;

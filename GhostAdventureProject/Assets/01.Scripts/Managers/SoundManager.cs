@@ -3,17 +3,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 // 씬 이름 → SceneType 변환을 위한 열거형
-//public enum SceneType
-//{
-//    Title,
-//    Main,
-//    Lv1_Castle,
-//    Lv2_Poison,
-//    Lv3_Desert, 
-//    Lv4_Gold,
-//    Final,
-//    EndingScene
-//}
+public enum SceneType
+{
+    StartScene,
+    Ch01_House,
+    Ch02_PlayGround,
+    Ch03_Hospital,
+    CutScene
+}
 
 public class SoundManager : Singleton<SoundManager>
 {
@@ -24,98 +21,92 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField] private AudioSource enemySource;
     private AudioClip currentClip;
 
-    //[Header("BGM Clips")]
-    //[SerializeField] private AudioClip bgm_Title;
-    //[SerializeField] private AudioClip bgm_Main;
-    //[SerializeField] private AudioClip bgm_Lv1Castle;
-    //[SerializeField] private AudioClip bgm_Lv2Poison;
-    //[SerializeField] private AudioClip bgm_Lv3Desert;
-    //[SerializeField] private AudioClip bgm_Lv4Gold;
-    //[SerializeField] private AudioClip bgm_Final;
-    //[SerializeField] private AudioClip endingScene;
+    [Header("BGM Clips")]
+    [SerializeField] private AudioClip bgm_StartScene;
+    [SerializeField] private AudioClip bgm_Ch01_House;
+    [SerializeField] private AudioClip bgm_Ch02_PlayGround;
+    [SerializeField] private AudioClip bgm_Ch03_Hospital;
+
+    [Header("SFX List")]
+    public AudioClip cluePickUP;
 
     public float BGMVolume => bgmSource.volume;
     public float SFXVolume => sfxSource.volume;
     public AudioSource EnemySource => enemySource;
-    public bool IsBGMMuted => bgmSource.mute;
-    public bool IsSFXMuted => sfxSource.mute;
-    
+    //public bool IsBGMMuted => bgmSource.mute;
+    //public bool IsSFXMuted => sfxSource.mute;
 
     private Coroutine bgmFadeCoroutine;
 
-    //private void OnEnable()
-    //{
-    //    SceneManager.sceneLoaded += OnSceneLoaded;
-    //}
+    // Enemy 음악이랑 교체될 때 필요
+    private AudioClip lastBGMClip;
+    private float lastBGMVolume = 0.3f;
 
-    //private void OnDisable()
-    //{
-    //    SceneManager.sceneLoaded -= OnSceneLoaded;
-    //}
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
     // 씬 이름 → SceneType 변환
-    //private SceneType GetSceneType(string sceneName)
-    //{
-    //    switch (sceneName)
-    //    {
-    //        case "TitleScene": return SceneType.Title;
-    //        case "MainScene": return SceneType.Main;
-    //        case "Dun_Lv.1_CastleScene": return SceneType.Lv1_Castle;
-    //        case "Dun_Lv.2_PoisonScene": return SceneType.Lv2_Poison;
-    //        case "Dun_Lv.3_DesertScene": return SceneType.Lv3_Desert;
-    //        case "Dun_Lv.4_GoldScene": return SceneType.Lv4_Gold;
-    //        case "Dun_FinalScene": return SceneType.Final;
-    //        case "EndingScene": return SceneType.EndingScene;
+    private SceneType GetSceneType(string sceneName)
+    {
+        switch (sceneName)
+        {
+            case "StartScene": return SceneType.StartScene;
+            case "Ch01_House": return SceneType.Ch01_House;
+            case "Ch02_PlayGround": return SceneType.Ch02_PlayGround;
+            case "Ch03_Hospital": return SceneType.Ch03_Hospital;
 
-    //        default: return SceneType.Main;
-    //    }
-    //}
+            default: return SceneType.CutScene;
+        }
+    }
 
     // 씬 로드 시 자동 BGM 전환
-    //private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    //{
-    //    SceneType sceneType = GetSceneType(scene.name);
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneType sceneType = GetSceneType(scene.name);
 
-    //    switch (sceneType)
-    //    {
-    //        case SceneType.Title:
-    //            ChangeBGM(bgm_Title);
-    //            break;
-    //        case SceneType.Main:
-    //            ChangeBGM(bgm_Main);
-    //            break;
-    //        case SceneType.Lv1_Castle:
-    //            ChangeBGM(bgm_Lv1Castle);
-    //            break;
-    //        case SceneType.Lv2_Poison:
-    //            ChangeBGM(bgm_Lv2Poison);
-    //            break;
-    //        case SceneType.Lv3_Desert:
-    //            ChangeBGM(bgm_Lv3Desert);
-    //            break;
-    //        case SceneType.Lv4_Gold:
-    //            ChangeBGM(bgm_Lv4Gold);
-    //            break;
-    //        case SceneType.Final:
-    //            ChangeBGM(bgm_Final);
-    //            break;
-    //        case SceneType.EndingScene:
-    //            ChangeBGM(endingScene, 1f, 0.5f);
-    //            break;
-    //        default:
-    //            ChangeBGM(bgm_Main);
-    //            break;
-    //    }
-    //}
+        switch (sceneType)
+        {
+            case SceneType.StartScene:
+                ChangeBGM(bgm_StartScene);
+                break;
+            case SceneType.Ch01_House:
+                ChangeBGM(bgm_Ch01_House);
+                break;
+            case SceneType.Ch02_PlayGround:
+                ChangeBGM(bgm_Ch02_PlayGround);
+                break;
+            case SceneType.Ch03_Hospital:
+                ChangeBGM(bgm_Ch03_Hospital);
+                break;
+
+            default:
+                FadeOutAndStopBGM();
+                break;
+        }
+        Debug.Log($"[SoundManager]씬 실행됨 : {scene.name}");
+    }
 
     // BGM 전환 (자동 페이드)
 
-    public void ChangeBGM(AudioClip newClip, float fadeDuration = 1f, float targetVolume = 0.8f)
+    public void ChangeBGM(AudioClip newClip, float fadeDuration = 1f, float targetVolume = 0.3f)
     {
+        if (newClip == null) return;
+
+        lastBGMClip = newClip;
+        lastBGMVolume = targetVolume;
+
         if (bgmFadeCoroutine != null)
             StopCoroutine(bgmFadeCoroutine);
 
         bgmFadeCoroutine = StartCoroutine(FadeOutInBGM(newClip, fadeDuration, targetVolume));
+        Debug.Log($"BGM 실행됨 : {newClip}");
     }
 
     private IEnumerator FadeOutInBGM(AudioClip newClip, float duration, float targetVolume)
@@ -148,11 +139,45 @@ public class SoundManager : Singleton<SoundManager>
         bgmSource.volume = targetVolume;
     }
 
+    public void FadeOutAndStopBGM(float duration = 1f)
+    {
+        if (bgmFadeCoroutine != null)
+            StopCoroutine(bgmFadeCoroutine);
+
+        bgmFadeCoroutine = StartCoroutine(FadeOutBGMOnly(duration));
+    }
+
+    private IEnumerator FadeOutBGMOnly(float duration)
+    {
+        float startVolume = bgmSource.volume;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            bgmSource.volume = Mathf.Lerp(startVolume, 0f, timer / duration);
+            yield return null;
+        }
+
+        bgmSource.Stop();
+        bgmSource.clip = null;
+        bgmSource.volume = startVolume; // 나중 재사용을 위해 원복 (혹은 0 유지도 가능)
+    }
+
     // BGM 강제 정지
     public void StopBGM()
     {
         if (bgmSource != null)
             bgmSource.Stop();
+    }
+
+    // 재생되던 BGM으로 복귀
+    public void RestoreLastBGM(float fadeDuration = 1f)
+    {
+        if (lastBGMClip != null)
+        {
+            ChangeBGM(lastBGMClip, fadeDuration, lastBGMVolume);
+        }
     }
 
     // 효과음 재생
@@ -188,16 +213,16 @@ public class SoundManager : Singleton<SoundManager>
         float adjustedVolume = Mathf.Pow(sliderValue, 2f); // 지수 적용
         bgmSource.volume = adjustedVolume;
 
-    //    foreach (var source in sfxPool)
-    //    {
-    //        source.volume = adjustedVolume;
-    //    }
+        //foreach (var source in sfxPool)
+        //{
+        //    source.volume = adjustedVolume;
+        //}
     }
 
-    public void SetBGMMute(bool mute)
-    {
-        bgmSource.mute = mute;
-    }
+    //public void SetBGMMute(bool mute)
+    //{
+    //    bgmSource.mute = mute;
+    //}
 
     // 음소거
     //public void SetSFXMute(bool mute)

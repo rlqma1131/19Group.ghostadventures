@@ -95,53 +95,49 @@ public class GameManager : Singleton<GameManager>
         Debug.Log($"씬 로드됨: {scene.name}");
 
         // 이어하기에 저장한 데이터 적용
-        if (loadFromSave && pendingSaveData != null)
-        {
-            ApplySaveData(pendingSaveData);
-        }
-
-        //PausePlayer(); // 플레이어 일시정지
-
-        //Invoke(nameof(RunPlayer), 2f); // 씬 로드 후 잠시 대기 후 플레이어 활성화
+        //if (loadFromSave && pendingSaveData != null)
+        //{
+        //    ApplySaveData(pendingSaveData);
+        //}
     }
 
-    public void SetPendingLoad(SaveData data)
-    {
-        loadFromSave = true;
-        pendingSaveData = data;
-    }
+    //public void SetPendingLoad(SaveData data)
+    //{
+    //    loadFromSave = true;
+    //    pendingSaveData = data;
+    //}
 
-    private void ApplySaveData(SaveData data)
-    {
-        //  Clue 복원
-        var inventory = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
-        inventory.RemoveClueBeforeStage();
-        foreach (string clueName in data.collectedClueNames)
-        {
-            ClueData clue = Resources.Load<ClueData>("ClueData/" + clueName);
-            if (clue != null)
-                inventory.AddClue(clue);
-        }
+    //private void ApplySaveData(SaveData data)
+    //{
+    //    //  Clue 복원
+    //    var inventory = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
+    //    inventory.RemoveClueBeforeStage();
+    //    foreach (string clueName in data.collectedClueNames)
+    //    {
+    //        ClueData clue = Resources.Load<ClueData>("ClueData/" + clueName);
+    //        if (clue != null)
+    //            inventory.AddClue(clue);
+    //    }
 
-        // Memory 복원
-        MemoryManager.Instance.ClearScannedDebug();
-        foreach (string memoryID in data.collectedMemoryIDs)
-        {
-            MemoryData memory = Resources.Load<MemoryData>("MemoryData/" + memoryID);
-            if (memory != null)
-                MemoryManager.Instance.TryCollect(memory);
-        }
+    //    // Memory 복원
+    //    MemoryManager.Instance.ClearScannedDebug();
+    //    foreach (string memoryID in data.collectedMemoryIDs)
+    //    {
+    //        MemoryData memory = Resources.Load<MemoryData>("MemoryData/" + memoryID);
+    //        if (memory != null)
+    //            MemoryManager.Instance.TryCollect(memory);
+    //    }
 
-        foreach (string title in data.scannedMemoryTitles)
-        {
-            MemoryData memory = Resources.LoadAll<MemoryData>("MemoryData")
-                .FirstOrDefault(m => m.memoryTitle == title);
-            if (memory != null && !MemoryManager.Instance.IsCanStore(memory))
-                MemoryManager.Instance.TryCollect(memory);
-        }
+    //    foreach (string title in data.scannedMemoryTitles)
+    //    {
+    //        MemoryData memory = Resources.LoadAll<MemoryData>("MemoryData")
+    //            .FirstOrDefault(m => m.memoryTitle == title);
+    //        if (memory != null && !MemoryManager.Instance.IsCanStore(memory))
+    //            MemoryManager.Instance.TryCollect(memory);
+    //    }
 
-        Debug.Log("[GameManager] 저장된 인벤토리 및 기억 복원 완료");
-    }
+    //    Debug.Log("[GameManager] 저장된 인벤토리 및 기억 복원 완료");
+    //}
 
     public void TrySpawnPlayer()
     {
@@ -200,6 +196,18 @@ public class GameManager : Singleton<GameManager>
         {
             Instantiate(prefab);
             Debug.Log($"[{typeof(T).Name}] 자동 생성됨");
+        }
+    }
+    
+    public static ClueStage GetStageForCurrentChapter()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        switch (sceneName)
+        {
+            case "Ch01_House": return ClueStage.Stage1;
+            case "Ch02_PlayGround": return ClueStage.Stage2;
+            case "Ch03_Hospital": return ClueStage.Stage3;
+            default: return ClueStage.Stage4;
         }
     }
 

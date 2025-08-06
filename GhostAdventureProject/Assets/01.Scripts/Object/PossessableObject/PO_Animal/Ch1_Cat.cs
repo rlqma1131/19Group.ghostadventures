@@ -7,6 +7,7 @@ public class Ch1_Cat : MoveBasePossessable
     [SerializeField] private LockedDoor door;
     [SerializeField] private GameObject q_Key;
     [SerializeField] private Animator highlightAnim;
+    [SerializeField] private AudioClip catMeow;
 
     private bool isNearDoor = false;
 
@@ -85,6 +86,7 @@ public class Ch1_Cat : MoveBasePossessable
 
     public void ActivateCat()
     {
+        SoundManager.Instance.PlaySFX(catMeow);
         // 1. 점프 애니메이션
         float jumpHeight = 1.5f;
         float jumpDuration = 0.4f;

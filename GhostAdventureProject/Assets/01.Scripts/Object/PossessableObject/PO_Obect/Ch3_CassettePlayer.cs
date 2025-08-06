@@ -7,6 +7,7 @@ using UnityEngine;
 public class Ch3_CassettePlayer : BasePossessable
 {
     [Header("소리 목록")]
+    [SerializeField] private AudioClip dial;
     [SerializeField] private AudioClip buttonPush;
     [SerializeField] private AudioClip talkingSound; // 대화 소리
     [SerializeField] private AudioClip glitchSound; // 퍼즐 해결 후 소리
@@ -31,6 +32,10 @@ public class Ch3_CassettePlayer : BasePossessable
 
     private bool isPlaying = false; // 재생 여부
     private bool isSolved = false; // 문제 해결 여부
+
+    private float inputCooldown = 0.5f; // 조작키 입력 텀
+    private float inputTimer = 0f;
+    private bool canAdjust = true;
 
     private float answerDistortion = 0f; // 정답 주파수 조정값
     private float answerPitch = 1f; // 정답 재생 속도
@@ -60,16 +65,13 @@ public class Ch3_CassettePlayer : BasePossessable
 
     protected override void Update()
     {
-        if (!isPossessed)
-            return;
+        if (!isPossessed) return;
 
         if (Input.GetKeyDown(KeyCode.E))
         {
             Unpossess();
             zoomCamera.Priority = 5;
             UIManager.Instance.PlayModeUI_OpenAll();
-
-            //SoundManager.Instance.ChangeBGM(챕터3BGM);
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -77,13 +79,11 @@ public class Ch3_CassettePlayer : BasePossessable
 
             if (isSolved)
             {
-                // 퍼즐 해결 후
                 SoundManager.Instance.StopBGM();
                 SoundManager.Instance.ChangeBGM(glitchSound);
             }
             else
             {
-                // 퍼즐 해결 전
                 if (!isPlaying)
                 {
                     playBtn.SetActive(true);
@@ -101,38 +101,57 @@ public class Ch3_CassettePlayer : BasePossessable
         if (!isPlaying)
             return;
 
-        // 재생 중 일때만
+        // 입력 쿨타임 처리
+        if (!canAdjust)
+        {
+            inputTimer -= Time.deltaTime;
+            if (inputTimer <= 0f)
+                canAdjust = true;
+            return; // 쿨타임 중엔 아래 조작 막음
+        }
+
         if (Input.GetKeyDown(KeyCode.A))
         {
             distortionValue += 0.1f;
             distortionValue = Mathf.Clamp(distortionValue, minDistort, maxDistort);
             distortion.distortionLevel = distortionValue;
+            TriggerInputCooldown();
+            SoundManager.Instance.PlaySFX(dial);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
             distortionValue -= 0.1f;
             distortionValue = Mathf.Clamp(distortionValue, minDistort, maxDistort);
-
-            // 부동소수점 오차 보정
             distortionValue = Mathf.Round(distortionValue * 100f) / 100f;
-
             distortion.distortionLevel = distortionValue;
+            TriggerInputCooldown();
+            SoundManager.Instance.PlaySFX(dial);
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
             playbackPitch += 0.2f;
             playbackPitch = Mathf.Clamp(playbackPitch, minPitch, maxPitch);
             audioSource.pitch = playbackPitch;
+            TriggerInputCooldown();
+            SoundManager.Instance.PlaySFX(dial);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
             playbackPitch -= 0.2f;
             playbackPitch = Mathf.Clamp(playbackPitch, minPitch, maxPitch);
             audioSource.pitch = playbackPitch;
+            TriggerInputCooldown();
+            SoundManager.Instance.PlaySFX(dial);
         }
 
         UpdateDialRotation();
         CheckSolved();
+    }
+
+    void TriggerInputCooldown()
+    {
+        canAdjust = false;
+        inputTimer = inputCooldown;
     }
 
     void UpdateDialRotation()

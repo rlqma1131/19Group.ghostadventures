@@ -59,7 +59,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
         {
             targetT = 0f;
         }
-        else if (PlayerInTrigger && !Ondead)
+        else if (PlayerInTrigger && !Ondead && !UIManager.Instance.QTE_UI_2.isdead)
         {
             float distance = Vector3.Distance(transform.position, player.position);
             targetT = Mathf.Clamp01(1 - (distance / detectionRadius));
@@ -77,6 +77,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드 아웃
             SoundManager.Instance.FadeInLoopingSFX(SoundManager.Instance.EnemySource.clip, 1f, 0.5f);
             PlayerInTrigger = true;
             globalVolume.enabled = true;
@@ -90,11 +91,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
                 colorAdjustments = ca;
                 farColor = ca.colorFilter.value;
             }
-
-            Debug.Log("박스볼륨 충돌");
         }
-
-
     }
 
 
@@ -103,8 +100,14 @@ public class EnemyVolumeTrigger : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            if (!collision.gameObject.activeInHierarchy)
+                return;
+
             PlayerInTrigger = false;
             SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
+
+            // 이전 BGM 복원
+            SoundManager.Instance.RestoreLastBGM(1f);
             // globalVolume.enabled = false;
 
         }
