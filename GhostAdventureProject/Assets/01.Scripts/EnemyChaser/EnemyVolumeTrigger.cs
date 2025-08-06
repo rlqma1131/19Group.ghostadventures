@@ -59,7 +59,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
         {
             targetT = 0f;
         }
-        else if (PlayerInTrigger && !Ondead)
+        else if (PlayerInTrigger && !Ondead && !UIManager.Instance.QTE_UI_2.isdead)
         {
             float distance = Vector3.Distance(transform.position, player.position);
             targetT = Mathf.Clamp01(1 - (distance / detectionRadius));
