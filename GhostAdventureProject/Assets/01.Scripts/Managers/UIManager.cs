@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 //using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -188,6 +189,12 @@ public class UIManager : Singleton<UIManager>
     public void TutorialUI_OpenAll()
     {
         TutorialUI.SetActive(true);
+        StartCoroutine(CloseAfterDelay(3f));
+    }
+    IEnumerator CloseAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        TutorialUI.SetActive(false);
     }
 
 

@@ -43,6 +43,15 @@ public class PlayerRoomTracker : MonoBehaviour
                 {
                     TutorialManager.Instance.Show(TutorialStep.LaundryRoom);                    
                 }
+
+                if (room.roomName == "놀이터")
+                {
+                    TutorialManager.Instance.Show(TutorialStep.Test);         
+                }
+                if (room.roomName == "일반병동 - 1F 로비")
+                {
+                    TutorialManager.Instance.Show(TutorialStep.Test);         
+                }
             }
 
 
