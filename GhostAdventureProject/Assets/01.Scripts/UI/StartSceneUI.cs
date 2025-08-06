@@ -42,6 +42,10 @@ public class StartSceneUI : MonoBehaviour
             UIManager.Instance.startEndingUI_CloseAll();
         }
     }
+    public void OpenURL()
+    {
+        Application.OpenURL("https://docs.google.com/forms/d/e/1FAIpQLSetE6cy2Iu6odXTSfW-ym8_2uxIw4b539wSyZo0Io8N3jNoeg/viewform?usp=dialog");
+    }
     public void ExitGameButton()
     {
 #if UNITY_EDITOR
