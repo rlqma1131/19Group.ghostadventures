@@ -59,7 +59,7 @@ public class Ch1_ClearDoor : BaseInteractable
         {
             canOpenDoor = true;
         }
-        if (TeddyBear.Completed_TeddyBear || canOpenDoor)
+        if (TeddyBear.Completed_TeddyBear && canOpenDoor && garageEvent.Answer.correct)
         {
             UIManager.Instance.PromptUI.ShowPrompt_Random("여기서 볼 일은 끝난거 같아 ", "이제 여기서 나가자");
         }

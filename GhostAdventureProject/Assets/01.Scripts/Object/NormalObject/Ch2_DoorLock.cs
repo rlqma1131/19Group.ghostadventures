@@ -33,7 +33,7 @@ public class Ch2_DoorLock : BaseInteractable
                 
                 if(inventory == null || needItem != inventory.selectedItem())
                 {
-                    UIManager.Instance.PromptUI.ShowPrompt_2("들어갈 수 없어...", "관리인을 나오게 해야 해", "근처에 뭐가 있을텐데");
+                    UIManager.Instance.PromptUI.ShowPrompt_2("문을 열 수 있는 카드키가 필요해");
                     return;
                 }
                 if(needItem == inventory.selectedItem() && needItem != null && doorOpenAble)

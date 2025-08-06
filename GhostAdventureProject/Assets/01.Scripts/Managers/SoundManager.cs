@@ -40,7 +40,7 @@ public class SoundManager : Singleton<SoundManager>
 
     // Enemy 음악이랑 교체될 때 필요
     private AudioClip lastBGMClip;
-    private float lastBGMVolume = 0.3f;
+    private float lastBGMVolume = 0.2f;
 
     private void OnEnable()
     {
@@ -95,7 +95,7 @@ public class SoundManager : Singleton<SoundManager>
 
     // BGM 전환 (자동 페이드)
 
-    public void ChangeBGM(AudioClip newClip, float fadeDuration = 1f, float targetVolume = 0.3f)
+    public void ChangeBGM(AudioClip newClip, float fadeDuration = 1f, float targetVolume = 0.2f)
     {
         if (newClip == null) return;
 

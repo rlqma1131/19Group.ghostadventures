@@ -195,7 +195,7 @@ public class Ch1_MainFlashlight : BasePossessable
         // 실패 이후 재빙의 가능하게 만들기
         if (!timerActive)
         {
-            UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 제한 시간: 60초");
+            UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 제한 시간: 45초");
             // 타이머 상태 초기화
             timeRemaining = timeLimit;
             timerActive = true;

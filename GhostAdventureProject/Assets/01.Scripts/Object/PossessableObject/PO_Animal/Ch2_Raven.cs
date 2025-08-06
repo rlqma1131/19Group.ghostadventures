@@ -64,10 +64,12 @@ public class Ch2_Raven : MoveBasePossessable
             // 방향에 따라 스프라이트 뒤집기
             spriteRenderer.flipX = (startSpot.position.x < transform.position.x);
         }
+        
     }
 
     protected override void Move()
     {
+        
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
         Vector3 move = new Vector3(h, v, 0);
@@ -76,7 +78,14 @@ public class Ch2_Raven : MoveBasePossessable
 
         if (anim != null)
         {
+             if (isPossessed)
+        {
+            anim.SetBool("Move", true);
+        }
+        else
+        {
             anim.SetBool("Move", isMoving);
+        }
         }
         if (isMoving)
         {

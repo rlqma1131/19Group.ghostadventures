@@ -53,6 +53,7 @@ public class CH2_File : MonoBehaviour
         PuzzleStateManager.Instance.MarkPuzzleSolved("금고");
         yield return new WaitForSeconds(2f);
         uimanager.InventoryExpandViewerUI.OnClueHidden -= CloseViewer;
+        yield return new WaitForSeconds(1f);
         Destroy(zoomSafeBox);
     }
 }

@@ -57,6 +57,10 @@ public class ESCMenu : MonoBehaviour, IUIClosable
             // masterVolumeSlider.onValueChanged.AddListener(OnVolumeChanged);
             masterVolumeSlider.onValueChanged.AddListener(value => AudioListener.volume = value);
         }
+        if(sfxSlider != null)
+        {
+            sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
+        }
 
         if (languageDropdown != null)
         {
@@ -258,6 +262,8 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         return name;
     }
 }
+
+
 }
 
 
