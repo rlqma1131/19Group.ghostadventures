@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class Ch02_경비원 : MonoBehaviour
+public class Ch02_SecurityCollider : MonoBehaviour
 {
     [SerializeField] private CinemachineConfiner2D virtualCamera;
 

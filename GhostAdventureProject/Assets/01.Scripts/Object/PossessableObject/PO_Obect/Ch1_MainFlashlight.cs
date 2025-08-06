@@ -46,6 +46,7 @@ public class Ch1_MainFlashlight : BasePossessable
                     zoomCamera.Priority = 20;
                 }
 
+                zoomCamera.Priority = 5;
                 Unpossess();
 
                 if (timerPanel != null)
