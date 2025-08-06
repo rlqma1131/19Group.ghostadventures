@@ -13,6 +13,8 @@ public class Ch3_MirrorPuzzleManager : MonoBehaviour
     private GameObject player;
 
     [SerializeField] private GameObject hintPrefab;
+    
+    private bool firstRoomEntered = false;
 
     private void Awake()
     {
@@ -24,6 +26,15 @@ public class Ch3_MirrorPuzzleManager : MonoBehaviour
         player = GameManager.Instance.Player;
     }
 
+    public void NotifyFirstRoomEntered()
+    {
+        if (!firstRoomEntered)
+        {
+            firstRoomEntered = true;
+            UIManager.Instance.PromptUI.ShowPrompt("이 방은 뭐지..? 이런 방이 더 있을까?", 2f);
+        }
+    }
+    
     public void NotifyRoomCleared()
     {
         roomsCleared++;

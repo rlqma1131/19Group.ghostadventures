@@ -65,8 +65,14 @@ public class Ch3_MirrorRoomManager : MonoBehaviour
     // 오답 처리용 함수
     public void OnWrongObjectReleased()
     {
-        Debug.Log("틀린 오브젝트에 빙의 해제됨 - 패널티 실행");
-
-        // 여기서 패널티 로직 추가 (예: 깜빡임, 시간 감소, 사운드 등)
+        UIManager.Instance.PromptUI.ShowPrompt("이게 아니야...", 2f);
+    }
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Ch3_MirrorPuzzleManager.Instance.NotifyFirstRoomEntered();
+        }
     }
 }
