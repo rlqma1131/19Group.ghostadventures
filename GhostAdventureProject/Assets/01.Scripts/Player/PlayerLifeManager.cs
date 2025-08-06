@@ -92,6 +92,7 @@ public class PlayerLifeManager : MonoBehaviour
         if (director != null)
         {
             director.stopped += ResetIsdead; 
+            PossessionSystem.Instance.CanMove = false; // 플레이어 이동 비활성화
             director.Play();
         }
 
@@ -160,7 +161,9 @@ public class PlayerLifeManager : MonoBehaviour
     public void ResetIsdead(PlayableDirector director)
     {
         UIManager.Instance.QTE_UI_2.isdead = false; // QTE UI 상태 초기화
+        PossessionSystem.Instance.CanMove = true; // 플레이어 이동 활성화
+
 
     }
-    
+
 }
