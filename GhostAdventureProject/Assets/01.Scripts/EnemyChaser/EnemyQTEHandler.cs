@@ -14,7 +14,7 @@ public class EnemyQTEHandler : MonoBehaviour
     
     public float qteFreezeDuration = 3f;
     private bool isQTERunning = false;
-    private bool hasEscapedOnce = false;
+    // private bool hasEscapedOnce = false;
 
     private void Awake()
     {
@@ -24,25 +24,16 @@ public class EnemyQTEHandler : MonoBehaviour
         startPosition = transform.position;
     }
 
-    private void Start()
-    {
-        if (UIManager.Instance != null)
-            qteUI = UIManager.Instance.QTE_UI_2;
-
-        qteEffect = QTEEffectManager.Instance;
-        player = GameManager.Instance.Player.transform;
-    }
-
     public void StartQTE()
     {
-        // 두 번째로 잡혔으면 즉시 게임오버
-        if (hasEscapedOnce)
+        // 목숨이 1개 남았을 때 잡히면 즉시 게임오버
+        if (PlayerLifeManager.Instance.GetCurrentLives() <= 1)
         {
             animator.SetTrigger("QTEFail");
             PlayerLifeManager.Instance.HandleGameOver();
             return;
         }
-
+        
         if (!isQTERunning)
             StartCoroutine(StartQTESequence());
     }
@@ -68,7 +59,7 @@ public class EnemyQTEHandler : MonoBehaviour
             qteUI.gameObject.SetActive(true);
             qteUI.StartQTE();
         }
-        
+    
         yield return new WaitForSeconds(qteFreezeDuration);
 
         bool success = qteUI != null && qteUI.IsSuccess();
@@ -76,7 +67,7 @@ public class EnemyQTEHandler : MonoBehaviour
         if (success)
         {
             animator.SetTrigger("QTESuccess");
-            hasEscapedOnce = true;
+            PlayerLifeManager.Instance.LosePlayerLife();
             PossessionSystem.Instance.CanMove = true;
 
             yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);

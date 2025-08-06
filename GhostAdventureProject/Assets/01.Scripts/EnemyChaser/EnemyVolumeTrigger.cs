@@ -50,6 +50,12 @@ public class EnemyVolumeTrigger : MonoBehaviour
             }
         }
 
+        if (player != null && (!player.gameObject.activeInHierarchy || PossessionStateManager.Instance.IsPossessing()))
+        {
+            ForceExitTrigger();
+            return;
+        }
+        
         if (player == null || colorAdjustments == null) return;
         if (!PlayerInTrigger && Mathf.Approximately(t, 0f)) return;
 
@@ -65,13 +71,29 @@ public class EnemyVolumeTrigger : MonoBehaviour
             targetT = Mathf.Clamp01(1 - (distance / detectionRadius));
             targetT = Mathf.Pow(targetT, 0.5f);
             SoundManager.Instance.EnemySource.volume = Mathf.Lerp(0.01f, 0.3f, targetT);
+            
+            if (distance > detectionRadius)
+            {
+                ForceExitTrigger();
+                return;
+            }
         }
 
         t = Mathf.Lerp(t, targetT, Time.deltaTime * 2f);
         colorAdjustments.colorFilter.value = Color.Lerp(farColor, closeColor, t);
     }
 
-
+    private void ForceExitTrigger()
+    {
+        if (PlayerInTrigger)
+        {
+            PlayerInTrigger = false;
+            SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
+            SoundManager.Instance.RestoreLastBGM(1f);
+        }
+        t = Mathf.Lerp(t, 0f, Time.deltaTime * 2f);
+        colorAdjustments.colorFilter.value = Color.Lerp(farColor, closeColor, t);
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -94,22 +116,11 @@ public class EnemyVolumeTrigger : MonoBehaviour
         }
     }
 
-
-
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            if (!collision.gameObject.activeInHierarchy)
-                return;
-
-            PlayerInTrigger = false;
-            SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
-
-            // 이전 BGM 복원
-            SoundManager.Instance.RestoreLastBGM(1f);
-            // globalVolume.enabled = false;
-
+            ForceExitTrigger();
         }
     }
 
