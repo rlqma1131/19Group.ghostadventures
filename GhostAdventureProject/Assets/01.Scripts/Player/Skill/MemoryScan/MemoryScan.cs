@@ -180,21 +180,21 @@ public class MemoryScan : MonoBehaviour
         currentMemoryFragment.AfterScan();
 
         // 저장
-        SaveData data = new SaveData
-        {
-            checkpointId = currentScanObject.name,
-            sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
-            playerPosition = playerTransform.position,
+        //SaveData data = new SaveData
+        //{
+        //    checkpointId = currentScanObject.name,
+        //    sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
+        //    playerPosition = playerTransform.position,
 
-            collectedClueNames = inventory_Player.collectedClues.Select(c => c.clue_Name).ToList(),
+        //    collectedClueNames = inventory_Player.collectedClues.Select(c => c.clue_Name).ToList(),
 
-            collectedMemoryIDs = MemoryManager.Instance.collectedMemoryIDs.ToList(),
+        //    collectedMemoryIDs = MemoryManager.Instance.collectedMemoryIDs.ToList(),
 
-            scannedMemoryTitles = MemoryManager.Instance.ScannedMemories.Select(m => m.memoryTitle).ToList()
-        };
+        //    scannedMemoryTitles = MemoryManager.Instance.ScannedMemories.Select(m => m.memoryTitle).ToList()
+        //};
 
-        SaveManager.SaveGame(data);
-        Debug.Log($"[MemoryScan] 기억조각 스캔 완료 및 저장됨: {data.checkpointId}");
+        //SaveManager.SaveGame(data);
+        //Debug.Log($"[MemoryScan] 기억조각 스캔 완료 및 저장됨: {data.checkpointId}");
 
     }
 
