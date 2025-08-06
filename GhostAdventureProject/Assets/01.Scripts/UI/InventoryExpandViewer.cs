@@ -24,6 +24,7 @@ public class InventoryExpandViewer : MonoBehaviour
     // 단서 크게 보여주기
     public void ShowClue(ClueData clue)
     {
+        EnemyAI.PauseAllEnemies();
         clueImage.sprite = clue.clue_Image;
         clueName.text = clue.clue_Name;
         clueDescription.text = clue.clue_Description;
@@ -48,6 +49,7 @@ public class InventoryExpandViewer : MonoBehaviour
     // 단서패널 닫기
     public void HideClue()
     {
+        EnemyAI.ResumeAllEnemies();
         cluePanel.SetActive(false);
         isShowing = false;
 
