@@ -304,6 +304,7 @@ public class Ch2_MorseKey : BasePossessable
         if (shakeCoroutine != null)
             StopCoroutine(shakeCoroutine);
 
+        UIManager.Instance.Inventory_PlayerUI.RemoveCluesByStage(GameManager.GetStageForCurrentChapter());
         shakeCoroutine = StartCoroutine(ShakeSuccess());
     }
 
