@@ -90,11 +90,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
                 colorAdjustments = ca;
                 farColor = ca.colorFilter.value;
             }
-
-            Debug.Log("박스볼륨 충돌");
         }
-
-
     }
 
 
@@ -103,6 +99,9 @@ public class EnemyVolumeTrigger : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            if (!collision.gameObject.activeInHierarchy)
+                return;
+            
             PlayerInTrigger = false;
             SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
             // globalVolume.enabled = false;

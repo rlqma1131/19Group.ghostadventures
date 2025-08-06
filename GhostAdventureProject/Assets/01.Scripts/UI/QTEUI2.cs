@@ -32,6 +32,7 @@ public class QTEUI2 : MonoBehaviour
         success.gameObject.SetActive(false);
         fail.gameObject.SetActive(false);
         qteUI.SetActive(false);
+        isdead = false;
     }
     public void StartQTE()
     {
