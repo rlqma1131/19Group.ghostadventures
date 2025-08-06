@@ -24,6 +24,8 @@ public class Ch3_LockerSelector : MonoBehaviour
     [SerializeField] private List<ClueData> requiredClues;
     private List<Ch3_Locker> openedLockers = new List<Ch3_Locker>();
     public bool IsPenaltyActive { get; private set; } = false;
+    
+    private Ch3_MemoryNecessary_Radi memoryRadi;
 
     public void OnCorrectBodySelected()
     {
@@ -58,6 +60,7 @@ public class Ch3_LockerSelector : MonoBehaviour
         // 보상 드랍 연출
         yield return new WaitForSeconds(0.5f);
         PlayRewardDrop();
+        memoryRadi.ActivateRadi();
 
         // 카메라 복귀
         yield return new WaitForSeconds(cameraReturnDelay + dropDuration);
