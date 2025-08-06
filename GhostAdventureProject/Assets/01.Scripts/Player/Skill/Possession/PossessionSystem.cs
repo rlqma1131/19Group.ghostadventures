@@ -6,6 +6,10 @@ public class PossessionSystem : MonoBehaviour
     // 싱글톤
     public static PossessionSystem Instance { get; private set; }
 
+    [Header("SFX")]
+    [SerializeField] private AudioClip possessIn;
+    [SerializeField] private AudioClip possessOut;
+
     [SerializeField] private GameObject scanPanel;
     [SerializeField] private BasePossessable currentTarget; // 디버깅용
     private BasePossessable obssessingTarget;
@@ -168,12 +172,15 @@ public class PossessionSystem : MonoBehaviour
     {
         CanMove = false;
         Player.animator.SetTrigger("PossessIn");
+        SoundManager.Instance.PlaySFX(possessIn);
+
     }
 
     public void StartPossessionOutSequence() // 빙의 해제 애니메이션
     {
         CanMove = false;
         StartCoroutine(DelayedPossessionOutPlay());
+        SoundManager.Instance.PlaySFX(possessOut);
     }
 
     private IEnumerator DelayedPossessionOutPlay()

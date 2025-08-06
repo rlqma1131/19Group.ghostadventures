@@ -88,6 +88,7 @@ using UnityEngine.UI;
 
 public class MemoryStorage : MonoBehaviour, IUIClosable
 {
+    [SerializeField] private AudioClip pageFlip;
     [SerializeField] private GameObject memoryNodePrefab;
     [SerializeField] private Transform leftPageSlot;
     [SerializeField] private Transform rightPageSlot;
@@ -168,6 +169,8 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
 
         currentPageIndex++;
         PlayPageTurnAnimation(() => ShowPage(currentPageIndex));
+
+        SoundManager.Instance.PlaySFX(pageFlip);
     }
 
     public void OnClickPrevPage()

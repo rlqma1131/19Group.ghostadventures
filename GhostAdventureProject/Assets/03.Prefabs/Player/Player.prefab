@@ -11111,6 +11111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 665255385a7328043a541528f3494857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  possessIn: {fileID: 8300000, guid: 508e51712559999498f2dc1c89cea630, type: 3}
+  possessOut: {fileID: 8300000, guid: b6802124893d60d4c823dccba0871b7b, type: 3}
   scanPanel: {fileID: 0}
   currentTarget: {fileID: 0}
 --- !u!114 &7723984142430952372
@@ -11131,7 +11133,7 @@ MonoBehaviour:
   playerTransform: {fileID: 7231383635840788848}
   currentScanObject: {fileID: 0}
   currentMemoryFragment: {fileID: 0}
-  scanSound: {fileID: 8300000, guid: 13226057857eba349bfc80c4ae07ad2d, type: 3}
+  scanSound: {fileID: 8300000, guid: eb1ad13efac58014887c3d41f9e7a90f, type: 3}
 --- !u!114 &4870225034165183840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11204,7 +11206,7 @@ MonoBehaviour:
   - {x: 0.32, y: -0.28, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 657400
+  m_InstanceId: 470968
   m_LocalBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0.32, y: 0.28, z: 0}
@@ -11353,6 +11355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uITweenAnimator: {fileID: 0}
   text: {fileID: 0}
+  roomName_RoomTracker: 
 --- !u!1 &7898128142336362698
 GameObject:
   m_ObjectHideFlags: 0
@@ -11677,6 +11680,7 @@ MonoBehaviour:
   ColorValue: 75.3
   rigidbodyMass: 0.02
   rigidbodyDrag: 0.68
+  explosionDuration: 1.2
 --- !u!114 &248143891045058901
 MonoBehaviour:
   m_ObjectHideFlags: 0

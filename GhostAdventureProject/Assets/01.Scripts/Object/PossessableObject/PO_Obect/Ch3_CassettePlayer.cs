@@ -7,6 +7,7 @@ using UnityEngine;
 public class Ch3_CassettePlayer : BasePossessable
 {
     [Header("소리 목록")]
+    [SerializeField] private AudioClip dial;
     [SerializeField] private AudioClip buttonPush;
     [SerializeField] private AudioClip talkingSound; // 대화 소리
     [SerializeField] private AudioClip glitchSound; // 퍼즐 해결 후 소리
@@ -115,6 +116,7 @@ public class Ch3_CassettePlayer : BasePossessable
             distortionValue = Mathf.Clamp(distortionValue, minDistort, maxDistort);
             distortion.distortionLevel = distortionValue;
             TriggerInputCooldown();
+            SoundManager.Instance.PlaySFX(dial);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
@@ -123,6 +125,7 @@ public class Ch3_CassettePlayer : BasePossessable
             distortionValue = Mathf.Round(distortionValue * 100f) / 100f;
             distortion.distortionLevel = distortionValue;
             TriggerInputCooldown();
+            SoundManager.Instance.PlaySFX(dial);
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
@@ -130,6 +133,7 @@ public class Ch3_CassettePlayer : BasePossessable
             playbackPitch = Mathf.Clamp(playbackPitch, minPitch, maxPitch);
             audioSource.pitch = playbackPitch;
             TriggerInputCooldown();
+            SoundManager.Instance.PlaySFX(dial);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
@@ -137,6 +141,7 @@ public class Ch3_CassettePlayer : BasePossessable
             playbackPitch = Mathf.Clamp(playbackPitch, minPitch, maxPitch);
             audioSource.pitch = playbackPitch;
             TriggerInputCooldown();
+            SoundManager.Instance.PlaySFX(dial);
         }
 
         UpdateDialRotation();
