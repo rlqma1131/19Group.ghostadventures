@@ -312,17 +312,17 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         gameObject.SetActive(false);
         puzzlecompleted = true;
 
-        SaveData data = new SaveData
-        {
-            checkpointId = "3챕터 최종 퍼즐",
-            sceneName = "Ch03_Hospital",
-            playerPosition = GameManager.Instance.Player.transform.position,
-            collectedClueNames = _inventory.collectedClues.Select(c => c.clue_Name).ToList(),
-            collectedMemoryIDs = MemoryManager.Instance.collectedMemoryIDs.ToList(),
-            scannedMemoryTitles = MemoryManager.Instance.ScannedMemories.Select(m => m.memoryTitle).ToList()
-        };
+        //SaveData data = new SaveData
+        //{
+        //    checkpointId = "3챕터 최종 퍼즐",
+        //    sceneName = "Ch03_Hospital",
+        //    playerPosition = GameManager.Instance.Player.transform.position,
+        //    collectedClueNames = _inventory.collectedClues.Select(c => c.clue_Name).ToList(),
+        //    collectedMemoryIDs = MemoryManager.Instance.collectedMemoryIDs.ToList(),
+        //    scannedMemoryTitles = MemoryManager.Instance.ScannedMemories.Select(m => m.memoryTitle).ToList()
+        //};
 
-        SaveManager.SaveGame(data);
+        //SaveManager.SaveGame(data);
         yield return new WaitForSeconds(0.5f);
     }
 
