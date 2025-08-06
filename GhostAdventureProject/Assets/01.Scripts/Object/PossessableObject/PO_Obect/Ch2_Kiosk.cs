@@ -132,6 +132,12 @@ public class Ch2_Kiosk : BasePossessable
 
     private void OnButtonPressed(Button btn)
     {
+        if (currentInput.Count >= 5)
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("최대 5개까지만 입력할 수 있어.", 1.5f);
+            return;
+        }
+        
         currentInput.Add(btn);
         Debug.Log($"버튼 입력됨: {btn.name}");
         UpdateInputDisplay();
