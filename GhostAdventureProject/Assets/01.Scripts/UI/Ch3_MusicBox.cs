@@ -71,7 +71,7 @@ public class Ch3_MusicBox : BaseInteractable
         if (Input.anyKeyDown)
         {
             if(Input.GetKeyDown(KeyCode.E)) return; // 임시
-
+            if(currentIndex >= targetSequence.Count) return;
             if (Input.GetKeyDown(targetSequence[currentIndex]))
             {
                 SuccessArrow();
@@ -94,7 +94,7 @@ public class Ch3_MusicBox : BaseInteractable
     // QTE 시작
     void StartQTE()
     {
-        // currentIndex = 0;
+        currentIndex = 0;
         isRunning = true;
         PossessionSystem.Instance.CanMove = false;
         QTEUI_MusicBox.SetActive(true);
@@ -204,7 +204,7 @@ public class Ch3_MusicBox : BaseInteractable
     
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && !isQTESuccess && linkedEnemy.failCount < 3)
+        if (collision.CompareTag("Player") && linkedEnemy.failCount < 3)
         {
             //SetHighlight(true);
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
