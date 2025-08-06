@@ -54,6 +54,7 @@ public class    Ch1_GarageEventManager : BaseInteractable
         {
             // [컷씬] 정답 이벤트
             UIManager.Instance.PlayModeUI_CloseAll();
+            UIManager.Instance.Inventory_PlayerUI.RemoveCluesByStage(GameManager.GetStageForCurrentChapter());
             cutsceneDirector_correct.Play();
             SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드아웃
             EnemyAI.PauseAllEnemies();
