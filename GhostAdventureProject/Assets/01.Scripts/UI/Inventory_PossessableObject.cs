@@ -198,7 +198,7 @@ public class Inventory_PossessableObject : MonoBehaviour
         isPlacing = false;
     }
 
-    private void SelectSlot(int index)
+    public void SelectSlot(int index)
     {
         if (selectedSlotIndex == index)
         {
@@ -293,6 +293,19 @@ public class Inventory_PossessableObject : MonoBehaviour
             // UpdateUI(); // UI 새로고침 (선택사항: 자동 갱신되면 생략 가능)
         }
     }
+
+    public void ClearAllSlotHighlights()
+{
+    foreach (GameObject slotObj in spawnedSlots)
+    {
+        var slot = slotObj.GetComponent<InventorySlot_PossessableObject>();
+        if (slot != null)
+            slot.keyText_PO.gameObject.SetActive(false);
+    }
+
+    selectedSlot = null;
+    selectedSlotIndex = -1;
+}
 
     public ItemData selectedItem() => selectedSlot != null ? selectedSlot.item : null;
 }

@@ -11,8 +11,10 @@ public class InventorySlot_PossessableObject : MonoBehaviour
     public int quantity;
     private GameObject slotUI;
     private TextMeshProUGUI countText;
+    public TMP_Text keyText_PO;
 
-    public TextMeshProUGUI quantityText;
+    // public TextMeshProUGUI quantityText;
+    
     private Inventory_PossessableObject inventoryRef;
 
 
@@ -38,7 +40,7 @@ public class InventorySlot_PossessableObject : MonoBehaviour
     public void SetSlot(InventorySlot_PossessableObject slot)
     {
         iconImage.sprite = slot.item.Item_Icon;
-        quantityText.text = slot.quantity > 1 ? slot.quantity.ToString() : "";
+        // quantityText.text = slot.quantity > 1 ? slot.quantity.ToString() : "";
         inventoryRef = Inventory_PossessableObject.Instance;
         item = slot.item;
         Debug.Log("아이템 남은 개수" + quantity);
@@ -108,8 +110,8 @@ public class InventorySlot_PossessableObject : MonoBehaviour
         iconImage.sprite = null;
 
     // 수량 텍스트 제거
-    if (quantityText != null)
-        quantityText.text = "";
+    // if (quantityText != null)
+    //     quantityText.text = "";
 }
 }
 
