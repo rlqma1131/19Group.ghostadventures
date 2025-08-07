@@ -79,13 +79,13 @@ public class Ch2_Raven : MoveBasePossessable
         if (anim != null)
         {
              if (isPossessed)
-        {
-            anim.SetBool("Move", true);
-        }
-        else
-        {
-            anim.SetBool("Move", isMoving);
-        }
+            {
+                anim.SetBool("Move", true);
+            }
+            else
+            {
+                anim.SetBool("Move", isMoving);
+            }
         }
         if (isMoving)
         {
