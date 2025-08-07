@@ -98,6 +98,14 @@ public class Ch1_Clock : BasePossessable
             minuteHand.localRotation = Quaternion.Euler(0, 0, -6f * minute);
     }
 
+    private void OnClickInitialize()
+    {
+        if (hourHand != null)
+            hourHand.localRotation = Quaternion.Euler(0, 0, 0);
+        if (minuteHand != null)
+            minuteHand.localRotation = Quaternion.Euler(0, 0, 0);
+    }
+
     private void ShowClockUI()
     {
         EnemyAI.PauseAllEnemies();

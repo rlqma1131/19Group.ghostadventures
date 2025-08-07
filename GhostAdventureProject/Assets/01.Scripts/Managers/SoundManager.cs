@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,6 +21,11 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField] private AudioSource sfxLoopSource;
     [SerializeField] private AudioSource enemySource;
     private AudioClip currentClip;
+
+    [Header("SFX Pool")]
+    [SerializeField] private int sfxPoolSize = 10;
+    private List<AudioSource> sfxPool = new();
+    private int currentSFXIndex = 0;
 
     [Header("BGM Clips")]
     [SerializeField] private AudioClip bgm_StartScene;
@@ -50,6 +56,10 @@ public class SoundManager : Singleton<SoundManager>
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    private void Awake()
+    {
+        InitSFXPool();
     }
 
     // 씬 이름 → SceneType 변환
@@ -183,13 +193,25 @@ public class SoundManager : Singleton<SoundManager>
     // 효과음 재생
     public void PlaySFX(AudioClip clip, float volume = 0.6f)
     {
-        if (clip == null || sfxSource == null) return;
+        if (clip == null || sfxPool.Count == 0) return;
 
-        if (sfxSource.isPlaying && clip == currentClip)
-        return;
+        AudioSource source = sfxPool[currentSFXIndex];
+        currentSFXIndex = (currentSFXIndex + 1) % sfxPoolSize;
 
-        currentClip = clip;
-        sfxSource.PlayOneShot(clip, volume);
+        source.clip = clip;
+        source.volume = volume;
+        source.Play();
+    }
+
+    private void InitSFXPool()
+    {
+        for (int i = 0; i < sfxPoolSize; i++)
+        {
+            var source = gameObject.AddComponent<AudioSource>();
+            source.playOnAwake = false;
+            source.loop = false;
+            sfxPool.Add(source);
+        }
     }
 
     public void StopSFX()
@@ -197,6 +219,15 @@ public class SoundManager : Singleton<SoundManager>
         if (sfxSource != null && sfxSource.isPlaying)
         {
             sfxSource.Stop();
+        }
+    }
+
+    public void StopAllSFX()
+    {
+        foreach (var source in sfxPool)
+        {
+            source.Stop();
+            source.clip = null;
         }
     }
 
