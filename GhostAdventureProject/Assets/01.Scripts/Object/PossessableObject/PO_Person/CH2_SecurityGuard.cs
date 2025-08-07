@@ -42,6 +42,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
     protected override void Update()
     {
+        Debug.Log(isPossessed);
         if (radio != null && radio.IsPlaying)
         {
             // anim.Play("Idle");
@@ -93,6 +94,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
             case GuardState.Roading:
                 radio.triggerSound_Person.Stop();
                 roadingTimer += Time.deltaTime;
+                targetPerson.currentCondition = PersonCondition.Normal;
                 if(roadingTimer >= roadingDuration) 
                 {
                     if(isInOffice)
