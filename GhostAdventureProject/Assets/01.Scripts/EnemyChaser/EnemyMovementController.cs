@@ -92,7 +92,7 @@ public class EnemyMovementController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.GetComponent<EnemyVolumeTrigger>() != null)
+        if (collision.collider.GetComponentInChildren<EnemyVolumeTrigger>() != null)
             return;
 
         Vector2 normal = collision.contacts[0].normal;
