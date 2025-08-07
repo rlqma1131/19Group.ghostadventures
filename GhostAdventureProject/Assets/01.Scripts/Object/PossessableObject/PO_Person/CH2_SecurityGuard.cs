@@ -28,7 +28,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     // private bool isNearDoor = false;
     private bool isInOffice;// 경비실 안에 있는지 확인
     private bool oneTimeShowClue = false; // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만)
-    public bool isdoorLockOpen;
+    public bool isdoorLockOpen; // 도어락 스크립트에서 정보 넣어줌
     public bool doorPass = false;
 
     // 처음 시작시 빙의불가(경비실안에 있음)

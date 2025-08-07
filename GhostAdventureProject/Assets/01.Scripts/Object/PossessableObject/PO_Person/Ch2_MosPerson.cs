@@ -5,12 +5,14 @@ using UnityEngine;
 public class Ch2_MosPerson : BasePossessable
 {
     [SerializeField] GameObject q_key;
+    public PersonConditionUI targetPerson;
     private HaveItem haveitem;
 
     protected override void Start()
     {
         base.Start();
         haveitem = GetComponent<HaveItem>();
+        targetPerson.currentCondition = PersonCondition.Tired;
     }
 
     protected override void Update()
@@ -20,6 +22,7 @@ public class Ch2_MosPerson : BasePossessable
         {
             hasActivated = false;
         }
+        targetPerson.SetCondition(targetPerson.currentCondition);
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
