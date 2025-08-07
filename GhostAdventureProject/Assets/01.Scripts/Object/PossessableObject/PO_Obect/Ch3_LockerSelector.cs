@@ -7,7 +7,7 @@ using System.Linq;
 public class Ch3_LockerSelector : MonoBehaviour
 {
     public int RemainingOpens = 2;
-    [SerializeField] private GameObject b1fDoor;
+    // [SerializeField] private GameObject b1fDoor;
     public bool IsSolved { get; private set; } = false;
     
     [Header("정답 시 등장 오브젝트 연출")]
@@ -25,11 +25,11 @@ public class Ch3_LockerSelector : MonoBehaviour
     private List<Ch3_Locker> openedLockers = new List<Ch3_Locker>();
     public bool IsPenaltyActive { get; private set; } = false;
     
-    private Ch3_MemoryNecessary_Radi memoryRadi;
+    [SerializeField] private Ch3_MemoryNecessary_Radi memoryRadi;
 
     public void OnCorrectBodySelected()
     {
-        b1fDoor.SetActive(true);
+        // b1fDoor.SetActive(true);
         IsSolved = true;
         ConsumeClue(requiredClues);
 
@@ -72,7 +72,7 @@ public class Ch3_LockerSelector : MonoBehaviour
 
     private void PlayRewardDrop()
     {
-        SpriteRenderer spriteRenderer = rewardObject.GetComponent<SpriteRenderer>();
+        SpriteRenderer spriteRenderer = rewardObject.GetComponentInChildren<SpriteRenderer>();
 
         if (spriteRenderer != null)
         {
