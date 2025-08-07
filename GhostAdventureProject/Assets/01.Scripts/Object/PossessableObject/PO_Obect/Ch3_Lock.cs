@@ -81,7 +81,7 @@ public class Ch3_Lock : BasePossessable
             if (!isZoomActive && !isPlayerInside) return;
 
             HideLockZoom();
-            UnPossess();
+            Unpossess();
         }
 
         if (isZoomActive && selectedType != ButtonType.None)
