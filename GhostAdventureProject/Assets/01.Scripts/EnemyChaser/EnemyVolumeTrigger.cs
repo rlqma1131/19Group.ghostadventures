@@ -50,11 +50,11 @@ public class EnemyVolumeTrigger : MonoBehaviour
             }
         }
 
-        if (player != null && (!player.gameObject.activeInHierarchy || PossessionStateManager.Instance.IsPossessing()))
-        {
-            ForceExitTrigger();
-            return;
-        }
+        //if (player != null && (!player.gameObject.activeInHierarchy || PossessionStateManager.Instance.IsPossessing()))
+        //{
+        //    ForceExitTrigger();
+        //    return;
+        //}
         
         if (player == null || colorAdjustments == null) return;
         if (!PlayerInTrigger && Mathf.Approximately(t, 0f)) return;
@@ -85,6 +85,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
 
     private void ForceExitTrigger()
     {
+        Debug.Log("플레이어 나감");
         if (PlayerInTrigger)
         {
             PlayerInTrigger = false;
@@ -107,6 +108,12 @@ public class EnemyVolumeTrigger : MonoBehaviour
 
         if (collision.CompareTag("Volume"))
         {
+
+            if (globalVolume != null && colorAdjustments != null)
+            {
+                colorAdjustments.colorFilter.value = farColor;
+            }
+
             globalVolume = collision.GetComponentInChildren<Volume>();
             if (globalVolume.profile.TryGet<ColorAdjustments>(out var ca))
             {
@@ -117,9 +124,10 @@ public class EnemyVolumeTrigger : MonoBehaviour
     }
 
     private void OnTriggerExit2D(Collider2D collision)
-    {
+    { 
         if (collision.CompareTag("Player"))
         {
+            
             ForceExitTrigger();
         }
     }
