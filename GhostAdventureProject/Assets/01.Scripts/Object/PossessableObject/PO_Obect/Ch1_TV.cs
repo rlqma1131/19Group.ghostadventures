@@ -140,13 +140,18 @@ public class Ch1_TV : BasePossessable
         isControlMode = false;
 
         UIManager.Instance.PlayModeUI_OpenAll();
-        //SoundManager.Instance.ChangeBGM(1챕터BGM);
+
+        // BGM 복구
+        SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
+        SoundManager.Instance.RestoreLastBGM(1f);
+
         spaceBar.SetActive(false);
         UI.SetActive(false);
 
         EnemyAI.ResumeAllEnemies();
         zoomCamera.Priority = 5;
         Unpossess();
+
         UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 노란 빛을 띄는 오브젝트는 E키를 3초간 눌러 스캔할 수 있습니다.");
 
     }
@@ -154,13 +159,19 @@ public class Ch1_TV : BasePossessable
     public override void OnPossessionEnterComplete() 
     {
         EnemyAI.PauseAllEnemies();
+
         UIManager.Instance.PlayModeUI_CloseAll();
+
         zoomCamera.Priority = 20; // 빙의 시 카메라 우선순위 높이기
         isControlMode = true;
         isPossessed = true;
+
         channelTxt.text = "01"; // 초기 채널 표시
         UpdateChannelDisplay();
-        //SoundManager.Instance.ChangeBGM(glitchSound);
+
+        SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드 아웃
+        SoundManager.Instance.FadeInLoopingSFX(glitchSound, 1f, 0.5f);
+
         UIManager.Instance.PromptUI.ShowPrompt("힌트를 살펴보자", 2.5f);
     }
 

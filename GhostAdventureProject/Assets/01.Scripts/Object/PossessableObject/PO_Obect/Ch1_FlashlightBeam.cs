@@ -2,6 +2,8 @@
 
 public class Ch1_FlashlightBeam : MonoBehaviour
 {
+    [SerializeField] private AudioClip on;
+    [SerializeField] private AudioClip off;
     [SerializeField] private GameObject beamVisual;
     public bool isOn { get; private set; } = false;
 
@@ -9,5 +11,9 @@ public class Ch1_FlashlightBeam : MonoBehaviour
     {
         isOn = !isOn;
         beamVisual.SetActive(isOn);
+        if (isOn)
+            SoundManager.Instance.PlaySFX(on);
+        else
+            SoundManager.Instance.PlaySFX(off);
     }
 }
