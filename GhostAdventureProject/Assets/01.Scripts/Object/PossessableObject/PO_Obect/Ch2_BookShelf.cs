@@ -62,6 +62,7 @@ public class Ch2_BookShelf : BasePossessable
         isControlMode = true;
         zoomCamera.Priority = 20;
         UIManager.Instance.PlayModeUI_CloseAll();
+        EnemyAI.PauseAllEnemies();
     }
 
     private void ExitControlMode()
@@ -69,6 +70,7 @@ public class Ch2_BookShelf : BasePossessable
         isControlMode = false;
         zoomCamera.Priority = 5;
         UIManager.Instance.PlayModeUI_OpenAll();
+        EnemyAI.ResumeAllEnemies();
     }
     
     private void LateUpdate()

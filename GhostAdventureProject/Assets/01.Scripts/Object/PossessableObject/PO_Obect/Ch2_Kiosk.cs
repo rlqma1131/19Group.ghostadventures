@@ -85,6 +85,7 @@ public class Ch2_Kiosk : BasePossessable
     {
         isPanelOpen = true;
         kioskPanel.gameObject.SetActive(true);
+        EnemyAI.PauseAllEnemies();
         kioskPanel.DOAnchorPos(visiblePos, 0.5f).SetEase(Ease.OutBack);
 
         currentInput.Clear();
@@ -118,6 +119,7 @@ public class Ch2_Kiosk : BasePossessable
     private void ClosePanel()
     {
         isPanelOpen = false;
+        EnemyAI.ResumeAllEnemies();
 
         kioskPanel.DOAnchorPos(hiddenPos, 0.5f)
                   .SetEase(Ease.InBack)
