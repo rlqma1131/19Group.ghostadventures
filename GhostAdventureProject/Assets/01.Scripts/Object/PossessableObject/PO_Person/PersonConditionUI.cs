@@ -21,16 +21,24 @@ public class PersonConditionUI : MonoBehaviour
     public GameObject vitalUI; // 활력UI
     public GameObject normalUI; // 보통UI
     public GameObject tiredUI; // 피곤UI
+    [SerializeField] private BasePossessable targetPerson;
 
     void Start()
     {   
         currentCondition = PersonCondition.Vital;
         conditionHandler = new VitalConditionHandler();
+        targetPerson = GetComponent<BasePossessable>();
         ShowConditionUI();
     }
     
     void Update()
     {
+        if (targetPerson.isPossessed)
+        {
+            Debug.Log("컨디션UI 없애기");
+            if (UI != null) UI.SetActive(false);
+            return;
+        }
         // UI컨디션이 갱신될 때만 표시
         if (currentCondition != lastCondition)
             {
@@ -46,6 +54,13 @@ public class PersonConditionUI : MonoBehaviour
     // 컨디션 UI 보여주는 함수
     public void ShowConditionUI()
     {
+        if (targetPerson.isPossessed)
+        {
+            Debug.Log("컨디션UI 없애기");
+            if (UI != null) UI.SetActive(false);
+            return;
+        }
+
         vitalUI.SetActive(false);
         normalUI.SetActive(false);
         tiredUI.SetActive(false);

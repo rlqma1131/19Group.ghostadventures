@@ -8,6 +8,7 @@ public class Ch3_Lock : BasePossessable
     public enum ButtonType { None, Top, Bottom, Num }
     [SerializeField] private AudioClip open;
     [SerializeField] private GameObject mainSprite;
+
     [Header("확대 UI")]
     [SerializeField] private GameObject lockZoom;
     [SerializeField] private RectTransform lockPos;
@@ -81,6 +82,7 @@ public class Ch3_Lock : BasePossessable
             if (!isZoomActive && !isPlayerInside) return;
 
             HideLockZoom();
+            Unpossess();
         }
 
         if (isZoomActive && selectedType != ButtonType.None)

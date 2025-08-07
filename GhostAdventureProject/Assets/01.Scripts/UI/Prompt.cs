@@ -23,16 +23,14 @@ public class Prompt : MonoBehaviour
 
 
     // ===================== 대화용 - 클릭시 넘어감 ============================
-    
-    public void ShowPrompt(List<string> lines) //, System.Action onComplete = null
+    public void ShowPrompt_Click(params string[] lines)
     {
         PromptQueue.Clear();
         foreach (var line in lines)
             PromptQueue.Enqueue(line);
 
-        // onDialogComplete = onComplete;
         PromptPanel.SetActive(true);
-        isActive = true;
+        enabled = true; // Update 실행 가능하게
         ShowNextLine();
     }
 
@@ -46,10 +44,41 @@ public class Prompt : MonoBehaviour
         else
         {
             PromptPanel.SetActive(false);
-            isActive = false;
-            // onDialogComplete?.Invoke();
+            enabled = false; // Update 비활성화
         }
     }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+            ShowNextLine();
+    }
+    // public void ShowPrompt(List<string> lines) //, System.Action onComplete = null
+    // {
+    //     PromptQueue.Clear();
+    //     foreach (var line in lines)
+    //         PromptQueue.Enqueue(line);
+
+    //     // onDialogComplete = onComplete;
+    //     PromptPanel.SetActive(true);
+    //     isActive = true;
+    //     ShowNextLine();
+    // }
+
+    // private void ShowNextLine()
+    // {
+    //     if (PromptQueue.Count > 0)
+    //     {
+    //         string nextLine = PromptQueue.Dequeue();
+    //         PromptText.text = nextLine;
+    //     }
+    //     else
+    //     {
+    //         PromptPanel.SetActive(false);
+    //         isActive = false;
+    //         // onDialogComplete?.Invoke();
+    //     }
+    // }
     
 
     // private void Update()
