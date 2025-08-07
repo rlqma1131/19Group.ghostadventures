@@ -6,6 +6,7 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
 {
 
     public bool Completed_TeddyBear = false;
+    public bool PlayerNearby = false;
 
     void Start()
     {
@@ -31,9 +32,26 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && !ChapterEndingManager.Instance.AllCh1CluesCollected())
+        PlayerNearby = true;
+        PlayerInteractSystem.Instance.AddInteractable(gameObject);
+
+        if (collision.CompareTag("Player") && !ChapterEndingManager.Instance.AllCh1CluesCollected())
         {
             UIManager.Instance.PromptUI.ShowPrompt("단서가 부족해...");
         }
+        //else if (collision.CompareTag("Player") 
+        //    && ChapterEndingManager.Instance.AllCh1CluesCollected()
+        //    && isScannable)
+        //{
+        //    PlayerInteractSystem.Instance.AddInteractable(gameObject);
+        //}
+    }
+
+    protected override void OnTriggerExit2D(Collider2D other)
+    {
+        PlayerNearby = false;
+
+        if (other.CompareTag("Player"))
+            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
     }
 }

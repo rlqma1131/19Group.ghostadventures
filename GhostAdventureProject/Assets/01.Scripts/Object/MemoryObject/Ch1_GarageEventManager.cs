@@ -4,14 +4,13 @@ using UnityEngine.Playables;
 /// <summary>
 /// TeddyBear 한테 붙는 클래스
 /// </summary>
-public class    Ch1_GarageEventManager : BaseInteractable
+public class Ch1_GarageEventManager : MonoBehaviour
 {
     private Ch1_MemoryPositive_01_TeddyBear bear;
     [SerializeField] private KeyBoard keyboard;
     [SerializeField] private KeyBoard_Enter answer;
     [SerializeField] private PlayableDirector cutsceneDirector;
     [SerializeField] private PlayableDirector cutsceneDirector_correct;
-    private bool playerNearby = false;
     private bool isCutscenePlaying = false;
     private bool isCutscenePlaying2 = false;
 
@@ -26,7 +25,7 @@ public class    Ch1_GarageEventManager : BaseInteractable
 
     void Update()
     {
-        if (!playerNearby)
+        if (!bear.PlayerNearby)
             return;
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -61,22 +60,6 @@ public class    Ch1_GarageEventManager : BaseInteractable
             // 기억조각 스캔 가능하도록 활성화
             bear.ActivateTeddyBear();
             EnemyAI.PauseAllEnemies();
-        }
-    }
-
-    protected override void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            playerNearby = true;
-        }
-    }
-
-    protected override void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            playerNearby = false;
         }
     }
 
