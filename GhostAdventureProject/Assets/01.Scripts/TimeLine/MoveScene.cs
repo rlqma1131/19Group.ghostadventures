@@ -80,7 +80,13 @@ public class MoveScene : MonoBehaviour
         //    //GameManager.Instance.Player.gameObject.SetActive(true); // 플레이어 활성화
         
         Debug.Log("씬 이동: " + Scenename);
+
+        if(GameManager.Instance.Player != null)
+        {
         PossessionSystem.Instance.CanMove = true; // 플레이어 이동 가능하도록 설정
+
+
+        }
 
         //}
     }
