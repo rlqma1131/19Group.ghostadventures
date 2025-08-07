@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class MemoryScan : MonoBehaviour
