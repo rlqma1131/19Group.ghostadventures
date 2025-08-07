@@ -55,7 +55,7 @@ public class Ch3_MirrorPuzzleManager : MonoBehaviour
         
         GameObject hint = Instantiate(hintPrefab, spawnPos, Quaternion.identity);
 
-        SpriteRenderer sr = hint.GetComponent<SpriteRenderer>();
+        SpriteRenderer sr = hint.GetComponentInChildren<SpriteRenderer>();
         if (sr != null)
         {
             sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 0f);
