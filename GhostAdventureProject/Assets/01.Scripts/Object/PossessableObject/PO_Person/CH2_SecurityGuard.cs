@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using DG.Tweening;
-using Unity.VisualScripting;
+﻿using UnityEngine;
 
 public enum GuardState { Idle, MovingToRadio, TurnOffRadio, MovingToBench, Resting, MovingToOffice, InOffice, Work, Roading }
 

@@ -1,5 +1,4 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Playables;
 /// <summary>
 /// TeddyBear 한테 붙는 클래스
