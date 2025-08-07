@@ -6,10 +6,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public BasePossessable currentTarget;
 
     public Animator animator { get; private set; }
+    private SpriteRenderer mainSprite;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        mainSprite = GetComponent<SpriteRenderer>();
 
         // GameManager에 Player 등록
         if (GameManager.Instance != null)
@@ -56,31 +58,15 @@ public class PlayerController : MonoBehaviour
         // 회전
         if (h > 0.01f)
         {
-            transform.localScale = new Vector3(1, 1, 1);
-            FlipEKey(true);
+            mainSprite.flipX = false;
         }
         else if (h < -0.01f)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
-            FlipEKey(false);
+            mainSprite.flipX = true;
         }
 
         bool isMoving = move.magnitude > 0.01f;
         animator.SetBool("Move", isMoving);
-    }
-
-    private void FlipEKey(bool facingRight)
-    {
-        if (PlayerInteractSystem.Instance != null && PlayerInteractSystem.Instance.CurrentClosest != null)
-        {
-            var eKey = PlayerInteractSystem.Instance.GetEKey();
-            if (eKey != null)
-            {
-                Vector3 scale = eKey.transform.localScale;
-                scale.x = facingRight ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
-                eKey.transform.localScale = scale;
-            }
-        }
     }
 
     private bool CurrentTargetIsPossessable()
@@ -99,7 +85,5 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.Instance.OnPlayerDestroyed();
         }
-
-        Debug.Log("[PlayerController] Player 파괴됨 - GameManager에 알림 전송");
     }
 }
