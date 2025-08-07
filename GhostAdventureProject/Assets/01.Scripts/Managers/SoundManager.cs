@@ -200,6 +200,30 @@ public class SoundManager : Singleton<SoundManager>
         }
     }
 
+    public void FadeOutAndStopSFX(float duration = 1f)
+    {
+        if (sfxSource != null && sfxSource.isPlaying)
+        {
+            StartCoroutine(FadeOutSFXCoroutine(duration));
+        }
+    }
+
+    private IEnumerator FadeOutSFXCoroutine(float duration)
+    {
+        float startVolume = sfxSource.volume;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            sfxSource.volume = Mathf.Lerp(startVolume, 0f, timer / duration);
+            yield return null;
+        }
+
+        sfxSource.Stop();
+        sfxSource.clip = null;
+        sfxSource.volume = startVolume; // 다시 사용할 수 있도록 원래 볼륨으로 복원
+    }
     // BGM 볼륨조절
     public void SetBGMVolume(float sliderValue , AudioSource audioSource)
     {

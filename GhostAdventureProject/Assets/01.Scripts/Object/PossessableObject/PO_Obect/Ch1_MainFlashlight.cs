@@ -41,11 +41,13 @@ public class Ch1_MainFlashlight : BasePossessable
 
                 if (isControlMode)
                 {
+                    EnemyAI.PauseAllEnemies();
                     isControlMode = false;
                     UIManager.Instance.PlayModeUI_CloseAll();
                     zoomCamera.Priority = 20;
                 }
 
+                EnemyAI.ResumeAllEnemies();
                 zoomCamera.Priority = 5;
                 UIManager.Instance.PlayModeUI_OpenAll();
                 Unpossess();
@@ -71,6 +73,7 @@ public class Ch1_MainFlashlight : BasePossessable
         {
             if (isControlMode)
             {
+                EnemyAI.ResumeAllEnemies();
                 isControlMode = false;
                 UIManager.Instance.PlayModeUI_OpenAll();
                 zoomCamera.Priority = 5;
@@ -169,6 +172,7 @@ public class Ch1_MainFlashlight : BasePossessable
                 if (timerPanel != null)
                     timerPanel.SetActive(false);
 
+                EnemyAI.ResumeAllEnemies();
                 UIManager.Instance.PlayModeUI_OpenAll();
                 zoomCamera.Priority = 5;
                 hasActivated = false;
@@ -184,6 +188,7 @@ public class Ch1_MainFlashlight : BasePossessable
     // 빙의 하고 바로 줌
     public override void OnPossessionEnterComplete()
     {
+        EnemyAI.PauseAllEnemies();
         isControlMode = true;
         UIManager.Instance.PlayModeUI_CloseAll();
         zoomCamera.Priority = 20;

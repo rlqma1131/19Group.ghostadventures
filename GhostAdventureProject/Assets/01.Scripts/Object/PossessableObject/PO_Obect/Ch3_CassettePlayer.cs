@@ -69,6 +69,7 @@ public class Ch3_CassettePlayer : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            EnemyAI.ResumeAllEnemies();
             Unpossess();
             zoomCamera.Priority = 5;
             UIManager.Instance.PlayModeUI_OpenAll();
@@ -279,6 +280,7 @@ public class Ch3_CassettePlayer : BasePossessable
 
         // 녹음본 내용 출력 끝
         Unpossess();
+        EnemyAI.ResumeAllEnemies();
         zoomCamera.Priority = 5;
         UIManager.Instance.PlayModeUI_OpenAll();
 
@@ -364,6 +366,7 @@ public class Ch3_CassettePlayer : BasePossessable
     {
         typingText.text = "";
 
+        EnemyAI.PauseAllEnemies();
         UIManager.Instance.PlayModeUI_CloseAll();
         zoomCamera.Priority = 20;
     }

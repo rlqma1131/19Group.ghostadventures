@@ -22,6 +22,7 @@ public class Ch3_Scanner : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            EnemyAI.ResumeAllEnemies();
             memoryPuzzleUI.Close();
             UIManager.Instance.PlayModeUI_OpenAll();
             Unpossess();
@@ -36,6 +37,7 @@ public class Ch3_Scanner : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        EnemyAI.PauseAllEnemies();
         UIManager.Instance.PlayModeUI_CloseAll();
         // UI 띄우기
         memoryPuzzleUI.StartFlow(MemoryManager.Instance.GetCollectedMemories());

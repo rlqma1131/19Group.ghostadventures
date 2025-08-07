@@ -100,6 +100,7 @@ public class Ch1_Clock : BasePossessable
 
     private void ShowClockUI()
     {
+        EnemyAI.PauseAllEnemies();
         //뒤에 어둡게 판넬 켜기
         zoomPanel.color = new Color(zoomPanel.color.r, zoomPanel.color.g, zoomPanel.color.b, 0f);
         zoomPanel.DOFade(150f / 255f, 0.5f);
@@ -111,6 +112,7 @@ public class Ch1_Clock : BasePossessable
 
     private void HideClockUI()
     {
+        EnemyAI.ResumeAllEnemies();
         // 판넬 끄기
         zoomPanel.DOFade(0f, 0.5f);
        

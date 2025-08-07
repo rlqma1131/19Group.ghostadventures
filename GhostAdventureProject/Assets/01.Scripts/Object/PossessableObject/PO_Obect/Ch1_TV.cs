@@ -67,6 +67,7 @@ public class Ch1_TV : BasePossessable
                 spaceBar.SetActive(false);
                 UI.SetActive(false);
 
+                EnemyAI.ResumeAllEnemies();
                 zoomCamera.Priority = 5;
                 Unpossess();
 
@@ -142,6 +143,8 @@ public class Ch1_TV : BasePossessable
         //SoundManager.Instance.ChangeBGM(1챕터BGM);
         spaceBar.SetActive(false);
         UI.SetActive(false);
+
+        EnemyAI.ResumeAllEnemies();
         zoomCamera.Priority = 5;
         Unpossess();
         UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 노란 빛을 띄는 오브젝트는 E키를 3초간 눌러 스캔할 수 있습니다.");
@@ -150,6 +153,7 @@ public class Ch1_TV : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        EnemyAI.PauseAllEnemies();
         UIManager.Instance.PlayModeUI_CloseAll();
         zoomCamera.Priority = 20; // 빙의 시 카메라 우선순위 높이기
         isControlMode = true;

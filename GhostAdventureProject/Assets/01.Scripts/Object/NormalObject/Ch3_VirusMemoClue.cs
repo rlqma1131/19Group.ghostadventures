@@ -41,6 +41,7 @@ public class Ch3_VirusMemoClue : MonoBehaviour
 
     private void ShowVirusMemoZoom()
     {
+        EnemyAI.PauseAllEnemies();
         isZoomActive = true;
 
         // 패널 페이드 인
@@ -57,6 +58,7 @@ public class Ch3_VirusMemoClue : MonoBehaviour
 
     private void HideVirusMemoZoom()
     {
+        EnemyAI.ResumeAllEnemies();
         isZoomActive = false;
 
         zoomPanel.DOFade(0f, 0.5f);

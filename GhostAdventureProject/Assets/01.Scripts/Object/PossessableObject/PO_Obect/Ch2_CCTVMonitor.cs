@@ -65,6 +65,7 @@ public class Ch2_CCTVMonitor : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            EnemyAI.ResumeAllEnemies();
             zoomCamera.Priority = 5;
 
             UIManager.Instance.PlayModeUI_OpenAll();
@@ -155,6 +156,7 @@ public class Ch2_CCTVMonitor : BasePossessable
         memoryH.SetActive(true);
         hasActivated = false; // 기억 스캔 전까지 빙의 불가
 
+        EnemyAI.ResumeAllEnemies();
         zoomCamera.Priority = 5;
 
         UIManager.Instance.PlayModeUI_OpenAll();
@@ -167,6 +169,7 @@ public class Ch2_CCTVMonitor : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
+        EnemyAI.PauseAllEnemies();
         zoomCamera.Priority = 20;
 
         UIManager.Instance.PlayModeUI_CloseAll();

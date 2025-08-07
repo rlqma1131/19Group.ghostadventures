@@ -38,6 +38,7 @@ public class Ch3_BedNametag : BaseInteractable
 
     private void ShowNametagZoom()
     {
+        EnemyAI.PauseAllEnemies();
         isZoomActive = true;
 
         // 패널 페이드 인
@@ -54,6 +55,7 @@ public class Ch3_BedNametag : BaseInteractable
 
     private void HideNametagZoom()
     {
+        EnemyAI.ResumeAllEnemies();
         isZoomActive = false;
 
         zoomPanel.DOFade(0f, 0.5f);
