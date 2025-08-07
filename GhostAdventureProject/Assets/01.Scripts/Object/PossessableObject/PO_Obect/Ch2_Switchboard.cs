@@ -31,6 +31,7 @@ public class Ch2_Switchboard : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            EnemyAI.ResumeAllEnemies();
             UIManager.Instance.PlayModeUI_OpenAll();
             zoomCamera.Priority = 5;
             Unpossess();
@@ -39,6 +40,7 @@ public class Ch2_Switchboard : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
+        EnemyAI.PauseAllEnemies();
         zoomCamera.Priority = 20;
 
         UIManager.Instance.PlayModeUI_CloseAll();

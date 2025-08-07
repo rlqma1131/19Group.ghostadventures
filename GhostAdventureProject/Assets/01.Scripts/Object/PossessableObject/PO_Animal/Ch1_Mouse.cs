@@ -1,9 +1,12 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class Ch1_Mouse : MoveBasePossessable
 {
+    [SerializeField] private AudioClip mouse;
+
     [Header("팬 이벤트")]
     [SerializeField] private Transform point1Transform;
     [SerializeField] private Transform point2Transform;
@@ -96,6 +99,11 @@ public class Ch1_Mouse : MoveBasePossessable
 
         // 스르륵 사라지기
         spriteRenderer.DOFade(0f, 0.5f);
+    }
+
+    public override void OnPossessionEnterComplete() 
+    {
+        SoundManager.Instance.PlaySFX(mouse);
     }
 }
 

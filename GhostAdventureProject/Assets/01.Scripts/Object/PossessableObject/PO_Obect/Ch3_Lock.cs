@@ -216,6 +216,8 @@ public class Ch3_Lock : BasePossessable
 
     private void ShowLockZoom()
     {
+        EnemyAI.PauseAllEnemies();
+
         isZoomActive = true;
         zoomPanel.DOFade(150f / 255f, 0.5f);
         lockZoom.SetActive(true);
@@ -226,6 +228,8 @@ public class Ch3_Lock : BasePossessable
 
     private void HideLockZoom()
     {
+        EnemyAI.ResumeAllEnemies();
+
         isZoomActive = false;
         zoomPanel.DOFade(0f, 0.5f);
         lockPos.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)

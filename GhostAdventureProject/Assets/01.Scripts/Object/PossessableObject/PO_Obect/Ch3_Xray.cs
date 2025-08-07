@@ -16,7 +16,7 @@ public class Ch3_Xray : BasePossessable
     [Header("조작키")]
     [SerializeField] private GameObject aKey;
     [SerializeField] private GameObject dKey;
-    [SerializeField] private GameObject qKey;
+    [SerializeField] private GameObject spaceKey;
 
     private int currentPhotoIndex = 0;
 
@@ -26,7 +26,7 @@ public class Ch3_Xray : BasePossessable
 
         aKey.SetActive(false);
         dKey.SetActive(false);
-        qKey.SetActive(false);
+        spaceKey.SetActive(false);
 
         currentPhotoIndex = 0;
         UpdateXrayDisplay();
@@ -40,7 +40,7 @@ public class Ch3_Xray : BasePossessable
         {
             aKey.SetActive(false);
             dKey.SetActive(false);
-            qKey.SetActive(false);
+            spaceKey.SetActive(false);
 
             Unpossess();
         }
@@ -62,7 +62,7 @@ public class Ch3_Xray : BasePossessable
 
             UpdateXrayDisplay();
         }
-        else if (Input.GetKeyDown(KeyCode.Q))
+        else if (Input.GetKeyDown(KeyCode.Space))
         {
             SoundManager.Instance.PlaySFX(scan, 1f);
             Scan();
@@ -88,6 +88,6 @@ public class Ch3_Xray : BasePossessable
     {
         aKey.SetActive(true);
         dKey.SetActive(true);
-        qKey.SetActive(true);
+        spaceKey.SetActive(true);
     }
 }

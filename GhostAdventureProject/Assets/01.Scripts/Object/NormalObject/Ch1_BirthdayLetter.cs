@@ -48,6 +48,7 @@ public class Ch1_BirthdayLetter : MonoBehaviour
 
     private void ShowLetterZoom()
     {
+        EnemyAI.PauseAllEnemies();
         isZoomActive = true;
 
         // 패널 페이드 인
@@ -64,6 +65,7 @@ public class Ch1_BirthdayLetter : MonoBehaviour
 
     private void HideLetterZoom()
     {
+        EnemyAI.ResumeAllEnemies();
         isZoomActive = false;
 
         zoomPanel.DOFade(0f, 0.5f);

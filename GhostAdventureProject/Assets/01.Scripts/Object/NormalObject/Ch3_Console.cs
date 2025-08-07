@@ -63,6 +63,7 @@ public class Ch3_Console : BaseInteractable
 
             if (cardKey == inventory.selectedItem() && cardKey != null && !isZoomed)
             {
+                EnemyAI.PauseAllEnemies();
                 UIManager.Instance.PlayModeUI_CloseAll();
                 qKey.SetActive(false);
                 zoomCamera.Priority = 20;
@@ -71,6 +72,7 @@ public class Ch3_Console : BaseInteractable
             }
             else if (cardKey == inventory.selectedItem() && cardKey != null && isZoomed)
             {
+                EnemyAI.ResumeAllEnemies();
                 UIManager.Instance.PlayModeUI_OpenAll();
                 qKey.SetActive(true);
                 zoomCamera.Priority = 5;
@@ -88,6 +90,7 @@ public class Ch3_Console : BaseInteractable
 
     private void ExitZoom()
     {
+        EnemyAI.ResumeAllEnemies();
         UIManager.Instance.PlayModeUI_OpenAll();
         zoomCamera.Priority = 5;
         isZoomed = false;
