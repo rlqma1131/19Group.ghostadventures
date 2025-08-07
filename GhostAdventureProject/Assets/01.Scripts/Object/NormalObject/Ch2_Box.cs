@@ -13,18 +13,24 @@ public class Box : MonoBehaviour
     // 부딪히면 투명하게
     void OnTriggerEnter2D(Collider2D collision)
     {
-        foreach (SpriteRenderer sr in renderers)
+        if(collision.CompareTag("Player"))
         {
-            sr.DOFade(0.1f, 0.5f);
+            foreach (SpriteRenderer sr in renderers)
+            {
+                sr.DOFade(0.1f, 0.5f);
+            }
         }
     }
 
     // 안부딪히면 불투명하게(복원)
     void OnTriggerExit2D(Collider2D collision)
     {
-        foreach (var sr in renderers)
+        if(collision.CompareTag("Player"))
         {
-            sr.DOFade(1f, 0.5f);  
+            foreach (var sr in renderers)
+            {
+                sr.DOFade(1f, 0.5f);  
+            }
         }
     }
 }

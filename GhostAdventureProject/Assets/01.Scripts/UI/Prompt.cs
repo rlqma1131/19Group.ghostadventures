@@ -48,11 +48,11 @@ public class Prompt : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-            ShowNextLine();
-    }
+    // private void Update()
+    // {
+    //     if (Input.GetMouseButtonDown(0))
+    //         ShowNextLine();
+    // }
     // public void ShowPrompt(List<string> lines) //, System.Action onComplete = null
     // {
     //     PromptQueue.Clear();
@@ -125,7 +125,7 @@ public class Prompt : MonoBehaviour
 
         promptTween?.Kill();
 
-        promptTween = DOVirtual.DelayedCall(1.5f, () =>
+        promptTween = DOVirtual.DelayedCall(2f, () =>
         {
             PromptPanel.SetActive(false);
             isActive = false;
