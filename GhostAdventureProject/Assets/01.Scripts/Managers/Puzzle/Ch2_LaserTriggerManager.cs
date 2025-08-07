@@ -42,6 +42,7 @@ public class Ch2_LaserTriggerManager : MonoBehaviour
         // 카메라 잠깐 멈췄다가 복귀 (3초)
         yield return new WaitForSeconds(3f);
 
+        UIManager.Instance.PromptUI.ShowPrompt("반대편에 출구가 있는 것 같네", 2f);
         UIManager.Instance.PromptUI.ShowPrompt("위에 있는 저 장치를 작동해보자", 2f);
         
         // 플레이어 조작 가능

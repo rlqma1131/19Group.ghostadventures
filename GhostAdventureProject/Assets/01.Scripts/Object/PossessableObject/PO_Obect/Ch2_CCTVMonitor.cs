@@ -13,6 +13,8 @@ public class Ch2_CCTVMonitor : BasePossessable
 
     [Header("가짜 기억 02")]
     [SerializeField] private GameObject memoryH;
+    [SerializeField] private GameObject clueH;
+    [SerializeField] private AudioClip reveal;
 
     private SpriteRenderer[] cctvScreenSpriteRenderer;
     private SpriteRenderer[] laserScreenSpriteRenderer;
@@ -154,6 +156,9 @@ public class Ch2_CCTVMonitor : BasePossessable
         yield return new WaitForSeconds(4f);
 
         memoryH.SetActive(true);
+        clueH.SetActive(true);
+        SoundManager.Instance.PlaySFX(reveal);
+
         hasActivated = false; // 기억 스캔 전까지 빙의 불가
 
         EnemyAI.ResumeAllEnemies();
