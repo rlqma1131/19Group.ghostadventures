@@ -10,7 +10,7 @@ public class Ch02_NPCEvent : MonoBehaviour
     [SerializeField] private PlayableDirector director; // 타임라인 디렉터
     private bool isTimelinePlaying = false; // 타임라인 재생 여부
 
-
+    SpriteRenderer spriteRenderer; // 스프라이트 렌더러
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -19,9 +19,11 @@ public class Ch02_NPCEvent : MonoBehaviour
             
             if (director != null)
             {
+                spriteRenderer = collision.gameObject.GetComponent<SpriteRenderer>();
                 GameObject player = collision.gameObject;
                 Vector3 scale = player.transform.localScale;
-                scale.x = -Mathf.Abs(scale.x); // 항상 왼쪽 보게
+                spriteRenderer.flipX = true; // 플레이어 스프라이트를 왼쪽으로 뒤집기
+                //scale.x = -Mathf.Abs(scale.x); // 항상 왼쪽 보게
                 player.transform.localScale = scale;
                 PossessionSystem.Instance.CanMove = false; // 플레이어 이동 불가능하게 설정
                 UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
@@ -52,6 +54,7 @@ public class Ch02_NPCEvent : MonoBehaviour
     {
         if (director != null)
         {
+            spriteRenderer.flipX = false; // 플레이어 스프라이트를 원래대로 돌리기
             director.stopped -= OnTimelineStopped;
         }
     }
