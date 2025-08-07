@@ -166,7 +166,7 @@ public class Ch1_MainFlashlight : BasePossessable
                 ChapterEndingManager.Instance.CollectCh1Clue("N");
 
                 // 퍼즐 성공 후 3초 대기
-                yield return new WaitForSeconds(3f);
+                yield return new WaitForSecondsRealtime(3f);
 
                 timerActive = false;
                 if (timerPanel != null)
