@@ -30,7 +30,6 @@ public class KeyBoard_Enter : MonoBehaviour
             textSlot.Close(); // 키보드 닫기
             PossessionSystem.Instance.CanMove = true;
             Debug.Log("정답!");
-            UIManager.Instance.PromptUI.ShowPrompt("이제 마지막 기억을 얻을 수 있어");
         }
         else
         {

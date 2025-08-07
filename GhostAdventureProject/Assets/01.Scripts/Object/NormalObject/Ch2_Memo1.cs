@@ -43,7 +43,8 @@ public class Ch2_Memo1 : MonoBehaviour
     private void ShowDrawingZoom()
     {
         isZoomActive = true;
-
+        EnemyAI.PauseAllEnemies();
+        
         // 배경 패널 페이드 인
         zoomPanel.color = new Color(zoomPanel.color.r, zoomPanel.color.g, zoomPanel.color.b, 0f);
         zoomPanel.DOFade(150f / 255f, 0.5f);
@@ -71,6 +72,7 @@ public class Ch2_Memo1 : MonoBehaviour
     private void HideDrawingZoom()
     {
         isZoomActive = false;
+        EnemyAI.ResumeAllEnemies();
 
         // 페이드 아웃
         zoomPanel.DOFade(0f, 0.5f);

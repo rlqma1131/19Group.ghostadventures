@@ -23,9 +23,9 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
 
     public override void AfterScan()
     {
+        isScannable = false;
         anim.SetTrigger("Show");
         Invoke(nameof(AfterScanEffect), 8f); // 애니메이션 재생 후 효과 실행
-        isScannable = false;
         highlight.SetActive(false); // 하이라이트 비활성화
         ChapterEndingManager.Instance.CollectCh1Clue("H");
     }

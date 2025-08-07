@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Ch3_Locker : BasePossessable
@@ -23,7 +20,7 @@ public class Ch3_Locker : BasePossessable
 
     protected override void Update()
     {
-        if (isOpened || lockerSelector.IsPenaltyActive)
+        if (isOpened || lockerSelector.IsPenaltyActive || lockerSelector.IsSolved)
         {
             hasActivated = false;
             q_Key.SetActive(false);
