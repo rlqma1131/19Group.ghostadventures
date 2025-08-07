@@ -15,6 +15,11 @@ public class PlayerInteractSystem : MonoBehaviour
     
     private List<GameObject> nearbyInteractables = new();
 
+    private void Start()
+    {
+        eKey.SetActive(false);
+    }
+
     private void Awake()
     {
         if (Instance == null)

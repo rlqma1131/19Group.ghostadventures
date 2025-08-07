@@ -15,6 +15,8 @@ public class Ch2_CCTV : BasePossessable
     [Header("하이라이트 애니메이터")]
     [SerializeField] private Animator highlightAnimator;
 
+    private bool isRight = false;
+
     protected override void Start()
     {
         isPossessed = false;
@@ -44,9 +46,7 @@ public class Ch2_CCTV : BasePossessable
         else if (Input.GetKeyDown(KeyCode.D))
         {
             anim.SetBool("Right", true);
-
-            if (highlightAnimator != null && highlightAnimator.runtimeAnimatorController != null && highlightAnimator.isActiveAndEnabled)
-                highlightAnimator.SetBool("Right", true);
+            isRight = true; 
 
             monitor?.SetMonitorAnimBool(index, "Right", true);
             CheckSolvedPrompt();
@@ -54,9 +54,7 @@ public class Ch2_CCTV : BasePossessable
         else if (Input.GetKeyDown(KeyCode.A))
         {
             anim.SetBool("Right", false);
-
-            if (highlightAnimator != null && highlightAnimator.runtimeAnimatorController != null && highlightAnimator.isActiveAndEnabled)
-                highlightAnimator.SetBool("Right", false);
+            isRight = false;
 
             monitor?.SetMonitorAnimBool(index, "Right", false);
             CheckSolvedPrompt();
@@ -94,26 +92,18 @@ public class Ch2_CCTV : BasePossessable
 
         if (other.CompareTag("Player"))
         {
-            SyncHighlightAnimator();
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            if (!isRight)
+            {
+                highlightAnimator.Play("Ch2_CCTV_Right");
+            }
+            else
+            {
+                highlightAnimator.Play("Ch2_CCTV_Left");
+            }
         }
-
-        SyncHighlightAnimator();
     }
-
-    public void SyncHighlightAnimator()
-    {
-        if (highlightAnimator == null || anim == null) return;
-
-        AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-
-        // 현재 상태 이름을 Hash로 가져오기
-        int currentStateHash = stateInfo.shortNameHash;
-
-        // 하이라이트 Animator에 동일한 상태 강제 재생
-        highlightAnimator.Play(currentStateHash, 0, stateInfo.normalizedTime);
-    }
-
+    
     public override void CantPossess()
     {
         UIManager.Instance.PromptUI.ShowPrompt("전력이 끊겨있는 것 같아", 2f);

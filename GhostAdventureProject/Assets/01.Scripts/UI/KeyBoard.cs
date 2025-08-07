@@ -52,6 +52,8 @@ public class KeyBoard : MonoBehaviour, IUIClosable
     // 키보드UI 열기
     public void OpenKeyBoard()
     {
+        EnemyAI.PauseAllEnemies();
+
         UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 수집한 단서로 이름을 입력하세요.");
         keyBoardPanel.SetActive(true); // 키보드UI 열기
         UIManager.Instance.PlayModeUI_CloseAll();
@@ -60,6 +62,8 @@ public class KeyBoard : MonoBehaviour, IUIClosable
     // 키보드UI 닫기
     public void Close()
     {
+        EnemyAI.ResumeAllEnemies();
+
         keyBoardPanel.SetActive(false);
         UIManager.Instance.PlayModeUI_OpenAll();
     }

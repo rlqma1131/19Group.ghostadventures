@@ -60,18 +60,6 @@ public class PossessionSystem : MonoBehaviour
             case "Cat":
                 break;
             
-            case "Animal":
-                if (!SoulEnergySystem.Instance.HasEnoughEnergy(2))
-                {
-                    UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
-                    return false;
-                }
-                else
-                {
-                    SoulEnergySystem.Instance.Consume(2);
-                }
-                break;
-
             case "Person":
                 // 사람 구현되면 피로도에 따라 소모량 조정
                 if (!SoulEnergySystem.Instance.HasEnoughEnergy(1))
@@ -100,16 +88,15 @@ public class PossessionSystem : MonoBehaviour
                 }
                 break;
 
-            case "SoundTrigger":
             default:
-                if (!SoulEnergySystem.Instance.HasEnoughEnergy(3))
+                if (!SoulEnergySystem.Instance.HasEnoughEnergy(1))
                 {
                     UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
                     return false;
                 }
                 else
                 {
-                    SoulEnergySystem.Instance.Consume(3);
+                    SoulEnergySystem.Instance.Consume(1);
                 }
                 break;
         }
