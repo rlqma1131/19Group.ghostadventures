@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Col_LivingRoom_HallWay : MonoBehaviour
 {
-    BoxCollider2D[] cols;
     BoxCollider2D maincol;
     [SerializeField] private GameObject icon;
     private bool onTrigger;
