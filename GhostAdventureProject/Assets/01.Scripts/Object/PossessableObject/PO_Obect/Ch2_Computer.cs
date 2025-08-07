@@ -81,6 +81,7 @@ public class Ch2_Computer : BasePossessable
 
     public void OpenPanel()
     {
+        EnemyAI.PauseAllEnemies();
         isPanelOpen = true;
         monitorPanel.gameObject.SetActive(true);
         monitorPanel.DOAnchorPos(visiblePos, 0.5f).SetEase(Ease.OutBack);
@@ -88,6 +89,7 @@ public class Ch2_Computer : BasePossessable
 
     public void ClosePanel()
     {
+        EnemyAI.ResumeAllEnemies();
         isPanelOpen = false;
         passwordPanel.SetActive(false);
         monitorPanel.DOAnchorPos(hiddenPos, 0.5f)
