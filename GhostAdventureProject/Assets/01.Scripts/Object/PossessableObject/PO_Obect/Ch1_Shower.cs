@@ -9,8 +9,7 @@ public class Ch1_Shower : BasePossessable
     [SerializeField] private GameObject steamEffect;
     [SerializeField] private GameObject temperatureArch;
     [SerializeField] private GameObject Needle;
-    [SerializeField] private AudioSource onWaterSound; // 물 켜는 소리 효과
-    [SerializeField] private AudioSource offWaterSound; // 물 끄는 소리 효과
+    [SerializeField] private AudioClip onWaterSound; // 물소리
     [SerializeField] private GameObject UI;
     [SerializeField] private GameObject q_key;
 
@@ -46,6 +45,7 @@ public class Ch1_Shower : BasePossessable
         if(isWater == true)
         {
             q_key.SetActive(false);
+            SoundManager.Instance.PlaySFX(onWaterSound);
         }
 
         if (Input.GetKeyDown(KeyCode.D))
@@ -91,6 +91,29 @@ public class Ch1_Shower : BasePossessable
         }
 
     }
+
+    protected override void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!hasActivated)
+            return;
+
+        if (other.CompareTag("Player"))
+            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+
+        if (isWater)
+            SoundManager.Instance.PlaySFX(onWaterSound);
+    }
+
+
+    protected override void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+
+        if (isWater)
+            SoundManager.Instance.FadeOutAndStopSFX();
+    }
+
     private void UpdateNeedleRotation()
     {
         if (Needle != null)

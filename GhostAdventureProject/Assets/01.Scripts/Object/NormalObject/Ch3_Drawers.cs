@@ -21,6 +21,7 @@ public class Ch3_Drawers : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            EnemyAI.ResumeAllEnemies();
             zoomCamera.Priority = 5;
 
             UIManager.Instance.PlayModeUI_OpenAll();
@@ -31,6 +32,7 @@ public class Ch3_Drawers : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
+        EnemyAI.PauseAllEnemies();
         zoomCamera.Priority = 20;
         SoundManager.Instance.PlaySFX(openDrawerSFX, 1f);
         UIManager.Instance.PlayModeUI_CloseAll();

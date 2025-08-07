@@ -104,6 +104,7 @@ public class Ch2_MorseKey : BasePossessable
         {
             Unpossess();
 
+            EnemyAI.ResumeAllEnemies();
             UIManager.Instance.PlayModeUI_OpenAll();
             StartCoroutine(FadeOutPanel(0.2f));
 
@@ -160,6 +161,7 @@ public class Ch2_MorseKey : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     { 
+        EnemyAI.PauseAllEnemies();
         UIManager.Instance.PlayModeUI_CloseAll();
         StartCoroutine(FadeInPanel(1.0f)); // 판넬 페이드 인
     }
