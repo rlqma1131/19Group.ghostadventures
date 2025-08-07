@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,14 @@ public class EnemyQTEHandler : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         enemy = GetComponent<EnemyAI>();
         startPosition = transform.position;
+        
+    }
+
+    private void Start()
+    {
+        qteUI = UIManager.Instance.QTE_UI_2;
+        qteEffect = QTEEffectManager.Instance;
+        player = GameManager.Instance.Player.transform;
     }
 
     public void StartQTE()
@@ -47,7 +56,7 @@ public class EnemyQTEHandler : MonoBehaviour
         PossessionSystem.Instance.CanMove = false;
         rb.velocity = Vector2.zero;
 
-        if (qteEffect != null)
+        if (qteEffect != null&& player != null)
         {
             qteEffect.playerTarget = player;
             qteEffect.enemyTarget = transform;
