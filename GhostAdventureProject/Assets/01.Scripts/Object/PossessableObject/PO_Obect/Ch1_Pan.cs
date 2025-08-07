@@ -72,6 +72,7 @@ public class Ch1_Pan : BasePossessable
             isFalling = false;
         });
         PuzzleStateManager.Instance.MarkPuzzleSolved("후라이팬");
+        UIManager.Instance.PromptUI.ShowPrompt("으악 소리가 너무 커");
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
@@ -81,11 +82,5 @@ public class Ch1_Pan : BasePossessable
         {
             UIManager.Instance.PromptUI.ShowPrompt_2("후라이팬이네", "떨어뜨려 볼까?");
         }
-    }
-
-    public override void Unpossess()
-    {
-        base.Unpossess();
-        UIManager.Instance.PromptUI.ShowPrompt("으악 소리가 너무 커");
     }
 }
