@@ -23,7 +23,7 @@ public class Ch3_Locker : BasePossessable
 
     protected override void Update()
     {
-        if (isOpened || lockerSelector.IsPenaltyActive)
+        if (isOpened || lockerSelector.IsPenaltyActive || lockerSelector.IsSolved)
         {
             hasActivated = false;
             q_Key.SetActive(false);

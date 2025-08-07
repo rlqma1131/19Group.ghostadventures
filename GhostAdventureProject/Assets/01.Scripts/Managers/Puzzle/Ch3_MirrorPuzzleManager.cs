@@ -13,7 +13,7 @@ public class Ch3_MirrorPuzzleManager : MonoBehaviour
     private GameObject player;
 
     [SerializeField] private GameObject hintPrefab;
-    private Ch3_MemoryPositive_Mirror memory;
+    [SerializeField] private Ch3_MemoryPositive_Mirror memory;
     
     private bool firstRoomEntered = false;
 
