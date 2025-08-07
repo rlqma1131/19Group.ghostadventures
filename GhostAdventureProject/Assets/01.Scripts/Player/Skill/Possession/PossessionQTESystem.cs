@@ -85,6 +85,7 @@ public class PossessionQTESystem : MonoBehaviour
         GameManager.Instance.PlayerController.currentTarget?.OnQTEFailure();
     }
 
+    // BasePossessable
     //public void OnQTESuccess()
     //{
     //    Debug.Log("QTE 성공 - 빙의 완료");

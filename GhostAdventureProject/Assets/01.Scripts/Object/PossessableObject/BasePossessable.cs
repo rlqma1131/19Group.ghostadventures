@@ -60,7 +60,6 @@ public abstract class BasePossessable : BaseInteractable
     public void OnQTEFailure()
     {
         isPossessed = false;
-        SoulEnergySystem.Instance.Consume(1);
     }
 
     // 빙의 애니메이션이 끝나면 호출되는 메서드

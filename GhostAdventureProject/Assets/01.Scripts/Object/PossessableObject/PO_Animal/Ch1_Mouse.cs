@@ -103,6 +103,7 @@ public class Ch1_Mouse : MoveBasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        zoomCamera.Priority = 20;
         SoundManager.Instance.PlaySFX(mouse);
     }
 }
