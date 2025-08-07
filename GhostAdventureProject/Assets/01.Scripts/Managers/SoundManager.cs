@@ -58,7 +58,12 @@ public class SoundManager : Singleton<SoundManager>
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
     private void Awake()
+    {    if (Instance != null && Instance != this)
     {
+        Destroy(gameObject);
+        return;
+    }
+    DontDestroyOnLoad(gameObject);
         InitSFXPool();
     }
 
