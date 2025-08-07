@@ -55,12 +55,12 @@ public class    Ch1_GarageEventManager : BaseInteractable
             // [컷씬] 정답 이벤트
             UIManager.Instance.Inventory_PlayerUI.RemoveCluesByStage(GameManager.GetStageForCurrentChapter());
             UIManager.Instance.PlayModeUI_CloseAll();
-            cutsceneDirector_correct.Play();
             SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드아웃
-            EnemyAI.PauseAllEnemies();
+            cutsceneDirector_correct.Play();
             PossessionSystem.Instance.CanMove = false;
             // 기억조각 스캔 가능하도록 활성화
             bear.ActivateTeddyBear();
+            EnemyAI.PauseAllEnemies();
         }
     }
 
