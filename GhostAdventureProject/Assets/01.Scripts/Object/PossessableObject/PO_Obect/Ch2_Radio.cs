@@ -24,7 +24,7 @@ public class Ch2_Radio : BasePossessable
 
     protected override void Start()
     {
-        hasActivated = true;
+        base.Start();
         zoomRadio.SetActive(false);
     }
 

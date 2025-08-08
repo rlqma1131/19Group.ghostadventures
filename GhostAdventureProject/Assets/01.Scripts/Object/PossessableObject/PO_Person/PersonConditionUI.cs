@@ -25,7 +25,7 @@ public class PersonConditionUI : MonoBehaviour
 
     void Start()
     {   
-        currentCondition = PersonCondition.Vital;
+        // currentCondition = PersonCondition.Vital;
         conditionHandler = new VitalConditionHandler();
         targetPerson = GetComponent<BasePossessable>();
         ShowConditionUI();

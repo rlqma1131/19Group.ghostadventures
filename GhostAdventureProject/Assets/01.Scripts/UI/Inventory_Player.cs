@@ -147,28 +147,48 @@ public class Inventory_Player : MonoBehaviour
 
     private void Update()
     {
-        for (int i = 0; i < 5; i++)
-        {
-            if(ESCMenu.Instance != null)
-            {
-            KeyCode key = ESCMenu.Instance.GetKey(i);
-            if (Input.GetKeyDown(key))
-            {
-                int clueIndex = currentPage * cluesPerPage + i;
+    //     for (int i = 0; i < 5; i++)
+    //     {
+    //         if(ESCMenu.Instance != null)
+    //         {
+    //         KeyCode key = ESCMenu.Instance.GetKey(i);
+    //         if (Input.GetKeyDown(key))
+    //         {
+    //             int clueIndex = currentPage * cluesPerPage + i;
 
-                if (InventoryExpandViewer.Instance.IsShowing())
-                {
-                    InventoryExpandViewer.Instance.HideClue();
-                }
-                else if (clueIndex < collectedClues.Count)
-                {
-                    InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
-                }
-            }}
+    //             if (InventoryExpandViewer.Instance.IsShowing())
+    //             {
+    //                 InventoryExpandViewer.Instance.HideClue();
+    //             }
+    //             else if (clueIndex < collectedClues.Count)
+    //             {
+    //                 InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
+    //             }
+    //         }}
+    //     }
+    // }
+
+
+    for (int i = 0; i < 4; i++)
+    {
+        KeyCode alphaKey = KeyCode.Alpha1 + i;
+        KeyCode keypadKey = KeyCode.Keypad1 + i;
+
+        if (Input.GetKeyDown(alphaKey) || Input.GetKeyDown(keypadKey))
+        {
+            int clueIndex = currentPage * cluesPerPage + i;
+
+            if (InventoryExpandViewer.Instance.IsShowing())
+            {
+                InventoryExpandViewer.Instance.HideClue();
+            }
+            else if (clueIndex < collectedClues.Count)
+            {
+                InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
+            }
         }
     }
+    }
 }
-
-
 
 
