@@ -74,6 +74,7 @@ public class PlayerLifeManager : MonoBehaviour
         UIManager.Instance.PlayModeUI_CloseAll();
         GameObject player = GameManager.Instance.Player;
         PlayableDirector director = player.GetComponentInChildren<PlayableDirector>();
+        ParticleSystem[] particleSystems = player.GetComponentsInChildren<ParticleSystem>();
         if (volume != null)
         {
             volume.Ondead = true;
@@ -94,6 +95,12 @@ public class PlayerLifeManager : MonoBehaviour
         {
             director.stopped += ResetIsdead; 
             PossessionSystem.Instance.CanMove = false; // 플레이어 이동 비활성화
+            //파티클 중지
+            foreach (var ps in particleSystems)
+            {
+                ps?.Stop();
+            }
+
             director.Play();
         }
 
