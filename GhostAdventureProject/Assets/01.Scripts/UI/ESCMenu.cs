@@ -184,6 +184,14 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         Debug.Log($"단서 {slotIndex + 1} 키 변경 대기 중...");
     }
 
+    void Update()
+    {
+        if(IsOpen())
+        {
+            UIManager.Instance.SetDefaultCursor();
+        }
+    }
+
     // private void Update()
     // {
     //     if (waitingSlot != -1)
@@ -203,13 +211,13 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // }
 
 
-// using System;
-// using System.Collections.Generic;
-// using UnityEngine;
+    // using System;
+    // using System.Collections.Generic;
+    // using UnityEngine;
 
-// public class KeyBindingManager : MonoBehaviour, IUIClosable
-// {
-//     public static KeyBindingManager Instance;
+    // public class KeyBindingManager : MonoBehaviour, IUIClosable
+    // {
+    //     public static KeyBindingManager Instance;
 
     public Dictionary<int, KeyCode> clueKeyBindings = new Dictionary<int, KeyCode>();
 

@@ -35,7 +35,6 @@ public class PersonConditionUI : MonoBehaviour
     {
         if (targetPerson.isPossessed)
         {
-            Debug.Log("컨디션UI 없애기");
             if (UI != null) UI.SetActive(false);
             return;
         }

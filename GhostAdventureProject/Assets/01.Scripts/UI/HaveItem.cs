@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HaveItem : MonoBehaviour
@@ -26,6 +27,9 @@ public class HaveItem : MonoBehaviour
         ConvertToSlots();
     }
 
+    void Update()
+    {
+    }
     private void ConvertToSlots()
     {
         inventorySlots.Clear();
@@ -42,5 +46,9 @@ public class HaveItem : MonoBehaviour
                 inventorySlots.Add(new InventorySlot_PossessableObject(item, 1));
             }
         }
+    }
+    public bool IsInventoryEmpty()
+    {
+        return inventorySlots.All(slot => slot.item == null ||  slot.quantity <= 0);
     }
 }

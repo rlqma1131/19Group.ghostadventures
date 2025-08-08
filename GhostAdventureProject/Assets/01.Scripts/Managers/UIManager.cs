@@ -172,12 +172,18 @@ public class UIManager : Singleton<UIManager>
         //============================================================================
         
     
-    }
+        }
+        
+        // for (int i = closableUI.Count - 1; i >= 0; i--)
+        // {
+        //     if (closableUI[i] is IUIClosable closable && closable.IsOpen())
+        //     {
+        //         SetDefaultCursor();
+        //     }
+        // }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         TryCloseTopUI();
-
-
     }
 
     public void TutorialUI_CloseAll()
@@ -214,7 +220,6 @@ public class UIManager : Singleton<UIManager>
     // 은신처 커서
     public void HideAreaCursor()
     {
-        Debug.Log("HideAreaCursor 호출됨!");
         Cursor.SetCursor(hideAreaCursor, hotspot, CursorMode.Auto);
     }
     public void LockDoorCursor()
