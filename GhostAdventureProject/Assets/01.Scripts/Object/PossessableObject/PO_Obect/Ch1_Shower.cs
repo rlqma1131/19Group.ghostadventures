@@ -15,6 +15,7 @@ public class Ch1_Shower : BasePossessable
 
     private bool isWater = false;
     private bool isWaterSoundPlaying = false;
+    private bool isPlayerNear = false;
 
     private int temperature = 0;
 
@@ -36,14 +37,12 @@ public class Ch1_Shower : BasePossessable
         if (!isPossessed)
             return;
 
-        if (!isWater)
-        {
-            q_key.SetActive(true);
-        }
-        else
-        {
-            q_key.SetActive(false);
-        }
+        // 조작키 UI 상태
+        q_key.SetActive(!isWater);
+        water.SetActive(isWater);
+        UI.SetActive(isWater);
+        temperatureArch.SetActive(isWater);
+        Needle.SetActive(isWater);
 
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -60,14 +59,19 @@ public class Ch1_Shower : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            UI.SetActive(true);
-            q_key.SetActive(false);
             isWater = !isWater;
-            water.SetActive(isWater);
-            temperatureArch.SetActive(isWater);
-            Needle.SetActive(isWater);
 
-            UpdateWaterSound();
+            // 물소리 껐다 켰다
+            if (!isWaterSoundPlaying)
+            {
+                SoundManager.Instance.PlayLoopingSFX(onWaterSound);
+                isWaterSoundPlaying = true;
+            }
+            else
+            {
+                SoundManager.Instance.FadeOutAndStopLoopingSFX();
+                isWaterSoundPlaying = false;
+            }
         }
 
         if (steamEffect != null)
@@ -90,38 +94,36 @@ public class Ch1_Shower : BasePossessable
 
     }
 
-    private void UpdateWaterSound()
-    {
-        if (isWater && !isWaterSoundPlaying)
-        {
-            SoundManager.Instance.PlaySFX(onWaterSound);
-            isWaterSoundPlaying = true;
-        }
-        else if (!isWater && isWaterSoundPlaying)
-        {
-            SoundManager.Instance.FadeOutAndStopSFX();
-            isWaterSoundPlaying = false;
-        }
-    }
-
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        if (!hasActivated)
-            return;
+        if (!hasActivated) return;
 
         if (other.CompareTag("Player"))
+        {
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            isPlayerNear = true;
 
-        UpdateWaterSound();
+            if (isWater)
+            {
+                SoundManager.Instance.PlayLoopingSFX(onWaterSound);
+                isWaterSoundPlaying = true;
+            }
+        }
     }
-
 
     protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
+        {
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            isPlayerNear = false;
 
-        UpdateWaterSound();
+            if (PossessionSystem.Instance.CanMove)
+            {
+                SoundManager.Instance.FadeOutAndStopLoopingSFX();
+                isWaterSoundPlaying = false;
+            }
+        }
     }
 
     private void UpdateNeedleRotation()
@@ -131,5 +133,10 @@ public class Ch1_Shower : BasePossessable
             float zAngle = temperature * 20f;
             Needle.transform.rotation = Quaternion.Euler(0f, 0f, zAngle);
         }
+    }
+
+    public override void OnPossessionEnterComplete() 
+    {
+        q_key.SetActive(!isWater);
     }
 }
