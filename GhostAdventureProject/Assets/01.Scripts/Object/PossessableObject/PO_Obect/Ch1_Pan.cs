@@ -71,7 +71,7 @@ public class Ch1_Pan : BasePossessable
             Unpossess();
             isFalling = false;
         });
-        PuzzleStateManager.Instance.MarkPuzzleSolved("후라이팬");
+        SaveManager.MarkPuzzleSolved("후라이팬");
         UIManager.Instance.PromptUI.ShowPrompt("으악 소리가 너무 커");
     }
 

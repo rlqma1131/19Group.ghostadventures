@@ -57,7 +57,7 @@ public class Ch1_HideAreaEventManager : MonoBehaviour
                     hideArea.HideAreaPuzzleDeactivate();
                 }
 
-                PuzzleStateManager.Instance.MarkPuzzleSolved("그림일기");
+                SaveManager.MarkPuzzleSolved("그림일기");
                 UIManager.Instance.PromptUI.ShowPrompt("열렸다… 안에 뭐가…");
 
                 

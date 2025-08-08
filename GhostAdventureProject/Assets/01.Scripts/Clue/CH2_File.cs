@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
@@ -50,7 +50,7 @@ public class CH2_File : MonoBehaviour
         yield return new WaitForSeconds(1f);
         ZoomCamera.Priority = 5;
         UIManager.Instance.PromptUI.ShowPrompt("이건 힌트 같은데...", 2f);
-        PuzzleStateManager.Instance.MarkPuzzleSolved("금고");
+        SaveManager.MarkPuzzleSolved("금고");
         yield return new WaitForSeconds(2f);
         uimanager.InventoryExpandViewerUI.OnClueHidden -= CloseViewer;
         yield return new WaitForSeconds(1f);

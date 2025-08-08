@@ -100,7 +100,7 @@ public class Ch1_TV : BasePossessable
             ShowMemoryandDoorOpen();
             hasActivated = false;
             col.enabled = false;
-            PuzzleStateManager.Instance.MarkPuzzleSolved("티비");
+            SaveManager.MarkPuzzleSolved("티비");
 
         }
     }

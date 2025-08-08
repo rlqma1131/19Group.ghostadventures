@@ -51,7 +51,7 @@ public class Ch1_CelebrityBox : BasePossessable
         StartCoroutine(ShowLetterWithDelay());
 
         hasActivated = false;
-        PuzzleStateManager.Instance.MarkPuzzleSolved("깜짝상자");
+        SaveManager.MarkPuzzleSolved("깜짝상자");
     }
     private IEnumerator ShowLetterWithDelay()
     {
@@ -69,7 +69,7 @@ public class Ch1_CelebrityBox : BasePossessable
         if (!hasActivated)
             return;
 
-        if (other.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
+        if (other.CompareTag("Player") && !SaveManager.IsPuzzleSolved("깜짝상자"))
         {
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
             // UIManager.Instance.TutorialUI_CloseAll();

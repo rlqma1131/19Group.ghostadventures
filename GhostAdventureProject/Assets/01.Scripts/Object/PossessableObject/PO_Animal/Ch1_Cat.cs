@@ -63,7 +63,7 @@ public class Ch1_Cat : MoveBasePossessable
             isNearDoor = true;
         }
 
-        if(collision.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("후라이팬"))
+        if(collision.CompareTag("Player") && !SaveManager.IsPuzzleSolved("후라이팬"))
         {
             UIManager.Instance.PromptUI.ShowPrompt("잠들어 있어..깨워볼까?");
         }

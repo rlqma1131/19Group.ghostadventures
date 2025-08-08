@@ -53,11 +53,11 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         base.OnTriggerEnter2D(other);
-        if(other.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("후라이팬"))
+        if(other.CompareTag("Player") && !SaveManager.IsPuzzleSolved("후라이팬"))
         {
             UIManager.Instance.PromptUI.ShowPrompt("쥐를 먼저 쫒아내야겠어");
         }
-        else if(other.CompareTag("Player") && PuzzleStateManager.Instance.IsPuzzleSolved("후라이팬"))
+        else if(other.CompareTag("Player") && SaveManager.IsPuzzleSolved("후라이팬"))
         {
             TutorialManager.Instance.Show(TutorialStep.Cake_Prompt);
         } 
