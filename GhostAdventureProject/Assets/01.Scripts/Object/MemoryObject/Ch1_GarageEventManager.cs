@@ -35,11 +35,10 @@ public class Ch1_GarageEventManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (!ChapterEndingManager.Instance.AllCh1CluesCollected() && !answer.correct)
+            if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
             {
                 UIManager.Instance.PromptUI.ShowPrompt("...아무 일도 일어나지 않았다.", 2f);
             }
-            // 1장 단서 모두 모이고 상호작용 시 이벤트 발생
             else
             {
                 if (!isCutscenePlaying)
@@ -48,13 +47,19 @@ public class Ch1_GarageEventManager : MonoBehaviour
                     // [컷씬] 꼬마유령 이벤트
                     PossessionSystem.Instance.CanMove = false;
                     GameManager.Instance.PlayerController.animator.SetBool("Move", false);
+
                     UIManager.Instance.PlayModeUI_CloseAll();
-                    energyRestoreZone.IsActive = false; // 에너지 회복존 비활성화
+                    EnemyAI.PauseAllEnemies();
+
+                    SoulEnergySystem.Instance.DisableHealingEffect(); // 에너지 회복존 비활성화
+
                     cutsceneDirector.Play();
                 }
                 else if (isCutscenePlaying && !openKeyboard && !answer.correct)
                 {
                     PlayerInteractSystem.Instance.eKey.SetActive(false);
+
+                    SoulEnergySystem.Instance.DisableHealingEffect(); // 에너지 회복존 비활성화
 
                     openKeyboard = true;
                     keyboard.OpenKeyBoard();
@@ -98,6 +103,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         }
     }
 
+    // 첫 상호작용, 벽에 피흐르는 이벤트 끝났을 때
     void OnTimelineFinished(PlayableDirector pd)
     {
         keyboard.OpenKeyBoard();
@@ -105,10 +111,13 @@ public class Ch1_GarageEventManager : MonoBehaviour
         isCutscenePlaying = true;
     }
 
+    // 정답 이벤트 끝났을 때
     void OnTimelineFinished2(PlayableDirector pd)
     {
         SoundManager.Instance.RestoreLastBGM(1f);
         keyboard.Close();
+
+        SoulEnergySystem.Instance.EnableHealingEffect();
         EnemyAI.ResumeAllEnemies();
         PossessionSystem.Instance.CanMove = true;
         isCutscenePlaying2 = true;

@@ -11,15 +11,11 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     void Start()
     {
         isScannable = false;
-
-        col = GetComponent<Collider2D>();
-        col.enabled = false;
     }
 
     public void ActivateTeddyBear()
     {
         isScannable = true;
-        col.enabled = true;
     }
 
     public override void AfterScan() 
