@@ -161,6 +161,7 @@ public class PossessionSystem : MonoBehaviour
         Player.animator.SetTrigger("PossessIn");
         SoundManager.Instance.PlaySFX(possessIn);
 
+        EnemyAI.PauseAllEnemies();
     }
 
     public void StartPossessionOutSequence() // 빙의 해제 애니메이션
@@ -168,6 +169,9 @@ public class PossessionSystem : MonoBehaviour
         CanMove = false;
         StartCoroutine(DelayedPossessionOutPlay());
         SoundManager.Instance.PlaySFX(possessOut);
+
+        EnemyAI.PauseAllEnemies();
+
     }
 
     private IEnumerator DelayedPossessionOutPlay()
@@ -178,6 +182,7 @@ public class PossessionSystem : MonoBehaviour
 
     public void OnPossessionInAnimationComplete() // 빙의 시작 애니메이션 후 이벤트
     {
+        EnemyAI.ResumeAllEnemies();
         PossessionStateManager.Instance.PossessionInAnimationComplete();
 
         if (obssessingTarget != null)
@@ -195,5 +200,6 @@ public class PossessionSystem : MonoBehaviour
     public void OnPossessionOutAnimationComplete() // 빙의 해제 애니메이션 후 이벤트
     {
         PossessionStateManager.Instance.PossessionOutAnimationComplete();
+        EnemyAI.ResumeAllEnemies();
     }
 }

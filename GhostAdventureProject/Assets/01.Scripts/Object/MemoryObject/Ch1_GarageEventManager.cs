@@ -65,7 +65,6 @@ public class Ch1_GarageEventManager : MonoBehaviour
     void OnTimelineFinished(PlayableDirector pd)
     {
         keyboard.OpenKeyBoard();
-        PossessionSystem.Instance.CanMove = true;
         UIManager.Instance.PlayModeUI_OpenAll();
         isCutscenePlaying = true;
     }
