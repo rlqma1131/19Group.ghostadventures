@@ -110,13 +110,13 @@ public class EnemyAI : MonoBehaviour
         float animLength = Animator.runtimeAnimatorController.animationClips
                                    .FirstOrDefault(c => c.name == "Enemy_SoundTeleport")?.length ?? 1f;
 
-        yield return new WaitForSeconds(animLength);
+        yield return new WaitForSecondsRealtime(animLength);
 
         Movement.MarkTeleported();
         isTeleporting = false;
         ChangeState(ChaseState);
 
-        yield return new WaitForSeconds(chaseDuration);
+        yield return new WaitForSecondsRealtime(chaseDuration);
 
         isTeleporting = true;
 

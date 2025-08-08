@@ -20,6 +20,8 @@ public class EnemyMovementController : MonoBehaviour
     private float lastTeleportTime = -10f;       // 초기값 멀리 설정
     
     private Vector2? forcedTarget = null;
+    public LayerMask obstacleMask;
+    public LayerMask doorLayerMask; 
 
     private void Awake()
     {
@@ -65,7 +67,34 @@ public class EnemyMovementController : MonoBehaviour
     public void PatrolMove()
     {
         if (enemy.isTeleporting) return;
-        rb.MovePosition(rb.position + moveDir * patrolSpeed * Time.fixedDeltaTime);
+        Vector2 delta = moveDir * patrolSpeed * Time.fixedDeltaTime;
+        Vector2 pos   = rb.position;
+        Vector2 newPos = pos;
+
+        // 1) 수직(Y) 이동 검사
+        if (Mathf.Abs(delta.y) > 0f)
+        {
+            // 위 또는 아래 방향에 충돌체가 있는지 Raycast
+            Vector2 dirY = Vector2.up * Mathf.Sign(delta.y);
+            float distY  = Mathf.Abs(delta.y);
+            if (Physics2D.Raycast(pos, dirY, distY, obstacleMask) == false)
+                newPos.y += delta.y;
+            else
+                moveDir.y = 0;   // 막혔으면 Y 성분 제거
+        }
+
+        // 2) 수평(X) 이동 검사
+        if (Mathf.Abs(delta.x) > 0f)
+        {
+            Vector2 dirX = Vector2.right * Mathf.Sign(delta.x);
+            float distX  = Mathf.Abs(delta.x);
+            if (Physics2D.Raycast(pos, dirX, distX, obstacleMask) == false)
+                newPos.x += delta.x;
+            else
+                moveDir.x = 0;   // 막혔으면 X 성분 제거
+        }
+
+        rb.MovePosition(newPos);
         UpdateFlip();
     }
 
@@ -103,37 +132,78 @@ public class EnemyMovementController : MonoBehaviour
     {
         if (Time.time - lastTeleportTime < teleportDoorIgnoreTime) return;
         
-        if (enemy.CurrentStateIsPatrol())
+        // 2) 스폰(혹은 상태 전환) 직후에 문 트리거 안 받도록
+        if (Time.time - startTime < doorBlockDuration)
         {
-            BaseDoor door = other.GetComponent<BaseDoor>();
-            if (door != null)
-            {
-                if (Time.time - startTime < doorBlockDuration)
-                {
-                    PickRandomDirection();
-                    return;
-                }
-
-                if (Random.value < 0.4f)
-                {
-                    Transform targetDoor = door.GetTargetDoor();
-                    Vector3 targetPos = targetDoor != null
-                        ? targetDoor.position
-                        : (Vector3)door.GetTargetPos();
-
-                    transform.position = targetPos;
-                    enemy.ChangeState(enemy.IdleState);
-                    enemy.StartCoroutine(ResumePatrolAfterDelay());
-                    return;
-                }
-                PickRandomDirection();
-            }
+            PickRandomDirection();
+            return;
         }
+        
+        // 3) 오직 문 레이어에만 반응
+        if ((doorLayerMask.value & (1 << other.gameObject.layer)) == 0)
+            return;
+
+        // 4) 순찰 상태가 아닐 땐 무시
+        if (!enemy.CurrentStateIsPatrol())
+            return;
+
+        // 5) BaseDoor 컴포넌트가 없으면 무시
+        BaseDoor door = other.GetComponent<BaseDoor>();
+        if (door == null)
+            return;
+
+        // 6) 랜덤 확률로 순간이동 or 방향 전환
+        if (Random.value < 0.4f)
+        {
+            // 6-a) 도착 지점 장애물 체크 (OverlapCircle)
+            Vector3 dest = door.GetTargetDoor()?.position
+                           ?? (Vector3)door.GetTargetPos();
+            bool blocked = Physics2D.OverlapCircle(dest, 0.2f, obstacleMask);
+            if (blocked)
+            {
+                PickRandomDirection();
+                return;
+            }
+
+            // 6-b) 안전 확인 됐으면 순간이동
+            TeleportThroughDoor(door);
+        }
+        else
+        {
+            PickRandomDirection();
+        }
+    }
+    
+    private IEnumerator RestoreCollision(int pLayer, int eLayer) {
+        yield return new WaitForSecondsRealtime(teleportDoorIgnoreTime);
+        Physics2D.IgnoreLayerCollision(pLayer, eLayer, false);
+    }
+
+    private void TeleportThroughDoor(BaseDoor door) {
+        // 1) 충돌 무시 시작
+        int pLayer = GameManager.Instance.Player.layer;
+        int eLayer = gameObject.layer;
+        Physics2D.IgnoreLayerCollision(pLayer, eLayer, true);
+
+        // 2) 순간이동
+        Transform td = door.GetTargetDoor();
+        Vector3 dest = td != null ? td.position : (Vector3)door.GetTargetPos();
+        transform.position = dest;
+
+        // 3) 타이밍 재설정
+        lastTeleportTime = Time.time;
+
+        // 4) 1초 뒤 충돌 복원
+        StartCoroutine(RestoreCollision(pLayer, eLayer));
+
+        // 5) 상태 전환
+        enemy.ChangeState(enemy.IdleState);
+        StartCoroutine(ResumePatrolAfterDelay());
     }
 
     private IEnumerator ResumePatrolAfterDelay()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(1f);
         enemy.ChangeState(enemy.PatrolState);
     }
     

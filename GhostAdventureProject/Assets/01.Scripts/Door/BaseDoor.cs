@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public abstract class BaseDoor : BaseInteractable
 {
@@ -60,10 +61,26 @@ public abstract class BaseDoor : BaseInteractable
         GameObject player = GameManager.Instance?.Player;
         if (player == null)
             return;
+        
+        // 1) 충돌 무시 시작
+        int playerLayer = player.layer;
+        int enemyLayer  = LayerMask.NameToLayer("Enemy");
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true);
 
-        Vector3 teleportPosition = targetDoor != null ? targetDoor.position : (Vector3)targetPos;
-
+        // 2) 순간이동
+        Vector3 teleportPosition = targetDoor != null 
+            ? targetDoor.position 
+            : (Vector3)targetPos;
         player.transform.position = teleportPosition;
+
+        // 3) 1초 후 다시 충돌 허용
+        StartCoroutine(RestoreCollision(playerLayer, enemyLayer, 1f));
+    }
+
+    private IEnumerator RestoreCollision(int pLayer, int eLayer, float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+        Physics2D.IgnoreLayerCollision(pLayer, eLayer, false);
     }
 
     protected void UpdateDoorVisual()
