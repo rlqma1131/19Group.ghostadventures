@@ -15,18 +15,22 @@ public class EnemyMovementController : MonoBehaviour
     private float directionChangeTimer = 0f;
     private float startTime;
     public float doorBlockDuration = 20f;
+    public float teleportSafetyRadius   = 0.2f;
     
     private float teleportDoorIgnoreTime = 1f;   // 텔레포트 후 문 무시 시간
     private float lastTeleportTime = -10f;       // 초기값 멀리 설정
     
     private Vector2? forcedTarget = null;
     public LayerMask obstacleMask;
-    public LayerMask doorLayerMask; 
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         enemy = GetComponent<EnemyAI>();
+        
+        var qteTrigger = GetComponentInChildren<EnemyQTETrigger>();
+        if (qteTrigger != null)
+            qteTrigger.OnDoorEntered += HandleDoorEntered;
     }
 
     private void Start()
@@ -128,48 +132,48 @@ public class EnemyMovementController : MonoBehaviour
         moveDir = Vector2.Reflect(moveDir, normal).normalized;
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnDestroy()
     {
-        var interaction = GetComponentInChildren<EnemyQTETrigger>();
-        if (interaction == null || !interaction.PlayerInInteractionRange)
+        var qteTrigger = GetComponentInChildren<EnemyQTETrigger>();
+        if (qteTrigger != null)
+            qteTrigger.OnDoorEntered -= HandleDoorEntered;
+    }
+
+    private void HandleDoorEntered(BaseDoor door)
+    {
+        // 1) Patrol 중이 아니면 무시
+        if (!enemy.CurrentStateIsPatrol())
             return;
-        
-        if (Time.time - lastTeleportTime < teleportDoorIgnoreTime) return;
-        
-        // 2) 스폰(혹은 상태 전환) 직후에 문 트리거 안 받도록
+
+        // 2) 순간이동 직후 무시
+        if (Time.time - lastTeleportTime < teleportDoorIgnoreTime)
+            return;
+
+        // 3) 스폰 직후 짧게 막기
         if (Time.time - startTime < doorBlockDuration)
         {
             PickRandomDirection();
             return;
         }
-        
-        // 3) 오직 문 레이어에만 반응
-        if ((doorLayerMask.value & (1 << other.gameObject.layer)) == 0)
-            return;
 
-        // 4) 순찰 상태가 아닐 땐 무시
-        if (!enemy.CurrentStateIsPatrol())
-            return;
-
-        // 5) BaseDoor 컴포넌트가 없으면 무시
-        BaseDoor door = other.GetComponent<BaseDoor>();
-        if (door == null)
-            return;
-
-        // 6) 랜덤 확률로 순간이동 or 방향 전환
-        if (Random.value < 0.4f)
+        // 4) 잠긴 문은 건너뛸 수 있으니 패스
+        if (door.IsLocked)
         {
-            // 6-a) 도착 지점 장애물 체크 (OverlapCircle)
-            Vector3 dest = door.GetTargetDoor()?.position
-                           ?? (Vector3)door.GetTargetPos();
-            bool blocked = Physics2D.OverlapCircle(dest, 0.2f, obstacleMask);
-            if (blocked)
+            PickRandomDirection();
+            return;
+        }
+
+        // 5) 순간이동 확률(테스트시 1f로 두세요)
+        if (Random.value < 0.4f) 
+        {
+            // a) 도착 지점 장애물 검사
+            Vector3 dest = door.GetTargetDoor()?.position ?? (Vector3)door.GetTargetPos();
+            if (Physics2D.OverlapCircle(dest, teleportSafetyRadius, obstacleMask))
             {
                 PickRandomDirection();
                 return;
             }
-
-            // 6-b) 안전 확인 됐으면 순간이동
+            // b) 순간이동 실행
             TeleportThroughDoor(door);
         }
         else

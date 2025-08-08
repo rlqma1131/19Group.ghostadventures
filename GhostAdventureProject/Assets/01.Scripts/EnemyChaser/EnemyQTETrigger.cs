@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,9 +6,8 @@ using UnityEngine;
 public class EnemyQTETrigger : MonoBehaviour
 {
     private EnemyAI enemyAI;
+    public event Action<BaseDoor> OnDoorEntered;
     
-    public bool PlayerInInteractionRange { get; private set; }
-
     private void Awake()
     {
         enemyAI = GetComponentInParent<EnemyAI>();
@@ -15,17 +15,19 @@ public class EnemyQTETrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
-
-        PlayerInInteractionRange = true;
-        // 원래 QTE 시작 로직
-        if (enemyAI != null)
-            enemyAI.ChangeState(enemyAI.QTEState);
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
         if (other.CompareTag("Player"))
-            PlayerInInteractionRange = false;
+        {
+            if (enemyAI != null)
+            {
+                enemyAI.ChangeState(enemyAI.QTEState);
+            }
+        }
+        
+        if (other.gameObject.layer == LayerMask.NameToLayer("Door"))
+        {
+            BaseDoor door = other.GetComponent<BaseDoor>();
+            if (door != null)
+                OnDoorEntered?.Invoke(door);
+        }
     }
 }
