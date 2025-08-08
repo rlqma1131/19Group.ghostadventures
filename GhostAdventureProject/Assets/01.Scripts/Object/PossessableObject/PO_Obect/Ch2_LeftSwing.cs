@@ -6,7 +6,7 @@ public class Ch2_LeftSwing : BasePossessable
 {
     [SerializeField] private AudioClip swingSFX;
     [SerializeField] private Ch2_Kiosk targetKiosk;
-    [SerializeField] private Ch2_Computer targetComputer;
+    // [SerializeField] private Ch2_Computer targetComputer;
     [SerializeField] private GameObject q_Key;
     private int qteSuccessCount = 0;
     private int totalQTECount = 3;
@@ -73,8 +73,8 @@ public class Ch2_LeftSwing : BasePossessable
             // 컴퓨터, 키오스크 hasActivated = true 포함된 매서드 추가
             if (targetKiosk != null)
                 targetKiosk.Activate();
-            if(targetComputer != null)
-                targetComputer.Activate();
+            // if(targetComputer != null)
+            //     targetComputer.Activate();
             
             Unpossess();
             UIManager.Instance.PromptUI.ShowPrompt_Random("이 그네가…발전기…?", "어디선가... 전원이 켜지는 소리가 났어");

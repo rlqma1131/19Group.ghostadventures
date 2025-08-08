@@ -27,7 +27,7 @@ public class Ch2_Computer : BasePossessable
     [Header("Puzzle Settings")]
     [SerializeField] private string correctPassword;
     [SerializeField] private LockedDoor doorToOpen;
-    [SerializeField] private GameObject monitorOn;
+    // [SerializeField] private GameObject monitorOn;
 
     private Vector2 hiddenPos = new(0, -800);
     private Vector2 visiblePos = new(0, 0);
@@ -40,7 +40,7 @@ public class Ch2_Computer : BasePossessable
 
     protected override void Start()
     {
-        hasActivated = false;
+        // hasActivated = false;
         monitorPanel.anchoredPosition = hiddenPos;
         monitorPanel.gameObject.SetActive(false);
         passwordPanel.SetActive(false);
@@ -174,9 +174,9 @@ public class Ch2_Computer : BasePossessable
         passwordInput.ActivateInputField();
     }
 
-    public void Activate()
-    {
-        hasActivated = true;
-        monitorOn.SetActive(false);
-    }
+    // public void Activate()
+    // {
+    //     hasActivated = true;
+    //     monitorOn.SetActive(false);
+    // }
 }
