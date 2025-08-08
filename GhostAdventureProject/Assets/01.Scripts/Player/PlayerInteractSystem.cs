@@ -15,10 +15,7 @@ public class PlayerInteractSystem : MonoBehaviour
     
     private List<GameObject> nearbyInteractables = new();
 
-    private void Start()
-    {
-        eKey.SetActive(false);
-    }
+    
 
     private void Awake()
     {
@@ -31,6 +28,11 @@ public class PlayerInteractSystem : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+
+    private void Start()
+    {
+        eKey.SetActive(false);
     }
 
     private void Update()

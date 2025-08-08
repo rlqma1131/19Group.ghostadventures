@@ -28,7 +28,7 @@ public class MemoryFragment : BaseInteractable
     [SerializeField] private float ellipseRadiusX = 0.8f;
     [SerializeField] private float ellipseRadiusZ = 1.5f;
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     private void OnValidate()
     {
         if (!Application.isPlaying) return;

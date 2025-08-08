@@ -113,7 +113,8 @@ public class Ch2_MorseKey : BasePossessable
             currentMorseChar = "";
             UpdateUI();
         }
-        else if (Input.GetKeyDown(KeyCode.Q)) // 치트키
+#if UNITY_EDITOR
+        else if (Input.GetKeyDown(KeyCode.Q)) // 치트키 (에디터 전용)
         {
             decodedLetters.Clear();
             decodedLetters.AddRange(new char[] { 'H', 'E', 'L', 'P' });
@@ -121,6 +122,7 @@ public class Ch2_MorseKey : BasePossessable
 
             StartSuccessShake(); // 진동 + 확대 + 빨갛게
         }
+#endif
 
         if (isPressing && Input.GetMouseButtonUp(0))
         {
@@ -379,8 +381,11 @@ public class Ch2_MorseKey : BasePossessable
 
         yield return StartCoroutine(FadeOutPanel(0.2f));
 
+
         revealMemory(); // 기억 조각 나타남
         memory.ActivateHandPrint();
+
+        hasActivated = false; // 더 이상 빙의 불가능
     }
 
     private IEnumerator FadeInPanel(float duration)
@@ -413,7 +418,6 @@ public class Ch2_MorseKey : BasePossessable
             panelCanvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, t); // 점점 투명하게
             yield return null;
 
-            hasActivated = false; // 더 이상 빙의 불가능
             UIManager.Instance.PlayModeUI_OpenAll();
 
             Unpossess();

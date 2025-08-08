@@ -17,6 +17,9 @@ public class TimelineControl : MonoBehaviour
     private float skipTimer = 0f; // S 키를 누른 시간을 측정하는 타이머
     private const float SKIP_DURATION = 3.0f; // 스킵에 필요한 시간 (3초)
     [SerializeField] private string prompt;
+    
+    private MemoryScan memoryScan;
+
     private void Update()
     {
 
@@ -72,8 +75,9 @@ public class TimelineControl : MonoBehaviour
     private void Start()
     {
         flashingCoroutine = StartCoroutine(FlashImages());
-
+        memoryScan = GameManager.Instance.Player.GetComponent<MemoryScan>();
     }
+
     public void PauseTimeline()
     {
         Debug.Log("타임라인 일시정지");
@@ -100,11 +104,13 @@ public class TimelineControl : MonoBehaviour
         // 이전 BGM 복원
         SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
         SoundManager.Instance.RestoreLastBGM(1f);
+
         if(prompt != null)
         {
             UIManager.Instance.PromptUI.ShowPrompt(prompt, 3f);
         }
 
+        memoryScan.currentMemoryFragment.AfterScan();
     }
 
     private IEnumerator FlashImages()

@@ -26,6 +26,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
     {
         if (!bear.PlayerNearby)
             return;
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
