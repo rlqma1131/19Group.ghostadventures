@@ -40,7 +40,7 @@ public class Ch2_Computer : BasePossessable
 
     protected override void Start()
     {
-        hasActivated = true;
+        // hasActivated = false;
         monitorPanel.anchoredPosition = hiddenPos;
         monitorPanel.gameObject.SetActive(false);
         passwordPanel.SetActive(false);
