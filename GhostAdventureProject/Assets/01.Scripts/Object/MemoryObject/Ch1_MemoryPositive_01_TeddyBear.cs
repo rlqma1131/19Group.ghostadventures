@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
 {
-
     public bool Completed_TeddyBear = false;
     public bool PlayerNearby = false;
 

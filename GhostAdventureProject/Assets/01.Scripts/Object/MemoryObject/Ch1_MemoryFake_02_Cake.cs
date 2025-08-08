@@ -4,6 +4,7 @@ using UnityEngine.Rendering.Universal;
 
 public class Ch1_MemoryFake_02_Cake : MemoryFragment
 {
+    [SerializeField] private Animator hilightAnim;
     private Animator anim;
     private ParticleSystem _particleSystem;
     private Light2D _light;
@@ -25,9 +26,11 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
     {
         isScannable = false;
         anim.SetTrigger("Show");
-        Invoke(nameof(AfterScanEffect), 8f); // 애니메이션 재생 후 효과 실행
         highlight.SetActive(false); // 하이라이트 비활성화
+
+        AfterScanEffect(); // 애니메이션 재생 후 효과 실행
         ChapterEndingManager.Instance.CollectCh1Clue("H");
+        Debug.Log("[Cake] AfterScan 호출됨");
     }
 
     protected override void PlusAction()
