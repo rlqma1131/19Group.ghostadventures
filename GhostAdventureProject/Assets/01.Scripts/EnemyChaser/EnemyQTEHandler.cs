@@ -54,6 +54,9 @@ public class EnemyQTEHandler : MonoBehaviour
         animator.SetTrigger("QTEIn");
 
         PossessionSystem.Instance.CanMove = false;
+        // var playerCtrl = GameManager.Instance.Player.GetComponent<PlayerController>();
+        // if (playerCtrl != null) playerCtrl.enabled = false;
+        
         rb.velocity = Vector2.zero;
 
         if (qteEffect != null&& player != null)
@@ -69,17 +72,19 @@ public class EnemyQTEHandler : MonoBehaviour
             qteUI.StartQTE();
         }
     
-        yield return new WaitForSeconds(qteFreezeDuration);
+        yield return new WaitForSecondsRealtime(qteFreezeDuration);
 
         bool success = qteUI != null && qteUI.IsSuccess();
 
         if (success)
         {
+            // if (playerCtrl != null) playerCtrl.enabled = true;
+            PossessionSystem.Instance.CanMove = true;
+            
             animator.SetTrigger("QTESuccess");
             PlayerLifeManager.Instance.LosePlayerLife();
-            PossessionSystem.Instance.CanMove = true;
 
-            yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+            yield return new WaitForSecondsRealtime(animator.GetCurrentAnimatorStateInfo(0).length);
 
             transform.position = startPosition;
             enemy.ChangeState(enemy.PatrolState);
