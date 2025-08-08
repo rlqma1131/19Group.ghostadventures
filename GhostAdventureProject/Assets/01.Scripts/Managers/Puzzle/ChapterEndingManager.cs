@@ -5,21 +5,20 @@ public class ChapterEndingManager : Singleton<ChapterEndingManager>
 {
     private HashSet<string> collectedFakeMemories = new();
     private HashSet<string> collectedAllCh1Clue = new();
-    
+
     /// <summary>
     /// Update문으로 진엔딩 조건 확인 가능
     /// </summary>
-    
+
+
+    [SerializeField] private bool allCh1CluesCollected; // 인스펙터에서 확인용
+    public bool AllCh1CluesCollected() => allCh1CluesCollected;
 
     public void CollectCh1Clue(string clueId)
     {
         collectedAllCh1Clue.Add(clueId);
+        allCh1CluesCollected = collectedAllCh1Clue.Count >= 4; // 4개 이상 모으면 true
         Debug.Log($"단서 수집: {clueId}");
-    }
-
-    public bool AllCh1CluesCollected()
-    {
-        return collectedAllCh1Clue.Count >= 4;
     }
 
     public void CollectFakeMemory(string id)

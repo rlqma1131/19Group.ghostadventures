@@ -14,6 +14,9 @@ public class Ch1_GarageEventManager : MonoBehaviour
     private bool isCutscenePlaying2 = false;
     [SerializeField] EnergyRestoreZone energyRestoreZone;
 
+    private bool playerNearby = false;
+    private bool openKeyboard = false;
+
     public KeyBoard_Enter Answer => answer;
 
     void Start()
@@ -25,12 +28,14 @@ public class Ch1_GarageEventManager : MonoBehaviour
 
     void Update()
     {
-        if (!bear.PlayerNearby)
+        //if (!bear.PlayerNearby)
+        //    return;
+        if (!playerNearby)
             return;
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
+            if (!ChapterEndingManager.Instance.AllCh1CluesCollected() && !answer.correct)
             {
                 UIManager.Instance.PromptUI.ShowPrompt("...아무 일도 일어나지 않았다.", 2f);
             }
@@ -39,11 +44,21 @@ public class Ch1_GarageEventManager : MonoBehaviour
             {
                 if (!isCutscenePlaying)
                 {
+                    PlayerInteractSystem.Instance.eKey.SetActive(false);
                     // [컷씬] 꼬마유령 이벤트
                     PossessionSystem.Instance.CanMove = false;
+                    GameManager.Instance.PlayerController.animator.SetBool("Move", false);
                     UIManager.Instance.PlayModeUI_CloseAll();
                     energyRestoreZone.IsActive = false; // 에너지 회복존 비활성화
                     cutsceneDirector.Play();
+                }
+                else if (isCutscenePlaying && !openKeyboard && !answer.correct)
+                {
+                    PlayerInteractSystem.Instance.eKey.SetActive(false);
+
+                    openKeyboard = true;
+                    keyboard.OpenKeyBoard();
+                    PossessionSystem.Instance.CanMove = false;
                 }
             }
         }
@@ -62,6 +77,24 @@ public class Ch1_GarageEventManager : MonoBehaviour
             // 기억조각 스캔 가능하도록 활성화
             bear.ActivateTeddyBear();
             EnemyAI.PauseAllEnemies();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            playerNearby = true;
+            PlayerInteractSystem.Instance.eKey.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            playerNearby = false;
+            PlayerInteractSystem.Instance.eKey.SetActive(false);
         }
     }
 

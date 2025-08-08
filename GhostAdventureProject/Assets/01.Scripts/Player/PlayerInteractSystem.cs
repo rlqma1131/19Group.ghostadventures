@@ -15,8 +15,6 @@ public class PlayerInteractSystem : MonoBehaviour
     
     private List<GameObject> nearbyInteractables = new();
 
-    
-
     private void Awake()
     {
         if (Instance == null)
@@ -28,11 +26,6 @@ public class PlayerInteractSystem : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-    }
-
-    private void Start()
-    {
-        eKey.SetActive(false);
     }
 
     private void Update()
@@ -78,6 +71,16 @@ public class PlayerInteractSystem : MonoBehaviour
         // 새 오브젝트 처리
         if (currentClosest != null)
         {
+            if(currentClosest.TryGetComponent<MemoryFragment>(out var memory))
+            {
+                if (!memory.IsScannable)
+                {
+                    eKey.SetActive(false);
+                    memory.SetHighlight(false);
+                    return;
+                }
+            }
+
             // 팝업 켜기
             if (currentClosest.TryGetComponent<BaseInteractable>(out var nextInteractable))
             {

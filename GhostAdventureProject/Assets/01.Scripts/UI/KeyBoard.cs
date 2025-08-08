@@ -66,6 +66,7 @@ public class KeyBoard : MonoBehaviour, IUIClosable
 
         keyBoardPanel.SetActive(false);
         UIManager.Instance.PlayModeUI_OpenAll();
+        PossessionSystem.Instance.CanMove = true;
     }
 
     public bool IsOpen()
