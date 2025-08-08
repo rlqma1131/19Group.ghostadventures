@@ -198,13 +198,13 @@ public class Inventory_PossessableObject : MonoBehaviour
         //     CancelPlacement();
         // }
 
-        if (Input.GetKeyDown(KeyCode.Alpha5))
+        if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
             SelectSlot(0);
 
-        if (Input.GetKeyDown(KeyCode.Alpha6))
+        if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
             SelectSlot(1);
             
-        if (Input.GetKeyDown(KeyCode.Alpha7))
+        if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
             SelectSlot(2);
 
         // if (Input.GetKeyDown(KeyCode.Q))

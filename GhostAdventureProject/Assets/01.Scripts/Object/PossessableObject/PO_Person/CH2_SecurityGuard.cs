@@ -38,6 +38,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         moveSpeed = 2f;
         hasActivated = false;
         isInOffice = true;
+        targetPerson = GetComponent<PersonConditionUI>();
         targetPerson.currentCondition = PersonCondition.Unknown;
     }
 
@@ -128,14 +129,16 @@ public class CH2_SecurityGuard : MoveBasePossessable
         }
 
         // 단서 관련 로직 (추후 수정예정)---------------------------
-        if (isPossessed && Input.GetKeyDown(KeyCode.Alpha7) && !oneTimeShowClue)
+        if (isPossessed && Input.GetKeyDown(KeyCode.Alpha7) &&!oneTimeShowClue || 
+            isPossessed && Input.GetKeyDown(KeyCode.Keypad7) && !oneTimeShowClue)
         {
             UIManager.Instance.InventoryExpandViewerUI.OnClueHidden += ShowText;
             oneTimeShowClue = true;
             PuzzleStateManager.Instance.MarkPuzzleSolved("메모3");
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4))
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)||
+        Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Keypad2) || Input.GetKeyDown(KeyCode.Keypad3) || Input.GetKeyDown(KeyCode.Keypad4))
         {
             UIManager.Instance.InventoryExpandViewerUI.OnClueHidden -= ShowText;
         }
