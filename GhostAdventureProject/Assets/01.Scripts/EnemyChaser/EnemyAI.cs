@@ -87,7 +87,8 @@ public class EnemyAI : MonoBehaviour
     public void StartSoundTeleport(Vector3 playerPos, float offsetDistance, float chaseDuration)
     {
         if (soundChaseCoroutine != null)
-            StopCoroutine(soundChaseCoroutine);
+            return;
+        
         soundChaseCoroutine = StartCoroutine(SoundTeleportRoutine(playerPos, offsetDistance, chaseDuration));
     }
 
@@ -118,6 +119,7 @@ public class EnemyAI : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(chaseDuration);
 
+        soundChaseCoroutine = null;
         isTeleporting = true;
 
         SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
