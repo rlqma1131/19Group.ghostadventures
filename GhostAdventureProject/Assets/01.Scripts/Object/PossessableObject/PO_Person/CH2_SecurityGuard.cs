@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using DG.Tweening;
+using System.Linq;
+
 
 public enum GuardState { Idle, MovingToRadio, TurnOffRadio, MovingToBench, Resting, MovingToOffice, InOffice, Work, Roading }
 
@@ -26,11 +28,13 @@ public class CH2_SecurityGuard : MoveBasePossessable
     public PersonConditionHandler conditionHandler;
     [SerializeField] private GameObject q_Key;
     // private bool isNearDoor = false;
+    private HaveItem haveitem;
     private bool isInOffice;// 경비실 안에 있는지 확인
     private bool oneTimeShowClue = false; // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만)
     public bool isdoorLockOpen; // 도어락 스크립트에서 정보 넣어줌
     public bool doorPass = false;
     public bool oneTimeActionDelete = false;
+    public bool UseAllItem = false;
 
     // 처음 시작시 빙의불가(경비실안에 있음)
     protected override void Start()
@@ -39,6 +43,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         moveSpeed = 2f;
         hasActivated = false;
         isInOffice = true;
+        haveitem = GetComponent<HaveItem>();
         targetPerson = GetComponent<PersonConditionUI>();
         targetPerson.currentCondition = PersonCondition.Unknown;
     }
@@ -125,9 +130,23 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 OnDoorInteract();
                 return;
             }
-            zoomCamera.Priority = 5;
-            Unpossess();
+
+            if (haveitem.IsInventoryEmpty())
+            {
+                zoomCamera.Priority = 5;
+                Unpossess();
+                hasActivated = false;
+                UseAllItem = true;
+            }
+            else
+                UIManager.Instance.PromptUI.ShowPrompt("뭔가 더 얻을 수 있는게 있을것 같아");
         }
+                
+
+            // zoomCamera.Priority = 5;
+            // Unpossess();
+            
+        
 
         // 단서 관련 로직 (추후 수정예정)---------------------------
         if (isPossessed && Input.GetKeyDown(KeyCode.Alpha7) &&!oneTimeShowClue || 
@@ -234,6 +253,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         {
             anim.SetBool("Move", false);
             anim.SetBool("Work", true);
+            targetPerson.currentCondition = PersonCondition.Vital;
         }
     }
 
@@ -280,17 +300,15 @@ public class CH2_SecurityGuard : MoveBasePossessable
             targetPerson.currentCondition = PersonCondition.Unknown;
         }
     }
-    // private void OnTriggerStay2D(Collider2D other)
-    // {
-    //     base.OnTriggerEnter2D(other);
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        base.OnTriggerEnter2D(other);
 
-    //     if(other.CompareTag("In"))
-    //     {
-    //         isInOffice = true;
-    //         hasActivated = false;
-    //         targetPerson.currentCondition = PersonCondition.Unknown;
-    //     }
-    // }
+        if(other.CompareTag("In"))
+        {
+            targetPerson.currentCondition = PersonCondition.Unknown;
+        }
+    }
     
     protected override void OnTriggerExit2D(Collider2D collision)
     {

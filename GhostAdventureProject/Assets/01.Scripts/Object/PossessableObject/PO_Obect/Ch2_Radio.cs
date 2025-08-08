@@ -30,6 +30,8 @@ public class Ch2_Radio : BasePossessable
 
     protected override void Update()
     {
+        if(guard.UseAllItem)
+            hasActivated = false;
 
         if(IsPlaying)
         {
