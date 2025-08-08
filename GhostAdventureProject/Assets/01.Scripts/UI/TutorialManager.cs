@@ -23,7 +23,8 @@ public enum TutorialStep
     SecurityGuard_InOffice,
     BlackShadow,
     CollectedAllMemoClue,
-    Test
+    Test,
+    TouchBat
 }
 public class TutorialManager : Singleton<TutorialManager>
 {
@@ -109,6 +110,9 @@ public class TutorialManager : Singleton<TutorialManager>
                 break;
             case TutorialStep.CollectedAllMemoClue:
                 CollectedAllMemoClue();
+                break;
+            case TutorialStep.TouchBat:
+                prompt.ShowPrompt("박쥐를 건드리면 안돼");
                 break;
 
 

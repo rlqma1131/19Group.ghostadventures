@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Ch1_Clock : BasePossessable
 {
+    [SerializeField] private Button initializeBtn;
     [SerializeField] private AudioClip ticktock;
     [SerializeField] private Image zoomPanel;
     [SerializeField] private RectTransform clockPos; // 두트윈 시작 위치
@@ -36,6 +37,8 @@ public class Ch1_Clock : BasePossessable
 
         // 시곗바늘 위치 초기화
         UpdateHands();
+
+        initializeBtn.onClick.AddListener(OnClickInitialize);
     }
 
     protected override void Update()
@@ -104,6 +107,11 @@ public class Ch1_Clock : BasePossessable
             hourHand.localRotation = Quaternion.Euler(0, 0, 0);
         if (minuteHand != null)
             minuteHand.localRotation = Quaternion.Euler(0, 0, 0);
+
+        hour = 0;
+        minute = 0;
+
+        SoundManager.Instance.PlaySFX(ticktock);
     }
 
     private void ShowClockUI()

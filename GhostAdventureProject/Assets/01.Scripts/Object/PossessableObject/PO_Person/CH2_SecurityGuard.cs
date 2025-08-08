@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using DG.Tweening;
 
 public enum GuardState { Idle, MovingToRadio, TurnOffRadio, MovingToBench, Resting, MovingToOffice, InOffice, Work, Roading }
 
@@ -27,7 +28,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     // private bool isNearDoor = false;
     private bool isInOffice;// 경비실 안에 있는지 확인
     private bool oneTimeShowClue = false; // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만)
-    public bool isdoorLockOpen;
+    public bool isdoorLockOpen; // 도어락 스크립트에서 정보 넣어줌
     public bool doorPass = false;
 
     // 처음 시작시 빙의불가(경비실안에 있음)
@@ -42,14 +43,11 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
     protected override void Update()
     {
-        Debug.Log(isPossessed);
         if (radio != null && radio.IsPlaying)
         {
             // anim.Play("Idle");
             state = GuardState.MovingToRadio;
         }
-        
-        
         
         switch (state)
         {
@@ -109,6 +107,12 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
         if (!isPossessed)
             return;
+        
+        if(radio.IsPlaying)
+        {
+            radio.triggerSound_Person.DOFade(0f, 1.5f)
+            .OnComplete(() => radio.triggerSound_Person.Stop());
+        }
 
         Move();
 
@@ -123,10 +127,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
             Unpossess();
         }
 
-        if (isPossessed)
-        {
-            // anim.Play("Idle");
-        }
         // 단서 관련 로직 (추후 수정예정)---------------------------
         if (isPossessed && Input.GetKeyDown(KeyCode.Alpha7) && !oneTimeShowClue)
         {
@@ -162,6 +162,33 @@ public class CH2_SecurityGuard : MoveBasePossessable
             }
         }
     }
+
+    // protected override void Move()
+    // {
+    //     float h = Input.GetAxis("Horizontal");
+
+    //     Vector3 move = new Vector3(h, 0, 0);
+
+    //     // 이동 여부 판단
+    //     bool isMoving = move.sqrMagnitude > 0.01f;
+
+    //     if (anim != null)
+    //     {
+   
+    //             anim.SetBool("Move", isMoving);
+    //     }
+
+    //     if (isMoving)
+    //     {
+    //         transform.position += move * moveSpeed * Time.deltaTime;
+
+    //         // 좌우 Flip
+    //         if (spriteRenderer != null && Mathf.Abs(h) > 0.01f)
+    //         {
+    //             spriteRenderer.flipX = h < 0f;
+    //         }
+    //     }
+    // }
 
     // 목적지 도착시 처리
     void OnDestinationReached(Vector3 destination)
@@ -223,6 +250,8 @@ public class CH2_SecurityGuard : MoveBasePossessable
             TutorialManager.Instance.Show(TutorialStep.SecurityGuard_GoToRadio);
         }
     }
+
+    
     
 
     public override void OnQTESuccess()
@@ -293,9 +322,12 @@ public class CH2_SecurityGuard : MoveBasePossessable
         anim.SetBool("Move", false);
         roadingTimer = 0f;
     }
-    public override void OnPossessionEnterComplete()
-    {
+    public override void OnPossessionEnterComplete() 
+    {       
         base.OnPossessionEnterComplete();
+            radio.triggerSound_Person.DOFade(0f, 5f)
+            .OnComplete(() => radio.triggerSound_Person.Stop());
+    
     }
 
     // 단서 획득시 대사 출력

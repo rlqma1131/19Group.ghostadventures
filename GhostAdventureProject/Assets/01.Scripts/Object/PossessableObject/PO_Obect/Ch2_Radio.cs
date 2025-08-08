@@ -83,7 +83,10 @@ public class Ch2_Radio : BasePossessable
             hasTriggered_Person = true;
             guard.targetPerson.SetCondition(PersonCondition.Tired);
             Debug.Log(guard.conditionHandler);
-            // AttractPerson();
+            zoomRadio.SetActive(false);
+            zoomCamera.Priority = 5;
+            UIManager.Instance.PlayModeUI_OpenAll();
+            Unpossess();
         }
         // needle의 위치가 트리거 위치에 멀어지면 사운드 중지.
         if (hasTriggered_Person && Mathf.Abs(needle.transform.localPosition.x - triggerX_Person) >= 0.01f)
@@ -99,6 +102,12 @@ public class Ch2_Radio : BasePossessable
             hasTriggered_Enemy = true;
             SoundTrigger.TriggerSound(transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
             Debug.Log(guard.conditionHandler);
+            zoomRadio.SetActive(false);
+            zoomCamera.Priority = 5;
+            UIManager.Instance.PlayModeUI_OpenAll();
+            Unpossess();
+            
+            
             // AttractPerson();
             UIManager.Instance.PromptUI.ShowPrompt("음악이 나왔어. 누군가 반응할지도 몰라.");
             

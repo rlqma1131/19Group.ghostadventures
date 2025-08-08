@@ -3,7 +3,7 @@
 public class YameDoor : MonoBehaviour
 {
     [SerializeField] private CH2_SecurityGuard guard;
-    // [SerializeField] private GameObject e_key;
+    [SerializeField] private GameObject e_key;
     [SerializeField] private GameObject targetDoor;
     [SerializeField] private GameObject closeSprite;
     [SerializeField] private GameObject player;
@@ -13,6 +13,7 @@ public class YameDoor : MonoBehaviour
      void Start()
     {
         player = FindObjectOfType<PlayerController>().gameObject;
+        e_key.SetActive(false);
     }
 
     void Update()
@@ -34,6 +35,10 @@ public class YameDoor : MonoBehaviour
         {
             guard.doorPass = true;
             moveAble = true;
+            if(guard.isdoorLockOpen)
+            {
+                e_key.SetActive(true);
+            }
         }
     }
 
@@ -43,6 +48,11 @@ public class YameDoor : MonoBehaviour
         {
             guard.doorPass = false;
             moveAble = false;
+            if(guard.isdoorLockOpen)
+            {
+                e_key.SetActive(false);
+            }
+
         }
     }
 }

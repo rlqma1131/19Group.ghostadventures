@@ -30,6 +30,7 @@ public class Ch2_Bat_Trigger : MonoBehaviour
             triggerOn = true;
             SoundTrigger.TriggerSound(collision.transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
             Debug.Log("박쥐에 부딪혔습니다. 사운드트리거 발생");
+            TutorialManager.Instance.Show(TutorialStep.TouchBat);
         }
     }
 

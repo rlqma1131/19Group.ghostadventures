@@ -93,17 +93,24 @@ public class Ch2_CCTV : BasePossessable
         if (other.CompareTag("Player"))
         {
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
-            if (!isRight)
-            {
-                highlightAnimator.Play("Ch2_CCTV_Right");
-            }
-            else
-            {
-                highlightAnimator.Play("Ch2_CCTV_Left");
-            }
+
+            Invoke(nameof(PlayHighlightAnim), 0.01f); // 0.01초 후 실행
         }
     }
-    
+
+    private void PlayHighlightAnim()
+    {
+        if (highlightAnimator != null && highlightAnimator.gameObject.activeInHierarchy)
+        {
+            highlightAnimator.SetBool("Right", isRight);
+            Debug.Log($"CCTV 하이라이트 bool Right : {isRight}");
+        }
+        else
+        {
+            Debug.Log($"현재 하이라이터 상태 : {highlightAnimator.gameObject.activeInHierarchy}");
+        }
+    }
+
     public override void CantPossess()
     {
         UIManager.Instance.PromptUI.ShowPrompt("전력이 끊겨있는 것 같아", 2f);

@@ -56,8 +56,8 @@ public class Ch2_DoorLock : BaseInteractable
         guard.isdoorLockOpen = doorOpen;
         q_Key.SetActive(false);
         inventory.TryUseSelectedItem();   
-        this.gameObject.SetActive(false);
         closeDoorSprite.SetActive(false);
+        this.gameObject.SetActive(false);
     }
     
     protected override void OnTriggerEnter2D(Collider2D collision)
