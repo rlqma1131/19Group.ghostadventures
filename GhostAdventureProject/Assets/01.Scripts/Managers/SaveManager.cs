@@ -13,12 +13,14 @@ public class SaveData
     public List<string> collectedMemoryIDs;      // memoryID (MemoryData의 고유값)
     public List<string> scannedMemoryTitles;     // memoryTitle
 
+    public List<string> solvedPuzzleIDs;
     // 인벤토리, 능력치 등 추가
 }
 
 public static class SaveManager
 {
     private static string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
+    private static SaveData currentData;
 
     public static void SaveGame(SaveData data)
     {
@@ -36,12 +38,30 @@ public static class SaveManager
         }
 
         string json = File.ReadAllText(SavePath);
-        return JsonUtility.FromJson<SaveData>(json);
+        currentData = JsonUtility.FromJson<SaveData>(json);
+        return currentData;
     }
 
     public static void DeleteSave()
     {
         if (File.Exists(SavePath))
             File.Delete(SavePath);
+    }
+
+    public static bool IsPuzzleSolved(string puzzleID)
+    {
+        return currentData?.solvedPuzzleIDs?.Contains(puzzleID) ?? false;
+    }
+
+    public static void MarkPuzzleSolved(string puzzleID)
+    {
+        if (currentData == null)
+            currentData = new SaveData();
+
+        if (currentData.solvedPuzzleIDs == null)
+            currentData.solvedPuzzleIDs = new List<string>();
+
+        if (!currentData.solvedPuzzleIDs.Contains(puzzleID))
+            currentData.solvedPuzzleIDs.Add(puzzleID);
     }
 }
