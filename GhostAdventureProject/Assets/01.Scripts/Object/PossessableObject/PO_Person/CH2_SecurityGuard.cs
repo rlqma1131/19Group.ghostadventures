@@ -30,6 +30,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     private bool oneTimeShowClue = false; // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만)
     public bool isdoorLockOpen; // 도어락 스크립트에서 정보 넣어줌
     public bool doorPass = false;
+    public bool oneTimeActionDelete = false;
 
     // 처음 시작시 빙의불가(경비실안에 있음)
     protected override void Start()
@@ -136,11 +137,14 @@ public class CH2_SecurityGuard : MoveBasePossessable
             oneTimeShowClue = true;
             PuzzleStateManager.Instance.MarkPuzzleSolved("메모3");
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)||
-        Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Keypad2) || Input.GetKeyDown(KeyCode.Keypad3) || Input.GetKeyDown(KeyCode.Keypad4))
+        if(oneTimeShowClue && !oneTimeActionDelete)
         {
-            UIManager.Instance.InventoryExpandViewerUI.OnClueHidden -= ShowText;
+            if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)||
+            Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Keypad2) || Input.GetKeyDown(KeyCode.Keypad3) || Input.GetKeyDown(KeyCode.Keypad4))
+            {
+                UIManager.Instance.InventoryExpandViewerUI.OnClueHidden -= ShowText;
+                oneTimeActionDelete = true;
+            }
         }
     }
 

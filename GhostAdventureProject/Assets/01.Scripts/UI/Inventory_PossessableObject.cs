@@ -89,7 +89,7 @@ public class Inventory_PossessableObject : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void Clear()
+    public void Clear()
     {
         foreach (var slot in spawnedSlots)
         {

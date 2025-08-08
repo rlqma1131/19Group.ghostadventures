@@ -133,6 +133,9 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // 타이틀로
     public void GoToMainMenu()
     {
+        UIManager.Instance.Inventory_PossessableObjectUI.Clear();
+        UIManager.Instance.Inventory_PossessableObjectUI.HideInventory();
+        UIManager.Instance.Inventory_PlayerUI.RemoveClueBeforeStage();
         UIManager.Instance.PlayModeUI_CloseAll();
         escMenuUI.SetActive(false);
         Time.timeScale = 1f;
