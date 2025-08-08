@@ -58,6 +58,11 @@ public class SoundManager : Singleton<SoundManager>
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    private void Start()
+    {
+        InitSFXPool(); // ← 이것만 넣으면 sfxPool 채워짐
+    }
+
     // 씬 이름 → SceneType 변환
     private SceneType GetSceneType(string sceneName)
     {
@@ -262,12 +267,18 @@ public class SoundManager : Singleton<SoundManager>
     public void SetSFXVolume(float sliderValue)
     {
         float adjustedVolume = Mathf.Pow(sliderValue, 2f); // 지수 적용
-        bgmSource.volume = adjustedVolume;
 
-        //foreach (var source in sfxPool)
-        //{
-        //    source.volume = adjustedVolume;
-        //}
+        if (sfxSource) 
+            sfxSource.volume = adjustedVolume;
+
+        if (sfxLoopSource) 
+            sfxLoopSource.volume = adjustedVolume;
+
+        if (enemySource) 
+            enemySource.volume = adjustedVolume;
+
+        foreach (var source in sfxPool) 
+            source.volume = adjustedVolume;
     }
 
     //public void SetBGMMute(bool mute)

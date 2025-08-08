@@ -6,29 +6,24 @@ using UnityEngine.UI;
 
 public class StartScene_Surveyh : MonoBehaviour
 {
-
     private Image targetImage;
-
+    private Sequence rainbowSequence;
 
     private void Awake()
     {
         targetImage = GetComponent<Image>();
     }
+
     private void Start()
     {
-        
-        
-        Vector3  targetScale = transform.localScale * 1.2f;
+        Vector3 targetScale = transform.localScale * 1.2f;
 
-        transform.DOScale(targetScale, 0.5f).SetLoops(-1, LoopType.Yoyo)
-            .SetEase(Ease.InOutSine);
-
-
-
+        transform.DOScale(targetScale, 0.5f)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine)
+            .SetLink(gameObject); // 오브젝트 Destroy 시 자동 Kill
 
         StartRainbowColorLoop();
-
-
     }
 
     void StartRainbowColorLoop()
@@ -39,7 +34,6 @@ public class StartScene_Surveyh : MonoBehaviour
             return;
         }
 
-        // 무지개 색상 배열 (빨, 주, 노, 초, 파, 남, 보)
         Color[] rainbowColors = new Color[]
         {
             Color.red,
@@ -53,14 +47,22 @@ public class StartScene_Surveyh : MonoBehaviour
 
         float durationPerColor = 0.5f;
 
-        Sequence rainbowSequence = DOTween.Sequence();
+        rainbowSequence = DOTween.Sequence();
 
         foreach (Color color in rainbowColors)
         {
-            rainbowSequence.Append(targetImage.DOColor(color, durationPerColor));
+            rainbowSequence.Append(
+                targetImage.DOColor(color, durationPerColor)
+                .SetLink(gameObject) // 오브젝트 Destroy 시 자동 Kill
+            );
         }
 
-        rainbowSequence.SetLoops(-1);
+        rainbowSequence.SetLoops(-1)
+            .SetLink(gameObject);
     }
 
+    private void OnDestroy()
+    {
+        rainbowSequence?.Kill(); // 혹시 모를 잔여 트윈 수동 종료
+    }
 }
