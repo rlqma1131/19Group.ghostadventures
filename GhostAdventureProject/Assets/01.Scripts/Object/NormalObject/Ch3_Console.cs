@@ -50,9 +50,6 @@ public class Ch3_Console : BaseInteractable
                 return;
 
             inventory = Inventory_PossessableObject.Instance;
-            
-            Debug.Log("인벤토리: " + inventory);
-            Debug.Log("카드키: " + cardKey);
 
             if (inventory == null || cardKey != inventory.selectedItem()
                 || !PossessionStateManager.Instance.IsPossessing())
