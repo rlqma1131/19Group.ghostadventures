@@ -12,11 +12,13 @@ public class Ch2_BackStreetObj : MonoBehaviour
     [SerializeField] private Transform fallTargetPoint;
     
     [Header("연출 설정")]
-    [SerializeField] private float fadeInTime = 0.5f;
-    [SerializeField] private float fadeOutTime = 1.0f;
+    [SerializeField]
+    public float fadeInTime = 0.5f;
+    [SerializeField] public float fadeOutTime = 1.0f;
     [SerializeField] private float moveDownDistance = 100f;
-    [SerializeField] private float moveDownTime = 0.7f;
-    
+    [SerializeField] public float moveDownTime = 0.7f;
+    [SerializeField] public float holdTime;
+
     public void OnFinalClueActivated()
     {
         Sequence seq = DOTween.Sequence();
