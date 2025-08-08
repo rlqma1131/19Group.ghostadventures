@@ -43,8 +43,8 @@ public class Ch1_Clock : BasePossessable
 
     protected override void Update()
     {
-        if (!PuzzleStateManager.Instance.IsPuzzleSolved("편지")) return;
-        if (!PuzzleStateManager.Instance.IsPuzzleSolved("시계")) hasActivated = true;
+        if (!SaveManager.IsPuzzleSolved("편지")) return;
+        if (!SaveManager.IsPuzzleSolved("시계")) hasActivated = true;
         if (!isPossessed) return;
         
         UI.SetActive(true); 
@@ -82,7 +82,7 @@ public class Ch1_Clock : BasePossessable
         if (hour == 8 && minute == 14)
         {
             Debug.Log("정답");
-            PuzzleStateManager.Instance.MarkPuzzleSolved("시계");
+            SaveManager.MarkPuzzleSolved("시계");
             tvObject.ActivateTV();
             isControlMode = false;
             HideClockUI();
@@ -151,9 +151,9 @@ public class Ch1_Clock : BasePossessable
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
-        if(!PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
+        if(!SaveManager.IsPuzzleSolved("시계"))
         {
-            if(PuzzleStateManager.Instance.IsPuzzleSolved("편지"))
+            if(SaveManager.IsPuzzleSolved("편지"))
             {
                 UIManager.Instance.PromptUI.ShowPrompt("시간을 떠올릴만한 숫자를 본 거 같은데");
                 if(hasActivated)

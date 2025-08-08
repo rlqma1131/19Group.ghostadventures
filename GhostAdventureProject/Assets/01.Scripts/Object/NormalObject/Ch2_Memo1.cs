@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -64,8 +64,7 @@ public class Ch2_Memo1 : MonoBehaviour
         if (!string.IsNullOrEmpty(promptMessage))
         {
             UIManager.Instance.PromptUI.ShowPrompt(promptMessage, 2f);
-            PuzzleStateManager.Instance.MarkPuzzleSolved(promptMessage);
-            Debug.Log("퍼즐이 저장되었습니다" + promptMessage);
+            SaveManager.MarkPuzzleSolved(promptMessage);
         }
     }
 

@@ -154,7 +154,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         {
             UIManager.Instance.InventoryExpandViewerUI.OnClueHidden += ShowText;
             oneTimeShowClue = true;
-            PuzzleStateManager.Instance.MarkPuzzleSolved("메모3");
+            SaveManager.MarkPuzzleSolved("메모3");
         }
         if(oneTimeShowClue && !oneTimeActionDelete)
         {

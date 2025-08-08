@@ -25,9 +25,18 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
     {
         isScannable = false;
         anim.SetTrigger("Show");
-        Invoke(nameof(AfterScanEffect), 8f); // 애니메이션 재생 후 효과 실행
-        highlight.SetActive(false); // 하이라이트 비활성화
+
+        AfterScanEffect(); // 애니메이션 재생 후 효과 실행
         ChapterEndingManager.Instance.CollectCh1Clue("H");
+        Debug.Log("[Cake] AfterScan 호출됨");
+
+        Invoke("HighlightOff", 1f);
+    }
+
+    void HighlightOff()
+    {
+        highlight.SetActive(false); // 하이라이트 비활성화
+        Debug.Log("하이라이트 오프함");
     }
 
     protected override void PlusAction()
@@ -44,11 +53,11 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         base.OnTriggerEnter2D(other);
-        if(other.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("후라이팬"))
+        if(other.CompareTag("Player") && !SaveManager.IsPuzzleSolved("후라이팬"))
         {
             UIManager.Instance.PromptUI.ShowPrompt("쥐를 먼저 쫒아내야겠어");
         }
-        else if(other.CompareTag("Player") && PuzzleStateManager.Instance.IsPuzzleSolved("후라이팬"))
+        else if(other.CompareTag("Player") && SaveManager.IsPuzzleSolved("후라이팬"))
         {
             TutorialManager.Instance.Show(TutorialStep.Cake_Prompt);
         } 

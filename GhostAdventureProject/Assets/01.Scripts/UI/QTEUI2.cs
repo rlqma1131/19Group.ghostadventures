@@ -41,10 +41,18 @@ public class QTEUI2 : MonoBehaviour
             return;
         
         qteUI.SetActive(true);
+        success.gameObject.SetActive(false);
+        fail.gameObject.SetActive(false);
+        
+        gaugeBar.fillAmount = 0f;
+        timeText.text = timeLimit.ToString("F2");
+        
         currentPressCount = 0;
         currentTime = 0f;
-        gaugeBar.fillAmount = 0f;
+        isSuccess = false;
+        isdead = false;
         isRunning = true;
+        
         camera = GameManager.Instance.Player.GetComponent<PlayerCamera>().currentCam;
         currentSize = camera.m_Lens.OrthographicSize;
         noise = camera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();

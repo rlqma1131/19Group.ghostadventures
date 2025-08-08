@@ -16,7 +16,7 @@ public class MemoryScan : MonoBehaviour
     private bool isScanning = false;
     private bool isNearMemory = false;
     [SerializeField] private GameObject currentScanObject; // 현재 스캔 대상 오브젝트
-    [SerializeField] private MemoryFragment currentMemoryFragment;
+    [SerializeField] public MemoryFragment currentMemoryFragment;
 
     [SerializeField] private AudioClip scanSound;
 
@@ -149,6 +149,8 @@ public class MemoryScan : MonoBehaviour
 
     private void CompleteScan()
     {
+        
+
         Debug.Log("스캔 완료");
         isScanning = false;
         Time.timeScale = 1f; // 시간 흐름을 원래대로 복구
@@ -174,8 +176,8 @@ public class MemoryScan : MonoBehaviour
         //Time.timeScale = 0f; // 시간 흐름을 원래대로 복구
 
         //각 오브젝트 별로 기억 재생 이후 구현할 메서드
+        //currentMemoryFragment.AfterScan();
 
-        currentMemoryFragment.AfterScan();
 
         // 저장
         //SaveData data = new SaveData

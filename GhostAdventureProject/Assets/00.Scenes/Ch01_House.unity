@@ -132,7 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 541727}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Doors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3513,6 +3513,10 @@ PlayableDirector:
     value: {fileID: 458521773}
   - key: {fileID: -2517446536098946918, guid: 6da0372867de6fb4ca1bfd4f9670aaac, type: 2}
     value: {fileID: 1690697989}
+  - key: {fileID: 4408017980636523580, guid: 6da0372867de6fb4ca1bfd4f9670aaac, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 2846433700217044719, guid: 6da0372867de6fb4ca1bfd4f9670aaac, type: 2}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References:
     - 1609bd3a04df51744996c65c7cf74995: {fileID: 1623621088}
@@ -6412,6 +6416,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusRestoreAmount: 1
   reduceInterval: 2
+  IsActive: 1
 --- !u!60 &479120166
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -6883,6 +6888,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 269600931674015291, guid: 1703e448a5ca7a342967e350eb3f4102, type: 3}
+      propertyPath: energyRestoreZone
+      value: 
+      objectReference: {fileID: 909562181}
     - target: {fileID: 1062618122690913725, guid: 1703e448a5ca7a342967e350eb3f4102, type: 3}
       propertyPath: m_sharedMaterial
       value: 
@@ -8557,8 +8566,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.64035, y: 1.2276, z: 0}
-    m_Extent: {x: 9.35475, y: 5.2264, z: 0}
+    m_Center: {x: 5.6414, y: 1.22825, z: 0}
+    m_Extent: {x: 9.354099, y: 5.22515, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -8637,6 +8646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusRestoreAmount: 1
   reduceInterval: 2
+  IsActive: 1
 --- !u!1 &613175867
 GameObject:
   m_ObjectHideFlags: 0
@@ -8703,8 +8713,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.48685, y: -5.4952497, z: 0}
-    m_Extent: {x: 23.81945, y: 17.333149, z: 0}
+    m_Center: {x: 5.4861994, y: -5.4944496, z: 0}
+    m_Extent: {x: 23.818901, y: 17.33375, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -9888,13 +9898,25 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 6594921194536100913, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
+      propertyPath: doorBlockDuration
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6594921194536100913, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
+      propertyPath: obstacleMask.m_Bits
+      value: 262272
+      objectReference: {fileID: 0}
+    - target: {fileID: 6594921194536100913, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
+      propertyPath: doorLayerMask.m_Bits
+      value: 524288
+      objectReference: {fileID: 0}
     - target: {fileID: 7588674267399368957, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 82
+      value: 81.28
       objectReference: {fileID: 0}
     - target: {fileID: 7588674267399368957, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.27
+      value: 0.28
       objectReference: {fileID: 0}
     - target: {fileID: 7588674267399368957, guid: fbd8bc1a167157a4291eb0f53889bb47, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10481,6 +10503,10 @@ PrefabInstance:
     - target: {fileID: 503569174458460511, guid: 64b81ecda0af448fd94ad628788eb809, type: 3}
       propertyPath: m_Name
       value: LockIcon
+      objectReference: {fileID: 0}
+    - target: {fileID: 503569174458460511, guid: 64b81ecda0af448fd94ad628788eb809, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 503569174458460511, guid: 64b81ecda0af448fd94ad628788eb809, type: 3}
       propertyPath: m_IsActive
@@ -11485,6 +11511,10 @@ PrefabInstance:
       value: OpenIcon
       objectReference: {fileID: 0}
     - target: {fileID: 5845200247503398939, guid: 86b56385108d348738d0c641537eb818, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 5845200247503398939, guid: 86b56385108d348738d0c641537eb818, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -12338,8 +12368,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.48625, y: -5.4954495, z: 0}
-    m_Extent: {x: 24.31035, y: 17.82295, z: 0}
+    m_Center: {x: 5.4863005, y: -5.4954495, z: 0}
+    m_Extent: {x: 24.310799, y: 17.82295, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -17878,8 +17908,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 9.28415, y: 2.29845, z: 0}
-    m_Extent: {x: 2.66195, y: 2.5841498, z: 0}
+    m_Center: {x: 9.2834, y: 2.2973, z: 0}
+    m_Extent: {x: 2.6622999, y: 2.5844, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -18070,8 +18100,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 6.8592997, y: 2.29745, z: 0}
-    m_Extent: {x: 0.8924, y: 0.39984995, z: 0}
+    m_Center: {x: 6.8606, y: 2.29745, z: 0}
+    m_Extent: {x: 0.8924999, y: 0.39935, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -18217,6 +18247,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3098597674476047386, guid: 5529b390bf9059c4eb2b57af9bbd62e1, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 05d05f498d5fa8a499ec4cd218666e14, type: 2}
     - target: {fileID: 3683686307078424590, guid: 5529b390bf9059c4eb2b57af9bbd62e1, type: 3}
       propertyPath: m_Name
       value: Ch1_Cake_MemoryFake_02
@@ -18338,8 +18372,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 10.5896, y: -0.39850008, z: 0}
-    m_Extent: {x: 5.0543003, y: 4.3042, z: 0}
+    m_Center: {x: 10.589149, y: -0.3987, z: 0}
+    m_Extent: {x: 5.05395, y: 4.3039, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -18370,6 +18404,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusRestoreAmount: 1
   reduceInterval: 2
+  IsActive: 1
 --- !u!60 &909562182
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -19869,6 +19904,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusRestoreAmount: 1
   reduceInterval: 2
+  IsActive: 1
 --- !u!1 &1001029522
 GameObject:
   m_ObjectHideFlags: 0
@@ -26659,8 +26695,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 1.52845, y: 0.4475, z: 0}
-    m_Extent: {x: 13.46865, y: 6.0428, z: 0}
+    m_Center: {x: 1.5275998, y: 0.44694996, z: 0}
+    m_Extent: {x: 13.468599, y: 6.04375, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -26809,8 +26845,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 1.5274, y: 0.44685006, z: 0}
-    m_Extent: {x: 13.4683, y: 6.0434504, z: 0}
+    m_Center: {x: 1.5285001, y: 0.44704986, z: 0}
+    m_Extent: {x: 13.4688, y: 6.0436497, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -28751,7 +28787,7 @@ Transform:
   m_GameObject: {fileID: 1576181887}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 61.32, y: 0.85, z: 0}
+  m_LocalPosition: {x: 63.7, y: 0.85, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -31803,8 +31839,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 12.088295, y: 0.24519885, z: 0}
-    m_Extent: {x: 4.247978, y: 3.3229904, z: 0}
+    m_Center: {x: 12.088558, y: 0.24525428, z: 0}
+    m_Extent: {x: 4.2482414, y: 3.3230457, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -31903,6 +31939,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusRestoreAmount: 1
   reduceInterval: 2
+  IsActive: 1
 --- !u!1 &1715376377
 GameObject:
   m_ObjectHideFlags: 0
@@ -35329,7 +35366,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 25919
+    m_Bits: 550207
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -43659,8 +43696,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.00024998188, y: -0.00009995699, z: 0}
-    m_Extent: {x: 1.35025, y: 1.3503001, z: 0}
+    m_Center: {x: 0.00015002489, y: 0.000049948692, z: 0}
+    m_Extent: {x: 1.3505499, y: 1.35025, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -44487,7 +44524,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5292948878650248427}
   - component: {fileID: 664799582870388600}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Gray_Door_AlwaysOpen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44522,6 +44559,10 @@ PrefabInstance:
       propertyPath: cutsceneDirector
       value: 
       objectReference: {fileID: 1384772618}
+    - target: {fileID: 3402829423375287405, guid: 1931688aeca58cb4aa6e65e531b5bd7b, type: 3}
+      propertyPath: energyRestoreZone
+      value: 
+      objectReference: {fileID: 909562181}
     - target: {fileID: 3402829423375287405, guid: 1931688aeca58cb4aa6e65e531b5bd7b, type: 3}
       propertyPath: cutsceneDirector_correct
       value: 
@@ -44702,7 +44743,7 @@ GameObject:
   - component: {fileID: 7768801521910974681}
   - component: {fileID: 4227891604826044714}
   - component: {fileID: 6235643605854460333}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Door_KidRoom_Stealth
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -45073,7 +45114,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5451302710205988734}
   - component: {fileID: 4557736493831066905}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: WoodDoor_Close
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45090,7 +45131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5451302711107980259}
   - component: {fileID: 4557736493063741828}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: WoodDoor_Close
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45108,6 +45149,10 @@ PrefabInstance:
     - target: {fileID: 503569174458460511, guid: 64b81ecda0af448fd94ad628788eb809, type: 3}
       propertyPath: m_Name
       value: LockIcon
+      objectReference: {fileID: 0}
+    - target: {fileID: 503569174458460511, guid: 64b81ecda0af448fd94ad628788eb809, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 503569174458460511, guid: 64b81ecda0af448fd94ad628788eb809, type: 3}
       propertyPath: m_IsActive
@@ -45173,7 +45218,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6668868792184021302}
   - component: {fileID: 7223424639722568374}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Big_WoodDoor_AlwaysOpen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45190,7 +45235,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6668868791405644771}
   - component: {fileID: 7223424639560224867}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Big_WoodDoor_AlwaysOpen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45207,7 +45252,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4696288731150641710}
   - component: {fileID: 2359263826141846208}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: WoodDoor_Close
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45224,7 +45269,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4696288732727513362}
   - component: {fileID: 2359263826712388092}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: WoodDoor_Close
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45593,7 +45638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5616468890586415335}
   - component: {fileID: 9013589387339858413}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: WoodDoor_AlwaysOpen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45647,7 +45692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 546274685686117980}
   - component: {fileID: 2233923058145015918}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Gray_Door_Open
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46031,7 +46076,7 @@ GameObject:
   - component: {fileID: 5113723468292074115}
   - component: {fileID: 5959662388820156528}
   - component: {fileID: 7875359626658074491}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Door_Kitchen_Stealth
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -46053,7 +46098,7 @@ GameObject:
   - component: {fileID: 5113723468598484510}
   - component: {fileID: 5959662388178654445}
   - component: {fileID: 7875359626620632038}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Door_Kitchen_Stealth
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -46068,9 +46113,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6234573337893293450}
     m_Modifications:
+    - target: {fileID: 4399529086182020137, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_Name
       value: InteractionInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
@@ -46356,9 +46409,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4621487105979380424}
     m_Modifications:
+    - target: {fileID: 4399529086182020137, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_Name
       value: InteractionInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
@@ -46438,9 +46499,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4621487107814184989}
     m_Modifications:
+    - target: {fileID: 4399529086182020137, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_Name
       value: InteractionInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
@@ -46572,9 +46641,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1774627526475018055}
     m_Modifications:
+    - target: {fileID: 4399529086182020137, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_Name
       value: InteractionInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
@@ -47376,7 +47453,7 @@ GameObject:
   - component: {fileID: 3732283591215524115}
   - component: {fileID: 7537533740706487739}
   - component: {fileID: 3496537866571987906}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Gray_Door_BathRoom
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -48250,9 +48327,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6934705681495848511}
     m_Modifications:
+    - target: {fileID: 4399529086182020137, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_Name
       value: InteractionInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
@@ -48367,7 +48452,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1351693111264384243}
   - component: {fileID: 596646798897512640}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: WoodDoor_Open
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48384,7 +48469,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1351693112841498575}
   - component: {fileID: 596646799468067836}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: WoodDoor_Open
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48486,7 +48571,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3032533890227983995}
   - component: {fileID: 2599452655271373539}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: WoodDoor_Open
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48503,7 +48588,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3032533890726879974}
   - component: {fileID: 2599452655300501118}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: WoodDoor_Open
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48554,7 +48639,7 @@ GameObject:
   - component: {fileID: 6978169845784456304}
   - component: {fileID: 8934585865058773268}
   - component: {fileID: 5448746895635258743}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Door_Hallways_Locked
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -48575,7 +48660,7 @@ GameObject:
   - component: {fileID: 6978169846354728780}
   - component: {fileID: 8934585865562100264}
   - component: {fileID: 5448746895131928139}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Door_LivingRoom
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -48666,9 +48751,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2030788445150281361}
     m_Modifications:
+    - target: {fileID: 4399529086182020137, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_Name
       value: InteractionInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
@@ -48748,9 +48841,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2030788444579792301}
     m_Modifications:
+    - target: {fileID: 4399529086182020137, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_Name
       value: InteractionInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
@@ -48934,9 +49035,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2291450241588366430}
     m_Modifications:
+    - target: {fileID: 4399529086182020137, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_Name
       value: InteractionInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
@@ -49016,9 +49125,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2291450241349531843}
     m_Modifications:
+    - target: {fileID: 4399529086182020137, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_Name
       value: InteractionInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
@@ -49322,7 +49439,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7601907905328005589}
   - component: {fileID: 2610841029331181226}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: WoodDoor_AlwaysOpen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49633,7 +49750,7 @@ GameObject:
   - component: {fileID: 1524281171133935395}
   - component: {fileID: 5646177508994036375}
   - component: {fileID: 7672899589578930509}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Door_Kidroom
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -49811,7 +49928,7 @@ GameObject:
   - component: {fileID: 2670272834836963961}
   - component: {fileID: 5038855452130165561}
   - component: {fileID: 2476791151252729219}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Gray_Door_BathRoom_Stealth
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -50104,9 +50221,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2320773570512305527}
     m_Modifications:
+    - target: {fileID: 4399529086182020137, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_Name
       value: InteractionInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
+      propertyPath: m_Layer
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
       propertyPath: m_IsActive
@@ -50286,7 +50411,7 @@ GameObject:
   - component: {fileID: 4791768186336664222}
   - component: {fileID: 4939101158336463440}
   - component: {fileID: 8850244693892658216}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Door_Garage
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -50305,7 +50430,7 @@ GameObject:
   - component: {fileID: 4791768187771318347}
   - component: {fileID: 4939101158043068549}
   - component: {fileID: 8850244695263862525}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Door_Garage2
   m_TagString: Door
   m_Icon: {fileID: 0}

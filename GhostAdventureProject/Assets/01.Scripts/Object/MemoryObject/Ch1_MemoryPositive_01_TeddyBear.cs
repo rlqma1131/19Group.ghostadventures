@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
 {
-
     public bool Completed_TeddyBear = false;
     public bool PlayerNearby = false;
+    private Collider2D col;
 
     void Start()
     {
@@ -22,7 +22,7 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     {
         isScannable = false;
         Completed_TeddyBear = true;
-        PuzzleStateManager.Instance.MarkPuzzleSolved("곰인형");
+        SaveManager.MarkPuzzleSolved("곰인형");
         
     }
     protected override void PlusAction()
@@ -30,28 +30,30 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
         UIManager.Instance.PromptUI.ShowPrompt_2("맞아 이건 내 기억이야", "여기서 볼 일은 끝난거 같아");    
     }
 
-    protected override void OnTriggerEnter2D(Collider2D collision)
-    {
-        PlayerNearby = true;
-        PlayerInteractSystem.Instance.AddInteractable(gameObject);
+    //protected override void OnTriggerEnter2D(Collider2D collision)
+    //{
 
-        if (collision.CompareTag("Player") && !ChapterEndingManager.Instance.AllCh1CluesCollected())
-        {
-            UIManager.Instance.PromptUI.ShowPrompt("단서가 부족해...");
-        }
-        //else if (collision.CompareTag("Player") 
-        //    && ChapterEndingManager.Instance.AllCh1CluesCollected()
-        //    && isScannable)
-        //{
-        //    PlayerInteractSystem.Instance.AddInteractable(gameObject);
-        //}
-    }
+    //    if (collision.CompareTag("Player"))
+    //    {
+    //        PlayerNearby = true;
 
-    protected override void OnTriggerExit2D(Collider2D other)
-    {
-        PlayerNearby = false;
+    //        if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
+    //        {
+    //            UIManager.Instance.PromptUI.ShowPrompt("단서가 부족해...");
+    //        }
+    //        else if (ChapterEndingManager.Instance.AllCh1CluesCollected())
+    //        {
+    //            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+    //        }
+    //    }
+    //}
 
-        if (other.CompareTag("Player"))
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
-    }
+    //protected override void OnTriggerExit2D(Collider2D other)
+    //{
+    //    if (other.CompareTag("Player"))
+    //    {
+    //        PlayerNearby = false;
+    //        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+    //    }
+    //}
 }
