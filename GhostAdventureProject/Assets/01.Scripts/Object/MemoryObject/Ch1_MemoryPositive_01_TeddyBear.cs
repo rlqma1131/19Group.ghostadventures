@@ -22,7 +22,7 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     {
         isScannable = false;
         Completed_TeddyBear = true;
-        PuzzleStateManager.Instance.MarkPuzzleSolved("곰인형");
+        SaveManager.MarkPuzzleSolved("곰인형");
         
     }
     protected override void PlusAction()

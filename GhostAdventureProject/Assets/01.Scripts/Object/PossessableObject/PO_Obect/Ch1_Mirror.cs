@@ -41,7 +41,7 @@ public class Ch1_Mirror : MonoBehaviour
         {
             revealed = true;
             ChapterEndingManager.Instance.CollectCh1Clue("W");
-            PuzzleStateManager.Instance.MarkPuzzleSolved("욕실");
+            SaveManager.MarkPuzzleSolved("욕실");
         }
     }
 
@@ -54,7 +54,7 @@ public class Ch1_Mirror : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && PuzzleStateManager.Instance.IsPuzzleSolved("욕실"))
+        if(collision.CompareTag("Player") && SaveManager.IsPuzzleSolved("욕실"))
         {
             UIManager.Instance.PromptUI.ShowPrompt("W", 3f);       
         }
