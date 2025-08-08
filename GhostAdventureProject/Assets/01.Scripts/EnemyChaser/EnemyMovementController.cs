@@ -32,7 +32,7 @@ public class EnemyMovementController : MonoBehaviour
     private void Start()
     {
         player = GameManager.Instance.Player.transform;
-        PickRandomDirection();
+        // PickRandomDirection();
         startTime = Time.time;
     }
 
@@ -130,6 +130,10 @@ public class EnemyMovementController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        var interaction = GetComponentInChildren<EnemyQTETrigger>();
+        if (interaction == null || !interaction.PlayerInInteractionRange)
+            return;
+        
         if (Time.time - lastTeleportTime < teleportDoorIgnoreTime) return;
         
         // 2) 스폰(혹은 상태 전환) 직후에 문 트리거 안 받도록
