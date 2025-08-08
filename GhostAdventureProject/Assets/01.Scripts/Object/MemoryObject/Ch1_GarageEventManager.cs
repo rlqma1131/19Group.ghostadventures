@@ -12,6 +12,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
     [SerializeField] private PlayableDirector cutsceneDirector_correct;
     private bool isCutscenePlaying = false;
     private bool isCutscenePlaying2 = false;
+    [SerializeField] EnergyRestoreZone energyRestoreZone;
 
     public KeyBoard_Enter Answer => answer;
 
@@ -41,6 +42,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
                     // [컷씬] 꼬마유령 이벤트
                     PossessionSystem.Instance.CanMove = false;
                     UIManager.Instance.PlayModeUI_CloseAll();
+                    energyRestoreZone.IsActive = false; // 에너지 회복존 비활성화
                     cutsceneDirector.Play();
                 }
             }
@@ -77,6 +79,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         EnemyAI.ResumeAllEnemies();
         PossessionSystem.Instance.CanMove = true;
         isCutscenePlaying2 = true;
+        energyRestoreZone.IsActive = true; // 에너지 회복존 비활성화
         UIManager.Instance.PlayModeUI_OpenAll();
     }
 }
