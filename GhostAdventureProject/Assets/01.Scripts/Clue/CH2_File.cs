@@ -12,6 +12,7 @@ public class CH2_File : MonoBehaviour
     [SerializeField] private ClueData fileClue; // 파일단서
     [SerializeField] private CinemachineVirtualCamera ZoomCamera;
     private UIManager uimanager;
+    private bool showfile = false;
 
     void Start()
     {
@@ -35,17 +36,19 @@ public class CH2_File : MonoBehaviour
     private void OnMouseDown()
     {
         if(fileClue == null) return;
+        if(showfile == true) return;
         
         uimanager.Inventory_PlayerUI.AddClue(fileClue);
         uimanager.InventoryExpandViewerUI.ShowClue(fileClue);
         uimanager.InventoryExpandViewerUI.OnClueHidden += ResetCameraAsync;
+        showfile = true;
     }
 
     private async void ResetCameraAsync()
     {
         await Task.Delay(1000); // 1초 대기
-        UIManager.Instance.PromptUI.ShowPrompt("이건 힌트 같은데...", 2f);
         uimanager.InventoryExpandViewerUI.OnClueHidden -= ResetCameraAsync;
+        UIManager.Instance.PromptUI.ShowPrompt("이건 힌트 같은데...", 2f);
         ZoomCamera.Priority = 5;
         SaveManager.MarkPuzzleSolved("금고");
         await Task.Delay(2000); // 2초 대기
