@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -37,23 +38,17 @@ public class CH2_File : MonoBehaviour
         
         uimanager.Inventory_PlayerUI.AddClue(fileClue);
         uimanager.InventoryExpandViewerUI.ShowClue(fileClue);
-        uimanager.InventoryExpandViewerUI.OnClueHidden += CloseViewer;
+        uimanager.InventoryExpandViewerUI.OnClueHidden += ResetCameraAsync;
     }
 
-    private void CloseViewer()
+    private async void ResetCameraAsync()
     {
-        StartCoroutine(ResetCamera());
-    }
-    
-    IEnumerator ResetCamera()
-    {
-        yield return new WaitForSeconds(1f);
-        ZoomCamera.Priority = 5;
+        await Task.Delay(1000); // 1초 대기
         UIManager.Instance.PromptUI.ShowPrompt("이건 힌트 같은데...", 2f);
+        uimanager.InventoryExpandViewerUI.OnClueHidden -= ResetCameraAsync;
+        ZoomCamera.Priority = 5;
         SaveManager.MarkPuzzleSolved("금고");
-        yield return new WaitForSeconds(2f);
-        uimanager.InventoryExpandViewerUI.OnClueHidden -= CloseViewer;
-        yield return new WaitForSeconds(1f);
-        Destroy(zoomSafeBox);
+        await Task.Delay(2000); // 2초 대기
+        zoomSafeBox.SetActive(false);
     }
 }

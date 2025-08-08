@@ -114,6 +114,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
         if (!isPossessed)
             return;
+
         
         if(radio.IsPlaying)
         {
@@ -350,9 +351,10 @@ public class CH2_SecurityGuard : MoveBasePossessable
     public override void OnPossessionEnterComplete() 
     {       
         base.OnPossessionEnterComplete();
-            radio.triggerSound_Person.DOFade(0f, 5f)
-            .OnComplete(() => radio.triggerSound_Person.Stop());
-    
+        radio.triggerSound_Person.DOFade(0f, 5f)
+        .OnComplete(() => radio.triggerSound_Person.Stop());
+        highlight.SetActive(false);
+                
     }
 
     // 단서 획득시 대사 출력
