@@ -29,6 +29,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private InventoryExpandViewer inventoryExpandViewer; // 인벤토리 확대뷰어
     [SerializeField] private ESCMenu escMenu; // ESC 메뉴
     [SerializeField] private NoticePopup noticePopup;
+    [SerializeField] private NoticePopup saveNoticePopup;
 
     // QTE 이펙트 캔버스 추가
     [SerializeField] private GameObject qteEffectCanvas; // QTE 이펙트 캔버스
@@ -46,6 +47,7 @@ public class UIManager : Singleton<UIManager>
     public InventoryExpandViewer InventoryExpandViewerUI => inventoryExpandViewer;
     public ESCMenu ESCMenuUI => escMenu;
     public NoticePopup NoticePopupUI => noticePopup;
+    public NoticePopup SaveNoticePopupUI => saveNoticePopup;
 
     // QTE 이펙트 캔버스 외부 접근용
     public GameObject QTEEffectCanvas => qteEffectCanvas;

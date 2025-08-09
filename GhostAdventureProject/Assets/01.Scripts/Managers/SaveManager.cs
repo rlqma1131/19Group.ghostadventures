@@ -69,7 +69,8 @@ public static class SaveManager
         File.WriteAllText(tmp, json);
         if (File.Exists(SavePath)) File.Delete(SavePath);
         File.Move(tmp, SavePath);
-        Debug.Log($"[SaveManager] 저장됨: {SavePath}");
+
+        UIManager.Instance.SaveNoticePopupUI.FadeInAndOut("게임이 저장되었습니다.");
     }
 
     public static SaveData LoadGame()
@@ -144,7 +145,6 @@ public static class SaveManager
         currentData.sceneName = sceneName;
         currentData.playerPosition = playerPos;
         currentData.checkpointId = checkpointId;
-        if (autosave) SaveGame();
     }
 
     // 기억 스캔할 때 호출 ( 기억ID, 기억제목, 플레이어 위치 저장 )
@@ -154,5 +154,6 @@ public static class SaveManager
         AddCollectedMemoryID(memoryID);
         AddScannedMemoryTitle(title);
         SetSceneAndPosition(sceneName, playerPos, checkpointId, autosave);
+        if (autosave) SaveGame();
     }
 }
