@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,9 +53,9 @@ public class Ch3_MirrorPuzzleManager : MonoBehaviour
         
         if (roomsCleared >= totalRooms)
         {
-            ShowHintNearPlayer();
             memory.ActivateObj();
             UIManager.Instance.PromptUI.ShowPrompt("이게 마지막인가..? 저기 뭔가 떨어져있어!", 2f);
+            ShowHintNearPlayer();
         }
     }
 
