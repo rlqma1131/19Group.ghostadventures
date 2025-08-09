@@ -13,13 +13,13 @@ public class InventoryExpandViewer : MonoBehaviour
     private bool isShowing = false; // "패널 클릭시 닫기" 기능용 불값
     public System.Action OnClueHidden; // 이벤트
 
-    public static InventoryExpandViewer Instance; // 싱글톤(수정예정)
+    // public static InventoryExpandViewer Instance; // 싱글톤(수정예정)
 
-    private void Awake()
-    {
-        Instance = this;
-        cluePanel.SetActive(false);
-    }
+    // private void Awake()
+    // {
+    //     Instance = this;
+    //     cluePanel.SetActive(false);
+    // }
 
     // 단서 크게 보여주기
     public void ShowClue(ClueData clue)
