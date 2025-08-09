@@ -40,6 +40,7 @@ public static class SaveManager
     private static string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
     private static SaveData currentData;
     public static SaveData CurrentData => currentData;
+    public static event Action<SaveData> Loaded;
 
     private static void EnsureData()
     {
@@ -57,45 +58,37 @@ public static class SaveManager
     {
         EnsureData();
         var list = currentData.possessableStates;
-        int idx = list.FindIndex(x => x.id == id);
-        if (idx >= 0) list[idx].hasActivated = hasActivated;
+        int i = list.FindIndex(x => x.id == id);
+        if (i >= 0) list[i].hasActivated = hasActivated;
         else list.Add(new PossessableState { id = id, hasActivated = hasActivated });
     }
 
     public static bool TryGetPossessableState(string id, out bool hasActivated)
     {
-        hasActivated = true; // 기본값(디폴트로 활성)
-        if (currentData == null || currentData.possessableStates == null) return false;
-        var found = currentData.possessableStates.Find(x => x.id == id);
-        if (found == null) return false;
-        hasActivated = found.hasActivated;
+        hasActivated = true;
+        var s = currentData?.possessableStates?.Find(x => x.id == id);
+        if (s == null) return false;
+        hasActivated = s.hasActivated;
         return true;
     }
 
 
     // ===== MemoryFragment 상태 저장/조회 =====
-    public static void SetMemoryFragmentState(string id, bool isScannable, bool canStore)
+    public static void SetMemoryFragmentScannable(string id, bool isScannable)
     {
         EnsureData();
         var list = currentData.memoryFragmentStates;
-        int idx = list.FindIndex(x => x.id == id);
-        if (idx >= 0)
-        {
-            list[idx].isScannable = isScannable;
-        }
-        else
-        {
-            list.Add(new MemoryFragmentState { id = id, isScannable = isScannable });
-        }
+        int i = list.FindIndex(x => x.id == id);
+        if (i >= 0) list[i].isScannable = isScannable;
+        else list.Add(new MemoryFragmentState { id = id, isScannable = isScannable });
     }
 
-    public static bool TryGetMemoryFragmentState(string id, out bool isScannable, out bool canStore)
+    public static bool TryGetMemoryFragmentScannable(string id, out bool isScannable)
     {
-        isScannable = false; canStore = false;
-        if (currentData == null || currentData.memoryFragmentStates == null) return false;
-        var found = currentData.memoryFragmentStates.Find(x => x.id == id);
-        if (found == null) return false;
-        isScannable = found.isScannable;
+        isScannable = false;
+        var s = currentData?.memoryFragmentStates?.Find(x => x.id == id);
+        if (s == null) return false;
+        isScannable = s.isScannable;
         return true;
     }
 
@@ -144,14 +137,15 @@ public static class SaveManager
     {
         if (!File.Exists(SavePath))
         {
-            Debug.LogWarning("[SaveManager] 저장 파일 없음");
-            currentData = null; // 조회 계열은 false/기본값 반환
+            currentData = null;
             return null;
         }
 
         string json = File.ReadAllText(SavePath);
         currentData = JsonUtility.FromJson<SaveData>(json) ?? new SaveData();
-        EnsureData(); // 로드 직후 내부 구조 보정(쓰기 관점)
+        EnsureData();
+
+        Loaded?.Invoke(currentData);
         return currentData;
     }
 

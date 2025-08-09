@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 6602169413675090811}
   - component: {fileID: 5150603566836687851}
   - component: {fileID: 6206165786779772054}
+  - component: {fileID: -2534056657656147557}
   m_Layer: 0
   m_Name: Ch3_Nurse
   m_TagString: Person
@@ -250,6 +251,7 @@ MonoBehaviour:
   vitalUI: {fileID: 0}
   normalUI: {fileID: 0}
   tiredUI: {fileID: 0}
+  targetPerson: {fileID: 0}
 --- !u!114 &6602169413675090811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,6 +340,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &-2534056657656147557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2187419007584197709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch3_Nurse
 --- !u!1 &5750088865963523970
 GameObject:
   m_ObjectHideFlags: 0

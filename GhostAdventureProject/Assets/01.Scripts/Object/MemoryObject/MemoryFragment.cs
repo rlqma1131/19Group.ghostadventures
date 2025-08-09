@@ -66,6 +66,9 @@ public class MemoryFragment : BaseInteractable
         isScannable = false;
         canStore = true;
 
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
+
         MemoryManager.Instance.TryCollect(data);
 
         Sprite dropSprite = GetFragmentSpriteByType(data.type);
@@ -227,4 +230,9 @@ public class MemoryFragment : BaseInteractable
 
     public virtual void AfterScan(){}
     protected virtual void PlusAction(){}
+
+    public void ApplyFromSave(bool scannable)
+    {
+        isScannable = scannable;
+    }
 }

@@ -234,6 +234,8 @@ public class Ch3_Nurse : MoveBasePossessable
     {
         hasActivated = false;
         MarkActivatedChanged();
+
+        zoomCamera.Priority = 5;
     }
 
     public override void OnPossessionEnterComplete() 

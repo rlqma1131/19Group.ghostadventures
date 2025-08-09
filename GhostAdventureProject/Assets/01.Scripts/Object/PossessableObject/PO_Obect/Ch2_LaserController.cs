@@ -27,15 +27,6 @@ public class Ch2_LaserController : BasePossessable
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         laserScreenAnimator = laserScreen.GetComponent<Animator>();
-
-        // 저장값 적용
-        if (TryGetComponent(out UniqueId uid))
-        {
-            if (SaveManager.TryGetPossessableState(uid.Id, out bool savedActive))
-            {
-                hasActivated = savedActive;
-            }
-        }
     }
 
     protected override void Update()

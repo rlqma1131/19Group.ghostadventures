@@ -477,6 +477,7 @@ GameObject:
   - component: {fileID: 7762429250242191419}
   - component: {fileID: 5023764423342151964}
   - component: {fileID: 3287357793814230545}
+  - component: {fileID: 775553350543087360}
   m_Layer: 0
   m_Name: Ch2_Raven
   m_TagString: Animal
@@ -523,11 +524,9 @@ MonoBehaviour:
   isPossessed: 0
   zoomCamera: {fileID: 3517789406948542676}
   moveSpeed: 3
-  underGroundDoor: {fileID: 0}
   highlightAnim: {fileID: 0}
   SandCastle: {fileID: 0}
-  flyForce: 5
-  diveSpeed: 10
+  startSpot: {fileID: 0}
 --- !u!58 &7762429250242191419
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -605,6 +604,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &775553350543087360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8441691396360961903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch2_Raven
 --- !u!1001 &5733249349742287911
 PrefabInstance:
   m_ObjectHideFlags: 0

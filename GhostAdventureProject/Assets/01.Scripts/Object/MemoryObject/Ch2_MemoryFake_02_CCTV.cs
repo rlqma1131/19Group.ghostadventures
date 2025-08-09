@@ -13,7 +13,6 @@ public class Ch2_MemoryFake_02_CCTV : MemoryFragment
 
     public override void AfterScan()
     {
-        isScannable = false;
         cctvMonitor.ActivateCCTVMonitor();
     }
 }

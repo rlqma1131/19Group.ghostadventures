@@ -258,6 +258,7 @@ GameObject:
   - component: {fileID: 3092279957444974203}
   - component: {fileID: 2205461610686727064}
   - component: {fileID: 2509689250726017754}
+  - component: {fileID: 3327870145920144566}
   m_Layer: 0
   m_Name: Ch2_SecurityGuard
   m_TagString: Person
@@ -318,6 +319,8 @@ MonoBehaviour:
   q_Key: {fileID: 2278975228792631}
   isdoorLockOpen: 0
   doorPass: 0
+  oneTimeActionDelete: 0
+  UseAllItem: 0
 --- !u!61 &4188093351116284457
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -425,6 +428,20 @@ MonoBehaviour:
   vitalUI: {fileID: 0}
   normalUI: {fileID: 0}
   tiredUI: {fileID: 0}
+  targetPerson: {fileID: 0}
+--- !u!114 &3327870145920144566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4570034663430982813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch2_SecurityGuard
 --- !u!1 &5416146221176661521
 GameObject:
   m_ObjectHideFlags: 0

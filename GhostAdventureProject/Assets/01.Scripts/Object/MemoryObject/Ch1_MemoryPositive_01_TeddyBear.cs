@@ -16,14 +16,14 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     public void ActivateTeddyBear()
     {
         isScannable = true;
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
     }
 
     public override void AfterScan() 
     {
-        isScannable = false;
         Completed_TeddyBear = true;
         SaveManager.MarkPuzzleSolved("곰인형");
-        
     }
     protected override void PlusAction()
     {

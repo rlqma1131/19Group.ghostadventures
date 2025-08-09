@@ -12,7 +12,6 @@ public class Ch1_MemoryFake_03_Baseball : MemoryFragment
 
     public override void AfterScan()
     {
-        isScannable = false;
         alphabet_A.SetActive(true);
         ChapterEndingManager.Instance.CollectCh1Clue("A");
         SaveManager.MarkPuzzleSolved("A");
