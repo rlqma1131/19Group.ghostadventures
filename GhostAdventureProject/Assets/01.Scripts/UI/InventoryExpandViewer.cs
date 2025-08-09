@@ -15,11 +15,10 @@ public class InventoryExpandViewer : MonoBehaviour
 
     // public static InventoryExpandViewer Instance; // 싱글톤(수정예정)
 
-    // private void Awake()
-    // {
-    //     Instance = this;
-    //     cluePanel.SetActive(false);
-    // }
+    private void Awake()
+    {
+        cluePanel.SetActive(false);
+    }
 
     // 단서 크게 보여주기
     public void ShowClue(ClueData clue)
