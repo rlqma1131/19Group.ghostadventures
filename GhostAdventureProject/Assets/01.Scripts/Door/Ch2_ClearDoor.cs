@@ -23,6 +23,7 @@ public class Ch2_ClearDoor : BaseInteractable
             {
                 // CH3로 이동
                 SceneManager.LoadScene("Ch02_To_Ch03");
+                Destroy(GameManager.Instance.Player.gameObject);
                 UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
             }
         }
