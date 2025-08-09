@@ -96,6 +96,18 @@ public abstract class BaseDoor : BaseInteractable
             OpenObject.SetActive(!isLocked);
     }
 
+    public void SetLockedFromSave(bool value)
+    {
+        isLocked = value;
+        UpdateDoorVisual();
+    }
+
+    protected void MarkDoorStateChanged()
+    {
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetDoorLocked(uid.Id, isLocked);
+    }
+
     // Enemy가 접근할 수 있는 public 메서드들
     public Transform GetTargetDoor() => targetDoor;
     public Vector2 GetTargetPos() => targetPos;

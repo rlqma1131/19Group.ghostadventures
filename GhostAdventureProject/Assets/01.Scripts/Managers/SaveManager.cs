@@ -18,6 +18,13 @@ public class MemoryFragmentState
 }
 
 [System.Serializable]
+public class DoorState
+{
+    public string id;
+    public bool isLocked; // true=잠김, false=열림
+}
+
+[System.Serializable]
 public class SaveData
 {
     public string sceneName;
@@ -27,9 +34,9 @@ public class SaveData
     public List<string> collectedClueNames;
     public List<string> collectedMemoryIDs;
     public List<string> scannedMemoryTitles;
-
     public List<string> solvedPuzzleIDs;
 
+    public List<DoorState> doorStates;
     public List<PossessableState> possessableStates;
     public List<MemoryFragmentState> memoryFragmentStates;
 }
@@ -49,6 +56,7 @@ public static class SaveManager
         if (currentData.collectedMemoryIDs == null) currentData.collectedMemoryIDs = new List<string>();
         if (currentData.scannedMemoryTitles == null) currentData.scannedMemoryTitles = new List<string>();
         if (currentData.solvedPuzzleIDs == null) currentData.solvedPuzzleIDs = new List<string>();
+        if (currentData.doorStates == null) currentData.doorStates = new List<DoorState>();
         if (currentData.possessableStates == null) currentData.possessableStates = new List<PossessableState>();               // ★
         if (currentData.memoryFragmentStates == null) currentData.memoryFragmentStates = new List<MemoryFragmentState>();       // ★
     }
@@ -92,6 +100,24 @@ public static class SaveManager
         return true;
     }
 
+    // ===== 문 상태 저장/조회 =====
+    public static void SetDoorLocked(string id, bool isLocked)
+    {
+        EnsureData();
+        var list = currentData.doorStates;
+        int i = list.FindIndex(x => x.id == id);
+        if (i >= 0) list[i].isLocked = isLocked;
+        else list.Add(new DoorState { id = id, isLocked = isLocked });
+    }
+
+    public static bool TryGetDoorLocked(string id, out bool isLocked)
+    {
+        isLocked = true;
+        var s = currentData?.doorStates?.Find(x => x.id == id);
+        if (s == null) return false;
+        isLocked = s.isLocked;
+        return true;
+    }
 
     // ===== 조회(읽기) 계열 =====
     public static bool HasSaveFile() => File.Exists(SavePath);

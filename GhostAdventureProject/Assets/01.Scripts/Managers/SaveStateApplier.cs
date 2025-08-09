@@ -70,5 +70,15 @@ public class SaveStateApplier : MonoBehaviour
             }
             // 3) 그 외엔 인스펙터 기본값 유지
         }
+
+        // 문
+        foreach (var door in FindObjectsOfType<BaseDoor>(true))
+        {
+            if (door.TryGetComponent(out UniqueId uid) &&
+                SaveManager.TryGetDoorLocked(uid.Id, out bool locked))
+            {
+                door.SetLockedFromSave(locked);
+            }
+        }
     }
 }

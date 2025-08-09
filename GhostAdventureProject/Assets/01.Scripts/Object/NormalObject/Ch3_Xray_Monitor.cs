@@ -47,11 +47,13 @@ public class Ch3_Xray_Monitor : BaseInteractable
 
                 if (isFirstFind)
                 {
-                    UIManager.Instance.PromptUI.ShowPrompt("어? 문양이 있네? 다른곳도 있을까?");
+                    if ((xray.currentPhotoIndex == 1 || xray.currentPhotoIndex == 3))
+                        UIManager.Instance.PromptUI.ShowPrompt("어? 문양이 있네? 다른곳도 있을까?");
                 }
                 else if (isFirstFind && isSecondFind)
                 {
-                    UIManager.Instance.PromptUI.ShowPrompt("이 문양들은 어떤 의미지?");
+                    if ((xray.currentPhotoIndex == 1 || xray.currentPhotoIndex == 3))
+                        UIManager.Instance.PromptUI.ShowPrompt("이 문양들은 어떤 의미지?");
                 }
             }
         }

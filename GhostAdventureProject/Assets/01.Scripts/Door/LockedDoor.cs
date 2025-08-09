@@ -59,6 +59,7 @@ public class LockedDoor : BaseDoor
             PlaySound(unlockSound);
             Debug.Log($"{gameObject.name} 문이 열렸습니다!");
             OnDoorUnlocked();
+            MarkDoorStateChanged();
         }
 
         // 페어 문도 열기 (무한 루프 방지)
@@ -68,6 +69,7 @@ public class LockedDoor : BaseDoor
             pairedDoor.PlaySound(pairedDoor.unlockSound);
             Debug.Log($"{pairedDoor.gameObject.name} 페어 문이 열렸습니다!");
             pairedDoor.OnDoorUnlocked();
+            pairedDoor.MarkDoorStateChanged();
         }
     }
 
@@ -80,6 +82,7 @@ public class LockedDoor : BaseDoor
             isLocked = true;
             Debug.Log($"{gameObject.name} 문이 잠겼습니다!");
             UpdateDoorVisual();
+            MarkDoorStateChanged();
         }
 
         // 페어 문도 잠그기
@@ -88,6 +91,7 @@ public class LockedDoor : BaseDoor
             pairedDoor.isLocked = true;
             Debug.Log($"{pairedDoor.gameObject.name} 페어 문이 잠겼습니다!");
             pairedDoor.UpdateDoorVisual();
+            pairedDoor.MarkDoorStateChanged();
         }
     }
 

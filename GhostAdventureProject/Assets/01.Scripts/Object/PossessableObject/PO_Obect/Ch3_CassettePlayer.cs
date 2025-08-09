@@ -33,6 +33,7 @@ public class Ch3_CassettePlayer : BasePossessable
 
     private bool isPlaying = false; // 재생 여부
     private bool isSolved = false; // 문제 해결 여부
+    private bool isTalking = false;
 
     private float inputCooldown = 0.5f; // 조작키 입력 텀
     private float inputTimer = 0f;
@@ -72,10 +73,15 @@ public class Ch3_CassettePlayer : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            if (isTalking)
+                return;
+
             EnemyAI.ResumeAllEnemies();
             Unpossess();
+
             zoomCamera.Priority = 5;
             UIManager.Instance.PlayModeUI_OpenAll();
+
             if (isSolved)
             {
                 UIManager.Instance.PromptUI.ShowPrompt("일단 이 정보를 입력해보려면 치료실을 찾아보자");
@@ -206,6 +212,7 @@ public class Ch3_CassettePlayer : BasePossessable
 
         // 정답 도달
         UIManager.Instance.PromptUI.ShowPrompt("상담 내용..? 왜 이렇게 익숙하지..");
+        isTalking = true;
 
         // 정상 문장 출력
         for (int i = 0; i < correctSentences.Length; i++)
@@ -290,12 +297,13 @@ public class Ch3_CassettePlayer : BasePossessable
 
         // 녹음본 내용 출력 끝
         Unpossess();
+
+        isTalking = false;
+
         EnemyAI.ResumeAllEnemies();
         zoomCamera.Priority = 5;
         UIManager.Instance.PlayModeUI_OpenAll();
-
-        //화면에 단서 출력
-        UIManager.Instance.PromptUI.ShowPrompt("카세트테이프 단서", 5f);
+        UIManager.Instance.PromptUI.ShowPrompt("일단 이 정보를 입력해보려면 치료실을 찾아보자");
     }
 
     string GenerateCorruptedText(float proximity)
