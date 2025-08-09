@@ -178,13 +178,13 @@ public class Inventory_Player : MonoBehaviour
         {
             int clueIndex = currentPage * cluesPerPage + i;
 
-            if (InventoryExpandViewer.Instance.IsShowing())
+            if (UIManager.Instance.InventoryExpandViewerUI.IsShowing())
             {
-                InventoryExpandViewer.Instance.HideClue();
+                UIManager.Instance.InventoryExpandViewerUI.HideClue();
             }
             else if (clueIndex < collectedClues.Count)
             {
-                InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
+                UIManager.Instance.InventoryExpandViewerUI.ShowClue(collectedClues[clueIndex]);
             }
         }
     }
