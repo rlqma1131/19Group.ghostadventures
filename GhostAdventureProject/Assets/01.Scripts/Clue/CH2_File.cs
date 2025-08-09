@@ -26,23 +26,29 @@ public class CH2_File : MonoBehaviour
 
     private void OnMouseExit()
     {
-        if(highlightObject != null)
-        {
-            highlightObject.SetActive(false);
-            return;
-        }
-    }
-
-    private void OnMouseDown()
-    {
         if(fileClue == null) return;
         if(showfile == true) return;
-        
+        if(highlightObject == null) return;
+            
+        highlightObject.SetActive(false);
         uimanager.Inventory_PlayerUI.AddClue(fileClue);
         uimanager.InventoryExpandViewerUI.ShowClue(fileClue);
         uimanager.InventoryExpandViewerUI.OnClueHidden += ResetCameraAsync;
         showfile = true;
+
+        return;
+        
     }
+
+    // private void OnMouseDown()
+    // {
+    //     if(fileClue == null) return;
+    //     if(showfile == true) return;
+        
+        
+        
+        
+    // }
 
     private async void ResetCameraAsync()
     {

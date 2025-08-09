@@ -16,7 +16,7 @@ public class Ch2_Bat_Trigger : MonoBehaviour
     [SerializeField] float flySpeed = 2f;          // 속도(유지)
     [SerializeField] int   curvePoints = 5;         // 경로 분할 수(많을수록 더 요철)
     [SerializeField] float jitterAmplitude = 1.0f;  // 흔들림 세기(월드 단위)
-    [SerializeField] float pathSpan = 18f;          // 시작점에서 목표까지 대략 거리(카메라 밖까지 충분히)
+    [SerializeField] float pathSpan = 25f;          // 시작점에서 목표까지 대략 거리(카메라 밖까지 충분히)
 
     [Header("VFX")]
     [SerializeField] float fadeDuration = 0.25f;
@@ -54,9 +54,12 @@ public class Ch2_Bat_Trigger : MonoBehaviour
         triggered = true;
 
         ani.SetBool("Move", true);
-        if (soundConfig != null)
+        if (soundConfig != null && !correctDoll.clear_UnderGround && !Clear_Bat)
+        {
             SoundTrigger.TriggerSound(other.transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
-        TutorialManager.Instance.Show(TutorialStep.TouchBat);
+            TutorialManager.Instance.Show(TutorialStep.TouchBat);
+        }
+
         if (col) col.enabled = false;
 
         // ★ 트리거 순간 플레이어를 향한 레이 방향 고정
