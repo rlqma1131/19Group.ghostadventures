@@ -111,6 +111,7 @@ public class TimelineControl : MonoBehaviour
         }
 
         memoryScan.currentMemoryFragment.AfterScan();
+        UIManager.Instance.NoticePopupUI.FadeInAndOut($"※ 기억조각 저장 됨 - [{memoryScan.currentMemoryFragment.data.memoryTitle}]");
     }
 
     private IEnumerator FlashImages()
