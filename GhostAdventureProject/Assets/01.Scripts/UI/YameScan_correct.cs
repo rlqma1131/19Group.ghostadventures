@@ -11,6 +11,7 @@ public class YameScan_correct : BaseInteractable
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject door; // 지하수로와 연결된 문
     [SerializeField] private GameObject shelf; // 문 막고 있는 책장
+    public bool clear_UnderGround = false;
     // [SerializeField] private GameObject e_key;
 
 
@@ -140,6 +141,7 @@ public class YameScan_correct : BaseInteractable
         Vector3 shelfPos = shelf.transform.position;
         shelfPos.x -= 3f;
         shelf.transform.position = shelfPos;
+        clear_UnderGround = true;
         Debug.Log("지하수로와 연결된 문을 발견했습니다");
 
     }
