@@ -10,7 +10,6 @@ public class Ch3_MemoryNegative_02_Paper : MemoryFragment
     public void ActivatePaper()
     {
         isScannable = true;
-        UIManager.Instance.PromptUI.ShowPrompt("관찰기록지? 스캔해봐야겠어", 3f);
     }
 
     public override void AfterScan()

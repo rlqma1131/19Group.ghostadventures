@@ -230,6 +230,11 @@ public class Ch3_Nurse : MoveBasePossessable
         highlightAnimator.Play(currentStateHash, 0, stateInfo.normalizedTime);
     }
 
+    public void InactiveNurse()
+    {
+        hasActivated = false;
+    }
+
     public override void OnPossessionEnterComplete() 
     {
         zoomCamera.Priority = 20;

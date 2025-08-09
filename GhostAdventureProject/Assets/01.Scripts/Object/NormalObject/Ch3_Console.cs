@@ -20,6 +20,9 @@ public class Ch3_Console : BaseInteractable
     [Header("기억 조각")]
     [SerializeField] private GameObject memoryFragment;
 
+    [Header("간호사")]
+    [SerializeField] private Ch3_Nurse nurse;
+
     Inventory_PossessableObject inventory; // 빙의 인벤토리(Item을 갖고 있는지 확인용)
 
     private bool canUse = false;
@@ -163,6 +166,10 @@ public class Ch3_Console : BaseInteractable
             seq.AppendCallback(() =>
             {
                 ExitZoom();
+
+                nurse.InactiveNurse();
+                nurse.Unpossess();
+                UIManager.Instance.PromptUI.ShowPrompt("관찰기록지? 스캔해봐야겠어", 3f);
             });
         }
     }

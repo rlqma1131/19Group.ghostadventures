@@ -23,7 +23,7 @@ public static class SaveManager
     // ===== 공통 =====
     private static string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
     private static SaveData currentData;
-    public static SaveData Current => currentData; // 읽기 전용 참조(주의: 외부에서 수정하지 말 것)
+    public static SaveData CurrentData => currentData;
 
     private static void EnsureData()
     {
@@ -32,6 +32,10 @@ public static class SaveManager
         if (currentData.collectedMemoryIDs == null) currentData.collectedMemoryIDs = new List<string>();
         if (currentData.scannedMemoryTitles == null) currentData.scannedMemoryTitles = new List<string>();
         if (currentData.solvedPuzzleIDs == null) currentData.solvedPuzzleIDs = new List<string>();
+
+        // 플레이어 인벤토리 상태
+        // 사람 인벤토리 상태
+        // 
     }
 
     // ===== 조회(읽기) 계열 =====
