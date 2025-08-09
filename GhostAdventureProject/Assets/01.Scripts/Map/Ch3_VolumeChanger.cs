@@ -28,13 +28,7 @@ public class Ch3_VolumeChanger : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player") && colorAdjustments != null)
-        {
-            colorAdjustments.postExposure.overrideState = false; // Post Exposure 해제
-        }
-    }
+
 }
 
 
