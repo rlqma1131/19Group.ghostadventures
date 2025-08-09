@@ -14,11 +14,12 @@ public class Ch3_MemoryPositive_Mirror : MemoryFragment
     public void ActivateObj()
     {
         isScannable = true;
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
     }
 
     public override void AfterScan()
     {
-        isScannable = false;
         scanner.ActiveScanner();
     }
 }

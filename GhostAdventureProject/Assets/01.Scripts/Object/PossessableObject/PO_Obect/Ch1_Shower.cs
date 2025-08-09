@@ -24,6 +24,7 @@ public class Ch1_Shower : BasePossessable
     protected override void Start()
     {
         base.Start();
+
         UI.SetActive(false);
         q_key.SetActive(false);
         water.SetActive(false);

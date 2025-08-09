@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 6607376444613216211}
   - component: {fileID: 3402829423375287405}
   - component: {fileID: 2891215509360032032}
+  - component: {fileID: 887315447955678892}
   m_Layer: 10
   m_Name: Ch1_TeddyBear_MemoryPositive_01
   m_TagString: Untagged
@@ -167,11 +168,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f0eba371f4789439c6f16029e76d8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 0}
   keyboard: {fileID: 0}
   answer: {fileID: 0}
   cutsceneDirector: {fileID: 0}
   cutsceneDirector_correct: {fileID: 0}
+  energyRestoreZone: {fileID: 0}
 --- !u!114 &2891215509360032032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +199,20 @@ MonoBehaviour:
   ellipseRadiusX: 0.8
   ellipseRadiusZ: 1.5
   Completed_TeddyBear: 0
+  PlayerNearby: 0
+--- !u!114 &887315447955678892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2343255428881560257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch1_TeddyBear_MemoryPositive_01
 --- !u!1 &8098539314906637999
 GameObject:
   m_ObjectHideFlags: 0

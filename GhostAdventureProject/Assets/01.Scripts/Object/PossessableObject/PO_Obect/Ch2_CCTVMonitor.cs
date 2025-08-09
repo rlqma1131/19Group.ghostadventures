@@ -59,14 +59,13 @@ public class Ch2_CCTVMonitor : BasePossessable
             }
         }
 
-        // 저장값 적용
-        if (TryGetComponent(out UniqueId uid))
-        {
-            if (SaveManager.TryGetPossessableState(uid.Id, out bool savedActive))
-            {
-                hasActivated = savedActive;
-            }
-        }
+        Debug.Log(
+        $"CCTVMonitor : " +
+        $"{cctvScreenAnimators[0].GetBool("Right")}, " +
+        $"{cctvScreenAnimators[1].GetBool("Right")}, " +
+        $"{cctvScreenAnimators[2].GetBool("Right")}, " +
+        $"{cctvScreenAnimators[3].GetBool("Right")}"
+        );
     }
 
     protected override void Update()
@@ -214,11 +213,24 @@ public class Ch2_CCTVMonitor : BasePossessable
 
     public bool SolvedCheck()
     {
-        cctvScreenAnimators[0].SetBool("Right", true);
-        cctvScreenAnimators[1].SetBool("Right", false);
-        cctvScreenAnimators[2].SetBool("Right", false);
-        cctvScreenAnimators[3].SetBool("Right", true);
-        return true;
+        bool[] expected = { true, false, false, true };
+        bool solved = true;
+
+        for (int i = 0; i < cctvScreenAnimators.Length && i < expected.Length; i++)
+        {
+            bool cur = cctvScreenAnimators[i].GetBool("Right");
+            Debug.Log($"CCTVMonitor Screen[{i}] Right = {cur}");
+            if (cur != expected[i]) solved = false;
+        }
+
+        Debug.Log(
+        $"CCTVMonitor : " +
+        $"{cctvScreenAnimators[0].GetBool("Right")}, " +
+        $"{cctvScreenAnimators[1].GetBool("Right")}, " +
+        $"{cctvScreenAnimators[2].GetBool("Right")}, " +
+        $"{cctvScreenAnimators[3].GetBool("Right")}"
+        );
+        return solved;
     }
 
     void ActivateFirst()

@@ -19,11 +19,12 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
     public void ActivateCake()
     {
         isScannable = true;
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
     }
 
     public override void AfterScan()
     {
-        isScannable = false;
         anim.SetTrigger("Show");
 
         AfterScanEffect(); // 애니메이션 재생 후 효과 실행

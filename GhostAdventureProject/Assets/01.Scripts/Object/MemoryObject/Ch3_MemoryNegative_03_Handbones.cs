@@ -15,6 +15,5 @@ public class Ch3_MemoryNegative_03_Handbones : MemoryFragment
     public override void AfterScan()
     {
         colected = true;
-        isScannable = false;
     }
 }
