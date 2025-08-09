@@ -145,9 +145,12 @@ public class YameScan_correct : BaseInteractable
         shelf.transform.position = shelfPos;
         clear_UnderGround = true;
         clue_P.SetActive(true);
-        UIManager.Instance.PromptUI.ShowPrompt_2("으악...!!", "벽에 뭔가 나타났어...!");
-        Debug.Log("지하수로와 연결된 문을 발견했습니다");
-
+        
+        if(!clear_UnderGround)
+        {
+            UIManager.Instance.PromptUI.ShowPrompt_2("으악...!!", "벽에 뭔가 나타났어...!");
+            Debug.Log("지하수로와 연결된 문을 발견했습니다");
+        }
     }
 
     private void CancleScan(string reason)

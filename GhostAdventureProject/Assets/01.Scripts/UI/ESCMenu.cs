@@ -6,11 +6,6 @@ using UnityEngine.UI;
 
 public class ESCMenu : MonoBehaviour, IUIClosable
 {
-    //esc키를 옵션메뉴가 뜸
-    // 일반, 사운드, 키설정 중에 선택할 수 있음.
-    // 일반 버튼 선택할 경우  나머지 키설정 버튼은 Setactivefalse
-    
-    //=======================
     public static ESCMenu Instance {get; private set;}
     [SerializeField] private GameObject escMenuUI; // ESCMenu Canvas
     // [SerializeField] private SoundMenu soundMenu;
