@@ -8,9 +8,12 @@ public class Ch3_Scanner : BasePossessable
     private MemoryStorage memoryStorage;
     private List<MemoryData> memories;
 
+    private bool isSolved = false;
+
     protected override void Start()
     {
-        base.Start();
+        isPossessed = false;
+        hasActivated = false;
 
         memoryStorage = UIManager.Instance.GetComponentInChildren<MemoryStorage>();
     }
@@ -29,9 +32,15 @@ public class Ch3_Scanner : BasePossessable
         }
     }
 
+    public void ActiveScanner()
+    {
+        hasActivated = true;
+    }
+
     public void InactiveScanner()
     {
         hasActivated = false;
+        isSolved = true;
         Unpossess();
     }
 
@@ -41,6 +50,14 @@ public class Ch3_Scanner : BasePossessable
         UIManager.Instance.PlayModeUI_CloseAll();
         // UI 띄우기
         memoryPuzzleUI.StartFlow(MemoryManager.Instance.GetCollectedMemories());
+    }
+
+    public override void CantPossess() 
+    {
+        if (!isSolved)
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("아직 위에서 해야할 일이 남은 것 같아");
+        }
     }
 }
 

@@ -33,6 +33,7 @@ public class Ch3_Nurse : MoveBasePossessable
     private bool isWaiting = false;
     private bool hasWorked = false;
     private bool isAnimatingWork = false;
+    private bool isFirstPossessionIn = true;
 
     protected override void Start()
     {
@@ -233,5 +234,10 @@ public class Ch3_Nurse : MoveBasePossessable
     {
         zoomCamera.Priority = 20;
         anim.SetBool("Move", false);
+        if (isFirstPossessionIn)
+        {
+            isFirstPossessionIn = false;
+            UIManager.Instance.PromptUI.ShowPrompt("이 카드키로 콘솔을 조작할 수 있겠어");
+        }
     }
 }

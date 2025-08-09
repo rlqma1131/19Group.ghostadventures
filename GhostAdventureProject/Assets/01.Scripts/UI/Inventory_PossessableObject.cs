@@ -210,6 +210,8 @@ public class Inventory_PossessableObject : MonoBehaviour
                 Debug.Log("해브아이템" + haveItem.inventorySlots.Count);
             }
         }
+
+        // 아이템 사용 시 상태 저장 (기록)
     }
 
     

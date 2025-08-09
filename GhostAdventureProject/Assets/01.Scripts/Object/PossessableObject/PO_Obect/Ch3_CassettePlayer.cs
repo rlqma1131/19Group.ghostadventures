@@ -37,6 +37,7 @@ public class Ch3_CassettePlayer : BasePossessable
     private float inputCooldown = 0.5f; // 조작키 입력 텀
     private float inputTimer = 0f;
     private bool canAdjust = true;
+    private bool isFirstPossessin = true;
 
     private float answerDistortion = 0f; // 정답 주파수 조정값
     private float answerPitch = 1f; // 정답 재생 속도
@@ -75,6 +76,10 @@ public class Ch3_CassettePlayer : BasePossessable
             Unpossess();
             zoomCamera.Priority = 5;
             UIManager.Instance.PlayModeUI_OpenAll();
+            if (isSolved)
+            {
+                UIManager.Instance.PromptUI.ShowPrompt("일단 이 정보를 입력해보려면 치료실을 찾아보자");
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -199,7 +204,10 @@ public class Ch3_CassettePlayer : BasePossessable
             yield return new WaitForSeconds(1f);
         }
 
-        // 정답 도달 후 정상 문장 출력
+        // 정답 도달
+        UIManager.Instance.PromptUI.ShowPrompt("상담 내용..? 왜 이렇게 익숙하지..");
+
+        // 정상 문장 출력
         for (int i = 0; i < correctSentences.Length; i++)
         {
             string sentence = correctSentences[i];
@@ -373,6 +381,12 @@ public class Ch3_CassettePlayer : BasePossessable
         EnemyAI.PauseAllEnemies();
         UIManager.Instance.PlayModeUI_CloseAll();
         zoomCamera.Priority = 20;
+
+        if (isFirstPossessin)
+        {
+            isFirstPossessin = false;
+            UIManager.Instance.PromptUI.ShowPrompt("잡음 투성이야. 주파수랑 속도를 맞추면..");
+        }
     }
 }
 

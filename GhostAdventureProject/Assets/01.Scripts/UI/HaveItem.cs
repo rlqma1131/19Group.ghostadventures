@@ -30,6 +30,7 @@ public class HaveItem : MonoBehaviour
     void Update()
     {
     }
+
     private void ConvertToSlots()
     {
         inventorySlots.Clear();
@@ -47,6 +48,7 @@ public class HaveItem : MonoBehaviour
             }
         }
     }
+
     public bool IsInventoryEmpty()
     {
         return inventorySlots.All(slot => slot.item == null ||  slot.quantity <= 0);

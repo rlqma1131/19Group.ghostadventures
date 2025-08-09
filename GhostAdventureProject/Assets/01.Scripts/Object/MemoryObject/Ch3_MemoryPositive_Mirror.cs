@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Ch3_MemoryPositive_Mirror : MemoryFragment
 {
-    // Start is called before the first frame update
+    [SerializeField] private Ch3_Scanner scanner;
+
     public void ActivateObj()
     {
         isScannable = true;
@@ -13,6 +14,6 @@ public class Ch3_MemoryPositive_Mirror : MemoryFragment
     public override void AfterScan()
     {
         isScannable = false;
-
+        scanner.ActiveScanner();
     }
 }

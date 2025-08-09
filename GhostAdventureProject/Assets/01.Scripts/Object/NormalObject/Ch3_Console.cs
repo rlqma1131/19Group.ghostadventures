@@ -24,6 +24,7 @@ public class Ch3_Console : BaseInteractable
 
     private bool canUse = false;
     private bool isZoomed = false;
+    private bool isFirstZoom = true;
 
     private Ch3_ConsoleButton currentActiveButton;
     private Ch3_MemoryNegative_02_Paper memoryPaper;
@@ -54,7 +55,7 @@ public class Ch3_Console : BaseInteractable
             if (inventory == null || cardKey != inventory.selectedItem()
                 || !PossessionStateManager.Instance.IsPossessing())
             {
-                UIManager.Instance.PromptUI.ShowPrompt("조작하려면 카드키가 필요해보여", 2f);
+                UIManager.Instance.PromptUI.ShowPrompt("조작하려면 카드키가 필요해보여.. 방법이 없을까?", 2f);
                 return;
             }
 
@@ -65,6 +66,12 @@ public class Ch3_Console : BaseInteractable
                 qKey.SetActive(false);
                 zoomCamera.Priority = 20;
                 isZoomed = true;
+
+                if (isFirstZoom)
+                {
+                    isFirstZoom = false;
+                    UIManager.Instance.PromptUI.ShowPrompt("알맞은 정보를 입력해야 해");
+                }
                 return;
             }
             else if (cardKey == inventory.selectedItem() && cardKey != null && isZoomed)
