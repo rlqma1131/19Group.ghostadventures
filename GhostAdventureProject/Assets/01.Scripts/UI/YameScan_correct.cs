@@ -11,6 +11,7 @@ public class YameScan_correct : BaseInteractable
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject door; // 지하수로와 연결된 문
     [SerializeField] private GameObject shelf; // 문 막고 있는 책장
+    [SerializeField] private GameObject clue_P; // 단서 P
     public bool clear_UnderGround = false;
     // [SerializeField] private GameObject e_key;
 
@@ -32,6 +33,7 @@ public class YameScan_correct : BaseInteractable
         scanCircleUI = UIManager.Instance.scanUI.transform.Find("CircleUI")?.GetComponent<Image>();
         scanCircleUI?.gameObject.SetActive(false);
         player = FindObjectOfType<PlayerController>().gameObject;
+        clue_P.SetActive(false);
 
     }
 
@@ -139,9 +141,11 @@ public class YameScan_correct : BaseInteractable
         // Animator doorani = door.GetComponent<Animator>();
         // doorani.SetBool("Open", true);
         Vector3 shelfPos = shelf.transform.position;
-        shelfPos.x -= 3f;
+        shelfPos.x -= 5f;
         shelf.transform.position = shelfPos;
         clear_UnderGround = true;
+        clue_P.SetActive(true);
+        UIManager.Instance.PromptUI.ShowPrompt_2("으악...!!", "벽에 뭔가 나타났어...!");
         Debug.Log("지하수로와 연결된 문을 발견했습니다");
 
     }
