@@ -101,11 +101,11 @@ public class GameManager : Singleton<GameManager>
         //}
     }
 
-    //public void SetPendingLoad(SaveData data)
-    //{
-    //    loadFromSave = true;
-    //    pendingSaveData = data;
-    //}
+    public void SetPendingLoad(SaveData data)
+    {
+        loadFromSave = true;
+        pendingSaveData = data;
+    }
 
     //private void ApplySaveData(SaveData data)
     //{

@@ -223,13 +223,6 @@ public class Ch2_CCTVMonitor : BasePossessable
             if (cur != expected[i]) solved = false;
         }
 
-        Debug.Log(
-        $"CCTVMonitor : " +
-        $"{cctvScreenAnimators[0].GetBool("Right")}, " +
-        $"{cctvScreenAnimators[1].GetBool("Right")}, " +
-        $"{cctvScreenAnimators[2].GetBool("Right")}, " +
-        $"{cctvScreenAnimators[3].GetBool("Right")}"
-        );
         return solved;
     }
 

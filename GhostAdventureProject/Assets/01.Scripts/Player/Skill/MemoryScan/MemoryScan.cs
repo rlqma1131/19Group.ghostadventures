@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MemoryScan : MonoBehaviour
@@ -149,8 +150,6 @@ public class MemoryScan : MonoBehaviour
 
     private void CompleteScan()
     {
-        
-
         Debug.Log("스캔 완료");
         isScanning = false;
         Time.timeScale = 1f; // 시간 흐름을 원래대로 복구
@@ -170,28 +169,18 @@ public class MemoryScan : MonoBehaviour
 
         currentScanObject.GetComponentInChildren<SpriteRenderer>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f); // 스캔 완료 후 색상 변경
 
-        // 여기에 스캔 완료 후 처리 로직 추가 (예: UI 업데이트, 사운드 재생 등)
-
-        //SceneManager.LoadScene($"{currentMemoryFragment.data.CutSceneName}", LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
-        //Time.timeScale = 0f; // 시간 흐름을 원래대로 복구
-
-        // 저장
-        //SaveData data = new SaveData
+        // 저장하기
+        //if (currentMemoryFragment != null)
         //{
-        //    checkpointId = currentScanObject.name,
-        //    sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
-        //    playerPosition = playerTransform.position,
-
-        //    collectedClueNames = inventory_Player.collectedClues.Select(c => c.clue_Name).ToList(),
-
-        //    collectedMemoryIDs = MemoryManager.Instance.collectedMemoryIDs.ToList(),
-
-        //    scannedMemoryTitles = MemoryManager.Instance.ScannedMemories.Select(m => m.memoryTitle).ToList()
-        //};
-
-        //SaveManager.SaveGame(data);
-        //Debug.Log($"[MemoryScan] 기억조각 스캔 완료 및 저장됨: {data.checkpointId}");
-
+        //    SaveManager.SaveWhenScan(
+        //        currentMemoryFragment.data.memoryID,
+        //        currentMemoryFragment.data.memoryTitle,
+        //        SceneManager.GetActiveScene().name,
+        //        playerTransform.position,
+        //        checkpointId: currentScanObject != null ? currentScanObject.name : null,
+        //        autosave: true  // 저장 팝업 띄움
+        //    );
+        //}
     }
 
     private void CancleScan(string reason)

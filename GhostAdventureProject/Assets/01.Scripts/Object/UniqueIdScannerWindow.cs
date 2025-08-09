@@ -166,13 +166,15 @@ public class UniqueIdScannerWindow : EditorWindow
 
     static List<Component> FindTargetsInHierarchy(GameObject root, bool onlyMissingUniqueId, bool includeInactive)
     {
-        // 대상: BasePossessable or MemoryFragment
+        // 대상: BasePossessable / MemoryFragment / BaseDoor(= LockedDoor, OpenDoor 등 포함)
         var possessables = root.GetComponentsInChildren(typeof(BasePossessable), includeInactive);
         var fragments = root.GetComponentsInChildren(typeof(MemoryFragment), includeInactive);
+        var doors = root.GetComponentsInChildren(typeof(BaseDoor), includeInactive); // ★ 추가
 
         var all = new List<Component>();
         all.AddRange(possessables);
         all.AddRange(fragments);
+        all.AddRange(doors); // ★ 추가
 
         if (onlyMissingUniqueId)
             all = all.Where(c => c != null && c.GetComponent<UniqueId>() == null).ToList();
