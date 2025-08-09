@@ -20,15 +20,6 @@ public class Ch3_Drawers : BasePossessable
     {
         isPossessed = false;
         zoomCamera.Priority = 5;
-
-        // 저장값 적용
-        if (TryGetComponent(out UniqueId uid))
-        {
-            if (SaveManager.TryGetPossessableState(uid.Id, out bool savedActive))
-            {
-                hasActivated = savedActive;
-            }
-        }
     }
 
     protected override void Update()
