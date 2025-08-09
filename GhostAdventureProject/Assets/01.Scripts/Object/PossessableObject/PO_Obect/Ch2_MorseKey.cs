@@ -380,6 +380,9 @@ public class Ch2_MorseKey : BasePossessable
         revealMemory(); // 기억 조각 나타남
         memory.ActivateHandPrint();
 
+        Unpossess();
+
+        UIManager.Instance.PlayModeUI_OpenAll();
         hasActivated = false; // 더 이상 빙의 불가능
     }
 
@@ -399,6 +402,7 @@ public class Ch2_MorseKey : BasePossessable
             panelCanvasGroup.alpha = Mathf.Lerp(0f, 1f, t);
             yield return null;
         }
+
 
         panelCanvasGroup.alpha = 1f;
 
