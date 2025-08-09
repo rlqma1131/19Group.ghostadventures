@@ -109,9 +109,11 @@ public class TimelineControl : MonoBehaviour
         {
             UIManager.Instance.PromptUI.ShowPrompt(prompt, 3f);
         }
-
+        if(memoryScan.currentMemoryFragment != null)
+        {
         memoryScan.currentMemoryFragment.AfterScan();
         UIManager.Instance.NoticePopupUI.FadeInAndOut($"※ 기억조각 저장 됨 - [{memoryScan.currentMemoryFragment.data.memoryTitle}]");
+        }
     }
 
     private IEnumerator FlashImages()
