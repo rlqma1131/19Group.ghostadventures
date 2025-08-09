@@ -43,6 +43,7 @@ public class MemoryNode : MonoBehaviour
         Debug.Log("씬 다시보기 버튼클릭");
         UIManager.Instance.PlayModeUI_CloseAll();
         SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+        EnemyAI.PauseAllEnemies();
     }
 
     public void SetStateEffect(MemoryState state)
