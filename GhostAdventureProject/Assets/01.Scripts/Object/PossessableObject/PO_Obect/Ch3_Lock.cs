@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +29,10 @@ public class Ch3_Lock : BasePossessable
 
     [Header("기억 조각 서랍장")]
     [SerializeField] private Ch3_Shelf shelf;
+
+    [Header("Xray 모니터 && 환자 서류")]
+    [SerializeField] private Ch3_Xray_Monitor xrayMonitor;
+    [SerializeField] private Ch3_PatientDocumentIndex[] documentIndex;
 
     // 상태 관리
     [HideInInspector] public ButtonType selectedType = ButtonType.None;
@@ -263,5 +268,9 @@ public class Ch3_Lock : BasePossessable
     public override void OnPossessionEnterComplete() 
     {
         ShowLockZoom();
+        if (!xrayMonitor.IsSecondFind || !documentIndex.Any(doc => doc.IsChecked))
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("정보가 부족해...");
+        }
     }
 }
