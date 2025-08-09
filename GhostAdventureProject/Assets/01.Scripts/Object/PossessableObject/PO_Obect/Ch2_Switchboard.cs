@@ -63,6 +63,7 @@ public class Ch2_Switchboard : BasePossessable
         UIManager.Instance.PlayModeUI_OpenAll();
 
         hasActivated = false;
+        MarkActivatedChanged();
 
         // CCTV, 모니터 빙의 가능
         foreach (var cctv in cams)

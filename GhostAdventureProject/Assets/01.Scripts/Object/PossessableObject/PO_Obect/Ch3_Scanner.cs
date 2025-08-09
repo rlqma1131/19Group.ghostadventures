@@ -44,11 +44,14 @@ public class Ch3_Scanner : BasePossessable
     public void ActiveScanner()
     {
         hasActivated = true;
+        MarkActivatedChanged();
     }
 
     public void InactiveScanner()
     {
         hasActivated = false;
+        MarkActivatedChanged();
+
         isSolved = true;
         Unpossess();
     }

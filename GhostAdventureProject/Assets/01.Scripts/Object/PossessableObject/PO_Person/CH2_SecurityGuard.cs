@@ -139,6 +139,8 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 zoomCamera.Priority = 5;
                 Unpossess();
                 hasActivated = false;
+                MarkActivatedChanged();
+
                 UseAllItem = true;
             }
             else
@@ -309,6 +311,8 @@ public class CH2_SecurityGuard : MoveBasePossessable
         {
             isInOffice = true;
             hasActivated = false;
+            MarkActivatedChanged();
+
             targetPerson.currentCondition = PersonCondition.Unknown;
         }
     }
@@ -330,6 +334,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         {
             isInOffice = false;
             hasActivated = true;
+            MarkActivatedChanged();
         }
     }
 

@@ -233,6 +233,7 @@ public class Ch3_Nurse : MoveBasePossessable
     public void InactiveNurse()
     {
         hasActivated = false;
+        MarkActivatedChanged();
     }
 
     public override void OnPossessionEnterComplete() 

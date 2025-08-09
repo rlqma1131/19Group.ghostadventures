@@ -34,9 +34,11 @@ public class Ch1_CelebrityBox : BasePossessable
     {
         TutorialManager.Instance.Show(TutorialStep.Q_key_Interact);
     }
+
     private void TriggerBoxEvent()
     {
         hasActivated = true;
+        MarkActivatedChanged();
 
         UIManager.Instance.Hide_Q_Key();
         

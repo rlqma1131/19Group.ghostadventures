@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Ch3_Locker : BasePossessable
 {
@@ -10,20 +10,28 @@ public class Ch3_Locker : BasePossessable
     private Ch3_LockerSelector lockerSelector;
     public bool IsCorrectBody => isCorrectBody;
 
+    private bool isSaved = false;
+
     protected override void Start()
     {
         base.Start();
         lockerSelector = FindObjectOfType<Ch3_LockerSelector>();
         openObj.SetActive(false);
         hasActivated = lockerSelector.HasAllClues();
+        MarkActivatedChanged();
     }
 
     protected override void Update()
     {
         if (isOpened || lockerSelector.IsPenaltyActive || lockerSelector.IsSolved)
         {
+            if (isSaved)
+                return;
+
             hasActivated = false;
             q_Key.SetActive(false);
+            MarkActivatedChanged();
+            isSaved = true;
             return;
         }
         
@@ -77,6 +85,7 @@ public class Ch3_Locker : BasePossessable
 
         openObj.SetActive(true);
         hasActivated = false;
+        MarkActivatedChanged();
         
         lockerSelector.RegisterOpenedLocker(this);
 
@@ -102,11 +111,13 @@ public class Ch3_Locker : BasePossessable
         openObj.SetActive(false);
         
         hasActivated = lockerSelector.HasAllClues();
+        MarkActivatedChanged();
     }
     
     public void SetActivateState(bool state)
     {
         hasActivated = state;
+        MarkActivatedChanged();
     }
 
     public override void CantPossess()

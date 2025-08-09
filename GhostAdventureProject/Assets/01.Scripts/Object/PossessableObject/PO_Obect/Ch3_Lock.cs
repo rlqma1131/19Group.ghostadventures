@@ -122,6 +122,7 @@ public class Ch3_Lock : BasePossessable
         {
             isSolved = true;
             hasActivated = false;
+            MarkActivatedChanged();
 
             StartCoroutine(RevealMemory());
         }
@@ -131,7 +132,9 @@ public class Ch3_Lock : BasePossessable
     {
         HideLockZoom();
         Unpossess();
+
         hasActivated = false;
+        MarkActivatedChanged();
 
         yield return new WaitForSeconds(0.5f);
 

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -41,6 +41,8 @@ public class Ch3_MirrorObj : BasePossessable
                 
                 // 다시 빙의되지 않게 막기
                 hasActivated = false;
+                MarkActivatedChanged();
+
                 sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 0.5f);
             }
 

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,6 +31,8 @@ public class Ch2_MosPerson : BasePossessable
             {
                 Unpossess();
                 hasActivated = false;
+                MarkActivatedChanged();
+
                 UseAllItem = true;
             }
             else

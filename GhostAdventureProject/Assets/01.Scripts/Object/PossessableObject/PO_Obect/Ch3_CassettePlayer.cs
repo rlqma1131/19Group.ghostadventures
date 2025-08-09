@@ -364,6 +364,8 @@ public class Ch3_CassettePlayer : BasePossessable
         if (Mathf.Abs(distortionValue - answerDistortion) < 0.05f && Mathf.Abs(playbackPitch - answerPitch) < 0.05f)
         {
             hasActivated = false;
+            MarkActivatedChanged();
+
             isPlaying = false;
             isSolved = true;
 
