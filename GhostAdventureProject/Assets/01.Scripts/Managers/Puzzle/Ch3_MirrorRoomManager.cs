@@ -39,7 +39,7 @@ public class Ch3_MirrorRoomManager : MonoBehaviour
         {
             sr.DOFade(0f, 0.4f);
         }
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
         
         player.transform.position = playerMovePoint.position;
         
@@ -47,7 +47,7 @@ public class Ch3_MirrorRoomManager : MonoBehaviour
         {
             sr.DOFade(1f, 0.4f);
         }
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
         
         SpriteRenderer[] mirrorSprites = mirrorRoom.GetComponentsInChildren<SpriteRenderer>(includeInactive: true);
         foreach (var sr in mirrorSprites)
@@ -55,7 +55,7 @@ public class Ch3_MirrorRoomManager : MonoBehaviour
             sr.DOFade(0f, 0.5f);
         }
 
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSecondsRealtime(0.6f);
         
         mirrorRoom.SetActive(false);
         
