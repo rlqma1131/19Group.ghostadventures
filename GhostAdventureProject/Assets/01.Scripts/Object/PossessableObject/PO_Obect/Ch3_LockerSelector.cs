@@ -59,6 +59,7 @@ public class Ch3_LockerSelector : MonoBehaviour
         b1fDoor.SetActive(true);
         IsSolved = true;
         ConsumeClue(requiredClues);
+        UIManager.Instance.PromptUI.ShowPrompt("※ 시신 확인 완료. 지하실 입구가 활성화되었습니다.", 2f);
 
         var lockers = FindObjectsOfType<Ch3_Locker>();
         foreach (var locker in lockers)
