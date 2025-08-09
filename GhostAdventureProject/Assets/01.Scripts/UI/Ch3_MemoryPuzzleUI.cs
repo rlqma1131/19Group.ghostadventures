@@ -312,6 +312,9 @@ public class Ch3_MemoryPuzzleUI : MonoBehaviour
         gameObject.SetActive(false);
         puzzlecompleted = true;
 
+        scanner.Unpossess();
+        scanner.InactiveScanner();
+
         //SaveData data = new SaveData
         //{
         //    checkpointId = "3챕터 최종 퍼즐",

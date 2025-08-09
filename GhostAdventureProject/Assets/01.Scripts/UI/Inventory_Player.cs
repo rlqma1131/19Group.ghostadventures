@@ -97,6 +97,7 @@ public class Inventory_Player : MonoBehaviour
             // currentPageText.text = currentPage.ToString(); //현재 페이지 표시 
         }
     }
+
     public void NextPage() // 다음 페이지로
     {
         int maxPage = (collectedClues.Count - 1) / cluesPerPage;
