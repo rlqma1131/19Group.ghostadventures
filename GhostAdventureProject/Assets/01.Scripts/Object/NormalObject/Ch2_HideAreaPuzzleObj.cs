@@ -10,15 +10,6 @@ public class Ch2_HideAreaPuzzleObj : HideArea
     {
         isPossessed = false;
         hasActivated = false;
-
-        // 저장값 적용
-        if (TryGetComponent(out UniqueId uid))
-        {
-            if (SaveManager.TryGetPossessableState(uid.Id, out bool savedActive))
-            {
-                hasActivated = savedActive;
-            }
-        }
     }
 
     public void HideAreaPuzzleActivate()
