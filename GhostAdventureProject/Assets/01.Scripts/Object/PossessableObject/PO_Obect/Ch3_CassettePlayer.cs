@@ -29,6 +29,7 @@ public class Ch3_CassettePlayer : BasePossessable
     [SerializeField] private GameObject pitchDial;
     [SerializeField] private GameObject distortDial;
     [SerializeField] private GameObject playBtn;
+    [SerializeField] private GameObject clueScreen;
 
     private bool isPlaying = false; // 재생 여부
     private bool isSolved = false; // 문제 해결 여부
@@ -59,6 +60,7 @@ public class Ch3_CassettePlayer : BasePossessable
         distortion.distortionLevel = distortionValue;
         audioSource.pitch = playbackPitch;
 
+        clueScreen.SetActive(false);
         playBtn.SetActive(false);
         UpdateDialRotation();
     }
@@ -359,6 +361,8 @@ public class Ch3_CassettePlayer : BasePossessable
 
             SoundManager.Instance.StopBGM();
             SoundManager.Instance.PlaySFX(talkingSound);
+
+            clueScreen.SetActive(true);
         }
     }
 
