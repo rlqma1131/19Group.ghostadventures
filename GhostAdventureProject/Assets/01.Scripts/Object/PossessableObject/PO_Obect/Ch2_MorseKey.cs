@@ -26,6 +26,7 @@ public class Ch2_MorseKey : BasePossessable
 
     private Ch2_MemoryPositive_01_HandPrint memory;
     private bool isSuccessAnimating = false;
+    private bool isTweening = false;
     private Coroutine shakeCoroutine;
 
     private Dictionary<string, char> morseToChar = new Dictionary<string, char>()
@@ -100,7 +101,7 @@ public class Ch2_MorseKey : BasePossessable
             isPressing = true;
             pressStartTime = Time.time;
         }
-        else if (Input.GetKeyDown(KeyCode.E))
+        else if (Input.GetKeyDown(KeyCode.E) && isTweening)
         {
             Unpossess();
 
@@ -161,12 +162,6 @@ public class Ch2_MorseKey : BasePossessable
         }
     }
 
-    public override void OnPossessionEnterComplete() 
-    { 
-        EnemyAI.PauseAllEnemies();
-        UIManager.Instance.PlayModeUI_CloseAll();
-        StartCoroutine(FadeInPanel(1.0f)); // 판넬 페이드 인
-    }
 
     private void UpdateUI()
     {
@@ -390,6 +385,8 @@ public class Ch2_MorseKey : BasePossessable
 
     private IEnumerator FadeInPanel(float duration)
     {
+        isTweening = true;
+
         panelCanvasGroup.alpha = 0f;
         panelCanvasGroup.interactable = true;
         panelCanvasGroup.blocksRaycasts = true;
@@ -404,6 +401,8 @@ public class Ch2_MorseKey : BasePossessable
         }
 
         panelCanvasGroup.alpha = 1f;
+
+        isTweening = false;
     }
 
     private IEnumerator FadeOutPanel(float duration)
@@ -417,10 +416,6 @@ public class Ch2_MorseKey : BasePossessable
             float t = timer / duration;
             panelCanvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, t); // 점점 투명하게
             yield return null;
-
-            UIManager.Instance.PlayModeUI_OpenAll();
-
-            Unpossess();
         }
 
         panelCanvasGroup.alpha = 0f;
@@ -452,5 +447,11 @@ public class Ch2_MorseKey : BasePossessable
     {
         SoundManager.Instance.PlaySFX(mudSFX); // 진흙 소리
         handprint.SetActive(true);
+    }
+    public override void OnPossessionEnterComplete() 
+    { 
+        EnemyAI.PauseAllEnemies();
+        UIManager.Instance.PlayModeUI_CloseAll();
+        StartCoroutine(FadeInPanel(1.0f)); // 판넬 페이드 인
     }
 }

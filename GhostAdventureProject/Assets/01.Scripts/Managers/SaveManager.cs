@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -92,46 +93,51 @@ public static class SaveManager
         currentData = null; // 조회 계열은 이후 false/기본값을 반환
     }
 
-    public static void MarkPuzzleSolved(string puzzleID, bool autosave = true)
+    // 퍼즐 풀었을 때 기록
+    public static void MarkPuzzleSolved(string puzzleID)
     {
         EnsureData();
         if (!currentData.solvedPuzzleIDs.Contains(puzzleID))
         {
             currentData.solvedPuzzleIDs.Add(puzzleID);
-            if (autosave) SaveGame();
+            //if (autosave) SaveGame();
         }
     }
 
-    public static void AddCollectedClue(string clueName, bool autosave = true)
+    // 단서 수집했을 때 기록
+    public static void AddCollectedClue(string clueName)
     {
         EnsureData();
         if (!currentData.collectedClueNames.Contains(clueName))
         {
             currentData.collectedClueNames.Add(clueName);
-            if (autosave) SaveGame();
+            //if (autosave) SaveGame();
         }
     }
 
-    public static void AddCollectedMemoryID(string memoryID, bool autosave = true)
+    // 기억 스캔했을 때 데이터이름 기록
+    public static void AddCollectedMemoryID(string memoryID)
     {
         EnsureData();
         if (!currentData.collectedMemoryIDs.Contains(memoryID))
         {
             currentData.collectedMemoryIDs.Add(memoryID);
-            if (autosave) SaveGame();
+            //if (autosave) SaveGame();
         }
     }
 
-    public static void AddScannedMemoryTitle(string title, bool autosave = true)
+    // 기억 스캔했을 때 기억제목 저장
+    public static void AddScannedMemoryTitle(string title)
     {
         EnsureData();
         if (!currentData.scannedMemoryTitles.Contains(title))
         {
             currentData.scannedMemoryTitles.Add(title);
-            if (autosave) SaveGame();
+            //if (autosave) SaveGame();
         }
     }
 
+    // 현재 씬 이름과 위치 저장
     public static void SetSceneAndPosition(string sceneName, Vector3 playerPos, string checkpointId = null, bool autosave = true)
     {
         EnsureData();
@@ -139,5 +145,14 @@ public static class SaveManager
         currentData.playerPosition = playerPos;
         currentData.checkpointId = checkpointId;
         if (autosave) SaveGame();
+    }
+
+    // 기억 스캔할 때 호출 ( 기억ID, 기억제목, 플레이어 위치 저장 )
+    public static void SaveWhenScan(string memoryID, string title,
+        string sceneName, Vector3 playerPos, string checkpointId = null, bool autosave = true)
+    {
+        AddCollectedMemoryID(memoryID);
+        AddScannedMemoryTitle(title);
+        SetSceneAndPosition(sceneName, playerPos, checkpointId, autosave);
     }
 }
