@@ -10,20 +10,19 @@ public class Ch2_Radio : BasePossessable
     [SerializeField] private float range = 0.0324f; // 주파수 바늘 이동범위
     [SerializeField] private float triggerX_Person = 0.38f; // 트리거위치 - 사람
     [SerializeField] private float triggerX_Enemy = 0.09f; // 트리거위치 - 적
-    public AudioClip triggerSound_Person; // 트리거사운드 - 사람
-    public AudioClip triggerSound_Enemy; // 트리거사운드 - 적
-    public bool hasTriggered_Person = false; // 트리거발동여부 - 사람
+    public AudioSource triggerSound_Person; // 트리거사운드 - 사람
+    public AudioSource triggerSound_Enemy; // 트리거사운드 - 적
+    private bool hasTriggered_Person = false; // 트리거발동여부 - 사람
     private bool hasTriggered_Enemy = false; // 트리거발동여부 - 적
     private bool isControlMode = false; // 주파수 조정가능 모드(줌)
     [SerializeField] private Animator speakerOn; // 스피커 애니메이션 재생용
     [SerializeField] private GameObject musicalNoteOn; // 음표 애니메이션 재생용
     [SerializeField] private CH2_SecurityGuard guard;
+    public bool IsPlaying=> triggerSound_Person.isPlaying; // 사운드 재생중 여부 - 사람
     [SerializeField] private SoundEventConfig soundConfig;
 
     // 저장 확인용 불값 ( 저장 후 중복 저장 방지 )
     private bool isSaved = false;
-    
-    public bool isPlaying = false;
 
     protected override void Start()
     {
@@ -43,14 +42,14 @@ public class Ch2_Radio : BasePossessable
             isSaved = true;
         }
 
-        if (isPlaying)
+        if (IsPlaying)
         {
             speakerOn.SetBool("OnSpeaker", true); // 스피커 애니메이션 재생
             musicalNoteOn.SetActive(true);
             Animator musicalNoteAni = musicalNoteOn.GetComponent<Animator>();
             musicalNoteAni.SetBool("OnSpeaker", true);
         }
-        else if(!isPlaying)
+        else if(!IsPlaying)
         {
             speakerOn.SetBool("OnSpeaker", false); // 스피커 애니메이션 재생
             Animator musicalNoteAni = musicalNoteOn.GetComponent<Animator>();
@@ -91,10 +90,8 @@ public class Ch2_Radio : BasePossessable
         // needle의 위치가 트리거 위치에 가까워지면 사운드 작동.
         if (!hasTriggered_Person && Mathf.Abs(needle.transform.localPosition.x - triggerX_Person) <= 0.01f)
         {
-            SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드 아웃
-            SoundManager.Instance.FadeInLoopingSFX(triggerSound_Person, 1f, 0.5f);
+            triggerSound_Person.Play();
             hasTriggered_Person = true;
-            isPlaying = true;
             guard.targetPerson.SetCondition(PersonCondition.Tired);
             Debug.Log(guard.conditionHandler);
             zoomRadio.SetActive(false);
@@ -105,18 +102,14 @@ public class Ch2_Radio : BasePossessable
         // needle의 위치가 트리거 위치에 멀어지면 사운드 중지.
         if (hasTriggered_Person && Mathf.Abs(needle.transform.localPosition.x - triggerX_Person) >= 0.01f)
         {
-            SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
-            SoundManager.Instance.RestoreLastBGM(1f);
+            triggerSound_Person.Stop();
             hasTriggered_Person = false;
-            isPlaying = false;
         }
 
         // 적 ==============================================================================================
         if (!hasTriggered_Enemy && Mathf.Abs(needle.transform.localPosition.x - triggerX_Enemy) <= 0.01f)
         {
-            SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드 아웃
-            SoundManager.Instance.FadeInLoopingSFX(triggerSound_Enemy, 1f, 0.5f);
-            isPlaying = true;
+            triggerSound_Enemy.Play();
             hasTriggered_Enemy = true;
             SoundTrigger.TriggerSound(transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
             Debug.Log(guard.conditionHandler);
@@ -133,9 +126,7 @@ public class Ch2_Radio : BasePossessable
         // needle의 위치가 트리거 위치에 멀어지면 사운드 중지.
         if (hasTriggered_Enemy && Mathf.Abs(needle.transform.localPosition.x - triggerX_Enemy) >= 0.01f)
         {
-            SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
-            SoundManager.Instance.RestoreLastBGM(1f);
-            isPlaying = false;
+            triggerSound_Enemy.Stop();
             hasTriggered_Enemy = false;
         }
         // ===============================================================================================
@@ -199,9 +190,7 @@ public class Ch2_Radio : BasePossessable
         base.OnTriggerEnter2D(other);
         if(other.CompareTag("Person"))
         {
-            SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
-            SoundManager.Instance.RestoreLastBGM(1f);
-            isPlaying = false;
+            triggerSound_Person.Stop();
             GoToLeft();
         }        
     }

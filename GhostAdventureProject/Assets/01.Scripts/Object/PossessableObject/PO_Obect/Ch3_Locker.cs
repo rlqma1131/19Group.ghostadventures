@@ -87,8 +87,7 @@ public class Ch3_Locker : BasePossessable
         }
         else
         {
-            if (lockerSelector.RemainingOpens == 1)
-                UIManager.Instance.PromptUI.ShowPrompt("신중하자", 2f);
+            UIManager.Instance.PromptUI.ShowPrompt("단서를 더 살펴보자.",2f);
             lockerSelector.OnWrongBodySelected();
             Unpossess();
         }

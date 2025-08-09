@@ -52,7 +52,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
     protected override void Update()
     {
-        if (radio != null && radio.isPlaying)
+        if (radio != null && radio.IsPlaying)
         {
             // anim.Play("Idle");
             state = GuardState.MovingToRadio;
@@ -99,10 +99,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 break;
 
             case GuardState.Roading:
-                SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
-                SoundManager.Instance.RestoreLastBGM(1f);
-                radio.isPlaying = false;
-
+                radio.triggerSound_Person.Stop();
                 roadingTimer += Time.deltaTime;
                 targetPerson.currentCondition = PersonCondition.Normal;
                 if(roadingTimer >= roadingDuration) 
@@ -121,11 +118,10 @@ public class CH2_SecurityGuard : MoveBasePossessable
             return;
 
         
-        if(radio.isPlaying)
+        if(radio.IsPlaying)
         {
-            SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
-            SoundManager.Instance.RestoreLastBGM(1f);
-            radio.isPlaying = false;
+            radio.triggerSound_Person.DOFade(0f, 1.5f)
+            .OnComplete(() => radio.triggerSound_Person.Stop());
         }
 
         Move();
@@ -357,27 +353,19 @@ public class CH2_SecurityGuard : MoveBasePossessable
     // 빙의 해제시
     public override void Unpossess()
     {
-        SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
-        SoundManager.Instance.RestoreLastBGM(1f);
-        radio.isPlaying = false;
-
+        radio.triggerSound_Person.Stop();
         base.Unpossess();
         state = GuardState.Roading;
         anim.SetBool("Move", false);
         roadingTimer = 0f;
     }
-
     public override void OnPossessionEnterComplete() 
     {   
         anim.SetBool("Rest", false);
         anim.SetBool("Move", false); 
-
         base.OnPossessionEnterComplete();
-
-        SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
-        SoundManager.Instance.RestoreLastBGM(1f);
-        radio.isPlaying = false;
-
+        radio.triggerSound_Person.DOFade(0f, 5f)
+        .OnComplete(() => radio.triggerSound_Person.Stop());
         highlight.SetActive(false);
     }
 

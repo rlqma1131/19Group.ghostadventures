@@ -5,7 +5,8 @@ public class SoundTrigger : MonoBehaviour
 {
     [Header("SO 기반 사운드 설정")]
     [SerializeField] private SoundEventConfig soundConfig;
-    
+
+    // 🔥 기존 코드 호환을 위한 정적 메서드
     public static void TriggerSound(Vector3 soundPos, float range, float duration, float offsetDistance = 3f)
     {
         EnemyAI[] enemies = GameObject.FindObjectsOfType<EnemyAI>();
@@ -20,7 +21,6 @@ public class SoundTrigger : MonoBehaviour
                 }
             }
         }
-        UIManager.Instance.PromptUI.ShowPrompt("으악!!!!!!!", 2f);
     }
 
     // SO 기반 인스펙터 호출용
