@@ -15,6 +15,8 @@ public class Ch3_PatientDocumentIndex : MonoBehaviour
 
     private bool isMouseInRange = false;
     private bool isZoomActive = false;
+    private bool isChecked = false;
+    public bool IsChecked => isChecked;
 
     void Start()
     {
@@ -38,6 +40,10 @@ public class Ch3_PatientDocumentIndex : MonoBehaviour
             {
                 SoundManager.Instance.PlaySFX(paperSFX);
                 ShowDocumentZoom();
+                if (!isChecked)
+                {
+                    isChecked = true;
+                }
             }
         }
 

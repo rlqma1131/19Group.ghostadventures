@@ -16,6 +16,8 @@ public class Ch3_Xray_Monitor : BaseInteractable
 
     private bool isFirstFind = false;
     private bool isSecondFind = false;
+    public bool IsSecondFind => isSecondFind;
+
     private int lastFoundIndex = -1;
 
     void Start()
