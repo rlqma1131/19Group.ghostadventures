@@ -35,6 +35,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     public bool doorPass = false;
     public bool oneTimeActionDelete = false;
     public bool UseAllItem = false;
+    private BoxCollider2D[] cols;
 
     // 처음 시작시 빙의불가(경비실안에 있음)
     protected override void Start()
@@ -46,6 +47,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         haveitem = GetComponent<HaveItem>();
         targetPerson = GetComponent<PersonConditionUI>();
         targetPerson.currentCondition = PersonCondition.Unknown;
+        cols = GetComponentsInChildren<BoxCollider2D>();
     }
 
     protected override void Update()
@@ -231,7 +233,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         else if (destination == bench.position)
         {   
             state = GuardState.Resting;
-            anim.SetBool("Move", false);
+            // anim.SetBool("Move", false);
             anim.SetBool("Rest", true);
             restTimer = 0f;
         }
@@ -255,6 +257,13 @@ public class CH2_SecurityGuard : MoveBasePossessable
             anim.SetBool("Move", false);
             anim.SetBool("Work", true);
             targetPerson.currentCondition = PersonCondition.Vital;
+            if(UseAllItem)
+            {
+                foreach(BoxCollider2D col in cols)
+                {
+                    col.enabled = false;
+                }
+            }
         }
     }
 
@@ -279,9 +288,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
         }
     }
 
-    
-    
-
     public override void OnQTESuccess()
     {
         SoulEnergySystem.Instance.RestoreAll();
@@ -292,7 +298,12 @@ public class CH2_SecurityGuard : MoveBasePossessable
     // 경비원이 있는 곳이 경비실 안인지 밖인지 확인 (트리거)
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
+        // if (!hasActivated)
+        //     return;
+
         base.OnTriggerEnter2D(collision);
+        // if (collision.CompareTag("Player"))
+        //     PlayerInteractSystem.Instance.AddInteractable(gameObject);
 
         if(collision.CompareTag("In"))
         {
@@ -303,8 +314,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
     }
     private void OnTriggerStay2D(Collider2D other)
     {
-        base.OnTriggerEnter2D(other);
-
         if(other.CompareTag("In"))
         {
             targetPerson.currentCondition = PersonCondition.Unknown;
@@ -314,6 +323,8 @@ public class CH2_SecurityGuard : MoveBasePossessable
     protected override void OnTriggerExit2D(Collider2D collision)
     {
         base.OnTriggerExit2D(collision);
+        // if (collision.CompareTag("Player"))
+        //     PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
 
         if(collision.CompareTag("In"))
         {
@@ -349,12 +360,13 @@ public class CH2_SecurityGuard : MoveBasePossessable
         roadingTimer = 0f;
     }
     public override void OnPossessionEnterComplete() 
-    {       
+    {   
+        anim.SetBool("Rest", false);
+        anim.SetBool("Move", false); 
         base.OnPossessionEnterComplete();
         radio.triggerSound_Person.DOFade(0f, 5f)
         .OnComplete(() => radio.triggerSound_Person.Stop());
         highlight.SetActive(false);
-                
     }
 
     // 단서 획득시 대사 출력
