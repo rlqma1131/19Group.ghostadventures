@@ -14,7 +14,15 @@ public abstract class BasePossessable : BaseInteractable
     {
         isPossessed = false;
         hasActivated = true;
-        // 해금 안된 오브젝트는 hasActivated 값 false로 초기화 해주기
+
+        // 저장값 적용
+        if (TryGetComponent(out UniqueId uid))
+        {
+            if (SaveManager.TryGetPossessableState(uid.Id, out bool savedActive))
+            {
+                hasActivated = savedActive;
+            }
+        }
     }
 
     protected virtual void Update()
@@ -67,4 +75,10 @@ public abstract class BasePossessable : BaseInteractable
     public virtual void OnPossessionEnterComplete() { }
 
     public virtual void CantPossess() { }
+
+    // 저장 / 셋업용
+    public void SetActivatedFromSave(bool value)
+    {
+        hasActivated = value;
+    }
 }

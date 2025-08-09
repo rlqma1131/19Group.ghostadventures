@@ -4,18 +4,34 @@ using System.IO;
 using UnityEngine;
 
 [System.Serializable]
+public class PossessableState
+{
+    public string id;
+    public bool hasActivated;
+}
+
+[System.Serializable]
+public class MemoryFragmentState
+{
+    public string id;
+    public bool isScannable;
+}
+
+[System.Serializable]
 public class SaveData
 {
     public string sceneName;
     public Vector3 playerPosition;
     public string checkpointId;
 
-    public List<string> collectedClueNames;      // clue_Name (아이템 이름)
-    public List<string> collectedMemoryIDs;      // memoryID (MemoryData의 고유값)
-    public List<string> scannedMemoryTitles;     // memoryTitle
+    public List<string> collectedClueNames;
+    public List<string> collectedMemoryIDs;
+    public List<string> scannedMemoryTitles;
 
     public List<string> solvedPuzzleIDs;
-    // 인벤토리, 능력치 등 추가
+
+    public List<PossessableState> possessableStates;
+    public List<MemoryFragmentState> memoryFragmentStates;
 }
 
 public static class SaveManager
@@ -32,11 +48,57 @@ public static class SaveManager
         if (currentData.collectedMemoryIDs == null) currentData.collectedMemoryIDs = new List<string>();
         if (currentData.scannedMemoryTitles == null) currentData.scannedMemoryTitles = new List<string>();
         if (currentData.solvedPuzzleIDs == null) currentData.solvedPuzzleIDs = new List<string>();
-
-        // 플레이어 인벤토리 상태
-        // 사람 인벤토리 상태
-        // 
+        if (currentData.possessableStates == null) currentData.possessableStates = new List<PossessableState>();               // ★
+        if (currentData.memoryFragmentStates == null) currentData.memoryFragmentStates = new List<MemoryFragmentState>();       // ★
     }
+
+    // ===== BasePossessable 상태 저장/조회 =====
+    public static void SetPossessableState(string id, bool hasActivated)
+    {
+        EnsureData();
+        var list = currentData.possessableStates;
+        int idx = list.FindIndex(x => x.id == id);
+        if (idx >= 0) list[idx].hasActivated = hasActivated;
+        else list.Add(new PossessableState { id = id, hasActivated = hasActivated });
+    }
+
+    public static bool TryGetPossessableState(string id, out bool hasActivated)
+    {
+        hasActivated = true; // 기본값(디폴트로 활성)
+        if (currentData == null || currentData.possessableStates == null) return false;
+        var found = currentData.possessableStates.Find(x => x.id == id);
+        if (found == null) return false;
+        hasActivated = found.hasActivated;
+        return true;
+    }
+
+
+    // ===== MemoryFragment 상태 저장/조회 =====
+    public static void SetMemoryFragmentState(string id, bool isScannable, bool canStore)
+    {
+        EnsureData();
+        var list = currentData.memoryFragmentStates;
+        int idx = list.FindIndex(x => x.id == id);
+        if (idx >= 0)
+        {
+            list[idx].isScannable = isScannable;
+        }
+        else
+        {
+            list.Add(new MemoryFragmentState { id = id, isScannable = isScannable });
+        }
+    }
+
+    public static bool TryGetMemoryFragmentState(string id, out bool isScannable, out bool canStore)
+    {
+        isScannable = false; canStore = false;
+        if (currentData == null || currentData.memoryFragmentStates == null) return false;
+        var found = currentData.memoryFragmentStates.Find(x => x.id == id);
+        if (found == null) return false;
+        isScannable = found.isScannable;
+        return true;
+    }
+
 
     // ===== 조회(읽기) 계열 =====
     public static bool HasSaveFile() => File.Exists(SavePath);
@@ -61,6 +123,7 @@ public static class SaveManager
 
     public static string GetCheckpointId()
         => currentData?.checkpointId ?? string.Empty;
+
 
     // ===== 변경(쓰기) 계열 =====
     public static void SaveGame(SaveData data = null)

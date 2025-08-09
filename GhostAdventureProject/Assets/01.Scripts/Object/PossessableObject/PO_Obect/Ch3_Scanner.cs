@@ -16,6 +16,15 @@ public class Ch3_Scanner : BasePossessable
         hasActivated = false;
 
         memoryStorage = UIManager.Instance.GetComponentInChildren<MemoryStorage>();
+
+        // 저장값 적용
+        if (TryGetComponent(out UniqueId uid))
+        {
+            if (SaveManager.TryGetPossessableState(uid.Id, out bool savedActive))
+            {
+                hasActivated = savedActive;
+            }
+        }
     }
 
     protected override void Update()
