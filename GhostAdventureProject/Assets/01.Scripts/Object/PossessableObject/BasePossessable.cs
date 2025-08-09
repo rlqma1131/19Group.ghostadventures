@@ -76,9 +76,16 @@ public abstract class BasePossessable : BaseInteractable
 
     public virtual void CantPossess() { }
 
-    // 저장 / 셋업용
+    // 상태 셋업
     public void SetActivatedFromSave(bool value)
     {
         hasActivated = value;
+    }
+
+    // 상태 저장
+    protected void MarkActivatedChanged()
+    {
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetPossessableState(uid.Id, hasActivated);
     }
 }

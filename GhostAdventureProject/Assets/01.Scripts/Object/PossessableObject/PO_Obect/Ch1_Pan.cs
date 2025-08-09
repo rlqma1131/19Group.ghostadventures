@@ -68,6 +68,8 @@ public class Ch1_Pan : BasePossessable
             cake.ActivateCake();
 
             hasActivated = false;
+            MarkActivatedChanged();
+
             Unpossess();
             isFalling = false;
         });

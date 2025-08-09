@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
@@ -159,7 +159,10 @@ public class Ch2_BookShelf : BasePossessable
         {
             doorToOpen.SetActive(true);
             ExitControlMode();
+
             hasActivated = false;
+            MarkActivatedChanged();
+
             Unpossess();
             ConsumeClue(needClues);
 

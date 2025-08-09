@@ -81,11 +81,13 @@ public class Ch2_CCTV : BasePossessable
     public void ActivateCCTV()
     {
         hasActivated = true;
+        MarkActivatedChanged();
     }
 
     public void InactiveCCTV()
     {
         hasActivated = false;
+        MarkActivatedChanged();
     }
 
     public override void OnPossessionEnterComplete() 

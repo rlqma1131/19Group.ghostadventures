@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -180,6 +180,7 @@ public class Ch2_Computer : BasePossessable
     // public void Activate()
     // {
     //     hasActivated = true;
+    //     MarkActivatedChanged();
     //     monitorOn.SetActive(false);
     // }
 }

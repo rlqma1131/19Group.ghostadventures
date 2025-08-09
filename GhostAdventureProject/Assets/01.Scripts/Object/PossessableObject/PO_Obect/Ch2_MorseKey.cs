@@ -383,7 +383,9 @@ public class Ch2_MorseKey : BasePossessable
         Unpossess();
 
         UIManager.Instance.PlayModeUI_OpenAll();
+
         hasActivated = false; // 더 이상 빙의 불가능
+        MarkActivatedChanged();
     }
 
     private IEnumerator FadeInPanel(float duration)

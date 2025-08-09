@@ -48,6 +48,8 @@ public class SoundManager : Singleton<SoundManager>
     private AudioClip lastBGMClip;
     private float lastBGMVolume = 0.2f;
 
+    public AudioClip CurrentBGM => bgmSource ? bgmSource.clip : null;
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -60,10 +62,10 @@ public class SoundManager : Singleton<SoundManager>
 
     private void Start()
     {
-        InitSFXPool(); // ← 이것만 넣으면 sfxPool 채워짐
+        InitSFXPool();
     }
 
-    // 씬 이름 → SceneType 변환
+    // 씬 이름에서 SceneType 변환
     private SceneType GetSceneType(string sceneName)
     {
         switch (sceneName)
@@ -108,10 +110,22 @@ public class SoundManager : Singleton<SoundManager>
 
     public void ChangeBGM(AudioClip newClip, float fadeDuration = 1f, float targetVolume = 0.2f)
     {
-        if (newClip == null) return;
+        // ★ 안전 가드
+        if (bgmSource == null || newClip == null) return;
 
         lastBGMClip = newClip;
         lastBGMVolume = targetVolume;
+
+        // ★ 같은 클립이 이미 재생 중이면 재시작 금지, 볼륨만 맞춰준다
+        if (bgmSource.clip == newClip && bgmSource.isPlaying)
+        {
+            if (!Mathf.Approximately(bgmSource.volume, targetVolume))
+            {
+                if (bgmFadeCoroutine != null) StopCoroutine(bgmFadeCoroutine);
+                bgmFadeCoroutine = StartCoroutine(FadeBGMVolumeTo(targetVolume, fadeDuration)); // ★
+            }
+            return; // ★ 재생 유지
+        }
 
         if (bgmFadeCoroutine != null)
             StopCoroutine(bgmFadeCoroutine);
@@ -150,6 +164,19 @@ public class SoundManager : Singleton<SoundManager>
         bgmSource.volume = targetVolume;
     }
 
+    private IEnumerator FadeBGMVolumeTo(float target, float duration)
+    {
+        float start = bgmSource.volume;
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            bgmSource.volume = Mathf.Lerp(start, target, t / duration);
+            yield return null;
+        }
+        bgmSource.volume = target;
+    }
+
     public void FadeOutAndStopBGM(float duration = 1f)
     {
         if (bgmFadeCoroutine != null)
@@ -172,7 +199,7 @@ public class SoundManager : Singleton<SoundManager>
 
         bgmSource.Stop();
         bgmSource.clip = null;
-        bgmSource.volume = startVolume; // 나중 재사용을 위해 원복 (혹은 0 유지도 가능)
+        bgmSource.volume = startVolume;
     }
 
     // BGM 강제 정지
@@ -254,7 +281,7 @@ public class SoundManager : Singleton<SoundManager>
 
         sfxSource.Stop();
         sfxSource.clip = null;
-        sfxSource.volume = startVolume; // 다시 사용할 수 있도록 원래 볼륨으로 복원
+        sfxSource.volume = startVolume;
     }
     // BGM 볼륨조절
     public void SetBGMVolume(float sliderValue , AudioSource audioSource)

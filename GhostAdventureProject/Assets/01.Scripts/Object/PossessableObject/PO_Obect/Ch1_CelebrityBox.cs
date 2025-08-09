@@ -37,6 +37,7 @@ public class Ch1_CelebrityBox : BasePossessable
     private void TriggerBoxEvent()
     {
         hasActivated = true;
+
         UIManager.Instance.Hide_Q_Key();
         
         // 박스 애니메이션 트리거
@@ -51,6 +52,8 @@ public class Ch1_CelebrityBox : BasePossessable
         StartCoroutine(ShowLetterWithDelay());
 
         hasActivated = false;
+        MarkActivatedChanged();
+
         SaveManager.MarkPuzzleSolved("깜짝상자");
     }
     private IEnumerator ShowLetterWithDelay()

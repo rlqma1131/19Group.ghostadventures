@@ -86,7 +86,10 @@ public class Ch1_Clock : BasePossessable
             tvObject.ActivateTV();
             isControlMode = false;
             HideClockUI();
+
             hasActivated = false;
+            MarkActivatedChanged();
+
             Unpossess();
             UI.SetActive(false); 
             

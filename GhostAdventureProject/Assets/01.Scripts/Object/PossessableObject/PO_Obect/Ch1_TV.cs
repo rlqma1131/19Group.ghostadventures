@@ -39,6 +39,8 @@ public class Ch1_TV : BasePossessable
         if (hasActivated) return;
 
         hasActivated = true;
+        MarkActivatedChanged();
+
         if (anim != null)
             anim.SetTrigger("On");
     }
@@ -98,7 +100,10 @@ public class Ch1_TV : BasePossessable
             UI.SetActive(false);
 
             ShowMemoryandDoorOpen();
+
             hasActivated = false;
+            MarkActivatedChanged();
+
             col.enabled = false;
             SaveManager.MarkPuzzleSolved("티비");
 

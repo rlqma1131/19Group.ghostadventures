@@ -107,6 +107,7 @@ public class Ch1_Cat : MoveBasePossessable
         jumpSequence.AppendCallback(() =>
         {
             hasActivated = true;
+            MarkActivatedChanged();
             anim.SetBool("Idle", true);
         });
     }
@@ -122,5 +123,6 @@ public class Ch1_Cat : MoveBasePossessable
         Unpossess();
         anim.Play("Cat_Sleeping");
         hasActivated = false;
+        MarkActivatedChanged();
     }
 }

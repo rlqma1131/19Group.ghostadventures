@@ -1,4 +1,4 @@
-using Cinemachine;
+﻿using Cinemachine;
 using System.Collections;
 using UnityEngine;
 
@@ -21,6 +21,8 @@ public class Ch2_Radio : BasePossessable
     public bool IsPlaying=> triggerSound_Person.isPlaying; // 사운드 재생중 여부 - 사람
     [SerializeField] private SoundEventConfig soundConfig;
 
+    // 저장 확인용 불값 ( 저장 후 중복 저장 방지 )
+    private bool isSaved = false;
 
     protected override void Start()
     {
@@ -30,10 +32,17 @@ public class Ch2_Radio : BasePossessable
 
     protected override void Update()
     {
-        if(guard.UseAllItem)
-            hasActivated = false;
+        if (isSaved)
+            return;
 
-        if(IsPlaying)
+        if (guard.UseAllItem)
+        {
+            hasActivated = false;
+            MarkActivatedChanged();
+            isSaved = true;
+        }
+
+        if (IsPlaying)
         {
             speakerOn.SetBool("OnSpeaker", true); // 스피커 애니메이션 재생
             musicalNoteOn.SetActive(true);

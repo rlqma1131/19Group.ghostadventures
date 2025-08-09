@@ -67,6 +67,8 @@ public class Ch1_Bottle : BasePossessable
         panSequence.AppendCallback(() =>
         {
             hasActivated = false;
+            MarkActivatedChanged();
+
             Unpossess();
         });
     }

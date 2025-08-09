@@ -83,6 +83,7 @@ public class Ch1_Mouse : MoveBasePossessable
         transform.position = point2Transform.position;
         anim.SetBool("Move", false);
         hasActivated = true;
+        MarkActivatedChanged();
     }
 
     private IEnumerator MouseAct()
@@ -94,6 +95,8 @@ public class Ch1_Mouse : MoveBasePossessable
         yield return new WaitForSeconds(1f);
 
         hasActivated = false;
+        MarkActivatedChanged();
+
         Unpossess();
         zoomCamera.Priority = 5;
 

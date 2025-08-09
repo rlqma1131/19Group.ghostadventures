@@ -169,6 +169,7 @@ public class Ch2_CCTVMonitor : BasePossessable
         SoundManager.Instance.PlaySFX(reveal);
 
         hasActivated = false; // 기억 스캔 전까지 빙의 불가
+        MarkActivatedChanged();
 
         EnemyAI.ResumeAllEnemies();
         zoomCamera.Priority = 5;
@@ -201,6 +202,7 @@ public class Ch2_CCTVMonitor : BasePossessable
     public void ActivateCCTVMonitor()
     {
         hasActivated = true;
+        MarkActivatedChanged();
 
         // 처음 활성화 됐을 때 프롬프트
         if(isActivatedFirst)

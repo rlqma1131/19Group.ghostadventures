@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -78,6 +78,8 @@ public class Ch2_Kiosk : BasePossessable
     public void Activate()
     {
         hasActivated = true;
+        MarkActivatedChanged();
+
         kioskOn.SetActive(false);
     }
     
@@ -185,6 +187,7 @@ public class Ch2_Kiosk : BasePossessable
         if (correctSolved && hiddenSolved)
         {
             hasActivated = false;
+            MarkActivatedChanged();
         }
     }
     

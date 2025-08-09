@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Ch2_Bag : BasePossessable
 {
@@ -40,6 +40,8 @@ public class Ch2_Bag : BasePossessable
         bagOpen.SetActive(true);
         drawingClue1.SetActive(true);
         clue1Anim.SetTrigger("Drop");
+
         hasActivated = false;
+        MarkActivatedChanged();
     }
 }

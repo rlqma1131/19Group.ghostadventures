@@ -37,6 +37,7 @@ public class Ch1_Sofa : HideArea
         if(collision.CompareTag("Player")  && SaveManager.IsPuzzleSolved("시계"))
         {
             hasActivated = true;
+            MarkActivatedChanged();
         }
 
     }
