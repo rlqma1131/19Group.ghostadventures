@@ -30,5 +30,6 @@ public class Ch03_EndMemory : MonoBehaviour
         MemoryManager.Instance.TryCollect(memoryData);
         SoundManager.Instance.FadeOutAndStopLoopingSFX();
         SceneManager.LoadScene("Ch03_End", LoadSceneMode.Additive);
+        ChapterEndingManager.Instance.RegisterScannedMemory(memoryData.memoryID, 3);
     }
 }

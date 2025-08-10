@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class Ch03_Memory01_Savedata : MonoBehaviour
     {
         MemoryManager.Instance.TryCollect(memoryData); // 기억 조각 수집
         //Inventory_Player _inventory = GameManager.Instance.Player.GetComponent<Inventory_Player>(); 
-        
+        ChapterEndingManager.Instance.RegisterScannedMemory(memoryData.memoryID, 3);
     }
 
 }

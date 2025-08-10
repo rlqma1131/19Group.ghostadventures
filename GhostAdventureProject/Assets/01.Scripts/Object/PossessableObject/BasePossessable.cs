@@ -73,7 +73,7 @@ public abstract class BasePossessable : BaseInteractable
         hasActivated = value;
     }
 
-    // 상태 저장
+    // 상태 기록
     protected void MarkActivatedChanged()
     {
         if (TryGetComponent(out UniqueId uid))

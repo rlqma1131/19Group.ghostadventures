@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -31,7 +32,5 @@ public class Ch03_realmemorycutscene : MonoBehaviour
         PossessionSystem.Instance.CanMove = true;
         UIManager.Instance.PlayModeUI_OpenAll();
         isCutsceneActive = true;
-
-
     }
 }
