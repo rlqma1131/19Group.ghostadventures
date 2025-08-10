@@ -5,25 +5,71 @@ using UnityEngine.UI;
 
 public class StartScene_MenuButtons : MonoBehaviour
 {
-    [SerializeField] private Button newGameBtn;
-    [SerializeField] private Button continueBtn;
-    [SerializeField] private Button optionBtn;
-    [SerializeField] private Button exitBtn;
-    [SerializeField] private Button surveyBtn;
+    [Header("Windows")]
+    [SerializeField] private GameObject optionWindow;
 
-    private Text surveyText;
+    [Header("Buttons")]
+    [SerializeField] private Button continueButton;
 
-    //private void Awake()
-    //{
-    //    // onClick 이벤트 등록
-    //    newGameBtn.onClick.AddListener(OnClickNewGame);
-    //    continueBtn.onClick.AddListener(OnClickContinue);
-    //    optionBtn.onClick.AddListener(OnClickOption);
-    //    exitBtn.onClick.AddListener(OnClickExit);
-    //    surveyBtn.onClick.AddListener(OpenURL);
-    //}
+    [Header("New Game Confirm UI")]
+    [SerializeField] private GameObject newGameConfirmPanel;
+    [SerializeField] private Button confirmYesButton;
+    [SerializeField] private Button confirmNoButton;
+
+    private static readonly Color EnabledColor = Color.white;
+    private static readonly Color DisabledColor = new Color(0.6f, 0.6f, 0.6f, 1f);
+
+    private void OnEnable()
+    {
+        UpdateContinueButtonState();
+    }
+
+    // 포커스 돌아왔을 때(세이브 파일이 생겼을 수도 있으니) 한 번 더 안전하게
+    private void OnApplicationFocus(bool focus)
+    {
+        if (focus) UpdateContinueButtonState();
+    }
+
+    void Awake()
+    {
+        // 새게임 버튼 셋업
+        if (confirmYesButton != null) confirmYesButton.onClick.AddListener(OnConfirmNewGame);
+        if (confirmNoButton != null) confirmNoButton.onClick.AddListener(CloseNewGameConfirm);
+        if (newGameConfirmPanel != null) newGameConfirmPanel.SetActive(false);
+    }
+
+    // 이어하기 버튼 셋업
+    private void UpdateContinueButtonState()
+    {
+        bool hasSave = SaveManager.HasSaveFile();
+
+        if (continueButton != null)
+        {
+            continueButton.interactable = hasSave;
+
+            // 하위 텍스트 색상 변경 (UGUI Text / TMP_Text 모두 처리)
+            var uguiText = continueButton.GetComponentInChildren<UnityEngine.UI.Text>(true);
+            if (uguiText != null) uguiText.color = hasSave ? EnabledColor : DisabledColor;
+
+            var tmpText = continueButton.GetComponentInChildren<TMPro.TMP_Text>(true);
+            if (tmpText != null) tmpText.color = hasSave ? EnabledColor : DisabledColor;
+        }
+    }
 
     public void OnClickNewGame()
+    {
+        // 저장 파일 있으면 경고 팝업 표시, 없으면 바로 시작
+        if (SaveManager.HasSaveFile())
+        {
+            OpenNewGameConfirm();
+        }
+        else
+        {
+            StartNewGameImmediate();
+        }
+    }
+
+    private void StartNewGameImmediate()
     {
         SceneManager.LoadScene("IntroScene_Real");
         if (UIManager.Instance != null)
@@ -31,6 +77,33 @@ public class StartScene_MenuButtons : MonoBehaviour
             UIManager.Instance.PlayModeUI_CloseAll();
             UIManager.Instance.startEndingUI_CloseAll();
         }
+    }
+
+    private void OpenNewGameConfirm()
+    {
+        if (newGameConfirmPanel == null) { StartNewGameImmediate(); return; }
+        newGameConfirmPanel.SetActive(true);
+
+        // (선택) 메인 버튼들 비활성화해서 중복 입력 방지
+        //if (continueButton != null) continueButton.interactable = false;
+        //if (optionButton != null) optionButton.interactable = false;
+    }
+
+    private void CloseNewGameConfirm()
+    {
+        if (newGameConfirmPanel != null) newGameConfirmPanel.SetActive(false);
+
+        // (선택) 메인 버튼 복구
+        //if (continueButton != null) continueButton.interactable = true;
+        //if (optionButton != null) optionButton.interactable = true;
+    }
+
+    private void OnConfirmNewGame()
+    {
+        // 저장 데이터 삭제 후 새 게임 시작
+        SaveManager.DeleteSave();
+        CloseNewGameConfirm();
+        StartNewGameImmediate();
     }
 
     public void OnClickContinue()
@@ -63,8 +136,8 @@ public class StartScene_MenuButtons : MonoBehaviour
 
     public void OnClickOption()
     {
-        Debug.Log("옵션 창 열기");
-        // 옵션 UI 열기 처리
+        if(optionWindow != null)
+            optionWindow.SetActive(true);
     }
 
     public void OnClickExit()
@@ -75,11 +148,9 @@ public class StartScene_MenuButtons : MonoBehaviour
         Application.Quit();
 #endif
     }
-
+    
     public void OpenURL()
     {
-        surveyText = GetComponentInChildren<Text>();
         Application.OpenURL("https://docs.google.com/forms/d/e/1FAIpQLSetE6cy2Iu6odXTSfW-ym8_2uxIw4b539wSyZo0Io8N3jNoeg/viewform?usp=dialog");
-        surveyText.text = "감사합니다!";
     }
 }
