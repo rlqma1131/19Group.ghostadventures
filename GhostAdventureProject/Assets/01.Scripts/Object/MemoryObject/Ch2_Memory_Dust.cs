@@ -8,6 +8,7 @@ public class Ch2_Memory_Dust : MemoryFragment
     public override void AfterScan()
     {
         letterE.SetActive(true);
+        ChapterEndingManager.Instance.CollectCh2Clue("E");
         SaveManager.MarkPuzzleSolved("먼지");
     }
 

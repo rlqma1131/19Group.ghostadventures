@@ -31,6 +31,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private ESCMenu escMenu; // ESC 메뉴
     [SerializeField] private NoticePopup noticePopup;
     [SerializeField] private NoticePopup saveNoticePopup;
+    [SerializeField] private GameObject[] puzzleStatusPanels;
 
     // QTE 이펙트 캔버스 추가
     [SerializeField] private GameObject qteEffectCanvas; // QTE 이펙트 캔버스
@@ -435,6 +436,43 @@ public class UIManager : Singleton<UIManager>
     //     }
     // }
 
+    // 퍼즐 진척도 UI 관리
+    public void ShowPuzzleStatus(PuzzleStatus.Chapter chapter)
+    {
+        int target = (int)chapter;
+        for (int i = 0; i < puzzleStatusPanels.Length; i++)
+        {
+            bool active = (i == target);
+            if (puzzleStatusPanels[i] == null) continue;
+
+            puzzleStatusPanels[i].SetActive(active);
+
+            // 선택: CanvasGroup까지 있으면 인터랙션/히트 차단도 같이
+            var cg = puzzleStatusPanels[i].GetComponent<CanvasGroup>();
+            if (cg != null)
+            {
+                cg.alpha = active ? 1f : 0f;
+                cg.interactable = active;
+                cg.blocksRaycasts = active;
+            }
+        }
+    }
+
+    public void AutoSelectPuzzleStatusByScene()
+    {
+        var name = SceneManager.GetActiveScene().name;
+        var chapter = DetectChapter(name);
+        ShowPuzzleStatus(chapter);
+    }
+
+    private PuzzleStatus.Chapter DetectChapter(string sceneName)
+    {
+        if (sceneName.Contains("Ch01")) return PuzzleStatus.Chapter.Chapter1;
+        if (sceneName.Contains("Ch02")) return PuzzleStatus.Chapter.Chapter2;
+        if (sceneName.Contains("Ch03")) return PuzzleStatus.Chapter.Chapter3;
+
+        return PuzzleStatus.Chapter.Chapter1; // 기본값
+    }
 
 }
     

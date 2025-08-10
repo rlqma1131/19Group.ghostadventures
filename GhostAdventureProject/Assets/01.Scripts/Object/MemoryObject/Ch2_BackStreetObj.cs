@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -49,6 +49,6 @@ public class Ch2_BackStreetObj : MonoBehaviour
         //     }
         // });
         TutorialManager.Instance.Show(TutorialStep.BlackShadow);
-        
+        ChapterEndingManager.Instance.CollectCh2Clue("L");
     }
 }

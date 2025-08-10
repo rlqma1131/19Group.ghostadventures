@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class YameScan_correct : BaseInteractable
@@ -145,6 +145,7 @@ public class YameScan_correct : BaseInteractable
         shelf.transform.position = shelfPos;
         clear_UnderGround = true;
         clue_P.SetActive(true);
+        ChapterEndingManager.Instance.CollectCh2Clue("P");
         
         if(!clear_UnderGround)
         {

@@ -96,6 +96,9 @@ public class GameManager : Singleton<GameManager>
         EnsureManagerExists<QTEEffectManager>(qteEffectManager);
         EnsureManagerExists<TutorialManager>(tutorialManager);
 
+        // 퍼즐 진척도 UI ( 씬에 맞게 로드 )
+        UIManager.Instance.AutoSelectPuzzleStatusByScene();
+
         Debug.Log($"씬 로드됨: {scene.name}");
 
         // 이어하기에 저장한 데이터 적용

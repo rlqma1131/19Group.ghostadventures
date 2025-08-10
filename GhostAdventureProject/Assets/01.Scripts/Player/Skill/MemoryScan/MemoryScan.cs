@@ -183,6 +183,7 @@ public class MemoryScan : MonoBehaviour
 
             var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
             ChapterEndingManager.Instance.RegisterScannedMemory(currentMemoryFragment.data.memoryID, chapter);
+            Debug.Log($"[ChapterEndingManager] 챕터{chapter}에서 {currentMemoryFragment.data.memoryID}가 기록 되었습니다");
         }
     }
 

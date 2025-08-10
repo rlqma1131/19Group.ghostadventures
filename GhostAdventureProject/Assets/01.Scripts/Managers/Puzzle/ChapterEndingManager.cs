@@ -47,13 +47,6 @@ public class ChapterEndingManager : Singleton<ChapterEndingManager>
         Debug.Log($"[ChapterEnding] Ch2 단서 수집: {clueId} (총 {CurrentCh2ClueCount})");
     }
 
-    public void CollectCh3Clue(string clueId)
-    {
-        if (string.IsNullOrEmpty(clueId)) return;
-        collectedAllCh3Clue.Add(clueId);
-        Debug.Log($"[ChapterEnding] Ch3 단서 수집: {clueId} (총 {CurrentCh3ClueCount})");
-    }
-
     // (공통) 기억 스캔 등록
     public void RegisterScannedMemory(string memoryId, int chapter)
     {

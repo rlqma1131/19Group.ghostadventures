@@ -166,6 +166,7 @@ public class Ch2_CCTVMonitor : BasePossessable
         memoryH.SetActive(true);
         clueH.SetActive(true);
         SoundManager.Instance.PlaySFX(reveal);
+        ChapterEndingManager.Instance.CollectCh2Clue("H");
 
         hasActivated = false; // 기억 스캔 전까지 빙의 불가
         MarkActivatedChanged();

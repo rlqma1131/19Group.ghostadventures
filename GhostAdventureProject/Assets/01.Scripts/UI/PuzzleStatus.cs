@@ -16,9 +16,6 @@ public class PuzzleStatus : MonoBehaviour
     [Header("챕터 설정")]
     [SerializeField] private Chapter currentChapter;
 
-    [Header("챕터엔딩매니저 프리팹")]
-    [SerializeField] private ChapterEndingManager chapterEndingManager;
-
     [Header("PuzzleStatus UI")]
     [SerializeField] private TextMeshProUGUI clue;
     [SerializeField] private TextMeshProUGUI scannedMemory;
@@ -32,6 +29,7 @@ public class PuzzleStatus : MonoBehaviour
 
     [SerializeField] private int maxCh3Memories = 5;
 
+    private ChapterEndingManager ChapterEndingManager;
     void OnEnable()
     {
         // 챕터 전환 시 clue 표시/숨김 초기화
@@ -39,29 +37,34 @@ public class PuzzleStatus : MonoBehaviour
         else clue.gameObject.SetActive(true);
     }
 
+    private void Start()
+    {
+        ChapterEndingManager = ChapterEndingManager.Instance;
+    }
+
     void Update()
     {
-        if (chapterEndingManager == null) return;
+        if (ChapterEndingManager == null) return;
 
         switch (currentChapter)
         {
             case Chapter.Chapter1:
                 if (clue != null)
-                    clue.text = $"• 최종 단서 {chapterEndingManager.CurrentCh1ClueCount} / {maxCh1Clues}";
+                    clue.text = $"• 최종 단서 {ChapterEndingManager.CurrentCh1ClueCount} / {maxCh1Clues}";
                 if (scannedMemory != null)
-                    scannedMemory.text = $"• 기억 수집 {chapterEndingManager.CurrentCh1MemoryCount} / {maxCh1Memories}";
+                    scannedMemory.text = $"• 수집 기억 {ChapterEndingManager.CurrentCh1MemoryCount} / {maxCh1Memories}";
                 break;
 
             case Chapter.Chapter2:
                 if (clue != null)
-                    clue.text = $"• 최종 단서 {chapterEndingManager.CurrentCh2ClueCount} / {maxCh2Clues}";
+                    clue.text = $"• 최종 단서 {ChapterEndingManager.CurrentCh2ClueCount} / {maxCh2Clues}";
                 if (scannedMemory != null)
-                    scannedMemory.text = $"• 기억 수집 {chapterEndingManager.CurrentCh2MemoryCount} / {maxCh2Memories}";
+                    scannedMemory.text = $"• 수집 기억 {ChapterEndingManager.CurrentCh2MemoryCount} / {maxCh2Memories}";
                 break;
 
             case Chapter.Chapter3:
                 if (scannedMemory != null)
-                    scannedMemory.text = $"• 기억 수집 {chapterEndingManager.CurrentCh3MemoryCount} / {maxCh3Memories}";
+                    scannedMemory.text = $"• 수집 기억 {ChapterEndingManager.CurrentCh3MemoryCount} / {maxCh3Memories}";
                 break;
         }
     }
