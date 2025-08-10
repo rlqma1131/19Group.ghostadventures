@@ -35,6 +35,20 @@ public class DoorState
     public bool isLocked; // true=잠김, false=열림
 }
 
+// 빙의 대상 인벤토리 상태 저장
+public class PossessableInventoryEntry
+{
+    public string itemKey;   // ItemData의 고유키(권장: 에셋 파일명 item.name)
+    public int quantity;
+}
+
+[System.Serializable]
+public class PossessableInventoryState
+{
+    public string ownerId;                      // UniqueId.Id
+    public List<PossessableInventoryEntry> items = new();
+}
+
 [System.Serializable]
 public class SaveData
 {
@@ -42,6 +56,7 @@ public class SaveData
     public Vector3 playerPosition;
     public string checkpointId;
 
+    public List<PossessableInventoryState> possessableInventories;
     public List<string> collectedClueNames;
     public List<string> collectedMemoryIDs;
     public List<string> scannedMemoryTitles;
@@ -64,6 +79,7 @@ public static class SaveManager
     private static void EnsureData()
     {
         if (currentData == null) currentData = new SaveData();
+        if (currentData.possessableInventories == null) currentData.possessableInventories = new List<PossessableInventoryState>();
         if (currentData.collectedClueNames == null) currentData.collectedClueNames = new List<string>();
         if (currentData.collectedMemoryIDs == null) currentData.collectedMemoryIDs = new List<string>();
         if (currentData.scannedMemoryTitles == null) currentData.scannedMemoryTitles = new List<string>();
@@ -150,6 +166,44 @@ public static class SaveManager
         isLocked = s.isLocked;
         return true;
     }
+
+    // ===== 플레이어 인벤토리 상태 적용 =====
+    public static void ApplyPlayerInventoryFromSave(Inventory_Player inv)
+    {
+        if (currentData?.collectedClueNames == null) return;
+
+        inv.RemoveClueBeforeStage(); // 전체 초기화
+        foreach (var clueName in currentData.collectedClueNames)
+        {
+            // ✅ 저장한 기준에 맞춰 로드 경로/키 선택
+            var clue = Resources.Load<ClueData>("ClueData/" + clueName); // (에셋 파일명 기준)
+                                                                         // var clue = /* clue_Name 기준이면 */ Resources.LoadAll<ClueData>("ClueData")
+                                                                         //               .FirstOrDefault(c => c.clue_Name == clueName);
+
+            if (clue != null) inv.AddClue(clue);
+        }
+    }
+
+    // ===== 빙의 대상 인벤토리 저장/조회 =====
+    public static void SetPossessableInventory(string ownerId, List<PossessableInventoryEntry> items)
+    {
+        EnsureData();
+        var list = currentData.possessableInventories;
+        int i = list.FindIndex(x => x.ownerId == ownerId);
+        if (i >= 0) list[i].items = items ?? new List<PossessableInventoryEntry>();
+        else list.Add(new PossessableInventoryState { ownerId = ownerId, items = items ?? new List<PossessableInventoryEntry>() });
+    }
+
+    public static bool TryGetPossessableInventory(string ownerId, out List<PossessableInventoryEntry> items)
+    {
+        items = null;
+        var s = currentData?.possessableInventories?.Find(x => x.ownerId == ownerId);
+        if (s == null) return false;
+        items = new List<PossessableInventoryEntry>(s.items ?? new List<PossessableInventoryEntry>());
+        return true;
+    }
+    
+
 
     // ===== 조회(읽기) 계열 =====
     public static bool HasSaveFile() => File.Exists(SavePath);
@@ -257,6 +311,17 @@ public static class SaveManager
         }
     }
 
+    // 플레이어 인벤토리 상태 저장
+    public static void SnapshotPlayerInventory(Inventory_Player inv)
+    {
+        EnsureData();
+        currentData.collectedClueNames.Clear();
+
+        // 에셋 파일명으로 저장
+        foreach (var c in inv.collectedClues)
+            if (c != null) currentData.collectedClueNames.Add(c.name);
+    }
+
     // 현재 씬 이름과 위치 저장
     public static void SetSceneAndPosition(string sceneName, Vector3 playerPos, string checkpointId = null, bool autosave = true)
     {
@@ -285,7 +350,39 @@ public static class SaveManager
                 SetActiveState(uid.Id, m.gameObject.activeSelf);
         }
 
+        // 플레이어 인벤토리 상태 저장
+        var inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
+        SnapshotPlayerInventory(inv);
+
+        // 빙의 대상 인벤토리 상태 저장
+        SnapshotAllPossessableInventories();
+
         SetSceneAndPosition(sceneName, playerPos, checkpointId, autosave);
         if (autosave) SaveGame();
     }
+
+    public static void SnapshotAllPossessableInventories()
+    {
+        foreach (var have in GameObject.FindObjectsOfType<HaveItem>(true))
+        {
+            if (!have.TryGetComponent(out UniqueId uid)) continue;
+            var items = new List<PossessableInventoryEntry>();
+
+            // InventorySlot_PossessableObject -> (itemKey, quantity)
+            foreach (var slot in have.inventorySlots)
+            {
+                if (slot == null || slot.item == null) continue;
+                if (slot.quantity <= 0) continue;
+
+                items.Add(new PossessableInventoryEntry
+                {
+                    itemKey = slot.item.name,   // 권장: 에셋 파일명 사용
+                    quantity = slot.quantity
+                });
+            }
+
+            SaveManager.SetPossessableInventory(uid.Id, items);
+        }
+    }
 }
+

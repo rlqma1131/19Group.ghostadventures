@@ -170,17 +170,17 @@ public class MemoryScan : MonoBehaviour
         currentScanObject.GetComponentInChildren<SpriteRenderer>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f); // 스캔 완료 후 색상 변경
 
         // 저장하기
-        //if (currentMemoryFragment != null)
-        //{
-        //    SaveManager.SaveWhenScan(
-        //        currentMemoryFragment.data.memoryID,
-        //        currentMemoryFragment.data.memoryTitle,
-        //        SceneManager.GetActiveScene().name,
-        //        playerTransform.position,
-        //        checkpointId: currentScanObject != null ? currentScanObject.name : null,
-        //        autosave: true  // 저장 팝업 띄움
-        //    );
-        //}
+        if (currentMemoryFragment != null)
+        {
+            SaveManager.SaveWhenScan(
+                currentMemoryFragment.data.memoryID,
+                currentMemoryFragment.data.memoryTitle,
+                SceneManager.GetActiveScene().name,
+                playerTransform.position,
+                checkpointId: currentScanObject != null ? currentScanObject.name : null,
+                autosave: true  // 저장 팝업 띄움
+            );
+        }
     }
 
     private void CancleScan(string reason)
