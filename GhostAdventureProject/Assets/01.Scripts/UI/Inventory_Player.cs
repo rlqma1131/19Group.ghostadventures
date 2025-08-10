@@ -32,6 +32,13 @@ public class Inventory_Player : MonoBehaviour
     [SerializeField] private Ease flipEase = Ease.InOutSine;
     private bool isAnimating = false;
 
+    void Start()
+    {
+        frontRow.localScale = Vector3.one;         // 항상 크게
+        backRow.localScale  = Vector3.one * 0.8f;;
+    }
+
+
     public void AddClue(ClueData clue)
     {
         if(clue == null) return;
@@ -167,27 +174,35 @@ public class Inventory_Player : MonoBehaviour
 
     private IEnumerator ToggleFaceFlipAnim()
     {
-        isAnimating = true;
+        if (isAnimating) yield break;
+    isAnimating = true;
 
-        // 1) 앞/뒤 모두 0~90도 회전 (앞이 사라지는 구간)
-        Sequence s1 = DOTween.Sequence();
-        s1.Join(frontRow.DOLocalRotate(new Vector3(0, 90, 0), flipDur).SetEase(flipEase))
-          .Join(backRow.DOLocalRotate(new Vector3(0, 90, 0), flipDur).SetEase(flipEase));
-        yield return s1.WaitForCompletion();
+    Vector3 smallScale  = Vector3.one * 0.8f;
+    Vector3 normalScale = Vector3.one;
 
-        yield return new WaitForSeconds(gapDur);
+    // 스왑 "이전" 상태 저장
+    bool wasFrontShowingFirst = frontShowsFirstPage; 
+    // wasFrontShowingFirst == true 면 현재 frontRow가 앞(크고), backRow가 뒤(작음)
 
-        // 2) 실제 데이터 스왑 및 UI 갱신(숫자/디밍 적용)
-        frontShowsFirstPage = !frontShowsFirstPage;
-        RefreshUI();
+    // 1) 0 → 90도 (스케일은 건드리지 않음)
+    Sequence s1 = DOTween.Sequence();
+    s1.Join(frontRow.DOLocalRotate(new Vector3(90, 0, 0), flipDur).SetEase(flipEase))
+      .Join(backRow.DOLocalRotate(new Vector3(90, 0, 0), flipDur).SetEase(flipEase));
+    yield return s1.WaitForCompletion();
 
-        // 3) 90~0도 반대로 회전 (새 앞면이 나타남)
-        Sequence s2 = DOTween.Sequence();
-        s2.Join(frontRow.DOLocalRotate(Vector3.zero, flipDur).SetEase(flipEase))
-          .Join(backRow.DOLocalRotate(Vector3.zero, flipDur).SetEase(flipEase));
-        yield return s2.WaitForCompletion();
+    yield return new WaitForSeconds(gapDur);
 
-        isAnimating = false;
+    // 2) 데이터 스왑 + UI 갱신
+    frontShowsFirstPage = !frontShowsFirstPage;
+    RefreshUI();
+
+    // 3) 90 → 0도 (여기서도 스케일은 추가 변경 없음)
+    Sequence s2 = DOTween.Sequence();
+    s2.Join(frontRow.DOLocalRotate(Vector3.zero, flipDur).SetEase(flipEase))
+      .Join(backRow.DOLocalRotate(Vector3.zero, flipDur).SetEase(flipEase));
+    yield return s2.WaitForCompletion();
+
+    isAnimating = false;
     }
 
     // private void Update()
@@ -254,6 +269,11 @@ public class Inventory_Player : MonoBehaviour
                     UIManager.Instance.InventoryExpandViewerUI.ShowClue(collectedClues[clueIndex]);
                 }
             }
+        }
+
+        if(Input.GetKeyDown(KeyCode.Tab))
+        {
+            ToggleFace();
         }
     }
     
