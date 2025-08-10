@@ -34,6 +34,7 @@ public class Ch3_MusicBox : BaseInteractable
     [SerializeField] private AudioClip successQTE_Sound;
 
 
+
     void Start()
     {
         playAble = false;
@@ -87,7 +88,11 @@ public class Ch3_MusicBox : BaseInteractable
                 return;
             }
 
-            if (currentIndex >= targetSequence.Count) SuccessQTE();
+            if (currentIndex >= targetSequence.Count) 
+            {
+                SuccessQTE();
+                isQTESuccess = true;
+            }
         }
     }
 
@@ -204,11 +209,18 @@ public class Ch3_MusicBox : BaseInteractable
     
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && linkedEnemy.failCount < 3)
+        if (collision.CompareTag("Player") && linkedEnemy.failCount < 3 && !isQTESuccess)
         {
             //SetHighlight(true);
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
             playAble = true;
+        }
+    }
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Player") && linkedEnemy.failCount < 3 && isQTESuccess)
+        {
+            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
         }
     }
     protected override void OnTriggerExit2D(Collider2D other)
