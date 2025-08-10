@@ -36,6 +36,7 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
         /// 빙의오브젝트 강조효과, 사운드 등
         currentState = State.Possessing;
         Debug.Log("target" + possessedTarget);
+        UIManager.Instance.unpossessKey.SetActive(true);
         UIManager.Instance.Inventory_PossessableObjectUI.OpenInventory(possessedTarget); // 빙의 인벤토리 표시됨
     }
 
@@ -44,6 +45,7 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
         PlayerTransform.position = possessedTarget.transform.position + spawnOffset;
         Player.SetActive(true);
         PossessionSystem.Instance.StartPossessionOutSequence();
+        UIManager.Instance.unpossessKey.SetActive(false);
         UIManager.Instance.Inventory_PossessableObjectUI.HideInventory(); // 빙의 인벤토리 사라짐
     }
     

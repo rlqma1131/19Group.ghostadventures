@@ -36,7 +36,17 @@ public class Ch1_Cat : MoveBasePossessable
             q_Key.SetActive(false);
         }
 
-        base.Update();
+        if (!isPossessed || !PossessionSystem.Instance.CanMove)
+            return;
+
+        Move();
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            zoomCamera.Priority = 5;
+            Unpossess();
+            anim.SetBool("Move", false);
+        }
 
         if (Input.GetKeyDown(KeyCode.Q) && isNearDoor)
         {
@@ -44,6 +54,11 @@ public class Ch1_Cat : MoveBasePossessable
             // 문 열기
             StartCoroutine(CatAct());
         }
+    }
+
+    void LateUpdate()
+    {
+        highlightSpriteRenderer.flipX = spriteRenderer.flipX;
     }
 
     public override void OnQTESuccess()
@@ -121,7 +136,7 @@ public class Ch1_Cat : MoveBasePossessable
 
         zoomCamera.Priority = 5;
         Unpossess();
-        anim.Play("Cat_Sleeping");
+        anim.SetTrigger("Sleep");
         hasActivated = false;
         MarkActivatedChanged();
     }

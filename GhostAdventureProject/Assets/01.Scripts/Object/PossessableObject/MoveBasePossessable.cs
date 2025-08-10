@@ -6,12 +6,14 @@ public class MoveBasePossessable : BasePossessable
     [SerializeField] protected CinemachineVirtualCamera zoomCamera;
     [SerializeField] protected float moveSpeed = 3f;
     protected SpriteRenderer spriteRenderer;
+    protected SpriteRenderer highlightSpriteRenderer;
 
 
     protected override void Start()
     {
         base.Start();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        highlightSpriteRenderer = highlight.GetComponent<SpriteRenderer>();
         anim = GetComponentInChildren<Animator>();
     }
 

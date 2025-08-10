@@ -67,6 +67,7 @@ public class UIManager : Singleton<UIManager>
     public GameObject d_Key;
     public GameObject spacebar_Key;
     public GameObject interactInfo;
+    public GameObject unpossessKey;
     
     // --------------------------------------------------------------------------------------------
 

@@ -59,6 +59,11 @@ public class Ch1_Mouse : MoveBasePossessable
         
     }
 
+    void LateUpdate()
+    {
+        highlightSpriteRenderer.flipX = spriteRenderer.flipX;
+    }
+
     private void InteractTutorial()
     {
         TutorialManager.Instance.Show(TutorialStep.Mouse_Possesse);
