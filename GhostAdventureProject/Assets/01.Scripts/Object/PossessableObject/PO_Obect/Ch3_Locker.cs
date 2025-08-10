@@ -132,7 +132,7 @@ public class Ch3_Locker : BasePossessable
         
         if (lockerSelector.IsSolved)
         {
-            UIManager.Instance.PromptUI.ShowPrompt("정말 끔찍해...", 2f);
+            UIManager.Instance.PromptUI.ShowPrompt("정말 끔찍해..", 2f);
         }
     }
 }
