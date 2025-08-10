@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using DG.Tweening;
+using Random = UnityEngine.Random;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -33,6 +34,10 @@ public class EnemyAI : MonoBehaviour
     public static bool IsPaused { get; private set; } = false;
     public static void PauseAllEnemies()  => IsPaused = true;
     public static void ResumeAllEnemies() => IsPaused = false;
+    
+    [SerializeField] private float searchRadius = 2.0f;   // 안 보일 때 빙글빙글/좌우 탐색 반경
+    [SerializeField] private float searchSpeed  = 3.0f;   // 탐색 이동 속도
+    [SerializeField] private float searchHz     = 1.2f;   // 탐색 진동 주기(Hz)
     
     private void Awake()
     {
@@ -117,7 +122,40 @@ public class EnemyAI : MonoBehaviour
         isTeleporting = false;
         ChangeState(ChaseState);
 
-        yield return new WaitForSecondsRealtime(chaseDuration);
+        // 추격 시작점(마지막으로 확인된 플레이어 위치 기준 앵커)
+        Vector3 anchor = GameManager.Instance.Player != null
+            ? GameManager.Instance.Player.transform.position
+            : transform.position;
+
+        // chaseDuration 동안: 보이면 추격, 안 보이면 앵커 주변 수색 이동
+        float elapsed = 0f;
+        float phase   = Random.Range(0f, Mathf.PI * 2f); // 탐색 궤적 위상 랜덤화
+        while (elapsed < chaseDuration)
+        {
+            // 플레이어 ‘보임’ 판정 (플레이어 오브젝트 꺼지면 false)
+            bool visible = IsPlayerVisible();
+            if (visible && GameManager.Instance.Player != null)
+            {
+                // 앵커 갱신 + 추격 상태 유지(ChaseState가 알아서 이동)
+                anchor = GameManager.Instance.Player.transform.position;
+                if (currentState != ChaseState) ChangeState(ChaseState);
+            }
+            else
+            {
+                // 안 보임 → 수색 이동: 앵커 주변으로 좌우/원형 도는 느낌
+                if (currentState != ChaseState) ChangeState(ChaseState); // 속도/애니 일관 목적
+
+                // 간단한 2D 좌우 탐색(사이드뷰 가정): x는 사인, y는 고정(원하면 y 흔들림 추가)
+                phase += 2f * Mathf.PI * searchHz * Time.deltaTime;
+                Vector3 searchTarget = anchor + new Vector3(Mathf.Sin(phase) * searchRadius, 0f, 0f);
+
+                // 충돌/물리 고려 없이 위치 스냅 대신, 부드럽게 근사 이동
+                transform.position = Vector3.MoveTowards(transform.position, searchTarget, searchSpeed * Time.deltaTime);
+            }
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
 
         soundChaseCoroutine = null;
         isTeleporting = true;
@@ -132,6 +170,21 @@ public class EnemyAI : MonoBehaviour
 
         isTeleporting = false;
         ChangeState(PatrolState);
+    }
+    
+    private bool IsPlayerVisible()
+    {
+        var playerObj = GameManager.Instance.Player;
+        if (playerObj == null || !playerObj.activeInHierarchy) return false;
+
+        Vector3 toPlayer = playerObj.transform.position - transform.position;
+        float dist = toPlayer.magnitude;
+        if (dist > Detection.detectionRange) return false;
+
+        // 좌/우 바라보는 방향 기준 각도
+        Vector2 forward = (transform.localScale.x >= 0f) ? Vector2.right : Vector2.left;
+        float angle = Vector2.Angle(forward, toPlayer);
+        return angle <= (Detection.detectionAngle * 0.5f);
     }
     
     /// <summary>오브젝트 활성화 시 호출</summary>

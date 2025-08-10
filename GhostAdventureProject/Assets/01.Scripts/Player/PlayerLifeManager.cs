@@ -83,13 +83,8 @@ public class PlayerLifeManager : MonoBehaviour
         {
             Debug.LogWarning("EnemyVolumeTrigger가 PlayerLifeManager에서 발견되지 않았습니다.");
         }
-        if (volume != null && volume.globalVolume.profile != null)
-        {
-            if (volume.globalVolume.profile.TryGet<ColorAdjustments>(out var ca))
-            {
-                ca.colorFilter.value = volume.farColor; // EnemyVolumeTrigger에 정의된 farColor로 복원
-            }
-        }
+        if (EnemyVolumeOverlay.Instance != null)
+            EnemyVolumeOverlay.Instance.Suspend(true);
 
         if (director != null)
         {
@@ -171,7 +166,8 @@ public class PlayerLifeManager : MonoBehaviour
         UIManager.Instance.QTE_UI_2.isdead = false; // QTE UI 상태 초기화
         PossessionSystem.Instance.CanMove = true; // 플레이어 이동 활성화
 
-
+        if (EnemyVolumeOverlay.Instance != null)
+            EnemyVolumeOverlay.Instance.Suspend(false);
     }
 
 }

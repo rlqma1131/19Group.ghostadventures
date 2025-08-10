@@ -6,138 +6,113 @@ using UnityEngine.Rendering.Universal;
 
 public class EnemyVolumeTrigger : MonoBehaviour
 {
-    public Volume globalVolume; // 글로벌 볼륨
+    [Header("Targeting")]
     [SerializeField] private Transform player;
     [SerializeField] private float detectionRadius = 15f;
 
-    public bool PlayerInTrigger = false; // 트리거 감지
-    public bool PlayerFind = false; // 플레이어 찾음?
-    public ColorAdjustments colorAdjustments; // 글로벌 볼륨 색상 조정 컴포넌트
+    [Header("State")]
+    public bool PlayerInTrigger = false;
+    public bool PlayerFind = false;
+    public bool Ondead = false;
 
-    public Color farColor; //원래 글로벌볼륨 컬러
-    [SerializeField]private Color closeColor = new Color(108f / 255f, 0, 0); // 가까이 갈수록 컬러
+    private int _id;
+    private float t = 0f; // 0..1 보간(강도)
 
-    private float t = 0f; // 현재 색상 보간 값 (0 = 원래색, 1 = 빨간색)
-    public bool Ondead =false;
-    
-
-    void Start()
+    private void Start()
     {
-        if (globalVolume == null)
-        {
-            globalVolume = GetComponentInChildren<Volume>();
-        }
+        _id = GetInstanceID();
 
-        if (globalVolume.profile.TryGet<ColorAdjustments>(out var ca))
-        {
-            colorAdjustments = ca;
-        }
+        // 플레이어 캐시 1회
+        var playerObj = GameManager.Instance != null ? GameManager.Instance.Player : null;
+        if (playerObj != null) { player = playerObj.transform; PlayerFind = true; }
 
-        globalVolume.enabled = true;
-        farColor= colorAdjustments.colorFilter.value; // 초기 색상 설정
-        
+        // 매니저 없으면 자동 생성
+        if (EnemyVolumeOverlay.Instance == null)
+        {
+            var go = new GameObject("EnemyVolumeOverlay");
+            go.AddComponent<EnemyVolumeOverlay>();
+        }
     }
 
-    void Update()
+    private void Update()
     {
+        // player 참조 보강
         if (!PlayerFind)
         {
-            GameObject playerObject = GameManager.Instance.Player;
-            if (playerObject != null)
+            var playerObj = GameManager.Instance != null ? GameManager.Instance.Player : null;
+            if (playerObj != null) { player = playerObj.transform; PlayerFind = true; }
+        }
+        if (player == null || EnemyVolumeOverlay.Instance == null) return;
+
+        // 빙의 중이면 빙의 대상, 아니면 player
+        Transform target = null;
+        if (PossessionStateManager.Instance != null
+            && PossessionStateManager.Instance.IsPossessing()
+            && PossessionSystem.Instance != null
+            && PossessionSystem.Instance.CurrentTarget != null)
+        {
+            target = PossessionSystem.Instance.CurrentTarget.transform;
+        }
+        else
+        {
+            target = player;
+        }
+        if (target == null) return;
+
+        bool isDead = (UIManager.Instance != null
+                       && UIManager.Instance.QTE_UI_2 != null
+                       && UIManager.Instance.QTE_UI_2.isdead);
+
+        float distance = Vector3.Distance(transform.position, target.position);
+        bool inRange = !Ondead && !isDead && distance <= detectionRadius;
+
+        // 엣지 사운드 처리만 유지
+        if (inRange && !PlayerInTrigger)
+        {
+            if (SoundManager.Instance != null)
             {
-                player = playerObject.transform;
-                PlayerFind = true;
+                SoundManager.Instance.FadeOutAndStopBGM(1f);
+                if (SoundManager.Instance.EnemySource != null)
+                    SoundManager.Instance.FadeInLoopingSFX(SoundManager.Instance.EnemySource.clip, 1f, 0.5f);
             }
         }
+        else if (!inRange && PlayerInTrigger)
+        {
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
+                SoundManager.Instance.RestoreLastBGM(1f);
+            }
+        }
+        PlayerInTrigger = inRange;
 
-        //if (player != null && (!player.gameObject.activeInHierarchy || PossessionStateManager.Instance.IsPossessing()))
-        //{
-        //    ForceExitTrigger();
-        //    return;
-        //}
-        
-        if (player == null || colorAdjustments == null) return;
-        if (!PlayerInTrigger && Mathf.Approximately(t, 0f)) return;
-
+        // 강도 계산(가까울수록 강함)
         float targetT = 0f;
+        if (inRange)
+        {
+            float norm = Mathf.Clamp01(1f - (distance / detectionRadius));
+            targetT = Mathf.Pow(norm, 0.5f);
 
-        if (UIManager.Instance.QTE_UI_2.isdead)
-        {
-            targetT = 0f;
-        }
-        else if (PlayerInTrigger && !Ondead && !UIManager.Instance.QTE_UI_2.isdead)
-        {
-            float distance = Vector3.Distance(transform.position, player.position);
-            targetT = Mathf.Clamp01(1 - (distance / detectionRadius));
-            targetT = Mathf.Pow(targetT, 0.5f);
-            SoundManager.Instance.EnemySource.volume = Mathf.Lerp(0.01f, 0.3f, targetT);
-            
-            if (distance > detectionRadius)
-            {
-                ForceExitTrigger();
-                return;
-            }
+            if (SoundManager.Instance != null && SoundManager.Instance.EnemySource != null)
+                SoundManager.Instance.EnemySource.volume = Mathf.Lerp(0.01f, 0.3f, targetT);
         }
 
+        // 부드럽게 따라감
         t = Mathf.Lerp(t, targetT, Time.deltaTime * 2f);
-        colorAdjustments.colorFilter.value = Color.Lerp(farColor, closeColor, t);
+
+        // ✅ 여기서 오버레이 매니저에 “내 강도”만 보고
+        EnemyVolumeOverlay.Instance.Report(_id, t);
     }
 
-    private void ForceExitTrigger()
+    private void OnDisable()
     {
-        Debug.Log("플레이어 나감");
-        if (PlayerInTrigger)
-        {
-            PlayerInTrigger = false;
-            SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
-            SoundManager.Instance.RestoreLastBGM(1f);
-        }
-        t = Mathf.Lerp(t, 0f, Time.deltaTime * 2f);
-        colorAdjustments.colorFilter.value = Color.Lerp(farColor, closeColor, t);
+        if (EnemyVolumeOverlay.Instance != null)
+            EnemyVolumeOverlay.Instance.Clear(_id);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnDestroy()
     {
-        if (collision.CompareTag("Player"))
-        {
-            SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드 아웃
-            SoundManager.Instance.FadeInLoopingSFX(SoundManager.Instance.EnemySource.clip, 1f, 0.5f);
-            PlayerInTrigger = true;
-            globalVolume.enabled = true;
-        }
-
-        if (collision.CompareTag("Volume"))
-        {
-
-            if (globalVolume != null && colorAdjustments != null)
-            {
-                colorAdjustments.colorFilter.value = farColor;
-            }
-
-            globalVolume = collision.GetComponentInChildren<Volume>();
-            if (globalVolume.profile.TryGet<ColorAdjustments>(out var ca))
-            {
-                colorAdjustments = ca;
-                farColor = ca.colorFilter.value;
-            }
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    { 
-        if (collision.CompareTag("Player"))
-        {
-            
-            ForceExitTrigger();
-        }
-    }
-
-    void OnDrawGizmos()
-    {
-        if (globalVolume != null)
-        {
-            Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
-            Gizmos.DrawWireSphere(transform.position, detectionRadius);
-        }
+        if (EnemyVolumeOverlay.Instance != null)
+            EnemyVolumeOverlay.Instance.Clear(_id);
     }
 }
