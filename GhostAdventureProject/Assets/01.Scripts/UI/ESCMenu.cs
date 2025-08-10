@@ -75,14 +75,17 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         sound.SetActive(false);
         keybind.SetActive(false);
     }
+
     // 사운드 버튼
     public void SoundButton()
     {
+        gameObject.SetActive(true);
         general.SetActive(false);
         optionMenu.SetActive(true);
         sound.SetActive(true);
         keybind.SetActive(false);
     }
+
     // 키설정 버튼
     public void KeyBindButton()
     {

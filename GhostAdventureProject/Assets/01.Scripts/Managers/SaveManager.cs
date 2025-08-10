@@ -350,6 +350,13 @@ public static class SaveManager
                 SetActiveState(uid.Id, m.gameObject.activeSelf);
         }
 
+        // 문 상태 저장
+        foreach (var door in GameObject.FindObjectsOfType<BaseDoor>(true))
+        {
+            if (door.TryGetComponent(out UniqueId uid))
+                SaveManager.SetDoorLocked(uid.Id, door.IsLocked);
+        }
+
         // 플레이어 인벤토리 상태 저장
         var inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         SnapshotPlayerInventory(inv);
