@@ -180,7 +180,20 @@ public class MemoryScan : MonoBehaviour
                 checkpointId: currentScanObject != null ? currentScanObject.name : null,
                 autosave: true  // 저장 팝업 띄움
             );
+
+            var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
+            ChapterEndingManager.Instance.RegisterScannedMemory(currentMemoryFragment.data.memoryID, chapter);
         }
+    }
+
+    // 씬 이름으로 챕터진행도 추적
+    private int DetectChapterFromScene(string sceneName)
+    {
+        if (string.IsNullOrEmpty(sceneName)) return 0;
+        if (sceneName.Contains("Ch01")) return 1;
+        if (sceneName.Contains("Ch02")) return 2;
+        if (sceneName.Contains("Ch03")) return 3;
+        return 0;
     }
 
     private void CancleScan(string reason)
