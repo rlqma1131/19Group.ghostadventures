@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+// 오브젝트 SetActive 상태
+[System.Serializable]
+public class ActiveObjectState
+{
+    public string id;
+    public bool active;
+}
+
+// 빙의오브젝트 활성화 상태
 [System.Serializable]
 public class PossessableState
 {
@@ -10,6 +19,7 @@ public class PossessableState
     public bool hasActivated;
 }
 
+// 기억오브젝트 스캔 가능 상태
 [System.Serializable]
 public class MemoryFragmentState
 {
@@ -17,6 +27,7 @@ public class MemoryFragmentState
     public bool isScannable;
 }
 
+// 문 열림, 잠김 상태
 [System.Serializable]
 public class DoorState
 {
@@ -36,6 +47,7 @@ public class SaveData
     public List<string> scannedMemoryTitles;
     public List<string> solvedPuzzleIDs;
 
+    public List<ActiveObjectState> activeObjectStates;
     public List<DoorState> doorStates;
     public List<PossessableState> possessableStates;
     public List<MemoryFragmentState> memoryFragmentStates;
@@ -56,9 +68,29 @@ public static class SaveManager
         if (currentData.collectedMemoryIDs == null) currentData.collectedMemoryIDs = new List<string>();
         if (currentData.scannedMemoryTitles == null) currentData.scannedMemoryTitles = new List<string>();
         if (currentData.solvedPuzzleIDs == null) currentData.solvedPuzzleIDs = new List<string>();
+        if (currentData.activeObjectStates == null) currentData.activeObjectStates = new List<ActiveObjectState>();
         if (currentData.doorStates == null) currentData.doorStates = new List<DoorState>();
         if (currentData.possessableStates == null) currentData.possessableStates = new List<PossessableState>();               // ★
         if (currentData.memoryFragmentStates == null) currentData.memoryFragmentStates = new List<MemoryFragmentState>();       // ★
+    }
+
+    // ===== 오브젝트 활성화 상태 저장/조회 =====
+    public static void SetActiveState(string id, bool active)
+    {
+        EnsureData();
+        var list = currentData.activeObjectStates;
+        int i = list.FindIndex(x => x.id == id);
+        if (i >= 0) list[i].active = active;
+        else list.Add(new ActiveObjectState { id = id, active = active });
+    }
+
+    public static bool TryGetActiveState(string id, out bool active)
+    {
+        active = true;
+        var s = currentData?.activeObjectStates?.Find(x => x.id == id);
+        if (s == null) return false;
+        active = s.active;
+        return true;
     }
 
     // ===== BasePossessable 상태 저장/조회 =====
@@ -236,10 +268,23 @@ public static class SaveManager
 
     // 기억 스캔할 때 호출 ( 기억ID, 기억제목, 플레이어 위치 저장 )
     public static void SaveWhenScan(string memoryID, string title,
-        string sceneName, Vector3 playerPos, string checkpointId = null, bool autosave = true)
+    string sceneName, Vector3 playerPos, string checkpointId = null, bool autosave = true)
     {
         AddCollectedMemoryID(memoryID);
         AddScannedMemoryTitle(title);
+
+        // 오브젝트 SetAcitve 상태 저장
+        foreach (var p in GameObject.FindObjectsOfType<BasePossessable>(true))
+        {
+            if (p.TryGetComponent(out UniqueId uid))
+                SetActiveState(uid.Id, p.gameObject.activeSelf);
+        }
+        foreach (var m in GameObject.FindObjectsOfType<MemoryFragment>(true))
+        {
+            if (m.TryGetComponent(out UniqueId uid))
+                SetActiveState(uid.Id, m.gameObject.activeSelf);
+        }
+
         SetSceneAndPosition(sceneName, playerPos, checkpointId, autosave);
         if (autosave) SaveGame();
     }

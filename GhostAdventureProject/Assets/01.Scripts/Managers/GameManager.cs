@@ -26,7 +26,9 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject cutSceneManager;
     [SerializeField] private GameObject qteEffectManager;
     [SerializeField] private GameObject tutorialManager;
-    
+    [SerializeField] private GameObject saveStateApplier;
+
+
     public GameObject playerPrefab;
 
     [SerializeField] private GameObject currentPlayer;
@@ -64,6 +66,8 @@ public class GameManager : Singleton<GameManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         string sceneName = scene.name;
+
+        EnsureManagerExists<SaveStateApplier>(saveStateApplier);
 
         if (sceneName != "StartScene" && sceneName != "IntroScene_Real" 
             && mode != LoadSceneMode.Additive && sceneName != "Ch01_To_Ch02" && sceneName != "Ch02_To_Ch03" && sceneName != "Ch03_To_Ch04" && sceneName != "Ch03_Memory01")
