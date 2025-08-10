@@ -29,72 +29,94 @@ public class QTEUI3 : MonoBehaviour
     private float previousAngle = 0f;
     private HashSet<int> pendingZoneIndices = new();
 
+    [SerializeField] AudioClip successSound;
+    [SerializeField] AudioClip failSound;
+
 
 
     void Update()
     {
-if (!isRunning) return;
+        if (!isRunning) return;
 
-    timer += Time.unscaledDeltaTime;
-    if (timer > timeLimit)
+        timer += Time.unscaledDeltaTime;
+        if (timer > timeLimit)
+        {
+            EndQTE(false); // 제한시간 초과
+            return;
+        }
+
+        // 회전
+        previousAngle = currentAngle;
+        currentAngle += rotationSpeed * Time.unscaledDeltaTime;
+        currentAngle %= 360f;
+        needle.localEulerAngles = new Vector3(0, 0, -currentAngle);
+
+        // ✅ 통과 체크
+       var pendingList = new List<int>(pendingZoneIndices);
+    pendingList.Sort((a, b) => b.CompareTo(a)); // 큰 인덱스 먼저
+
+    foreach (int i in pendingList)
     {
-        EndQTE(false); // 제한시간 초과
-        return;
-    }
+        // 삭제로 리스트가 줄었을 수 있으니 가드
+        if (i < 0 || i >= successZones.Count)
+        {
+            pendingZoneIndices.Remove(i);
+            continue;
+        }
 
-    // 회전
-    previousAngle = currentAngle;
-    currentAngle += rotationSpeed * Time.unscaledDeltaTime;
-    currentAngle %= 360f;
-    needle.localEulerAngles = new Vector3(0, 0, -currentAngle);
-
-    // ✅ 통과 체크
-    foreach (int i in new List<int>(pendingZoneIndices))
-    {
         if (ZonePassed(successZones[i], previousAngle, currentAngle))
         {
             if (!clearedZoneIndices.Contains(i))
             {
-                // ❌ 통과 전에 Space를 안 눌렀음 → 실패
+                EndQTE(false); // 안 누르고 지나감 → 실패
+                SoundManager.Instance.PlaySFX(failSound, 0.5f);
+                return;
+            }
+
+            // 누르고 지나감 → 이 즉시 삭제
+            RemoveZoneAt(i); // 아래 헬퍼
+            SoundManager.Instance.PlaySFX(successSound, 0.5f);
+
+            if (successZones.Count == 0)
+            {
+                EndQTE(true);
+                return;
+            }
+            // 내림차순 스냅샷이라 계속 돌려도 안전
+        }
+    }
+
+        // ✅ 입력 체크
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            bool hit = false;
+
+            for (int i = 0; i < successZones.Count; i++)
+            {
+                if (clearedZoneIndices.Contains(i)) continue;
+
+                if (IsInZone(currentAngle, successZones[i]))
+                {
+                    clearedZoneIndices.Add(i);
+                    Debug.Log($"성공 영역 {i + 1} 통과!");
+                    hit = true;
+                }
+            }
+
+            if (!hit)
+            {
+                // ❌ 아무 영역 위에 없는데 누름 → 실패
                 EndQTE(false);
                 return;
             }
 
-            pendingZoneIndices.Remove(i); // 통과 완료
-        }
-    }
-
-    // ✅ 입력 체크
-    if (Input.GetKeyDown(KeyCode.Space))
-    {
-        bool hit = false;
-
-        for (int i = 0; i < successZones.Count; i++)
-        {
-            if (clearedZoneIndices.Contains(i)) continue;
-
-            if (IsInZone(currentAngle, successZones[i]))
+            //✅ 모든 영역 성공 시
+            if (clearedZoneIndices.Count == successZones.Count)
             {
-                clearedZoneIndices.Add(i);
-                Debug.Log($"성공 영역 {i + 1} 통과!");
-                hit = true;
+                EndQTE(true);
             }
-        }
 
-        if (!hit)
-        {
-            // ❌ 아무 영역 위에 없는데 누름 → 실패
-            EndQTE(false);
-            return;
-        }
-
-        // ✅ 모든 영역 성공 시
-        if (clearedZoneIndices.Count == successZones.Count)
-        {
-            EndQTE(true);
-        }
-
-    }    
+        }    
     }
 
     public void ShowQTEUI3()
@@ -111,9 +133,10 @@ if (!isRunning) return;
             Destroy(child.gameObject);
 
         successZones = GenerateZones(successZoneCount, minZoneSize, maxZoneSize);
-        foreach (var zone in successZones)
+        for (int i = 0; i < successZones.Count; i++)
         {
-            CreateZoneVisual(zone);
+            CreateZoneVisual(successZones[i]);
+            pendingZoneIndices.Add(i); // ← 추가
         }
     }
 
@@ -157,6 +180,7 @@ if (!isRunning) return;
     void CreateZoneVisual(QTERingZone zone)
     {
         GameObject zoneObj = Instantiate(zonePrefab, ringTransform);
+        zone.visual = zoneObj;
         Image img = zoneObj.GetComponent<Image>();
 
         float zoneSize = (zone.endAngle >= zone.startAngle)
@@ -194,6 +218,8 @@ if (!isRunning) return;
     {
         public float startAngle;
         public float endAngle;
+        public GameObject visual; // ← 추가
+
     }
 
     private void InvokeResult(bool result)
@@ -229,5 +255,28 @@ if (!isRunning) return;
         minZoneSize = settings.minZoneSize;
         maxZoneSize = settings.maxZoneSize;
     }
+
+    void RemoveZoneAt(int removeIdx)
+{
+    var z = successZones[removeIdx];
+    if (z.visual != null) Destroy(z.visual); // 비주얼 제거
+
+    successZones.RemoveAt(removeIdx);
+
+    // 인덱스 세트 재매핑
+    pendingZoneIndices = ReindexSet(pendingZoneIndices, removeIdx);
+    clearedZoneIndices = ReindexSet(clearedZoneIndices, removeIdx);
+}
+
+HashSet<int> ReindexSet(HashSet<int> src, int removeIdx)
+{
+    var dst = new HashSet<int>();
+    foreach (var idx in src)
+    {
+        if (idx == removeIdx) continue;     // 지운 인덱스 제거
+        dst.Add(idx > removeIdx ? idx - 1 : idx); // 뒤는 -1
+    }
+    return dst;
+}
 
 }

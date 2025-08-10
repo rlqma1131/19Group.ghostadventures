@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public interface IUIClosable
 {
@@ -90,12 +91,21 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Texture2D hideAreaCursor; // 은신처
     [SerializeField] private Texture2D lockDoorCursor; // 잠긴문
     [SerializeField] private Texture2D openDoorCursor; // 열린문
+    [SerializeField] private Texture2D moveAbleCursor; // 움직임가능하다는표시 커서
     private GameObject lastHovered;
     [SerializeField] private Vector2 hotspot = Vector2.zero;
     [SerializeField] private EventSystem eventSystem;
 
     // -------------------------------------------------------------------------------------------
-    
+    public AudioClip clickSound;
+    // -------------------------------------------------------------------------------------------
+    void PlayClickSound()
+    {
+        if (clickSound != null)
+            SoundManager.Instance.PlaySFX(clickSound, 0.2f);
+    }
+
+
     // private void Start()
     // {
     //     playModeUI.SetActive(false);
@@ -113,6 +123,14 @@ public class UIManager : Singleton<UIManager>
             PlayModeUI_CloseAll();
         }
         eventSystem = FindObjectOfType<EventSystem>();
+
+        // 씬 안의 모든 Button 찾기
+        Button[] buttons = FindObjectsOfType<Button>(true); // 비활성화 포함
+
+        foreach (Button btn in buttons)
+        {
+            btn.onClick.AddListener(() => PlayClickSound());
+        }
     
     }
     private void Update() {
@@ -236,6 +254,10 @@ public class UIManager : Singleton<UIManager>
     public void ClearCursor()
     {
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+    }
+    public void MoveAbleCursor()
+    {
+        Cursor.SetCursor(moveAbleCursor, hotspot, CursorMode.Auto);
     }
 
     // targetUI 하나만 보이게 하기
@@ -412,7 +434,9 @@ public class UIManager : Singleton<UIManager>
     //         Hide_Q_Key();
     //     }
     // }
-    
-    
+
+
 }
+    
+
 

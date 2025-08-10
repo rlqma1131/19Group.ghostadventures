@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using DG.Tweening;
 
 public class InventorySlot_Player : MonoBehaviour
 {
@@ -11,7 +12,9 @@ public class InventorySlot_Player : MonoBehaviour
     public Image clearSlotIcon;
     public int clueIndex;
     public TMP_Text keyText;
-
+[Header("Dim Settings")]
+    [Range(0f,1f)] public float dimAlpha = 0.6f; // 뒷면 투명도
+    private float normalAlpha = 1f;
     // public TextMeshProUGUI clueName;
 
     public void Setup(ClueData clue)
@@ -30,8 +33,31 @@ public class InventorySlot_Player : MonoBehaviour
 
     private void Start()
     {
-        UpdateKeyText();
+        // UpdateKeyText();
         icon.enabled = false;
+        SetKeyVisible(true);
+        SetDim(false);
+    }
+
+    public void SetKeyVisible(bool visible)
+    {
+        if (keyText != null) keyText.gameObject.SetActive(visible);
+    }
+
+    public void SetDim(bool dim)
+    {
+        if (icon == null) return;
+        var c = icon.color;
+        c.a = dim ? dimAlpha : normalAlpha;
+        icon.color = c;
+
+        // 빈 슬롯 배경도 같이 처리하고 싶으면
+        if (clearSlotIcon != null)
+        {
+            var bc = clearSlotIcon.color;
+            bc.a = dim ? dimAlpha : normalAlpha;
+            clearSlotIcon.color = bc;
+        }
     }
 
     public void UpdateKeyText()
