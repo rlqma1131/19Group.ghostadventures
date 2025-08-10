@@ -84,6 +84,11 @@ public class Ch3_Nurse : MoveBasePossessable
         SetCondition(condition.currentCondition);
     }
 
+    void LateUpdate()
+    {
+        highlightSpriteRenderer.flipX = spriteRenderer.flipX;
+    }
+
     private void HandleWork()
     {
         if (isWaiting)

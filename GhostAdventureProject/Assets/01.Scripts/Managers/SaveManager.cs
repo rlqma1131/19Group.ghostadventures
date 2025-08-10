@@ -11,6 +11,14 @@ public class ActiveObjectState
     public bool active;
 }
 
+// 오브젝트 위치
+[System.Serializable]
+public class ObjectPositionState
+{
+    public string id;
+    public Vector3 position;
+}
+
 // 빙의오브젝트 활성화 상태
 [System.Serializable]
 public class PossessableState
@@ -63,6 +71,7 @@ public class SaveData
     public List<string> solvedPuzzleIDs;
 
     public List<ActiveObjectState> activeObjectStates;
+    public List<ObjectPositionState> objectPositions;
     public List<DoorState> doorStates;
     public List<PossessableState> possessableStates;
     public List<MemoryFragmentState> memoryFragmentStates;
@@ -79,6 +88,7 @@ public static class SaveManager
     private static void EnsureData()
     {
         if (currentData == null) currentData = new SaveData();
+        if (currentData.objectPositions == null) currentData.objectPositions = new List<ObjectPositionState>();
         if (currentData.possessableInventories == null) currentData.possessableInventories = new List<PossessableInventoryState>();
         if (currentData.collectedClueNames == null) currentData.collectedClueNames = new List<string>();
         if (currentData.collectedMemoryIDs == null) currentData.collectedMemoryIDs = new List<string>();
@@ -106,6 +116,25 @@ public static class SaveManager
         var s = currentData?.activeObjectStates?.Find(x => x.id == id);
         if (s == null) return false;
         active = s.active;
+        return true;
+    }
+
+    // ===== 오브젝트 위치 저장/조회 =====
+    public static void SetObjectPosition(string id, Vector3 pos)
+    {
+        EnsureData();
+        var list = currentData.objectPositions;
+        int i = list.FindIndex(x => x.id == id);
+        if (i >= 0) list[i].position = pos;
+        else list.Add(new ObjectPositionState { id = id, position = pos });
+    }
+    
+    public static bool TryGetObjectPosition(string id, out Vector3 pos)
+    {
+        pos = default;
+        var s = currentData?.objectPositions?.Find(x => x.id == id);
+        if (s == null) return false;
+        pos = s.position;
         return true;
     }
 
@@ -338,16 +367,23 @@ public static class SaveManager
         AddCollectedMemoryID(memoryID);
         AddScannedMemoryTitle(title);
 
-        // 오브젝트 SetAcitve 상태 저장
+        // 오브젝트 SetAcitve 상태, 위치 저장
         foreach (var p in GameObject.FindObjectsOfType<BasePossessable>(true))
         {
             if (p.TryGetComponent(out UniqueId uid))
+            {
                 SetActiveState(uid.Id, p.gameObject.activeSelf);
+                SetObjectPosition(uid.Id, p.transform.position);
+            }
         }
+
         foreach (var m in GameObject.FindObjectsOfType<MemoryFragment>(true))
         {
             if (m.TryGetComponent(out UniqueId uid))
+            {
                 SetActiveState(uid.Id, m.gameObject.activeSelf);
+                SetObjectPosition(uid.Id, m.transform.position);
+            }
         }
 
         // 문 상태 저장

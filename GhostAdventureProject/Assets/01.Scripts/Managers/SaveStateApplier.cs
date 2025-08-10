@@ -50,10 +50,13 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
         foreach (var p in FindObjectsOfType<BasePossessable>(true))
         {
             if (p.TryGetComponent(out UniqueId uid) &&
-                SaveManager.TryGetPossessableState(uid.Id, out bool active))
+                SaveManager.TryGetObjectPosition(uid.Id, out var pos))
             {
-                p.SetActivatedFromSave(active);
-                Debug.Log($"SaveStateApplier : {p}의 잠김 상태는 {active}로 적용됨");
+                // Rigidbody2D 있으면 물리 좌표로 세팅
+                if (p.TryGetComponent<Rigidbody2D>(out var rb))
+                    rb.position = pos;
+                else
+                    p.transform.position = pos;
             }
         }
 
@@ -76,6 +79,18 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 m.ApplyFromSave(false);
             }
             // 3) 그 외엔 인스펙터 기본값 유지
+        }
+        // MemoryFragment 위치도 셋팅
+        foreach (var m in FindObjectsOfType<MemoryFragment>(true))
+        {
+            if (m.TryGetComponent(out UniqueId uid) &&
+                SaveManager.TryGetObjectPosition(uid.Id, out var pos))
+            {
+                if (m.TryGetComponent<Rigidbody2D>(out var rb))
+                    rb.position = pos;
+                else
+                    m.transform.position = pos;
+            }
         }
 
         // 문
