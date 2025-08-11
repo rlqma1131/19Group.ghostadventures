@@ -228,7 +228,28 @@ public class MemoryFragment : BaseInteractable
         }
     }
 
-    public virtual void AfterScan(){}
+    public virtual void AfterScan()
+    {
+        // 저장한 기억 챕터 진행도에 반영
+        var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
+        ChapterEndingManager.Instance.RegisterScannedMemory(data.memoryID, chapter);
+
+        SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
+            SceneManager.GetActiveScene().name,
+            GameManager.Instance.Player.transform.position,
+            checkpointId: data.memoryID,
+            autosave: true);
+    }
+
+    private int DetectChapterFromScene(string sceneName)
+    {
+        if (string.IsNullOrEmpty(sceneName)) return 0;
+        if (sceneName.Contains("Ch01")) return 1;
+        if (sceneName.Contains("Ch02")) return 2;
+        if (sceneName.Contains("Ch03")) return 3;
+        return 0;
+    }
+
     protected virtual void PlusAction(){}
 
     public void ApplyFromSave(bool scannable)

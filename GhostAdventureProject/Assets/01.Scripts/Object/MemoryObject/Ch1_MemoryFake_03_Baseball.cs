@@ -15,6 +15,8 @@ public class Ch1_MemoryFake_03_Baseball : MemoryFragment
         alphabet_A.SetActive(true);
         ChapterEndingManager.Instance.CollectCh1Clue("A");
         SaveManager.MarkPuzzleSolved("A");
+
+        base.AfterScan();
     }
 
     protected override void PlusAction()

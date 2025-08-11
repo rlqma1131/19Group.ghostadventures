@@ -8,5 +8,7 @@ public class Ch2_MemoryFake_BackStreetObj : MemoryFragment
     public override void AfterScan()
     {
         drawingClue2.SetActive(true);
+
+        base.AfterScan();
     }
 }

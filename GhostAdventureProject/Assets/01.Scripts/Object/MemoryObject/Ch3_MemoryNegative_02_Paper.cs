@@ -17,5 +17,7 @@ public class Ch3_MemoryNegative_02_Paper : MemoryFragment
     public override void AfterScan()
     {
         colected = true;
+
+        base.AfterScan();
     }
 }

@@ -24,6 +24,8 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     {
         Completed_TeddyBear = true;
         SaveManager.MarkPuzzleSolved("곰인형");
+
+        base.AfterScan();
     }
     // protected override void PlusAction()
     // {

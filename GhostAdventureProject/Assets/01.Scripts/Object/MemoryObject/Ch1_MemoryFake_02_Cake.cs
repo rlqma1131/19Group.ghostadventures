@@ -25,13 +25,18 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
 
     public override void AfterScan()
     {
+        ChapterEndingManager.Instance.CollectCh1Clue("H");
+
+
         anim.SetTrigger("Show");
 
         AfterScanEffect(); // 애니메이션 재생 후 효과 실행
-        ChapterEndingManager.Instance.CollectCh1Clue("H");
+
         Debug.Log("[Cake] AfterScan 호출됨");
 
         Invoke("HighlightOff", 1f);
+
+        base.AfterScan();
     }
 
     void HighlightOff()

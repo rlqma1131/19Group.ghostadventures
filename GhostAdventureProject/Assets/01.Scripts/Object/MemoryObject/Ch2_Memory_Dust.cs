@@ -10,6 +10,8 @@ public class Ch2_Memory_Dust : MemoryFragment
         letterE.SetActive(true);
         ChapterEndingManager.Instance.CollectCh2Clue("E");
         SaveManager.MarkPuzzleSolved("먼지");
+
+        base.AfterScan();
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)

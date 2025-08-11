@@ -16,5 +16,7 @@ public class Ch2_MemoryPositive_01_HandPrint : MemoryFragment
     public override void AfterScan() 
     {
         exit.ActivateClearDoor();
+
+        base.AfterScan();
     }
 }
