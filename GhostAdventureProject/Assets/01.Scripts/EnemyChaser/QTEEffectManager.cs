@@ -4,7 +4,7 @@ using System.Collections;
 
 public class QTEEffectManager : MonoBehaviour
 {
-    public static QTEEffectManager Instance;
+    public static QTEEffectManager Instance { get; private set; }
 
     [Header("어두운 오버레이")]
     public CanvasGroup darkOverlay;

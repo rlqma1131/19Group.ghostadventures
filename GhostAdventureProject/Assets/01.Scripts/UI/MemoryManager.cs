@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MemoryManager : MonoBehaviour
 {
-    public static MemoryManager Instance;
+    public static MemoryManager Instance { get; private set; }
 
     // 저장과 동일하게 "ID" 리스트로 관리
     public List<string> collectedMemoryIDs = new();
