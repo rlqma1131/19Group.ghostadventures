@@ -21,6 +21,7 @@ public class Ch02_NPCEvent : MonoBehaviour
             kid.SetActive(false); // 방 방문 수가 1 이상이면 Ch2_kid 비활성화
 
         }
+
     }
 
 

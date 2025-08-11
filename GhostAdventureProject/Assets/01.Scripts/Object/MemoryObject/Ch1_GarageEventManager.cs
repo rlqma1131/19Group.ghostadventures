@@ -16,7 +16,9 @@ public class Ch1_GarageEventManager : MonoBehaviour
 
     private bool playerNearby = false;
     private bool openKeyboard = false;
-
+    [SerializeField] SpriteRenderer door;
+    //NPC컷신보고 상호작용 가능하게하기 위해 추가
+    [SerializeField]Cutscene_NPC cutscene_NPC;
     public KeyBoard_Enter Answer => answer;
 
     void Start()
@@ -41,7 +43,13 @@ public class Ch1_GarageEventManager : MonoBehaviour
             }
             else
             {
-                if (!isCutscenePlaying)
+                if(!isCutscenePlaying && !cutscene_NPC.isCutscenePlaying)
+                {
+                    UIManager.Instance.PromptUI.ShowPrompt("아이방에서 누군가의 기척이 느껴져..", 2f);
+
+                }
+
+                if (!isCutscenePlaying && cutscene_NPC.isCutscenePlaying)
                 {
                     PlayerInteractSystem.Instance.eKey.SetActive(false);
                     // [컷씬] 꼬마유령 이벤트
@@ -123,5 +131,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         isCutscenePlaying2 = true;
         energyRestoreZone.IsActive = true; // 에너지 회복존 비활성화
         UIManager.Instance.PlayModeUI_OpenAll();
+        door.color = new Color(door.color.r, door.color.g, door.color.b, 0f); // 문 투명하게
+
     }
 }
