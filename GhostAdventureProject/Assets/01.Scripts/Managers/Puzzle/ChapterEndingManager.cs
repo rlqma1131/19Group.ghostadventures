@@ -53,6 +53,10 @@ public class ChapterEndingManager : Singleton<ChapterEndingManager>
     private void OnSaveLoaded(SaveData data)
     {
         ApplyFromSave();
+
+        var saved = SaveManager.CurrentData;
+        var e = saved?.chapterClueProgress?.Find(x => x.chapter == 1);
+        Debug.Log($"[LOAD] ch1 entry? {(e != null)} / count={(e?.clueIds?.Count ?? -1)}");
     }
 
     // 단서 수집 될 때마다 호출되는 메서드

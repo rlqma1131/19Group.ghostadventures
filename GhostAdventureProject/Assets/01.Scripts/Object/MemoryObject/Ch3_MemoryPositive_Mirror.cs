@@ -21,5 +21,7 @@ public class Ch3_MemoryPositive_Mirror : MemoryFragment
     public override void AfterScan()
     {
         scanner.ActiveScanner();
+
+        base.AfterScan();
     }
 }

@@ -442,6 +442,7 @@ public static class SaveManager
         }
 
         Loaded?.Invoke(currentData);
+
         return currentData;
     }
 
@@ -516,7 +517,7 @@ public static class SaveManager
     }
 
     // 기억 스캔할 때 호출
-    public static void SaveWhenScan(string memoryID, string title,
+    public static void SaveWhenScanAfter(string memoryID, string title,
     string sceneName, Vector3 playerPos, string checkpointId = null, bool autosave = true)
     {
         AddCollectedMemoryID(memoryID);
@@ -558,6 +559,8 @@ public static class SaveManager
         var cem = ChapterEndingManager.Instance;
         if (cem != null)
         {
+            Debug.Log($"[SAVE] ch1 clues now={cem.CurrentCh1ClueCount}");
+
             // 최종단서 진행도 스냅샷
             SetChapterProgress(1, cem.GetClueIds(1), cem.GetAllCollected(1));
             SetChapterProgress(2, cem.GetClueIds(2), cem.GetAllCollected(2));
