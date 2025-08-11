@@ -23,7 +23,11 @@ public class Ch3_MusicBox : BaseInteractable
     private bool playAble; // 오르골과 상호작용할 수 있는 영역에 있는지
     private bool isRunning; // QTE가 실행되고 있는지
     private bool isQTESuccess = false; // QTE를 성공했는지
-    private List<KeyCode> targetSequence = new List<KeyCode>(); // 방향키 순서를 정해두고 사용자 키 입력과 맞는지 확인용
+    private enum Dir { Left, Right, Up, Down }
+
+    // before: private List<KeyCode> targetSequence = new List<KeyCode>();
+    private List<Dir> targetSequence = new List<Dir>();
+    // private List<KeyCode> targetSequence = new List<KeyCode>(); // 방향키 순서를 정해두고 사용자 키 입력과 맞는지 확인용
     KeyCode[] possibleKeys = { KeyCode.A, KeyCode.D, KeyCode.W, KeyCode.S }; //입력 가능한 키
     public CryEnemy linkedEnemy; // CryEnemy에서 정보 넣어줌(인스펙터연결x)
     [SerializeField] private GameObject QTEUI_MusicBox; // QTE UI Canvas
@@ -68,27 +72,20 @@ public class Ch3_MusicBox : BaseInteractable
             StopQTE();
             return;
         }
+        
 
         if (Input.anyKeyDown)
         {
-            if(Input.GetKeyDown(KeyCode.E)) return; // 임시
-            if(currentIndex >= targetSequence.Count) return;
-            if (Input.GetKeyDown(targetSequence[currentIndex]))
-            {
-                SuccessArrow();
-            }
-            else
-            {
-                FailArrow();
-            }
+            if (Input.GetKeyDown(KeyCode.E)) return;
+            if (currentIndex >= targetSequence.Count) return;
 
-            if(linkedEnemy.failCount >= 3)
-            {
-                StopQTE();
-                return;
-            }
+            var dir = targetSequence[currentIndex];
+            if (IsDirectionPressed(dir))  SuccessArrow();
+            else                          FailArrow();
 
-            if (currentIndex >= targetSequence.Count) 
+            if (linkedEnemy.failCount >= 3) { StopQTE(); return; }
+
+            if (currentIndex >= targetSequence.Count)
             {
                 SuccessQTE();
                 isQTESuccess = true;
@@ -169,34 +166,45 @@ public class Ch3_MusicBox : BaseInteractable
     private void GenerateRandomSequence(int count)
     {
         targetSequence.Clear();
-
         for (int i = 0; i < count; i++)
         {
-            KeyCode randomKey = GetRandomArrowKey();
-            targetSequence.Add(randomKey);
+            var dir = (Dir)UnityEngine.Random.Range(0, 4); // 0~3
+            targetSequence.Add(dir);
 
             GameObject arrow = Instantiate(arrowPrefab, arrowContainer);
             Image img = arrow.GetComponent<Image>();
-            img.sprite = GetSpriteForKey(randomKey);
-            arrowImages.Add(img); 
+            img.sprite = GetSpriteForDirection(dir);
+            arrowImages.Add(img);
         }
         UpdateHighlight();
+    }
+
+    private Sprite GetSpriteForDirection(Dir d)
+    {
+        switch (d)
+        {
+            case Dir.Left:  return leftArrow;
+            case Dir.Right: return rightArrow;
+            case Dir.Up:    return upArrow;
+            case Dir.Down:  return downArrow;
+        }
+        return null;
     }
     private KeyCode GetRandomArrowKey()
     {
         return possibleKeys[UnityEngine.Random.Range(0, possibleKeys.Length)];
     }
-    Sprite GetSpriteForKey(KeyCode key)
-    {
-        switch (key)
-        {
-            case KeyCode.A: return leftArrow;
-            case KeyCode.D: return rightArrow;
-            case KeyCode.W: return upArrow;
-            case KeyCode.S: return downArrow;
-            default: return null;
-        }
-    }
+    // Sprite GetSpriteForKey(KeyCode key)
+    // {
+    //     switch (key)
+    //     {
+    //         case KeyCode.A: return leftArrow;
+    //         case KeyCode.D: return rightArrow;
+    //         case KeyCode.W: return upArrow;
+    //         case KeyCode.S: return downArrow;
+    //         default: return null;
+    //     }
+    // }
 
     // 화살표(arrow)를 하이라이트 이미지가 따라다니도록 만듬
     void UpdateHighlight()
@@ -237,6 +245,20 @@ public class Ch3_MusicBox : BaseInteractable
             playAble = false;
         }
     }
+
+    bool IsDirectionPressed(Dir d)
+    {
+        switch (d)
+        {
+            case Dir.Left:  return Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow);
+            case Dir.Right: return Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow);
+            case Dir.Up:    return Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow);
+            case Dir.Down:  return Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow);
+        }
+        return false;
+    }
+
+
 
 }
 
