@@ -47,10 +47,10 @@ public class Ch3_MusicBox : BaseInteractable
     {
         if(!playAble || isQTESuccess) return;
 
-        if(!isRunning)
-        {
+        // if(!isRunning)
+        // {
             if(Input.GetKeyDown(KeyCode.E)) StartQTE();
-        }
+        // }
 
         if(!isRunning) return;
         
@@ -99,6 +99,7 @@ public class Ch3_MusicBox : BaseInteractable
     // QTE 시작
     void StartQTE()
     {
+        if(isRunning) return;
         currentIndex = 0;
         isRunning = true;
         PossessionSystem.Instance.CanMove = false;
@@ -127,6 +128,8 @@ public class Ch3_MusicBox : BaseInteractable
     // QTE 성공
     void SuccessQTE()
     {
+         if (!isRunning) return;   // 중복 방지
+        isRunning = false;
         SoundManager.Instance.PlaySFX(successArrow_Sound);
         StopQTE();
         linkedEnemy.OnMusicBoxSuccess();
@@ -135,10 +138,12 @@ public class Ch3_MusicBox : BaseInteractable
     // QTE 실패
     void FailQTE()
     {
+        if (!isRunning) return;   // 중복 방지
+        isRunning = false;
         linkedEnemy.OnMusicBoxFail();
         text.text = (linkedEnemy.failCount + " / 3").ToString();
         StopQTE();
-        linkedEnemy.OnMusicBoxFail();
+        // linkedEnemy.OnMusicBoxFail();
     }
 
     // QTE 멈춤

@@ -47,6 +47,7 @@ public class CryEnemy : MonoBehaviour
     [SerializeField] private float attackRange; // 공격 범위
 
     private Vector2 lastDirection;
+    private bool attackMode = false;
 
 
     void Start()
@@ -146,6 +147,7 @@ public class CryEnemy : MonoBehaviour
         soundManager.StopLoopingSFX();
         soundManager.PlaySFX(cry_big);
         StartCoroutine(WaitAndChangeState(cry_big.length));
+        attackMode = true;
     }
     private IEnumerator WaitAndChangeState(float delay)
     {
@@ -162,8 +164,18 @@ public class CryEnemy : MonoBehaviour
     // ChangeState 애니메이션 종료시 작동
     public void OnChangeStateAnimationEnd()
     {
-        anim.SetBool("ChangeState", false);
-        currentState = CryEnemyState.Chase;
+        if(attackMode)
+        {
+            anim.SetBool("ChangeState", false);
+            currentState = CryEnemyState.Chase;
+        }
+        else
+            anim.SetBool("BackState", true);
+    }
+
+    public void OnBackeStateAnimationEnd()
+    {
+        anim.SetBool("BackState", false);
     }
 
     private void ChasePlayer()
@@ -259,6 +271,7 @@ public class CryEnemy : MonoBehaviour
         if(collision.CompareTag("Player") && currentState == CryEnemyState.Known)
         {
             // soundManager.StopLoopingSFX();
+            anim.SetBool("ChangeState", true);
             soundManager.PlaySFX(cry_big);
             // soundManager.PlayLoopingSFX(cry_small);
         }
