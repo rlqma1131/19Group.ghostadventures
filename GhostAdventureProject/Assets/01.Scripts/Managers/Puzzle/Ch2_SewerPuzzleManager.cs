@@ -1,10 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Ch2_SewerPuzzleManager : MonoBehaviour
 {
-    public static Ch2_SewerPuzzleManager Instance;
+    public static Ch2_SewerPuzzleManager Instance { get; private set; }
+
     [SerializeField] private GameObject mazeGroup;
     [SerializeField] private GameObject autoLights;
     [SerializeField] private GameObject sewerMemoryObj;

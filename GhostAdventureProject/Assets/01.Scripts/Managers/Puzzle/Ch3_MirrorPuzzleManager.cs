@@ -6,7 +6,7 @@ using DG.Tweening;
 
 public class Ch3_MirrorPuzzleManager : MonoBehaviour
 {
-    public static Ch3_MirrorPuzzleManager Instance;
+    public static Ch3_MirrorPuzzleManager Instance { get; private set; }
 
     private int roomsCleared = 0;
     public int totalRooms = 3;
