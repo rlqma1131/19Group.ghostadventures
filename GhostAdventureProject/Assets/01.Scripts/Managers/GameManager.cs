@@ -66,11 +66,27 @@ public class GameManager : Singleton<GameManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         string sceneName = scene.name;
-
+        
+        bool IsChapterStart(string name)
+        {
+            return name == "Ch01_House" || name == "Ch02_PlayGround" || name == "Ch03_Hospital";
+        }
+        
+        if (IsChapterStart(sceneName) && !SceneLoadContext.CameThroughLoading)
+        {
+            Debug.Log($"[GameManager] 챕터 '{sceneName}'가 로딩씬 없이 열림 → 로딩씬 경유로 재진입");
+            LoadThroughLoading(sceneName);
+            return; // 이하 초기화/스폰 실행 안 함
+        }
+        
+        if (sceneName != "LoadingScene")
+            SceneLoadContext.CameThroughLoading = false;
+        
         EnsureManagerExists<SaveStateApplier>(saveStateApplier);
 
         if (sceneName != "StartScene" && sceneName != "IntroScene_Real" 
-            && mode != LoadSceneMode.Additive && sceneName != "Ch01_To_Ch02" && sceneName != "Ch02_To_Ch03" && sceneName != "Ch03_To_Ch04" && sceneName != "Ch03_Memory01")
+            && mode != LoadSceneMode.Additive && sceneName != "Ch01_To_Ch02" && sceneName != "Ch02_To_Ch03" 
+            && sceneName != "Ch03_To_Ch04" && sceneName != "Ch03_Memory01"&& sceneName != "LoadingScene")
         {
             // 플레이모드 UI 열기
             if (UIManager.Instance != null)
@@ -216,6 +232,13 @@ public class GameManager : Singleton<GameManager>
             case "Ch03_Hospital": return ClueStage.Stage3;
             default: return ClueStage.Stage4;
         }
+    }
+    
+    public static void LoadThroughLoading(string nextScene, Color? bgBaseColor = null)
+    {
+        SceneLoadContext.RequestedNextScene = nextScene;
+        SceneLoadContext.RequestedBaseBgColor = bgBaseColor;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("LoadingScene");
     }
 
     //private void RunPlayer()

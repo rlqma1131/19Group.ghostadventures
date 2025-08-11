@@ -74,7 +74,7 @@ public class MoveScene : MonoBehaviour
     public void GoScene(string Scenename)
     {
         // 타임라인이 종료되면 씬 이동
-        SceneManager.LoadScene(Scenename);
+        GameManager.LoadThroughLoading(Scenename);
         //if (!GameManager.Instance.Player.activeSelf)
         //{
         //    //GameManager.Instance.Player.gameObject.SetActive(true); // 플레이어 활성화
