@@ -1,7 +1,7 @@
 // using System.Collections;
 // using System.Collections.Generic;
 // using UnityEngine;
-
+// public enum InvSide { Player, Possess }
 // public class InventoryInputManager : MonoBehaviour
 // {
 //     private Inventory_Player playerInventory;
@@ -24,7 +24,7 @@
 //             Debug.Log("빙의 인벤토리 제어 상태: " + isPossessableInventoryActive);
 //             // if (!isPossessableInventoryActive)
 //             // possessableInventory.ClearSelectedSlot(); // 선택 해제
-//             possessableInventory.ClearAllSlotHighlights();
+//             // possessableInventory.ClearAllSlotHighlights();
 //         }
 
 //         // 입력 처리는 빙의 인벤토리 활성 상태일 때만
