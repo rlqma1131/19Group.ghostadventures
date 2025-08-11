@@ -105,14 +105,29 @@ public class EnemyMovementController : MonoBehaviour
     public void ChasePlayer()
     {
         if (enemy.isTeleporting) return;
-        if (player != null)
+
+        // 1) 강제 타겟 우선
+        if (forcedTarget.HasValue)
         {
-            Vector2 targetPos = forcedTarget ?? player.position;
-            Vector2 dir = (targetPos - (Vector2)transform.position).normalized;
+            Vector2 dir = (forcedTarget.Value - rb.position).normalized;
             rb.MovePosition(rb.position + dir * chaseSpeed * Time.fixedDeltaTime);
             moveDir = dir;
             UpdateFlip();
+            return;
         }
+
+        // 2) 플레이어 쫓기 (없으면 늦게 캐싱)
+        if (player == null)
+        {
+            var pObj = GameManager.Instance != null ? GameManager.Instance.Player : null;
+            if (pObj != null) player = pObj.transform;
+        }
+        if (player == null) return;
+
+        Vector2 toPlayer = ((Vector2)player.position - rb.position).normalized;
+        rb.MovePosition(rb.position + toPlayer * chaseSpeed * Time.fixedDeltaTime);
+        moveDir = toPlayer;
+        UpdateFlip();
     }
 
     private void UpdateFlip()
