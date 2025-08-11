@@ -13,6 +13,12 @@ public class Guide : MonoBehaviour, IUIClosable
         gameObject.SetActive(false);
     }
 
+    void OnDisable()
+    {
+        EnemyAI.ResumeAllEnemies();
+        // UIManager.Instance.SetDefaultCursor();
+    }
+
     public void GuideToggle()
     {
         if (isOpen)
@@ -32,5 +38,14 @@ public class Guide : MonoBehaviour, IUIClosable
     public bool IsOpen()
     {
         return gameObject.activeInHierarchy;
+    }
+
+    void Update()
+    {
+        if(IsOpen())
+        {
+            // UIManager.Instance.SwipeCursor();
+            EnemyAI.PauseAllEnemies();
+        }
     }
 }

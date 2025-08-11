@@ -97,6 +97,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Texture2D lockDoorCursor; // 잠긴문
     [SerializeField] private Texture2D openDoorCursor; // 열린문
     [SerializeField] private Texture2D moveAbleCursor; // 움직임가능하다는표시 커서
+    [SerializeField] private Texture2D swipeCursor; // 드래그 가능하다는 표시 커서
     private GameObject lastHovered;
     [SerializeField] private Vector2 hotspot = Vector2.zero;
     [SerializeField] private EventSystem eventSystem;
@@ -263,6 +264,10 @@ public class UIManager : Singleton<UIManager>
     public void MoveAbleCursor()
     {
         Cursor.SetCursor(moveAbleCursor, hotspot, CursorMode.Auto);
+    }
+    public void SwipeCursor()
+    {
+        Cursor.SetCursor(swipeCursor, hotspot, CursorMode.Auto);
     }
 
     // targetUI 하나만 보이게 하기
