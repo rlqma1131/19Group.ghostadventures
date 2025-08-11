@@ -57,6 +57,14 @@ public class PossessableInventoryState
     public List<PossessableInventoryEntry> items = new();
 }
 
+// 튜토리얼 진행도 저장용
+[System.Serializable]
+public class RoomVisitEntry
+{
+    public string roomName;
+    public int count;
+}
+
 [System.Serializable]
 public class SaveData
 {
@@ -75,6 +83,9 @@ public class SaveData
     public List<DoorState> doorStates;
     public List<PossessableState> possessableStates;
     public List<MemoryFragmentState> memoryFragmentStates;
+
+    // 튜토리얼 진행도 저장용
+    public List<RoomVisitEntry> roomVisitCounts = new();
 }
 
 public static class SaveManager
@@ -100,7 +111,26 @@ public static class SaveManager
         if (currentData.memoryFragmentStates == null) currentData.memoryFragmentStates = new List<MemoryFragmentState>();       // ★
     }
 
-    // ===== 오브젝트 활성화 상태 저장/조회 =====
+    // ===== 튜토리얼 진행도 저장/적용 =====
+    public static void SetRoomVisitCount(string roomName, int count)
+    {
+        EnsureData();
+        if (currentData.roomVisitCounts == null) currentData.roomVisitCounts = new List<RoomVisitEntry>();
+        int i = currentData.roomVisitCounts.FindIndex(x => x.roomName == roomName);
+        if (i >= 0) currentData.roomVisitCounts[i].count = count;
+        else currentData.roomVisitCounts.Add(new RoomVisitEntry { roomName = roomName, count = count });
+    }
+
+    public static bool TryGetRoomVisitCount(string roomName, out int count)
+    {
+        count = 0;
+        var e = currentData?.roomVisitCounts?.Find(x => x.roomName == roomName);
+        if (e == null) return false;
+        count = e.count;
+        return true;
+    }
+
+    // ===== 오브젝트 활성화 상태 저장/적용 =====
     public static void SetActiveState(string id, bool active)
     {
         EnsureData();
@@ -119,7 +149,7 @@ public static class SaveManager
         return true;
     }
 
-    // ===== 오브젝트 위치 저장/조회 =====
+    // ===== 오브젝트 위치 저장/적용 =====
     public static void SetObjectPosition(string id, Vector3 pos)
     {
         EnsureData();
@@ -138,7 +168,7 @@ public static class SaveManager
         return true;
     }
 
-    // ===== BasePossessable 상태 저장/조회 =====
+    // ===== BasePossessable 상태 저장/적용 =====
     public static void SetPossessableState(string id, bool hasActivated)
     {
         EnsureData();
@@ -158,7 +188,7 @@ public static class SaveManager
     }
 
 
-    // ===== MemoryFragment 상태 저장/조회 =====
+    // ===== MemoryFragment 상태 저장/적용 =====
     public static void SetMemoryFragmentScannable(string id, bool isScannable)
     {
         EnsureData();
@@ -177,7 +207,7 @@ public static class SaveManager
         return true;
     }
 
-    // ===== 문 상태 저장/조회 =====
+    // ===== 문 상태 저장/적용 =====
     public static void SetDoorLocked(string id, bool isLocked)
     {
         EnsureData();

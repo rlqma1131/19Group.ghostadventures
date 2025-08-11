@@ -10,6 +10,7 @@ public class Ch1_Cat : MoveBasePossessable
     [SerializeField] private AudioClip catMeow;
 
     private bool isNearDoor = false;
+    private bool isActing = false;
 
     protected override void Start()
     {
@@ -37,6 +38,9 @@ public class Ch1_Cat : MoveBasePossessable
         }
 
         if (!isPossessed || !PossessionSystem.Instance.CanMove)
+            return;
+
+        if (isActing)
             return;
 
         Move();
@@ -129,6 +133,8 @@ public class Ch1_Cat : MoveBasePossessable
 
     IEnumerator CatAct()
     {
+        isActing = true;
+
         anim.SetTrigger("Open");
         door.SolvePuzzle();
 
@@ -139,5 +145,7 @@ public class Ch1_Cat : MoveBasePossessable
         anim.SetTrigger("Sleep");
         hasActivated = false;
         MarkActivatedChanged();
+
+        isActing = false;
     }
 }
