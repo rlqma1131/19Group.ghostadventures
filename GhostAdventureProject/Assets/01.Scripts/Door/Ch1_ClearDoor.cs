@@ -30,7 +30,7 @@ public class Ch1_ClearDoor : BaseInteractable
             // 이름 안맞췄을 때
             if (!garageEvent.Answer.correct)
             {
-                UIManager.Instance.PromptUI.ShowPrompt("...잠겨 있다.", 2f);
+                UIManager.Instance.PromptUI.ShowPrompt("안에서 더 해야할 일이 남았어", 2f);
             }
             // 이름 맞췄는데, 기억조각을 안 모았을 때
             else if (garageEvent.Answer.correct && !TeddyBear.Completed_TeddyBear)
