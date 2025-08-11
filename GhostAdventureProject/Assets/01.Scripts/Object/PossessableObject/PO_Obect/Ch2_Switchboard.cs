@@ -14,6 +14,7 @@ public class Ch2_Switchboard : BasePossessable
     [SerializeField] private Ch2_CCTV[] cams;
 
     private Ch2_SwitchboardPuzzleManager puzzleManager;
+    private bool isSolved = false;
 
     protected override void Start()
     {
@@ -27,6 +28,9 @@ public class Ch2_Switchboard : BasePossessable
     protected override void Update()
     {
         if (!isPossessed)
+            return;
+
+        if (isSolved)
             return;
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -49,6 +53,7 @@ public class Ch2_Switchboard : BasePossessable
 
     public void SolvedPuzzle()
     {
+        isSolved = true;
         SoundManager.Instance.PlaySFX(electricSFX);
         UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("CCTV 전력이 연결됐어!", 1f);
         StartCoroutine(SolvedPuzzleRoutine());

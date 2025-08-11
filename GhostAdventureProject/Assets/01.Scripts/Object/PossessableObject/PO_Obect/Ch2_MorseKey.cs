@@ -101,7 +101,7 @@ public class Ch2_MorseKey : BasePossessable
             isPressing = true;
             pressStartTime = Time.time;
         }
-        else if (Input.GetKeyDown(KeyCode.E) && isTweening)
+        else if (Input.GetKeyDown(KeyCode.E) && !isTweening)
         {
             Unpossess();
 
@@ -309,6 +309,7 @@ public class Ch2_MorseKey : BasePossessable
 
     private IEnumerator ShakeSuccess()
     {
+        isTweening = true;
         isSuccessAnimating = true;
 
         decodedDisplayText.ForceMeshUpdate();
@@ -382,6 +383,7 @@ public class Ch2_MorseKey : BasePossessable
 
         Unpossess();
 
+        isTweening = false;
         UIManager.Instance.PlayModeUI_OpenAll();
 
         hasActivated = false; // 더 이상 빙의 불가능

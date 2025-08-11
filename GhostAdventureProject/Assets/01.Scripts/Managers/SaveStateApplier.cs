@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,6 +14,7 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
         if (SaveManager.CurrentData != null && gameObject.activeInHierarchy)
             StartCoroutine(ApplyNextFrame());
     }
+
     private void OnDisable()
     {
         SaveManager.Loaded -= OnSaveLoaded;
@@ -24,7 +24,7 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
     private void OnSaveLoaded(SaveData _)
     {
         if (gameObject.activeInHierarchy)
-            StartCoroutine(ApplyNextFrame()); //다음 프레임에 적용 (Start 이후에 적용을 위해)
+            StartCoroutine(ApplyNextFrame()); // Start 이후에 적용하기 위해 다음 프레임에
         else
             ApplySavedStatesInScene();
     }
@@ -32,12 +32,12 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (SaveManager.CurrentData != null)
-            StartCoroutine(ApplyNextFrame()); //다음 프레임에 적용
+            StartCoroutine(ApplyNextFrame()); // 다음 프레임에 적용
     }
 
     private IEnumerator ApplyNextFrame()
     {
-        yield return null; // 한 프레임 대기 -> 모든 Start() 이후
+        yield return null; // 모든 Start() 이후
         ApplySavedStatesInScene();
     }
 
@@ -46,13 +46,12 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
         var data = SaveManager.CurrentData;
         if (data == null) return;
 
-        // BasePossessable
+        // BasePossessable 위치 적용
         foreach (var p in FindObjectsOfType<BasePossessable>(true))
         {
             if (p.TryGetComponent(out UniqueId uid) &&
                 SaveManager.TryGetObjectPosition(uid.Id, out var pos))
             {
-                // Rigidbody2D 있으면 물리 좌표로 세팅
                 if (p.TryGetComponent<Rigidbody2D>(out var rb))
                     rb.position = pos;
                 else
@@ -60,7 +59,7 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
             }
         }
 
-        // MemoryFragment
+        // MemoryFragment 스캔 가능/불가 적용
         foreach (var m in FindObjectsOfType<MemoryFragment>(true))
         {
             if (!m.TryGetComponent(out UniqueId uid)) continue;
@@ -71,15 +70,15 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 m.ApplyFromSave(scannable);
                 continue;
             }
-            // 2) 저장에 없더라도, 이미 수집된 MemoryData면 스캔 불가로 강제
-            //    (collectedMemoryIDs에 있으면 이미 스캔됨)
+            // 2) 이미 수집된 MemoryData면 스캔 불가
             if (SaveManager.HasCollectedMemoryID(m.data.memoryID))
             {
                 m.ApplyFromSave(false);
             }
             // 3) 그 외엔 인스펙터 기본값 유지
         }
-        // MemoryFragment 위치도 셋팅
+
+        // MemoryFragment 위치 적용
         foreach (var m in FindObjectsOfType<MemoryFragment>(true))
         {
             if (m.TryGetComponent(out UniqueId uid) &&
@@ -92,7 +91,7 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
             }
         }
 
-        // 문
+        // 문 잠금 상태 적용
         foreach (var door in FindObjectsOfType<BaseDoor>(true))
         {
             if (door.TryGetComponent(out UniqueId uid) &&
@@ -139,11 +138,13 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
             var newList = new List<InventorySlot_PossessableObject>();
             foreach (var e in entries)
             {
-                // ItemData 로드(에셋 파일명 기준)
                 var item = Resources.Load<ItemData>("ItemData/" + e.itemKey);
-                if (item == null) { Debug.LogWarning($"[Restore] ItemData not found: {e.itemKey}"); continue; }
+                if (item == null)
+                {
+                    Debug.LogWarning($"[Restore] ItemData not found: {e.itemKey}");
+                    continue;
+                }
 
-                // 슬롯 컴포넌트가 반드시 필요하면 간단히 생성해서 보관용으로 씀
                 var slotGo = new GameObject($"Slot_{e.itemKey}");
                 slotGo.transform.SetParent(have.transform, false);
                 var slot = slotGo.AddComponent<InventorySlot_PossessableObject>();
@@ -151,9 +152,14 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 slot.quantity = e.quantity;
                 newList.Add(slot);
             }
-
             have.inventorySlots = newList;
-            // 필요 시: 현재 빙의 UI가 열려있으면 갱신 트리거 (보통 OpenInventory 때 새로 뿌려서 불필요)
         }
+
+        // === 진행도 복원 ===
+        // 1) MemoryManager 먼저 (ID -> MemoryData 매핑 확보)
+        MemoryManager.Instance?.WarmStartFromSave();
+
+        // 2) CEM에 저장값 주입 → Notify()로 UI(PuzzleStatus) 자동 갱신
+        ChapterEndingManager.Instance?.ApplyFromSave();
     }
 }
