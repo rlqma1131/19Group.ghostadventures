@@ -22,6 +22,13 @@ public class EnemyMovementController : MonoBehaviour
     
     private Vector2? forcedTarget = null;
     public LayerMask obstacleMask;
+    
+    [SerializeField] private float stuckMaxTime = 0.25f;      // 이 시간 이상 제자리면 '막힘'
+    [SerializeField] private float idleMin = 0.35f;           // 짧은 Idle 최소
+    [SerializeField] private float idleMax = 0.60f;           // 짧은 Idle 최대
+    private float stuckTimer = 0f;
+    private bool briefIdleRunning = false;
+    private Vector2 lastPos;
 
     private void Awake()
     {
@@ -38,6 +45,7 @@ public class EnemyMovementController : MonoBehaviour
         player = GameManager.Instance.Player.transform;
         // PickRandomDirection();
         startTime = Time.time;
+        lastPos = rb.position;
     }
 
     public void PickRandomDirection()
@@ -71,35 +79,78 @@ public class EnemyMovementController : MonoBehaviour
     public void PatrolMove()
     {
         if (enemy.isTeleporting) return;
+
         Vector2 delta = moveDir * patrolSpeed * Time.fixedDeltaTime;
         Vector2 pos   = rb.position;
         Vector2 newPos = pos;
 
-        // 1) 수직(Y) 이동 검사
+        bool movedY = false;
+        bool movedX = false;
+
+        // 1) 수직(Y)
         if (Mathf.Abs(delta.y) > 0f)
         {
-            // 위 또는 아래 방향에 충돌체가 있는지 Raycast
             Vector2 dirY = Vector2.up * Mathf.Sign(delta.y);
             float distY  = Mathf.Abs(delta.y);
-            if (Physics2D.Raycast(pos, dirY, distY, obstacleMask) == false)
+            if (!Physics2D.Raycast(pos, dirY, distY, obstacleMask))
+            {
                 newPos.y += delta.y;
+                movedY = true;
+            }
             else
-                moveDir.y = 0;   // 막혔으면 Y 성분 제거
+            {
+                moveDir.y = 0; // 막혔으면 Y 성분 제거
+            }
         }
 
-        // 2) 수평(X) 이동 검사
+        // 2) 수평(X)
         if (Mathf.Abs(delta.x) > 0f)
         {
             Vector2 dirX = Vector2.right * Mathf.Sign(delta.x);
             float distX  = Mathf.Abs(delta.x);
-            if (Physics2D.Raycast(pos, dirX, distX, obstacleMask) == false)
+            if (!Physics2D.Raycast(pos, dirX, distX, obstacleMask))
+            {
                 newPos.x += delta.x;
+                movedX = true;
+            }
             else
-                moveDir.x = 0;   // 막혔으면 X 성분 제거
+            {
+                moveDir.x = 0; // 막혔으면 X 성분 제거
+            }
         }
 
+        // 실제 이동
         rb.MovePosition(newPos);
         UpdateFlip();
+
+        // ── 막힘 감지: 이번 프레임에 거의 못 움직였으면 타이머 증가
+        float movedDist = (newPos - pos).sqrMagnitude;
+        if (movedDist < 0.0001f || (!movedX && !movedY))
+            stuckTimer += Time.fixedDeltaTime;
+        else
+            stuckTimer = 0f;
+
+        // ── 일정 시간 이상 막혔다 → 즉시 방향 재선택 + (가끔) 짧은 Idle
+        if (stuckTimer >= stuckMaxTime)
+        {
+            stuckTimer = 0f;
+            PickRandomDirection();
+
+            // 너무 딱딱 바뀌는 느낌 방지: 짧게 Idle 후 재개(한 번에 하나만)
+            if (!briefIdleRunning)
+                StartCoroutine(BriefIdleThenPatrol());
+        }
+    }
+
+    // 새 코루틴 추가: 아주 짧게 Idle 후 다시 Patrol
+    private IEnumerator BriefIdleThenPatrol()
+    {
+        briefIdleRunning = true;
+        enemy.ChangeState(enemy.IdleState);
+        yield return new WaitForSecondsRealtime(Random.Range(idleMin, idleMax));
+        enemy.ChangeState(enemy.PatrolState);
+        PickRandomDirection();
+        briefIdleRunning = false;
     }
 
     public void ChasePlayer()
