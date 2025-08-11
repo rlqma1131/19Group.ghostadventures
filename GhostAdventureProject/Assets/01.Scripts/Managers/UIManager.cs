@@ -50,8 +50,9 @@ public class UIManager : Singleton<UIManager>
     public ESCMenu ESCMenuUI => escMenu;
     public NoticePopup NoticePopupUI => noticePopup;
     public NoticePopup SaveNoticePopupUI => saveNoticePopup;
+    public GameObject memoryStorageButton;
     public GameObject guidButton;
-    public OverlayHoleFitter overlay;
+    public GameObject guidBlackPanel;
 
     // QTE 이펙트 캔버스 외부 접근용
     public GameObject QTEEffectCanvas => qteEffectCanvas;
