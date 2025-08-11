@@ -33,12 +33,12 @@ public class Ch1_ClearDoor : BaseInteractable
                 UIManager.Instance.PromptUI.ShowPrompt("...잠겨 있다.", 2f);
             }
             // 이름 맞췄는데, 기억조각을 안 모았을 때
-            else if (!TeddyBear.Completed_TeddyBear)
+            else if (garageEvent.Answer.correct && !TeddyBear.Completed_TeddyBear)
             {
                 UIManager.Instance.PromptUI.ShowPrompt("곰인형을 살펴봐야 해..", 2f);
             }
             // 이름 맞추고, 기억조각도 모았을 때
-            else if (TeddyBear.Completed_TeddyBear)
+            else if (garageEvent.Answer.correct && TeddyBear.Completed_TeddyBear)
             {
                 PossessionSystem.Instance.CanMove = false;
                 playable.Play();
@@ -46,7 +46,6 @@ public class Ch1_ClearDoor : BaseInteractable
                 UIManager.Instance.PlayModeUI_CloseAll();
                 inventory_Player.RemoveClueBeforeStage();
                 Destroy(GameManager.Instance.Player.gameObject); // 플레이어 비활성화
-                //SceneManager.LoadScene("Ch02");
             }
         }
     }
@@ -58,8 +57,9 @@ public class Ch1_ClearDoor : BaseInteractable
         if(collision.CompareTag("Player"))
         {
             canOpenDoor = true;
+            PlayerInteractSystem.Instance.AddInteractable(gameObject);
         }
-        if (TeddyBear.Completed_TeddyBear && canOpenDoor && garageEvent.Answer.correct)
+        if (collision.CompareTag("Player")&& TeddyBear.Completed_TeddyBear && canOpenDoor && garageEvent.Answer.correct)
         {
             UIManager.Instance.PromptUI.ShowPrompt_Random("여기서 볼 일은 끝난거 같아 ", "이제 여기서 나가자");
         }
@@ -70,6 +70,7 @@ public class Ch1_ClearDoor : BaseInteractable
         if (collision.CompareTag("Player"))
         {
             canOpenDoor = false;
+            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
         }
     }
 
