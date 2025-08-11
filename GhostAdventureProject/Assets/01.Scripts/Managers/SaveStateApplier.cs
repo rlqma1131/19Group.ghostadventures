@@ -69,7 +69,6 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
             if (SaveManager.TryGetMemoryFragmentScannable(uid.Id, out bool scannable))
             {
                 m.ApplyFromSave(scannable);
-                Debug.Log($"SaveStateApplier : {m}의 잠김 상태는 {scannable}로 적용됨");
                 continue;
             }
             // 2) 저장에 없더라도, 이미 수집된 MemoryData면 스캔 불가로 강제
@@ -100,7 +99,6 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 SaveManager.TryGetDoorLocked(uid.Id, out bool locked))
             {
                 door.SetLockedFromSave(locked);
-                Debug.Log($"SaveStateApplier : {door}의 잠김 상태는 {locked}로 적용됨");
             }
         }
 
@@ -111,7 +109,6 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 SaveManager.TryGetActiveState(uid.Id, out bool activeGO))
             {
                 p.gameObject.SetActive(activeGO);
-                // Debug.Log($"Apply Active (Possessable): {p.name} -> {activeGO}");
             }
         }
 
@@ -122,7 +119,6 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 SaveManager.TryGetActiveState(uid.Id, out bool activeGO))
             {
                 m.gameObject.SetActive(activeGO);
-                // Debug.Log($"Apply Active (MemoryFragment): {m.name} -> {activeGO}");
             }
         }
 

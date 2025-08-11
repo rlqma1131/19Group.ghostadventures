@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class ESCMenu : MonoBehaviour, IUIClosable
 {
     public static ESCMenu Instance {get; private set;}
+
     [SerializeField] private GameObject escMenuUI; // ESCMenu Canvas
     // [SerializeField] private SoundMenu soundMenu;
     [SerializeField] private GameObject general;
@@ -18,6 +19,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     [SerializeField] private Slider masterVolumeSlider;
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
+    private const float DEFAULT_SLIDER = 0.5f;
 
     [Header("Language")]
     [SerializeField] private Dropdown languageDropdown;
@@ -36,36 +38,48 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         {
             clueKeyBindings[i] = KeyCode.Alpha1 + i;
         }
-    }    
+    }
+
     void Start()
     {
         escMenuUI.SetActive(false);
-        bgmSlider.value = SoundManager.Instance.BGMVolume;
-        sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
-        sfxSlider.value = SoundManager.Instance.SFXVolume;
-        // 초기화
+
+        const float DEFAULT_SLIDER = 0.5f;
+
         if (masterVolumeSlider != null)
         {
-            masterVolumeSlider.value = AudioListener.volume;
-            // masterVolumeSlider.onValueChanged.AddListener(OnVolumeChanged);
-            masterVolumeSlider.onValueChanged.AddListener(value => AudioListener.volume = value);
+            masterVolumeSlider.onValueChanged.RemoveAllListeners();
+            float masterVal = PlayerPrefs.GetFloat("MasterVol", DEFAULT_SLIDER);
+            masterVolumeSlider.SetValueWithoutNotify(masterVal);
+            AudioListener.volume = masterVal;
+            masterVolumeSlider.onValueChanged.AddListener(v => {
+                AudioListener.volume = v;
+                PlayerPrefs.SetFloat("MasterVol", v);
+            });
         }
-        if(sfxSlider != null)
+
+        if (bgmSlider != null)
         {
-            sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
+            bgmSlider.onValueChanged.RemoveAllListeners();
+            float bgmVal = PlayerPrefs.GetFloat("BGMVol", DEFAULT_SLIDER);
+            bgmSlider.SetValueWithoutNotify(bgmVal);
+            SoundManager.Instance.SetBGMVolume(bgmVal);
+            bgmSlider.onValueChanged.AddListener(v => {
+                SoundManager.Instance.SetBGMVolume(v);
+                PlayerPrefs.SetFloat("BGMVol", v);
+            });
         }
 
-        if (languageDropdown != null)
+        if (sfxSlider != null)
         {
-            languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
+            float sfxVal = PlayerPrefs.GetFloat("SFXVol", 0.5f);
+            sfxSlider.SetValueWithoutNotify(sfxVal);
+            SoundManager.Instance.SetSFXVolume(sfxVal);
+            sfxSlider.onValueChanged.AddListener(v => {
+                SoundManager.Instance.SetSFXVolume(v);
+                PlayerPrefs.SetFloat("SFXVol", v);
+            });
         }
-
-        if (rebindJumpButton != null)
-        {
-            rebindJumpButton.onClick.AddListener(() => StartRebind("Jump"));
-        }
-
-
     }
 
     // 일반 버튼
@@ -161,6 +175,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         AudioListener.volume = value;
         Debug.Log($"Master Volume: {value}");
     }
+
     private void OnLanguageChanged(int index)
     {
         string selectedLang = languageDropdown.options[index].text;

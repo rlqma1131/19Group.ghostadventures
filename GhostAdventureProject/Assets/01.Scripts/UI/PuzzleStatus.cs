@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PuzzleStatus : MonoBehaviour
 {
@@ -29,43 +31,93 @@ public class PuzzleStatus : MonoBehaviour
 
     [SerializeField] private int maxCh3Memories = 5;
 
-    private ChapterEndingManager ChapterEndingManager;
+    private ChapterEndingManager chapterEndingManager;
+
     void OnEnable()
     {
         // 챕터 전환 시 clue 표시/숨김 초기화
         if (currentChapter == Chapter.Chapter3) clue.gameObject.SetActive(false);
         else clue.gameObject.SetActive(true);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        TryBind();
+        Refresh();
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene s, LoadSceneMode m)
+    {
+        TryBind();
+        Refresh();
     }
 
     private void Start()
     {
-        ChapterEndingManager = ChapterEndingManager.Instance;
+        chapterEndingManager = ChapterEndingManager.Instance;
     }
 
-    void Update()
+    private void TryBind()
     {
-        if (ChapterEndingManager == null) return;
+        if (chapterEndingManager == null) chapterEndingManager = ChapterEndingManager.Instance;
+    }
+
+    private void Refresh()
+    {
+        if (chapterEndingManager == null) return;
 
         switch (currentChapter)
         {
             case Chapter.Chapter1:
                 if (clue != null)
-                    clue.text = $"• 최종 단서 {ChapterEndingManager.CurrentCh1ClueCount} / {maxCh1Clues}";
+                    clue.text = $"• 최종 단서 {chapterEndingManager.CurrentCh1ClueCount} / {maxCh1Clues}";
                 if (scannedMemory != null)
-                    scannedMemory.text = $"• 수집 기억 {ChapterEndingManager.CurrentCh1MemoryCount} / {maxCh1Memories}";
+                    scannedMemory.text = $"• 수집 기억 {chapterEndingManager.CurrentCh1MemoryCount} / {maxCh1Memories}";
                 break;
 
             case Chapter.Chapter2:
                 if (clue != null)
-                    clue.text = $"• 최종 단서 {ChapterEndingManager.CurrentCh2ClueCount} / {maxCh2Clues}";
+                    clue.text = $"• 최종 단서 {chapterEndingManager.CurrentCh2ClueCount} / {maxCh2Clues}";
                 if (scannedMemory != null)
-                    scannedMemory.text = $"• 수집 기억 {ChapterEndingManager.CurrentCh2MemoryCount} / {maxCh2Memories}";
+                    scannedMemory.text = $"• 수집 기억 {chapterEndingManager.CurrentCh2MemoryCount} / {maxCh2Memories}";
                 break;
 
             case Chapter.Chapter3:
                 if (scannedMemory != null)
-                    scannedMemory.text = $"• 수집 기억 {ChapterEndingManager.CurrentCh3MemoryCount} / {maxCh3Memories}";
+                    scannedMemory.text = $"• 수집 기억 {chapterEndingManager.CurrentCh3MemoryCount} / {maxCh3Memories}";
                 break;
         }
     }
+    
+
+    //void Update()
+    //{
+    //    // null일 때 계속 접근 시도
+    //    if (chapterEndingManager == null) chapterEndingManager = ChapterEndingManager.Instance;
+    //    if (chapterEndingManager == null) return;
+
+    //    switch (currentChapter)
+    //    {
+    //        case Chapter.Chapter1:
+    //            if (clue != null)
+    //                clue.text = $"• 최종 단서 {chapterEndingManager.CurrentCh1ClueCount} / {maxCh1Clues}";
+    //            if (scannedMemory != null)
+    //                scannedMemory.text = $"• 수집 기억 {chapterEndingManager.CurrentCh1MemoryCount} / {maxCh1Memories}";
+    //            break;
+
+    //        case Chapter.Chapter2:
+    //            if (clue != null)
+    //                clue.text = $"• 최종 단서 {chapterEndingManager.CurrentCh2ClueCount} / {maxCh2Clues}";
+    //            if (scannedMemory != null)
+    //                scannedMemory.text = $"• 수집 기억 {chapterEndingManager.CurrentCh2MemoryCount} / {maxCh2Memories}";
+    //            break;
+
+    //        case Chapter.Chapter3:
+    //            if (scannedMemory != null)
+    //                scannedMemory.text = $"• 수집 기억 {chapterEndingManager.CurrentCh3MemoryCount} / {maxCh3Memories}";
+    //            break;
+    //    }
+    //}
 }
