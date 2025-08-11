@@ -5,6 +5,7 @@ using DG.Tweening;
 using System;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 
 // 튜토리얼은 1회만 작동됩니다. 
 public enum TutorialStep
@@ -24,7 +25,8 @@ public enum TutorialStep
     BlackShadow,
     CollectedAllMemoClue,
     Test,
-    TouchBat
+    TouchBat,
+    MemoryStorageGuide
 }
 public class TutorialManager : Singleton<TutorialManager>
 {
@@ -114,7 +116,15 @@ public class TutorialManager : Singleton<TutorialManager>
             case TutorialStep.TouchBat:
                 prompt.ShowPrompt("박쥐를 건드리면 안돼");
                 break;
-
+            case TutorialStep.MemoryStorageGuide:
+                PossessionSystem.Instance.CanMove = false;
+                uimanager.guidBlackPanel.SetActive(true);
+                uimanager.memoryStorageButton.GetComponent<Button>().
+                onClick.AddListener(() => {
+                    uimanager.guidBlackPanel.SetActive(false);
+                    PossessionSystem.Instance.CanMove = true;
+                    }); // 클릭되면 실행
+                break;
 
             // case TutorialStep.HideGuide:
             //     ToastUI.Instance.Show("※ 특정 오브젝트 빙의는 쉽지 않을 수 있습니다.\n숨을 수 있어!", 3f);

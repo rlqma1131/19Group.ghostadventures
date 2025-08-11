@@ -16,4 +16,9 @@ public class Ch1_MemoryFake_01_BirthdayHat : MemoryFragment
         if (TryGetComponent(out UniqueId uid))
             SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
     }
+
+    public override void AfterScan()
+    {
+        TutorialManager.Instance.Show(TutorialStep.MemoryStorageGuide);
+    }
 }
