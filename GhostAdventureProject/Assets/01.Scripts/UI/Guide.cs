@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Guide : MonoBehaviour, IUIClosable
+{
+    private bool isOpen;
+
+    public void Close()
+    {
+        Time.timeScale = 1f;
+        isOpen = false;    
+        gameObject.SetActive(false);
+    }
+
+    public void GuideToggle()
+    {
+        if (isOpen)
+            Close();
+        else
+            GuideOpen();
+    }
+
+    public void GuideOpen()
+    {
+        UIManager.Instance.SetDefaultCursor();
+        gameObject.SetActive(true);
+        Time.timeScale = 0f;
+        isOpen = true;
+    }
+
+    public bool IsOpen()
+    {
+        return gameObject.activeInHierarchy;
+    }
+}
