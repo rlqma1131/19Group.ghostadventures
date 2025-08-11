@@ -28,16 +28,25 @@ public class Inventory_PossessableObject : MonoBehaviour
         inventory_Player = FindObjectOfType<Inventory_Player>();
     }
 
+
+
      private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
-            SelectSlot(0);
+         if (InventoryInputFocus.Current != InvSide.Possess) return;
 
-        if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
-            SelectSlot(1);
-            
-        if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
-            SelectSlot(2);
+        // 비활성/빈 인벤이면 무시
+        if (!gameObject.activeSelf || spawnedSlots.Count == 0) return;
+
+        for (int i = 0; i < 4; i++)
+        {
+            var alpha = KeyCode.Alpha1 + i;
+            var keypad = KeyCode.Keypad1 + i;
+            if (Input.GetKeyDown(alpha) || Input.GetKeyDown(keypad))
+            {
+                SelectSlot(i);
+                break;
+            }
+        }
     }
     
     // slotPrefab을 slotParent에 생성하고 spawnedSlots에 추가함
@@ -51,15 +60,16 @@ public class Inventory_PossessableObject : MonoBehaviour
             var slotComponent = obj.GetComponent<InventorySlot_PossessableObject>();
             slotComponent.SetSlot(slots[i]);
 
-            int keyNumber = 5 + i;
+            int keyNumber = 1 + i;
             if (slotComponent.keyText_PO != null)
             {
                 slotComponent.keyText_PO.text = keyNumber.ToString();
             }
 
             spawnedSlots.Add(obj);
+            
         }
-
+        SetKeyLabelsVisible(!Inventory_Player.FocusIsPlayer);
         gameObject.SetActive(true);   
     }
 
@@ -69,6 +79,7 @@ public class Inventory_PossessableObject : MonoBehaviour
         if (haveItem != null)
         {
             ShowInventory(haveItem.inventorySlots);
+            InventoryInputFocus.Current = InvSide.Possess;
             return;
         }
         HideInventory();
@@ -78,6 +89,7 @@ public class Inventory_PossessableObject : MonoBehaviour
     {
         Clear();
         gameObject.SetActive(false);
+        InventoryInputFocus.Current = InvSide.Player; 
     }
 
     // 슬롯을 삭제. 슬롯리스트 안의 데이터도 삭제.
@@ -212,6 +224,15 @@ public class Inventory_PossessableObject : MonoBehaviour
         }
 
         // 아이템 사용 시 상태 저장 (기록)
+    }
+
+    public void SetKeyLabelsVisible(bool on)
+    {
+        foreach (var obj in spawnedSlots)
+        {
+            var slot = obj.GetComponent<InventorySlot_PossessableObject>();
+            if (slot) slot.SetKeyVisible(on);
+        }
     }
 
     
