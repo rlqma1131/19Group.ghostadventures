@@ -11,12 +11,12 @@ public class Ch02_NPCEvent : MonoBehaviour
     private bool isTimelinePlaying = false; // 타임라인 재생 여부
 
     SpriteRenderer spriteRenderer; // 스프라이트 렌더러
-
+    [SerializeField] private RoomInfo roomInfo; // 방 정보
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") && !isTimelinePlaying)
+        if (collision.gameObject.CompareTag("Player") && !isTimelinePlaying && roomInfo.roomCount ==1)
         {
-            
+            SaveManager.SetRoomVisitCount(roomInfo.roomName, roomInfo.roomCount);
             if (director != null)
             {
                 spriteRenderer = collision.gameObject.GetComponent<SpriteRenderer>();
@@ -30,6 +30,7 @@ public class Ch02_NPCEvent : MonoBehaviour
                 director.Play();
                 EnemyAI.PauseAllEnemies();
                 isTimelinePlaying = true; // 타임라인 재생 상태로 설정
+                roomInfo.roomCount++; // 방 방문 수 증가
             }
         }
     }
