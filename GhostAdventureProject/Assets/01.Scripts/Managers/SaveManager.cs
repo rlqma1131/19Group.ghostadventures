@@ -61,18 +61,18 @@ public class DoorState
 }
 
 // 빙의 대상 인벤토리 상태 저장
-public class PossessableInventoryEntry
-{
-    public string itemKey;   // ItemData의 고유키(권장: 에셋 파일명 item.name)
-    public int quantity;
-}
+//public class PossessableInventoryEntry
+//{
+//    public string itemKey;   // ItemData의 고유키(권장: 에셋 파일명 item.name)
+//    public int quantity;
+//}
 
-[System.Serializable]
-public class PossessableInventoryState
-{
-    public string ownerId;                      // UniqueId.Id
-    public List<PossessableInventoryEntry> items = new();
-}
+//[System.Serializable]
+//public class PossessableInventoryState
+//{
+//    public string ownerId;                      // UniqueId.Id
+//    public List<PossessableInventoryEntry> items = new();
+//}
 
 // 튜토리얼 진행도 저장용
 [System.Serializable]
@@ -89,7 +89,7 @@ public class SaveData
     public Vector3 playerPosition;
     public string checkpointId;
 
-    public List<PossessableInventoryState> possessableInventories;
+    //public List<PossessableInventoryState> possessableInventories;
     public List<string> collectedClueNames;
     public List<string> collectedMemoryIDs;
     public List<string> scannedMemoryTitles;
@@ -122,7 +122,7 @@ public static class SaveManager
         if (currentData.chapterMemoryProgress == null) currentData.chapterMemoryProgress = new List<ChapterMemoryProgress>();
         if (currentData.chapterClueProgress == null) currentData.chapterClueProgress = new List<ChapterClueProgress>();
         if (currentData.objectPositions == null) currentData.objectPositions = new List<ObjectPositionState>();
-        if (currentData.possessableInventories == null) currentData.possessableInventories = new List<PossessableInventoryState>();
+        //if (currentData.possessableInventories == null) currentData.possessableInventories = new List<PossessableInventoryState>();
         if (currentData.collectedClueNames == null) currentData.collectedClueNames = new List<string>();
         if (currentData.collectedMemoryIDs == null) currentData.collectedMemoryIDs = new List<string>();
         if (currentData.scannedMemoryTitles == null) currentData.scannedMemoryTitles = new List<string>();
@@ -337,23 +337,23 @@ public static class SaveManager
     }
 
     // ===== 빙의 대상 인벤토리 저장/조회 =====
-    public static void SetPossessableInventory(string ownerId, List<PossessableInventoryEntry> items)
-    {
-        EnsureData();
-        var list = currentData.possessableInventories;
-        int i = list.FindIndex(x => x.ownerId == ownerId);
-        if (i >= 0) list[i].items = items ?? new List<PossessableInventoryEntry>();
-        else list.Add(new PossessableInventoryState { ownerId = ownerId, items = items ?? new List<PossessableInventoryEntry>() });
-    }
+    //public static void SetPossessableInventory(string ownerId, List<PossessableInventoryEntry> items)
+    //{
+    //    EnsureData();
+    //    var list = currentData.possessableInventories;
+    //    int i = list.FindIndex(x => x.ownerId == ownerId);
+    //    if (i >= 0) list[i].items = items ?? new List<PossessableInventoryEntry>();
+    //    else list.Add(new PossessableInventoryState { ownerId = ownerId, items = items ?? new List<PossessableInventoryEntry>() });
+    //}
 
-    public static bool TryGetPossessableInventory(string ownerId, out List<PossessableInventoryEntry> items)
-    {
-        items = null;
-        var s = currentData?.possessableInventories?.Find(x => x.ownerId == ownerId);
-        if (s == null) return false;
-        items = new List<PossessableInventoryEntry>(s.items ?? new List<PossessableInventoryEntry>());
-        return true;
-    }
+    //public static bool TryGetPossessableInventory(string ownerId, out List<PossessableInventoryEntry> items)
+    //{
+    //    items = null;
+    //    var s = currentData?.possessableInventories?.Find(x => x.ownerId == ownerId);
+    //    if (s == null) return false;
+    //    items = new List<PossessableInventoryEntry>(s.items ?? new List<PossessableInventoryEntry>());
+    //    return true;
+    //}
     
 
 
@@ -578,22 +578,22 @@ public static class SaveManager
         foreach (var have in GameObject.FindObjectsOfType<HaveItem>(true))
         {
             if (!have.TryGetComponent(out UniqueId uid)) continue;
-            var items = new List<PossessableInventoryEntry>();
+            //var items = new List<PossessableInventoryEntry>();
 
             // InventorySlot_PossessableObject -> (itemKey, quantity)
-            foreach (var slot in have.inventorySlots)
-            {
-                if (slot == null || slot.item == null) continue;
-                if (slot.quantity <= 0) continue;
+            //foreach (var slot in have.inventorySlots)
+            //{
+            //    if (slot == null || slot.item == null) continue;
+            //    if (slot.quantity <= 0) continue;
 
-                items.Add(new PossessableInventoryEntry
-                {
-                    itemKey = slot.item.name,   // 권장: 에셋 파일명 사용
-                    quantity = slot.quantity
-                });
-            }
+            //    items.Add(new PossessableInventoryEntry
+            //    {
+            //        itemKey = slot.item.name,   // 권장: 에셋 파일명 사용
+            //        quantity = slot.quantity
+            //    });
+            //}
 
-            SaveManager.SetPossessableInventory(uid.Id, items);
+            //SaveManager.SetPossessableInventory(uid.Id, items);
         }
     }
 }
