@@ -19,7 +19,11 @@ public class PatrolState : EnemyState
 
     public override void Update()
     {
-        if (enemy.Detection.CanSeePlayer())
+        if (!enemy.IsPlayerObjectDetectableNow())
+            return;
+
+        // 실제 시야(앞 5m·80°, 뒤 4m·40°)에 들어온 경우에만 추격으로 전환
+        if (enemy.IsPlayerDetectable())
             enemy.ChangeState(enemy.ChaseState);
     }
 
