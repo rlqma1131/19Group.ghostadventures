@@ -123,6 +123,7 @@ public class TutorialManager : Singleton<TutorialManager>
                 onClick.AddListener(() => {
                     uimanager.guidBlackPanel.SetActive(false);
                     PossessionSystem.Instance.CanMove = true;
+                    UIManager.Instance.guidButton.SetActive(true);
                     }); // 클릭되면 실행
                 break;
 
