@@ -150,4 +150,12 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
         currentPageIndex = 0;
         ShowPage(currentPageIndex);
     }
+
+    void Update()
+    {
+        if(IsOpen())
+        {
+            EnemyAI.PauseAllEnemies();
+        }
+    }
 }
