@@ -33,7 +33,7 @@ public class PossessionSystem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log($"트리거 충돌: {other.name}");
+        //Debug.Log($"트리거 충돌: {other.name}");
         var possessionObject = other.GetComponent<BasePossessable>();
         if (possessionObject != null)
         {

@@ -3,6 +3,23 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+// 챕터별 단서 기록 상태
+[System.Serializable]
+public class ChapterClueProgress
+{
+    public int chapter;
+    public List<string> clueIds = new();
+    public bool allCollected;
+}
+
+// 챕터별 기억 기록 상태
+[System.Serializable]
+public class ChapterMemoryProgress
+{
+    public int chapter;                 // 1,2,3
+    public List<string> memoryIds = new();
+}
+
 // 오브젝트 SetActive 상태
 [System.Serializable]
 public class ActiveObjectState
@@ -78,6 +95,9 @@ public class SaveData
     public List<string> scannedMemoryTitles;
     public List<string> solvedPuzzleIDs;
 
+    public List<ChapterMemoryProgress> chapterMemoryProgress = new();
+    public List<ChapterClueProgress> chapterClueProgress = new();
+
     public List<ActiveObjectState> activeObjectStates;
     public List<ObjectPositionState> objectPositions;
     public List<DoorState> doorStates;
@@ -99,6 +119,8 @@ public static class SaveManager
     private static void EnsureData()
     {
         if (currentData == null) currentData = new SaveData();
+        if (currentData.chapterMemoryProgress == null) currentData.chapterMemoryProgress = new List<ChapterMemoryProgress>();
+        if (currentData.chapterClueProgress == null) currentData.chapterClueProgress = new List<ChapterClueProgress>();
         if (currentData.objectPositions == null) currentData.objectPositions = new List<ObjectPositionState>();
         if (currentData.possessableInventories == null) currentData.possessableInventories = new List<PossessableInventoryState>();
         if (currentData.collectedClueNames == null) currentData.collectedClueNames = new List<string>();
@@ -107,9 +129,80 @@ public static class SaveManager
         if (currentData.solvedPuzzleIDs == null) currentData.solvedPuzzleIDs = new List<string>();
         if (currentData.activeObjectStates == null) currentData.activeObjectStates = new List<ActiveObjectState>();
         if (currentData.doorStates == null) currentData.doorStates = new List<DoorState>();
-        if (currentData.possessableStates == null) currentData.possessableStates = new List<PossessableState>();               // ★
-        if (currentData.memoryFragmentStates == null) currentData.memoryFragmentStates = new List<MemoryFragmentState>();       // ★
+        if (currentData.possessableStates == null) currentData.possessableStates = new List<PossessableState>();
+        if (currentData.memoryFragmentStates == null) currentData.memoryFragmentStates = new List<MemoryFragmentState>();
     }
+
+    // ===== 챕터 최종단서 수집 진행도 저장/적용 =====
+    private static ChapterClueProgress GetOrCreateChapterProgress(int chapter)
+    {
+        EnsureData();
+        var list = currentData.chapterClueProgress;
+        int idx = list.FindIndex(x => x.chapter == chapter);
+        if (idx >= 0) return list[idx];
+
+        var p = new ChapterClueProgress { chapter = chapter };
+        list.Add(p);
+        return p;
+    }
+
+    // Collect될 때마다 호출할 메서드
+    public static void AddChapterClue(int chapter, string clueId, bool allCollected = false, bool autosave = false)
+    {
+        if (string.IsNullOrEmpty(clueId)) return;
+        var p = GetOrCreateChapterProgress(chapter);
+
+        if (!p.clueIds.Contains(clueId))
+            p.clueIds.Add(clueId);
+
+        // ChapterEndingManager 쪽 판단 결과를 그대로 반영
+        if (allCollected) p.allCollected = true;
+
+        if (autosave) SaveGame();
+    }
+
+    // 로드시 ChapterEndingManager가 세트로 복구할 때 사용
+    public static bool TryGetChapterClueProgress(int chapter, out ChapterClueProgress progress)
+    {
+        progress = currentData?.chapterClueProgress?.Find(x => x.chapter == chapter);
+        return progress != null;
+    }
+
+    public static void SetChapterProgress(int chapter, IEnumerable<string> ids, bool allCollected)
+    {
+        var p = GetOrCreateChapterProgress(chapter);
+        p.clueIds = ids != null ? new List<string>(ids) : new List<string>();
+        p.allCollected = allCollected;
+    }
+
+    // ===== 챕터 기억 수집 진행도 저장/적용 =====
+    private static ChapterMemoryProgress GetOrCreateChapterMemory(int chapter)
+    {
+        EnsureData();
+        var list = currentData.chapterMemoryProgress;
+        int idx = list.FindIndex(x => x.chapter == chapter);
+        if (idx >= 0) return list[idx];
+
+        var p = new ChapterMemoryProgress { chapter = chapter };
+        list.Add(p);
+        return p;
+    }
+
+    // 스냅샷 세팅
+    public static void SetChapterScannedMemories(int chapter, IEnumerable<string> ids)
+    {
+        var p = GetOrCreateChapterMemory(chapter);
+        p.memoryIds = ids != null ? new List<string>(ids) : new List<string>();
+    }
+
+    // 로드시 읽기
+    public static bool TryGetChapterScannedMemories(int chapter, out ChapterMemoryProgress progress)
+    {
+        progress = currentData?.chapterMemoryProgress?.Find(x => x.chapter == chapter);
+        return progress != null;
+    }
+
+
 
     // ===== 튜토리얼 진행도 저장/적용 =====
     public static void SetRoomVisitCount(string roomName, int count)
@@ -234,7 +327,7 @@ public static class SaveManager
         inv.RemoveClueBeforeStage(); // 전체 초기화
         foreach (var clueName in currentData.collectedClueNames)
         {
-            // ✅ 저장한 기준에 맞춰 로드 경로/키 선택
+            // 저장한 기준에 맞춰 로드 경로/키 선택
             var clue = Resources.Load<ClueData>("ClueData/" + clueName); // (에셋 파일명 기준)
                                                                          // var clue = /* clue_Name 기준이면 */ Resources.LoadAll<ClueData>("ClueData")
                                                                          //               .FirstOrDefault(c => c.clue_Name == clueName);
@@ -295,26 +388,58 @@ public static class SaveManager
         if (data != null) currentData = data;
         EnsureData();
 
-        string json = JsonUtility.ToJson(currentData, true);
-        string tmp = SavePath + ".tmp";
-        File.WriteAllText(tmp, json);
-        if (File.Exists(SavePath)) File.Delete(SavePath);
-        File.Move(tmp, SavePath);
+        try
+        {
+            string json = JsonUtility.ToJson(currentData, true);
+            string tmp = SavePath + ".tmp";
+            File.WriteAllText(tmp, json);
+            if (File.Exists(SavePath)) File.Delete(SavePath);
+            File.Move(tmp, SavePath);
 
-        UIManager.Instance.SaveNoticePopupUI.FadeInAndOut("게임이 저장되었습니다.");
+            Debug.Log($"[SaveManager] Saved to: {SavePath}\n" +
+                      $" scene={currentData.sceneName}" +
+                      $" memIDs={currentData.collectedMemoryIDs?.Count ?? 0}" +
+                      $" clues={currentData.collectedClueNames?.Count ?? 0}" +
+                      $" bytes={json.Length}");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[SaveManager] Save FAILED at {SavePath}\n{ex}");
+        }
+
+        // 팝업 Null-safe
+        var popup = UIManager.Instance != null ? UIManager.Instance.SaveNoticePopupUI : null;
+        if (popup != null) popup.FadeInAndOut("게임이 저장되었습니다.");
     }
+
 
     public static SaveData LoadGame()
     {
+        Debug.Log($"[SaveManager] Try load from: {SavePath}");
         if (!File.Exists(SavePath))
         {
+            Debug.LogWarning("[SaveManager] No save file.");
             currentData = null;
             return null;
         }
 
-        string json = File.ReadAllText(SavePath);
-        currentData = JsonUtility.FromJson<SaveData>(json) ?? new SaveData();
-        EnsureData();
+        try
+        {
+            string json = File.ReadAllText(SavePath);
+            currentData = JsonUtility.FromJson<SaveData>(json) ?? new SaveData();
+            EnsureData();
+
+            Debug.Log($"[SaveManager] Loaded. scene={currentData.sceneName}" +
+                      $" memIDs={currentData.collectedMemoryIDs?.Count ?? 0}" +
+                      $" clues={currentData.collectedClueNames?.Count ?? 0}" +
+                      $" bytes={json.Length}");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[SaveManager] Load FAILED at {SavePath}\n{ex}");
+            currentData = new SaveData();
+            EnsureData();
+        }
 
         Loaded?.Invoke(currentData);
         return currentData;
@@ -390,7 +515,7 @@ public static class SaveManager
         currentData.checkpointId = checkpointId;
     }
 
-    // 기억 스캔할 때 호출 ( 기억ID, 기억제목, 플레이어 위치 저장 )
+    // 기억 스캔할 때 호출
     public static void SaveWhenScan(string memoryID, string title,
     string sceneName, Vector3 playerPos, string checkpointId = null, bool autosave = true)
     {
@@ -430,7 +555,21 @@ public static class SaveManager
         // 빙의 대상 인벤토리 상태 저장
         SnapshotAllPossessableInventories();
 
+        var cem = ChapterEndingManager.Instance;
+        if (cem != null)
+        {
+            // 최종단서 진행도 스냅샷
+            SetChapterProgress(1, cem.GetClueIds(1), cem.GetAllCollected(1));
+            SetChapterProgress(2, cem.GetClueIds(2), cem.GetAllCollected(2));
+
+            // 스캔된 기억 스냅샷
+            SetChapterScannedMemories(1, cem.GetScannedMemoryIds(1));
+            SetChapterScannedMemories(2, cem.GetScannedMemoryIds(2));
+            SetChapterScannedMemories(3, cem.GetScannedMemoryIds(3));
+        }
+
         SetSceneAndPosition(sceneName, playerPos, checkpointId, autosave);
+
         if (autosave) SaveGame();
     }
 

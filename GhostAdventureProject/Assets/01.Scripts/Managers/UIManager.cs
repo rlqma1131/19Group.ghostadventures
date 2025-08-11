@@ -451,19 +451,14 @@ public class UIManager : Singleton<UIManager>
         int target = (int)chapter;
         for (int i = 0; i < puzzleStatusPanels.Length; i++)
         {
+            var go = puzzleStatusPanels[i];
+            if (go == null) continue;
+
             bool active = (i == target);
-            if (puzzleStatusPanels[i] == null) continue;
+            go.SetActive(active);
 
-            puzzleStatusPanels[i].SetActive(active);
-
-            // 선택: CanvasGroup까지 있으면 인터랙션/히트 차단도 같이
-            var cg = puzzleStatusPanels[i].GetComponent<CanvasGroup>();
-            if (cg != null)
-            {
-                cg.alpha = active ? 1f : 0f;
-                cg.interactable = active;
-                cg.blocksRaycasts = active;
-            }
+            var cg = go.GetComponent<CanvasGroup>();
+            if (cg != null) { cg.alpha = active ? 1f : 0f; cg.interactable = active; cg.blocksRaycasts = active; }
         }
     }
 

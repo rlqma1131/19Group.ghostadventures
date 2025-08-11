@@ -154,6 +154,26 @@ public class MemoryScan : MonoBehaviour
         isScanning = false;
         Time.timeScale = 1f; // 시간 흐름을 원래대로 복구
 
+        // 저장하기
+        if (currentMemoryFragment != null)
+        {
+            // 저장한 기억 챕터 진행도에 반영
+            var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
+            ChapterEndingManager.Instance.RegisterScannedMemory(currentMemoryFragment.data.memoryID, chapter);
+
+            SaveManager.SaveWhenScan(
+                currentMemoryFragment.data.memoryID,
+                currentMemoryFragment.data.memoryTitle,
+                SceneManager.GetActiveScene().name,
+                playerTransform.position,
+                checkpointId: currentScanObject != null ? currentScanObject.name : null,
+                autosave: true  // 저장 팝업 띄움
+                // 수집한 최종 단서도 저장하고 있음
+            );
+
+            Debug.Log($"[ChapterEndingManager] 챕터{chapter}에서 {currentMemoryFragment.data.memoryID}가 기록 되었습니다");
+        }
+
         scanPanel?.SetActive(false);
         scanCircleUI?.gameObject.SetActive(false);
 
@@ -168,23 +188,6 @@ public class MemoryScan : MonoBehaviour
         }
 
         currentScanObject.GetComponentInChildren<SpriteRenderer>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f); // 스캔 완료 후 색상 변경
-
-        // 저장하기
-        if (currentMemoryFragment != null)
-        {
-            SaveManager.SaveWhenScan(
-                currentMemoryFragment.data.memoryID,
-                currentMemoryFragment.data.memoryTitle,
-                SceneManager.GetActiveScene().name,
-                playerTransform.position,
-                checkpointId: currentScanObject != null ? currentScanObject.name : null,
-                autosave: true  // 저장 팝업 띄움
-            );
-
-            var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
-            ChapterEndingManager.Instance.RegisterScannedMemory(currentMemoryFragment.data.memoryID, chapter);
-            Debug.Log($"[ChapterEndingManager] 챕터{chapter}에서 {currentMemoryFragment.data.memoryID}가 기록 되었습니다");
-        }
     }
 
     // 씬 이름으로 챕터진행도 추적

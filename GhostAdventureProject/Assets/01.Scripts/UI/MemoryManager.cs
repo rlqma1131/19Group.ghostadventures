@@ -5,107 +5,169 @@ using UnityEngine.UI;
 
 public class MemoryManager : MonoBehaviour
 {
-    // 기억 수집 및 상태 관리
     public static MemoryManager Instance;
 
-    public List<string> collectedMemoryIDs = new List<string>();
-    private Dictionary<string, MemoryData> memoryDataDict = new();
+    // 저장과 동일하게 "ID" 리스트로 관리
+    public List<string> collectedMemoryIDs = new();
 
-    private List<MemoryData> scannedMemoryList = new();
+    // id → data, title → data (호환용)
+    private readonly Dictionary<string, MemoryData> byId = new();
+    private readonly Dictionary<string, MemoryData> byTitle = new();
+
+    private readonly List<MemoryData> scannedMemoryList = new();
     public IReadOnlyList<MemoryData> ScannedMemories => scannedMemoryList;
 
     public event Action<MemoryData> OnMemoryCollected;
     public Button closeMemoryStorage;
 
+    // SaveManager.Loaded 구독/해제용 델리게이트(람다 대신 메서드)
+    private void OnSaveLoaded(SaveData _) => WarmStartFromSave();
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        else { Destroy(gameObject); return; }
+
         LoadAllMemoryData();
-        closeMemoryStorage.gameObject.SetActive(false);
+
+        // 저장 로드 직후 복원
+        SaveManager.Loaded += OnSaveLoaded;
+        WarmStartFromSave(); // 이미 로드된 상태일 수 있어 한 번 더 시도
+
+        closeMemoryStorage?.gameObject.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        SaveManager.Loaded -= OnSaveLoaded;
     }
 
 #if UNITY_EDITOR
-    void Update()
+    // 에디터 디버그: T 키로 모든 MemoryData 수집
+    [SerializeField] private bool debugSaveAndRefresh = true;
+
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
             Debug.Log("[디버그] 모든 MemoryData 수집 시도");
 
-            var allMemories = Resources.LoadAll<MemoryData>("MemoryData");
-            foreach (var memory in allMemories)
-            {
-                TryCollect(memory);
-            }
+            foreach (var m in byId.Values)
+                TryCollect(m);
 
             Debug.Log($"[디버그] 총 수집된 기억 개수: {collectedMemoryIDs.Count}");
+
+            if (debugSaveAndRefresh)
+            {
+                var data = SaveManager.CurrentData;
+                if (data != null)
+                {
+                    data.collectedMemoryIDs ??= new List<string>();
+
+                    foreach (var id in collectedMemoryIDs)
+                        if (!data.collectedMemoryIDs.Contains(id))
+                            data.collectedMemoryIDs.Add(id);
+
+                    SaveManager.SaveGame(data);
+                }
+                else
+                {
+                    Debug.LogWarning("[디버그] SaveManager.CurrentData 가 없음: 저장 반영 생략");
+                }
+            }
         }
     }
 #endif
+
     private void LoadAllMemoryData()
     {
-        var all = Resources.LoadAll<MemoryData>("MemoryData"); // Resources 폴더 사용 시
-        foreach (var memory in all)
+        var all = Resources.LoadAll<MemoryData>("MemoryData");
+        byId.Clear();
+        byTitle.Clear();
+
+        foreach (var m in all)
         {
-            if (!memoryDataDict.ContainsKey(memory.memoryTitle))
-                memoryDataDict.Add(memory.memoryTitle, memory);
+            if (!string.IsNullOrEmpty(m.memoryID) && !byId.ContainsKey(m.memoryID))
+                byId.Add(m.memoryID, m);
+
+            if (!string.IsNullOrEmpty(m.memoryTitle) && !byTitle.ContainsKey(m.memoryTitle))
+                byTitle.Add(m.memoryTitle, m);
         }
     }
 
-   public void TryCollect(MemoryData memoryData)
-   {
-        if (collectedMemoryIDs.Contains(memoryData.memoryTitle)) return;
+    // 수집은 ID 기준으로 중복 방지
+    public void TryCollect(MemoryData m)
+    {
+        if (m == null || string.IsNullOrEmpty(m.memoryID)) return;
+        if (collectedMemoryIDs.Contains(m.memoryID)) return;
 
-        collectedMemoryIDs.Add(memoryData.memoryTitle);
-        if (!scannedMemoryList.Contains(memoryData))
-            scannedMemoryList.Add(memoryData);
+        collectedMemoryIDs.Add(m.memoryID);
+        if (!scannedMemoryList.Contains(m)) scannedMemoryList.Add(m);
 
-        OnMemoryCollected?.Invoke(memoryData);
-   }
+        OnMemoryCollected?.Invoke(m);
+    }
+
+    // 저장값으로 런타임 상태 복원
+    public void WarmStartFromSave()
+    {
+        var data = SaveManager.CurrentData;
+        if (data == null) return;
+
+        collectedMemoryIDs.Clear();
+        scannedMemoryList.Clear();
+
+        // 1) 저장된 ID들로 복원 (정상 경로)
+        if (data.collectedMemoryIDs != null)
+        {
+            foreach (var id in data.collectedMemoryIDs)
+                if (byId.TryGetValue(id, out var m)) TryCollect(m);
+        }
+
+        // 2) 예전 세이브(제목만 저장) 호환
+        if (data.scannedMemoryTitles != null)
+        {
+            foreach (var title in data.scannedMemoryTitles)
+                if (byTitle.TryGetValue(title, out var m)) TryCollect(m);
+        }
+    }
 
     public List<MemoryData> GetCollectedMemories()
     {
-        List<MemoryData> result = new();
+        var result = new List<MemoryData>();
         foreach (var id in collectedMemoryIDs)
-        {
-            if (memoryDataDict.TryGetValue(id, out var memory))
-                result.Add(memory);
-        }
-        return result;    }
+            if (byId.TryGetValue(id, out var m)) result.Add(m);
+        return result;
+    }
+
+    // === ChapterEndingManager가 챕터 추정을 위해 쓰는 헬퍼 ===
+    public bool TryGetById(string id, out MemoryData data) => byId.TryGetValue(id, out data);
 
     public bool IsCanStore(MemoryData data) => scannedMemoryList.Contains(data);
 
     public void OpenMemoryStorage()
     {
         UIManager.Instance.MemoryStorageUI.gameObject.SetActive(true);
-        closeMemoryStorage.gameObject.SetActive(true);
+        if (closeMemoryStorage != null) closeMemoryStorage.gameObject.SetActive(true);
     }
-    
+
     public void CloseMemoryStorage()
     {
         UIManager.Instance.MemoryStorageUI.gameObject.SetActive(false);
-        closeMemoryStorage.gameObject.SetActive(false);
+        if (closeMemoryStorage != null) closeMemoryStorage.gameObject.SetActive(false);
     }
 
-    // ✅ 디버깅용 출력
     public void PrintScannedDebugLog()
     {
         Debug.Log("== [MemoryManager] 스캔된 기억 목록 ==");
-        foreach (var memory in scannedMemoryList)
-        {
-            Debug.Log($"- {memory.memoryID}: {memory.memoryTitle}");
-        }
+        foreach (var m in scannedMemoryList)
+            Debug.Log($"- {m.memoryID}: {m.memoryTitle}");
     }
 
-    public void TryCollectAll(List<MemoryData> memoryDataList)
+    public void TryCollectAll(List<MemoryData> list)
     {
-        foreach (var memoryData in memoryDataList)
-        {
-            TryCollect(memoryData);
-        }
+        foreach (var m in list) TryCollect(m);
     }
 
-    // ✅ 디버깅용 초기화
     public void ClearScannedDebug()
     {
         scannedMemoryList.Clear();

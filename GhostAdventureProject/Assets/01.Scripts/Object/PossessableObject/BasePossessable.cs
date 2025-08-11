@@ -68,10 +68,10 @@ public abstract class BasePossessable : BaseInteractable
     public virtual void CantPossess() { }
 
     // 상태 셋업
-    public void SetActivatedFromSave(bool value)
-    {
-        hasActivated = value;
-    }
+    //public void SetActivatedFromSave(bool value)
+    //{
+    //    hasActivated = value;
+    //}
 
     // 상태 기록
     protected void MarkActivatedChanged()
