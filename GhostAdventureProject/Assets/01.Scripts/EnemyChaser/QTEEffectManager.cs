@@ -45,11 +45,28 @@ public class QTEEffectManager : MonoBehaviour
         initialCamPosition = mainCamera.transform.position;
     }
 
-    private void Update()
+    // private void Update()
+    // {
+    //     if(UIManager.Instance.QTE_UI_2.isdead)
+    //     {
+    //         gameObject.SetActive(false);
+    //     }
+    // }
+    
+    public void ResetImmediate()
     {
-        if(UIManager.Instance.QTE_UI_2.isdead)
+        StopRunningCoroutines();
+
+        if (darkOverlay != null)
         {
-            gameObject.SetActive(false);
+            darkOverlay.alpha = 0f;
+            darkOverlay.blocksRaycasts = false;
+            darkOverlay.interactable = false;
+        }
+        if (mainCamera != null)
+        {
+            mainCamera.fieldOfView = initialFOV;
+            mainCamera.transform.position = initialCamPosition;
         }
     }
 
@@ -57,6 +74,12 @@ public class QTEEffectManager : MonoBehaviour
     {
         StopRunningCoroutines();
 
+        if (darkOverlay != null)
+        {
+            darkOverlay.blocksRaycasts = true;  // QTE 중 클릭 차단
+            darkOverlay.interactable   = false;
+        }
+        
         fadeCoroutine = StartCoroutine(FadeToAlphaRange(darkOverlay.alpha, 0.9f, fadeDuration));
         zoomCoroutine = StartCoroutine(ZoomTo(zoomFOV, zoomDuration));
 
@@ -68,10 +91,19 @@ public class QTEEffectManager : MonoBehaviour
         }
     }
 
-    public void EndQTEEffects()
+    public void EndQTEEffects(bool instant = false)
     {
         StopRunningCoroutines();
 
+        if (instant)
+        {
+            ResetImmediate();        // ← 즉시 복귀
+            return;
+        }
+
+        if (darkOverlay != null)
+            darkOverlay.blocksRaycasts = false;
+        
         fadeCoroutine = StartCoroutine(FadeToAlphaRange(darkOverlay.alpha, 0f, fadeDuration));
         zoomCoroutine = StartCoroutine(ZoomTo(initialFOV, zoomDuration));
         moveCoroutine = StartCoroutine(MoveCameraTo(initialCamPosition, moveDuration));

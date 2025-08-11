@@ -37,25 +37,18 @@ public class QTEUI2 : MonoBehaviour
     }
     public void StartQTE()
     {
-        if (isRunning) // 중복 방지
-            return;
-        
-        qteUI.SetActive(true);
-        success.gameObject.SetActive(false);
-        fail.gameObject.SetActive(false);
-        
-        gaugeBar.fillAmount = 0f;
-        timeText.text = timeLimit.ToString("F2");
-        
-        currentPressCount = 0;
-        currentTime = 0f;
-        isSuccess = false;
-        isdead = false;
+        if (isRunning) return;
+
+        ResetState();
+        if (qteUI) qteUI.SetActive(true);
+
         isRunning = true;
-        
+
+        // (카메라/참조 캐싱은 기존대로)
         camera = GameManager.Instance.Player.GetComponent<PlayerCamera>().currentCam;
         currentSize = camera.m_Lens.OrthographicSize;
         noise = camera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
         StartCoroutine(RunQTE());
     }
 
@@ -72,7 +65,8 @@ public class QTEUI2 : MonoBehaviour
                 isSuccess = true;
                 break;
             }
-            currentTime += Time.deltaTime;
+            // currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             float remainingTime = Mathf.Max(0f, timeLimit - currentTime);
             timeText.text = remainingTime.ToString("F2");
 
@@ -114,7 +108,7 @@ public class QTEUI2 : MonoBehaviour
         }
         
         isRunning = false;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSecondsRealtime(1.5f);
         qteUI.SetActive(false);
         success.gameObject.SetActive(false);
         fail.gameObject.SetActive(false);
@@ -125,12 +119,39 @@ public class QTEUI2 : MonoBehaviour
         noise.m_AmplitudeGain = amplitude;
         noise.m_FrequencyGain = frequency;
 
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSecondsRealtime(duration);
 
         noise.m_AmplitudeGain = 0f;
         noise.m_FrequencyGain = 0f;
     }
-    // (선택) 외부에서 QTE 상태 확인용
+    
+    public void ResetState()
+    {
+        StopAllCoroutines();
+
+        // 순수 상태값 초기화
+        currentPressCount = 0;
+        currentTime = 0f;
+        isRunning = false;
+        isSuccess = false;
+        isdead = false;
+
+        // UI 초기화
+        if (gaugeBar) gaugeBar.fillAmount = 0f;
+        if (timeText) timeText.text = timeLimit.ToString("F2");
+        if (success) success.gameObject.SetActive(false);
+        if (fail)    fail.gameObject.SetActive(false);
+        if (qteUI)   qteUI.SetActive(false);
+
+        // 카메라 연출 원복(혹시 남았을 수 있으니 안전하게)
+        if (camera != null)
+        {
+            camera.m_Lens.OrthographicSize = currentSize;
+            if (noise == null) noise = camera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            if (noise != null) { noise.m_AmplitudeGain = 0f; noise.m_FrequencyGain = 0f; }
+        }
+    }
+    
     public bool IsQTERunning() => isRunning;
     public bool IsSuccess() => isSuccess;
 }

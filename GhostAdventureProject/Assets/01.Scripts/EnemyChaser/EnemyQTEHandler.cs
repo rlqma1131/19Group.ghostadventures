@@ -72,6 +72,7 @@ public class EnemyQTEHandler : MonoBehaviour
 
         if (qteUI != null)
         {
+            qteUI.ResetState();  
             qteUI.gameObject.SetActive(true);
             qteUI.StartQTE();
         }
@@ -113,6 +114,7 @@ public class EnemyQTEHandler : MonoBehaviour
                     transform.position = startPosition;
                 }
 
+                qteEffect?.EndQTEEffects(true);
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), false);
                 enemy.ChangeState(enemy.PatrolState);
                 animator.updateMode = AnimatorUpdateMode.Normal;
@@ -123,13 +125,15 @@ public class EnemyQTEHandler : MonoBehaviour
         else
         {
             animator.SetTrigger("QTEFail");
+            qteEffect?.EndQTEEffects(true);
             PlayerLifeManager.Instance.HandleGameOver();
             isQTERunning = false;
             yield break;
         }
 
-        qteEffect?.EndQTEEffects();
+        qteEffect?.EndQTEEffects(true);
         qteUI?.gameObject.SetActive(false);
+        qteUI?.ResetState(); 
         // isQTERunning = false;
     }
 
@@ -140,6 +144,7 @@ public class EnemyQTEHandler : MonoBehaviour
             hasReturned = true;
             transform.position = startPosition;
         }
+        qteEffect?.EndQTEEffects(true);
     }
     
     public void OnQTESuccessAnimationEnd()
