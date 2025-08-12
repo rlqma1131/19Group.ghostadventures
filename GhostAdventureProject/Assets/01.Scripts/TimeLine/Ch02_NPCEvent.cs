@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
@@ -70,8 +71,13 @@ public class Ch02_NPCEvent : MonoBehaviour
     {
         if (director != null)
         {
-            spriteRenderer.flipX = false; // 플레이어 스프라이트를 원래대로 돌리기
+            if(spriteRenderer != null)
+            {
+
+
+                spriteRenderer.flipX = false; // 플레이어 스프라이트를 원래대로 돌리기
             director.stopped -= OnTimelineStopped;
+            }
         }
     }
 }
