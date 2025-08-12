@@ -32,17 +32,19 @@ public class Inventory_PossessableObject : MonoBehaviour
 
      private void Update()
     {
-         if (InventoryInputFocus.Current != InvSide.Possess) return;
+        if (InventoryInputFocus.Current != InvSide.Possess) return;
 
         // 비활성/빈 인벤이면 무시
         if (!gameObject.activeSelf || spawnedSlots.Count == 0) return;
 
         for (int i = 0; i < 4; i++)
         {
+            
             var alpha = KeyCode.Alpha1 + i;
             var keypad = KeyCode.Keypad1 + i;
             if (Input.GetKeyDown(alpha) || Input.GetKeyDown(keypad))
             {
+                if (Inventory_Player.FocusIsPlayer) return;
                 SelectSlot(i);
                 break;
             }
@@ -117,9 +119,9 @@ public class Inventory_PossessableObject : MonoBehaviour
         }
         if(item.Item_Type == ItemType.Clue)
         {
+            UIManager.Instance.InventoryExpandViewerUI.ShowClue(item.clue);
             inventory_Player.AddClue(item.clue);
             UseItem(item, 1);
-            UIManager.Instance.InventoryExpandViewerUI.ShowClue(item.clue);
         }
     }
     
@@ -142,6 +144,8 @@ public class Inventory_PossessableObject : MonoBehaviour
             // 선택된 슬롯 시각적 강조 (옵션)
             HighlightSlot(index);
         }
+        else return;
+
         if(selectedSlot.item != null && selectedSlot.item.Item_Type == ItemType.Clue)
         {
             UseOrPlaceItem(selectedSlot.item);

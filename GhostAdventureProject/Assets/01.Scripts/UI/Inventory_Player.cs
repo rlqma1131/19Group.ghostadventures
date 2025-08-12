@@ -292,6 +292,7 @@ public class Inventory_Player : MonoBehaviour
         var keypad = KeyCode.Keypad1 + i;
         if (Input.GetKeyDown(alpha) || Input.GetKeyDown(keypad))
         {
+            if(!FocusIsPlayer) return;
             int frontStart = frontShowsFirstPage ? 0 : cluesPerFace;
             int clueIndex = frontStart + i;
 

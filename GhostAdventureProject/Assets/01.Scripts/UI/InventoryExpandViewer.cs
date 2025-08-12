@@ -53,6 +53,7 @@ public class InventoryExpandViewer : MonoBehaviour
         isShowing = false;
 
         OnClueHidden?.Invoke();
+        OnClueHidden = null; //자동해제
     }
 
     public bool IsShowing() => isShowing;  

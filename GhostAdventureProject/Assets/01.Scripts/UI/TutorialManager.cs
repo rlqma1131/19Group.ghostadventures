@@ -95,7 +95,7 @@ public class TutorialManager : Singleton<TutorialManager>
                 break;
 
             case TutorialStep.Cake_Prompt:
-                prompt.ShowPrompt_2("쥐는 어디로 갔을라나?", "아무튼 이제 케잌을 살펴보자");
+                prompt.ShowPrompt("쥐는 어디로 갔을라나? 아무튼 이제 케잌을 살펴보자");
                 break;
             case TutorialStep.SecurityGuard_GoToRadio:
                 prompt.ShowPrompt("나왔다... 지금이 기회야");
@@ -140,7 +140,7 @@ public class TutorialManager : Singleton<TutorialManager>
     {   
         PossessionSystem.Instance.CanMove = false;
         await Task.Delay(2000);
-        prompt.ShowPrompt_2("나도 모르게 여기로 들어왔어..", "여기서 기억을 찾을 수 있을까?");
+        prompt.ShowPrompt_2("나도 모르게 여기로 들어왔어..", "여기서 기억을 찾을 수 있을까?..");
         await Task.Delay(3000);
         notice.FadeInAndOut("※ 이 집 안에 흩어진 기억 조각을 찾아 수집하세요.");
         await Task.Delay(3000);
