@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class Ch03_EndMemory : MemoryFragment
 {
-    [SerializeField] private MemoryData memoryData;
     bool activeCutscene = false;
+
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player") && !activeCutscene)
@@ -25,7 +25,7 @@ public class Ch03_EndMemory : MemoryFragment
         yield return new WaitForSeconds(delay);
         
         Inventory_Player _inventory = GameManager.Instance.Player.GetComponent<Inventory_Player>();
-        MemoryManager.Instance.TryCollect(memoryData);
+        MemoryManager.Instance.TryCollect(data);
         SoundManager.Instance.FadeOutAndStopLoopingSFX();
         SceneManager.LoadScene("Ch03_End", LoadSceneMode.Additive);
 
