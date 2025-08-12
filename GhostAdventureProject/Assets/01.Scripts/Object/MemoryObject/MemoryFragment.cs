@@ -239,6 +239,8 @@ public class MemoryFragment : BaseInteractable
             GameManager.Instance.Player.transform.position,
             checkpointId: data.memoryID,
             autosave: true);
+
+        Debug.Log($"[MemoryFragment] 진행도 저장됨 : {data.memoryID} / {data.memoryTitle}");
     }
 
     private int DetectChapterFromScene(string sceneName)
