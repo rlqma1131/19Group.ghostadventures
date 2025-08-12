@@ -7,6 +7,7 @@ public class Col_LivingRoom_HallWay : MonoBehaviour
     BoxCollider2D maincol;
     [SerializeField] private GameObject icon;
     private bool onTrigger;
+    private bool showPrompt = false;
 
     void Start()
     {
@@ -30,9 +31,10 @@ public class Col_LivingRoom_HallWay : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && !SaveManager.IsPuzzleSolved("시계"))
+        if(collision.CompareTag("Player") && !SaveManager.IsPuzzleSolved("시계") && !showPrompt)
         {
             UIManager.Instance.PromptUI.ShowPrompt("일단 TV를 켜야 해");
+            showPrompt = true;
         }
         if(icon == null) return;
 

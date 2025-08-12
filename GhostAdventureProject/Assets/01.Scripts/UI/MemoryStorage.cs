@@ -33,14 +33,22 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
     {
         MemoryManager.Instance.OnMemoryCollected += OnMemoryCollected;
         RedrawStorage();
-
-        EnemyAI.PauseAllEnemies();
     }
 
     private void OnDisable()
     {
         MemoryManager.Instance.OnMemoryCollected -= OnMemoryCollected;
         EnemyAI.ResumeAllEnemies();
+        PossessionSystem.Instance.CanMove = true;
+    }
+    
+    void Update()
+    {
+        if(IsOpen())
+        {
+            EnemyAI.PauseAllEnemies();
+            PossessionSystem.Instance.CanMove = false;
+        }
     }
 
     private void OnMemoryCollected(MemoryData memory)
@@ -151,11 +159,5 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
         ShowPage(currentPageIndex);
     }
 
-    void Update()
-    {
-        if(IsOpen())
-        {
-            EnemyAI.PauseAllEnemies();
-        }
-    }
+
 }

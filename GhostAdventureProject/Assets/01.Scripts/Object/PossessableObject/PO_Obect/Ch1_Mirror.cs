@@ -8,6 +8,7 @@ public class Ch1_Mirror : MonoBehaviour
 
     private float fogTime = 0f;
     private bool revealed = false;
+    private bool ShowPrompt = false;
 
     private void Start()
     {
@@ -32,9 +33,10 @@ public class Ch1_Mirror : MonoBehaviour
 
         float alpha = Mathf.Clamp01(fogTime / fogDuration);
         SetAlpha(alpha);
-        if (!revealed && alpha >= 0.3f)
+        if (!revealed && alpha >= 0.3f && !ShowPrompt)
         {
-            UIManager.Instance.PromptUI.ShowPrompt("…글씨…?");       
+            UIManager.Instance.PromptUI.ShowPrompt("…글씨…?"); 
+            ShowPrompt = true;      
         }
 
         if (!revealed && alpha >= 0.5f)

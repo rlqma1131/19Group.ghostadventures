@@ -35,7 +35,7 @@ public class KeyBoard_Enter : MonoBehaviour
         {
             correct = false;
             PossessionSystem.Instance.CanMove = true;
-            UIManager.Instance.PromptUI.ShowPrompt_Random("순서가...", "기억을 되짚어 보자");
+            UIManager.Instance.PromptUI.ShowPrompt("순서가...기억을 되짚어 보자");
         }
         textSlot.ClearAll();
     }

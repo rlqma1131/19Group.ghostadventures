@@ -86,6 +86,7 @@ public class Ch1_Clock : BasePossessable
             tvObject.ActivateTV();
             isControlMode = false;
             HideClockUI();
+            UIManager.Instance.PromptUI.ShowPrompt("어? 저 TV… 무언가 보여줄지도 몰라.");
 
             hasActivated = false;
             MarkActivatedChanged();
@@ -141,7 +142,7 @@ public class Ch1_Clock : BasePossessable
             {
                 clockZoom.SetActive(false);
             });
-        UIManager.Instance.PromptUI.ShowPrompt("어? 저 TV… 무언가 보여줄지도 몰라.");
+        
         // UIManager.Instance.NoticePopupUI.FadeInAndOut("※목표 : TV 켜기 ");
     }
 
@@ -154,7 +155,7 @@ public class Ch1_Clock : BasePossessable
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
-        if(!SaveManager.IsPuzzleSolved("시계"))
+        if(collision.CompareTag("Player") && !SaveManager.IsPuzzleSolved("시계"))
         {
             if(SaveManager.IsPuzzleSolved("편지"))
             {

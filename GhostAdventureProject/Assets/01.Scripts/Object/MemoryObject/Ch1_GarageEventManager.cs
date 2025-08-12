@@ -39,7 +39,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         {
             if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
             {
-                UIManager.Instance.PromptUI.ShowPrompt("...아무 일도 일어나지 않았다.", 2f);
+                UIManager.Instance.PromptUI.ShowPrompt("단서가 부족해...", 2f);
             }
             else
             {

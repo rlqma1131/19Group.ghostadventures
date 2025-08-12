@@ -74,13 +74,13 @@ public class Ch1_Pan : BasePossessable
             isFalling = false;
         });
         SaveManager.MarkPuzzleSolved("후라이팬");
-        UIManager.Instance.PromptUI.ShowPrompt("으악 소리가 너무 커");
+        UIManager.Instance.PromptUI.ShowPrompt("으악! 소리가 너무 커");
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {   
         base.OnTriggerEnter2D(collision);
-        if(collision.CompareTag("Player"))
+        if(collision.CompareTag("Player") && !SaveManager.IsPuzzleSolved("후라이팬"))
         {
             UIManager.Instance.PromptUI.ShowPrompt("후라이팬이네. 떨어뜨려 볼까?");
         }
