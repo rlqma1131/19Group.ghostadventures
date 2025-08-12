@@ -81,7 +81,7 @@ public abstract class BaseDoor : BaseInteractable
         player.transform.position = teleportPosition;
 
         // 3) 1초 후 다시 충돌 허용
-        StartCoroutine(RestoreCollision(playerLayer, enemyLayer, 1f));
+        StartCoroutine(RestoreCollision(playerLayer, enemyLayer, 1.5f));
     }
 
     private IEnumerator RestoreCollision(int pLayer, int eLayer, float delay)
