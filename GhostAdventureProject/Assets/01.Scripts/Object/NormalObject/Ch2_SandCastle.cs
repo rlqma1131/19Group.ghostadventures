@@ -32,15 +32,14 @@ public class Ch2_SandCastle : BaseInteractable
         {
             if(Input.GetKeyDown(KeyCode.Q))
             {
+                cluepickup.PickupClue();
+                UIManager.Instance.InventoryExpandViewerUI.ShowClue(cluepickup.clueData);
                 SandCastle_crumble.SetActive(true);
                 carToy.SetActive(true);
                 SandCastle_intactly.SetActive(false);
                 q_key.SetActive(false);
-                cluepickup.PickupClue();
                 crumbled = true;
-                UIManager.Instance.PromptUI.ShowPrompt("무너뜨릴까?");
             }
-
         }
     }
 
@@ -53,6 +52,7 @@ public class Ch2_SandCastle : BaseInteractable
         }
         if(collision.CompareTag("Animal") && raven.isPossessed && !crumbled)
         {
+            UIManager.Instance.PromptUI.ShowPrompt("무너뜨릴까?");
             crumbleAble = true;
             q_key.SetActive(true);
         }
@@ -68,6 +68,7 @@ public class Ch2_SandCastle : BaseInteractable
 
         if(other.CompareTag("Animal") && !crumbled)
         {
+            
             crumbleAble = true;
             q_key.SetActive(false);
         }

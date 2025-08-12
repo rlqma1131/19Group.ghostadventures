@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HaveItem : MonoBehaviour
 {
-    public static HaveItem Instance { get; private set; }
+    // public static HaveItem Instance { get; private set; }
 
     [Header("ItemData Scriptable Object를 넣어주세요")]
     public List<ItemData> initialItems = new List<ItemData>();
@@ -14,10 +14,10 @@ public class HaveItem : MonoBehaviour
 
     private void Start()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
+        // if (Instance == null)
+        // {
+        //     Instance = this;
+        // }
         //else
         //{
         //    Destroy(gameObject);
