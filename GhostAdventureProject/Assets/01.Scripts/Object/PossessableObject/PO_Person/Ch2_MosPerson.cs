@@ -23,8 +23,9 @@ public class Ch2_MosPerson : BasePossessable
         targetPerson.currentCondition = PersonCondition.Tired;
         targetPerson.SetCondition(targetPerson.currentCondition);
         if (!isPossessed)
-        return;
+            return;
 
+        UIManager.Instance.tabkeyUI.SetActive(true);
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (haveitem.IsInventoryEmpty())
@@ -69,6 +70,7 @@ public class Ch2_MosPerson : BasePossessable
     {
         base.Unpossess();
         targetPerson.currentCondition = PersonCondition.Normal; 
+        UIManager.Instance.tabkeyUI.SetActive(false);
     }
     
 }

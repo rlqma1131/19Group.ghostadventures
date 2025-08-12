@@ -9,6 +9,7 @@ public class YameScan_fake : BaseInteractable
     [SerializeField] private Image scanCircleUI; //스캔 원 UI
     [SerializeField] private GameObject player;
     // [SerializeField] private GameObject e_key;
+    [SerializeField] private YameScan_correct correctDoll; // 정답 인형
 
     // 내부 상태 변수
     private float scanTime = 0f;
@@ -125,6 +126,7 @@ public class YameScan_fake : BaseInteractable
     private void CompleteScan()
     {
         Debug.Log("스캔 완료");
+        isNearMemory = false;
         isScanning = false;
         Time.timeScale = 1f; // 시간 흐름을 원래대로 복구
 
@@ -146,7 +148,7 @@ public class YameScan_fake : BaseInteractable
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && !correctDoll.clear_UnderGround)
         {
             isNearMemory = true;
             currentScanObject = collision.gameObject;

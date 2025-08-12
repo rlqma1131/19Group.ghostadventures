@@ -12,6 +12,7 @@ public class Ch2_LeftSwing : BasePossessable
     private int totalQTECount = 3;
     private bool isQTESequenceRunning = false;
     //private QTEUI qteUI;
+    private bool isShowPrompt = false;
 
     protected override void Start()
     {
@@ -28,7 +29,11 @@ public class Ch2_LeftSwing : BasePossessable
         }
         
         if(isPossessed)
-            UIManager.Instance.PromptUI.ShowPrompt("흔들어볼까?",2f);
+            if(!isShowPrompt)
+            {
+                UIManager.Instance.PromptUI.ShowPrompt("흔들어볼까?",2f);
+                isShowPrompt = true;
+            }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -40,6 +45,7 @@ public class Ch2_LeftSwing : BasePossessable
         
         if (!isQTESequenceRunning && Input.GetKeyDown(KeyCode.E))
         {
+            
             Unpossess();
         }
         
@@ -59,6 +65,7 @@ public class Ch2_LeftSwing : BasePossessable
         if (!success)
         {
             isQTESequenceRunning = false;
+            isShowPrompt = false;
             Unpossess();
             return;
         }

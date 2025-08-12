@@ -71,6 +71,7 @@ public class UIManager : Singleton<UIManager>
     public GameObject spacebar_Key;
     public GameObject interactInfo;
     public GameObject unpossessKey;
+    public GameObject tabkeyUI;
     
     // --------------------------------------------------------------------------------------------
 
