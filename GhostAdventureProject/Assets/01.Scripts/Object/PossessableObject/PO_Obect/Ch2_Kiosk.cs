@@ -96,7 +96,7 @@ public class Ch2_Kiosk : BasePossessable
         {
             if (safeBox.safeBoxOpen)
             {
-                UIManager.Instance.PromptUI.ShowPrompt("금고 안에서 본 이상한 기호들... 저 버튼과 닮았어.", 2f);
+                // UIManager.Instance.PromptUI.ShowPrompt("금고 안에서 본 이상한 기호들... 저 버튼과 닮았어.", 2f);
             }
             else
             {

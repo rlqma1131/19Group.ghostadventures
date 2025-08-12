@@ -48,10 +48,10 @@ public class PlayerRoomTracker : MonoBehaviour
                 TutorialManager.Instance.Show(TutorialStep.LivingRoomIntro_Start);
             else if (room.roomName == "다용도실" && !TutorialManager.Instance.HasCompleted(TutorialStep.LaundryRoom))
                 TutorialManager.Instance.Show(TutorialStep.LaundryRoom);
-            else if (room.roomName == "놀이터")
-                TutorialManager.Instance.Show(TutorialStep.Test);
-            else if (room.roomName == "일반병동 - 1F 로비")
-                TutorialManager.Instance.Show(TutorialStep.Test);
+            // else if (room.roomName == "놀이터")
+            //     TutorialManager.Instance.Show(TutorialStep.Test);
+            // else if (room.roomName == "일반병동 - 1F 로비")
+            //     TutorialManager.Instance.Show(TutorialStep.Test);
         }
     }
 }

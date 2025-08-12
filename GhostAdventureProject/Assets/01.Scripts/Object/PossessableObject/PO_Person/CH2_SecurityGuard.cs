@@ -33,7 +33,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
     private bool oneTimeShowClue = false; // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만)
     public bool isdoorLockOpen; // 도어락 스크립트에서 정보 넣어줌
     public bool doorPass = false;
-    public bool oneTimeActionDelete = false;
     public bool UseAllItem = false;
     private BoxCollider2D[] cols;
 
@@ -123,6 +122,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
             radio.triggerSound_Person.DOFade(0f, 1.5f)
             .OnComplete(() => radio.triggerSound_Person.Stop());
         }
+        UIManager.Instance.tabkeyUI.SetActive(true);
 
         Move();
 
@@ -154,22 +154,29 @@ public class CH2_SecurityGuard : MoveBasePossessable
         
 
         // 단서 관련 로직 (추후 수정예정)---------------------------
-        if (isPossessed && Input.GetKeyDown(KeyCode.Alpha7) &&!oneTimeShowClue || 
-            isPossessed && Input.GetKeyDown(KeyCode.Keypad7) && !oneTimeShowClue)
+        if (isPossessed && Input.GetKeyDown(KeyCode.Alpha3) &&!oneTimeShowClue || 
+            isPossessed && Input.GetKeyDown(KeyCode.Keypad3) && !oneTimeShowClue)
         {
             UIManager.Instance.InventoryExpandViewerUI.OnClueHidden += ShowText;
             oneTimeShowClue = true;
             SaveManager.MarkPuzzleSolved("메모3");
         }
-        if(oneTimeShowClue && !oneTimeActionDelete)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)||
-            Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Keypad2) || Input.GetKeyDown(KeyCode.Keypad3) || Input.GetKeyDown(KeyCode.Keypad4))
-            {
-                UIManager.Instance.InventoryExpandViewerUI.OnClueHidden -= ShowText;
-                oneTimeActionDelete = true;
-            }
-        }
+        // if(oneTimeShowClue && !oneTimeActionDelete)
+        // {
+        //     if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)||
+        //     Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Keypad2) || Input.GetKeyDown(KeyCode.Keypad3) || Input.GetKeyDown(KeyCode.Keypad4))
+        //     {
+        //         UIManager.Instance.InventoryExpandViewerUI.OnClueHidden -= ShowText;
+        //         oneTimeActionDelete = true;
+        //     }
+        // }
+
+        // var found = haveitem.inventorySlots.Find(slot => slot?.item?.name == "MISSING");
+        // if (isPossessed && found == null)
+        // {
+        //     var viewer = UIManager.Instance.InventoryExpandViewerUI;
+        //     viewer.OnClueHidden += ShowText;
+        // }
     }
 
     // 목적지까지 이동
@@ -360,6 +367,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     {
         radio.triggerSound_Person.Stop();
         base.Unpossess();
+        UIManager.Instance.tabkeyUI.SetActive(false);
         state = GuardState.Roading;
         anim.SetBool("Move", false);
         roadingTimer = 0f;

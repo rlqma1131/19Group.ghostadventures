@@ -68,7 +68,7 @@ public class Ch02_NPCEvent : MonoBehaviour
 
     private void OnDisable()
     {
-        if (director != null)
+        if (director != null && spriteRenderer != null)
         {
             spriteRenderer.flipX = false; // 플레이어 스프라이트를 원래대로 돌리기
             director.stopped -= OnTimelineStopped;
