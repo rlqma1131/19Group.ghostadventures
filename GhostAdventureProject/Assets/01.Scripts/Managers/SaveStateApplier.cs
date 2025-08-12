@@ -57,6 +57,12 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 else
                     p.transform.position = pos;
             }
+
+            if (SaveManager.TryGetPossessableState(uid.Id, out var has))
+            {
+                p.ApplyHasActivatedFromSave(has);
+                // 만약 공개 세터가 있으면: p.HasActivated = has;
+            }
         }
 
         // MemoryFragment 스캔 가능/불가 적용
