@@ -33,7 +33,6 @@ public class Ch3_CassettePlayer : BasePossessable
 
     private bool isPlaying = false; // 재생 여부
     private bool isSolved = false; // 문제 해결 여부
-    private bool isTalking = false;
 
     private float inputCooldown = 0.5f; // 조작키 입력 텀
     private float inputTimer = 0f;
@@ -73,7 +72,7 @@ public class Ch3_CassettePlayer : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (isTalking)
+            if (isSolved)
                 return;
 
             EnemyAI.ResumeAllEnemies();
@@ -82,15 +81,9 @@ public class Ch3_CassettePlayer : BasePossessable
             zoomCamera.Priority = 5;
             UIManager.Instance.PlayModeUI_OpenAll();
 
-            if (isSolved)
-            {
-                UIManager.Instance.PromptUI.ShowPrompt("일단 이 정보를 입력해보려면 치료실을 찾아보자");
-            }
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
-            SoundManager.Instance.PlaySFX(buttonPush);
-
             if (isSolved)
             {
                 SoundManager.Instance.StopBGM();
@@ -98,6 +91,8 @@ public class Ch3_CassettePlayer : BasePossessable
             }
             else
             {
+                SoundManager.Instance.PlaySFX(buttonPush);
+
                 if (!isPlaying)
                 {
                     playBtn.SetActive(true);
@@ -126,7 +121,7 @@ public class Ch3_CassettePlayer : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            distortionValue += 0.1f;
+            distortionValue += 0.2f;
             distortionValue = Mathf.Clamp(distortionValue, minDistort, maxDistort);
             distortion.distortionLevel = distortionValue;
             TriggerInputCooldown();
@@ -134,7 +129,7 @@ public class Ch3_CassettePlayer : BasePossessable
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            distortionValue -= 0.1f;
+            distortionValue -= 0.2f;
             distortionValue = Mathf.Clamp(distortionValue, minDistort, maxDistort);
             distortionValue = Mathf.Round(distortionValue * 100f) / 100f;
             distortion.distortionLevel = distortionValue;
@@ -143,7 +138,7 @@ public class Ch3_CassettePlayer : BasePossessable
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            playbackPitch += 0.2f;
+            playbackPitch += 0.5f;
             playbackPitch = Mathf.Clamp(playbackPitch, minPitch, maxPitch);
             audioSource.pitch = playbackPitch;
             TriggerInputCooldown();
@@ -151,7 +146,7 @@ public class Ch3_CassettePlayer : BasePossessable
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            playbackPitch -= 0.2f;
+            playbackPitch -= 0.5f;
             playbackPitch = Mathf.Clamp(playbackPitch, minPitch, maxPitch);
             audioSource.pitch = playbackPitch;
             TriggerInputCooldown();
@@ -212,7 +207,6 @@ public class Ch3_CassettePlayer : BasePossessable
 
         // 정답 도달
         UIManager.Instance.PromptUI.ShowPrompt("상담 내용..? 왜 이렇게 익숙하지..");
-        isTalking = true;
 
         // 정상 문장 출력
         for (int i = 0; i < correctSentences.Length; i++)
@@ -298,8 +292,6 @@ public class Ch3_CassettePlayer : BasePossessable
         // 녹음본 내용 출력 끝
         Unpossess();
 
-        isTalking = false;
-
         EnemyAI.ResumeAllEnemies();
         zoomCamera.Priority = 5;
         UIManager.Instance.PlayModeUI_OpenAll();
@@ -369,7 +361,7 @@ public class Ch3_CassettePlayer : BasePossessable
 
     void CheckSolved()
     {
-        if (Mathf.Abs(distortionValue - answerDistortion) < 0.05f && Mathf.Abs(playbackPitch - answerPitch) < 0.05f)
+        if (Mathf.Abs(distortionValue - answerDistortion) < 0.1f && Mathf.Abs(playbackPitch - answerPitch) < 0.3f)
         {
             hasActivated = false;
             MarkActivatedChanged();

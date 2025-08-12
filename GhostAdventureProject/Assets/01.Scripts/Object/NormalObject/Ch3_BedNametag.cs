@@ -66,7 +66,8 @@ public class Ch3_BedNametag : BaseInteractable
             {
                 nametagZoom.SetActive(false);
 
-                PlayerInteractSystem.Instance.AddInteractable(gameObject);
+                if(isPlayerInside)
+                    PlayerInteractSystem.Instance.AddInteractable(gameObject);
             });
     }
 
