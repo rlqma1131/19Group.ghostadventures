@@ -280,7 +280,6 @@ public static class SaveManager
         return true;
     }
 
-
     // ===== MemoryFragment 상태 저장/적용 =====
     public static void SetMemoryFragmentScannable(string id, bool isScannable)
     {

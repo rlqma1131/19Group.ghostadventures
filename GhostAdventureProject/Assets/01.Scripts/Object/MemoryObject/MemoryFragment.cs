@@ -69,6 +69,17 @@ public class MemoryFragment : BaseInteractable
         if (TryGetComponent(out UniqueId uid))
             SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
 
+        var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
+        ChapterEndingManager.Instance.RegisterScannedMemory(data.memoryID, chapter);
+
+        SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
+            SceneManager.GetActiveScene().name,
+            GameManager.Instance.Player.transform.position,
+            checkpointId: data.memoryID,
+            autosave: true);
+
+        Debug.Log($"[MemoryFragment] 진행도 저장됨 : {data.memoryID} / {data.memoryTitle}");
+
         MemoryManager.Instance.TryCollect(data);
 
         Sprite dropSprite = GetFragmentSpriteByType(data.type);
@@ -228,20 +239,7 @@ public class MemoryFragment : BaseInteractable
         }
     }
 
-    public virtual void AfterScan()
-    {
-        // 저장한 기억 챕터 진행도에 반영
-        var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
-        ChapterEndingManager.Instance.RegisterScannedMemory(data.memoryID, chapter);
-
-        SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
-            SceneManager.GetActiveScene().name,
-            GameManager.Instance.Player.transform.position,
-            checkpointId: data.memoryID,
-            autosave: true);
-
-        Debug.Log($"[MemoryFragment] 진행도 저장됨 : {data.memoryID} / {data.memoryTitle}");
-    }
+    public virtual void AfterScan() { }
 
     private int DetectChapterFromScene(string sceneName)
     {
