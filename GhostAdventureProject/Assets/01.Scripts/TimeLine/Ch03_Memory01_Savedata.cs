@@ -3,17 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class Ch03_Memory01_Savedata : MonoBehaviour
+public class Ch03_Memory01_Savedata : MemoryFragment
 {
-
-    [SerializeField] private MemoryData memoryData;
-    // Start is called before the first frame update
     void Start()
     {
-        MemoryManager.Instance.TryCollect(memoryData); // 기억 조각 수집
+        MemoryManager.Instance.TryCollect(data); // 기억 조각 수집
         //Inventory_Player _inventory = GameManager.Instance.Player.GetComponent<Inventory_Player>(); 
-        ChapterEndingManager.Instance.RegisterScannedMemory(memoryData.memoryID, 3);
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
+
+        var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
+        ChapterEndingManager.Instance.RegisterScannedMemory(data.memoryID, chapter);
+
+        SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
+            SceneManager.GetActiveScene().name,
+            GameManager.Instance.Player.transform.position,
+            checkpointId: data.memoryID,
+            autosave: true);
+
+        Debug.Log($"[MemoryFragment] 진행도 저장됨 : {data.memoryID} / {data.memoryTitle}");
     }
 
 }
