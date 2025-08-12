@@ -131,6 +131,7 @@ public class YameScan_correct : BaseInteractable
     private void CompleteScan()
     {
         Debug.Log("스캔 완료");
+        isNearMemory = false;
         isScanning = false;
         Time.timeScale = 1f; // 시간 흐름을 원래대로 복구
 
@@ -146,12 +147,8 @@ public class YameScan_correct : BaseInteractable
         clear_UnderGround = true;
         clue_P.SetActive(true);
         ChapterEndingManager.Instance.CollectCh2Clue("P");
-        
-        if(!clear_UnderGround)
-        {
-            UIManager.Instance.PromptUI.ShowPrompt_2("으악...!!", "벽에 뭔가 나타났어...!");
-            Debug.Log("지하수로와 연결된 문을 발견했습니다");
-        }
+        UIManager.Instance.PromptUI.ShowPrompt_2("으악...!!", "벽에 뭔가 나타났어...!");
+        Debug.Log("지하수로와 연결된 문을 발견했습니다");
     }
 
     private void CancleScan(string reason)
@@ -166,7 +163,7 @@ public class YameScan_correct : BaseInteractable
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && !clear_UnderGround)
         {
             isNearMemory = true;
             currentScanObject = collision.gameObject;

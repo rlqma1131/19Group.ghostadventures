@@ -69,7 +69,7 @@ public class Ch02_NPCEvent : MonoBehaviour
 
     private void OnDisable()
     {
-        if (director != null)
+        if (director != null && spriteRenderer != null)
         {
             if(spriteRenderer != null)
             {

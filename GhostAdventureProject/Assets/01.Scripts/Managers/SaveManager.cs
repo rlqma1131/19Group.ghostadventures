@@ -515,7 +515,7 @@ public static class SaveManager
         currentData.checkpointId = checkpointId;
     }
 
-    // 기억 스캔할 때 호출
+    // 기억 스캔 ScanedCheck 할 때 호출
     public static void SaveWhenScanAfter(string memoryID, string title,
     string sceneName, Vector3 playerPos, string checkpointId = null, bool autosave = true)
     {
@@ -529,6 +529,8 @@ public static class SaveManager
             {
                 SetActiveState(uid.Id, p.gameObject.activeSelf);
                 SetObjectPosition(uid.Id, p.transform.position);
+
+                SetPossessableState(uid.Id, p.HasActivated);
             }
         }
 
@@ -538,6 +540,8 @@ public static class SaveManager
             {
                 SetActiveState(uid.Id, m.gameObject.activeSelf);
                 SetObjectPosition(uid.Id, m.transform.position);
+
+                SetMemoryFragmentScannable(uid.Id, m.IsScannable);
             }
         }
 
