@@ -2777,6 +2777,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectedMemoryIDs: []
   closeMemoryStorage: {fileID: 4663642622217373052}
+  debugSaveAndRefresh: 1
 --- !u!1 &762646975324635182
 GameObject:
   m_ObjectHideFlags: 0
@@ -6432,6 +6433,41 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1786801886901878689
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1177212883881194904}
+  m_Layer: 5
+  m_Name: Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1177212883881194904
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786801886901878689}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.9857386, y: 0.9857386, z: 0.9857386}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3880655950077294972}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 8.960999}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1873945498482712102
 GameObject:
   m_ObjectHideFlags: 0
@@ -8594,7 +8630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4167815381434829213
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10287,6 +10323,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4167815381434829213}
+  - {fileID: 1177212883881194904}
   m_Father: {fileID: 368353947743961623}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -10344,6 +10381,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffb5e38d00e8455b93cc910aa3d35f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PromptContainer: {fileID: 1177212883881194904}
+  PromptPrefab: {fileID: 5624292579140530279, guid: 6f4d7c2cec2f040019074e1cc36ce4d4, type: 3}
+  spawnScale: 1.25
+  settleScale: 1
+  shiftUpY: 48
+  shrinkFactor: 0.85
+  fadeFactor: 0.65
+  oldColor: {r: 1, g: 1, b: 1, a: 0.75}
+  maxVisible: 3
+  spawnInTime: 0.25
+  shiftTime: 0.25
+  easeIn: 9
+  easeShift: 9
 --- !u!1 &3084523789962201495
 GameObject:
   m_ObjectHideFlags: 0
