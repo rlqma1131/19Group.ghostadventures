@@ -138,7 +138,7 @@ public class Ch1_Cat : MoveBasePossessable
         anim.SetTrigger("Open");
         door.SolvePuzzle();
 
-        yield return new WaitForSeconds(2f); // 2초 기다림
+        yield return new WaitForSecondsRealtime(2f); // 2초 기다림
 
         zoomCamera.Priority = 5;
         Unpossess();
