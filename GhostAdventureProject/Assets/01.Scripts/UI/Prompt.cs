@@ -121,7 +121,7 @@ public class Prompt : MonoBehaviour
     [SerializeField] private float shrinkFactor = 0.85f;      // 기존 프롬프트 스케일 축소 비율
     [SerializeField] private float fadeFactor = 0.65f;        // 기존 프롬프트 알파 감소 비율
     [SerializeField] private Color oldColor = new Color(1f,1f,1f,0.75f); // 이전 프롬프트 목표 색(옅은 회색 느낌)
-    [SerializeField] private int maxVisible = 3;              // 화면에 남겨둘 최대 줄 수
+    [SerializeField] private int maxVisible = 2;              // 화면에 남겨둘 최대 줄 수
     [SerializeField] private float spawnInTime = 0.25f;       // 새 프롬프트 등장 트윈
     [SerializeField] private float shiftTime = 0.25f;         // 기존 프롬프트 이동/축소/페이드
     [SerializeField] private Ease easeIn = Ease.OutCubic;

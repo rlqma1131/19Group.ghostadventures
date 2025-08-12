@@ -82,7 +82,7 @@ public class Ch1_Pan : BasePossessable
         base.OnTriggerEnter2D(collision);
         if(collision.CompareTag("Player"))
         {
-            UIManager.Instance.PromptUI.ShowPrompt_2("후라이팬이네", "떨어뜨려 볼까?");
+            UIManager.Instance.PromptUI.ShowPrompt("후라이팬이네. 떨어뜨려 볼까?");
         }
     }
 }

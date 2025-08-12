@@ -95,7 +95,7 @@ public class TutorialManager : Singleton<TutorialManager>
                 break;
 
             case TutorialStep.Cake_Prompt:
-                prompt.ShowPrompt_2("쥐는 어디로 갔을라나?", "아무튼 이제 케잌을 살펴보자");
+                prompt.ShowPrompt("쥐는 어디로 갔을라나? 아무튼 이제 케잌을 살펴보자");
                 break;
             case TutorialStep.SecurityGuard_GoToRadio:
                 prompt.ShowPrompt("나왔다... 지금이 기회야");

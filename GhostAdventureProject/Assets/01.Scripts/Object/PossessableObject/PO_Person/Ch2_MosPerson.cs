@@ -61,7 +61,7 @@ public class Ch2_MosPerson : BasePossessable
         base.OnTriggerEnter2D(collision);
         if(collision.CompareTag("Player") && !UseAllItem)
         {
-            UIManager.Instance.PromptUI.ShowPrompt_2("저 사람, 메모를 들고 있어.", "빙의해볼까?");
+            UIManager.Instance.PromptUI.ShowPrompt("저 사람, 메모를 들고 있어. 빙의해볼까?");
         } 
     }
 
