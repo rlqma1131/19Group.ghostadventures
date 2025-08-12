@@ -74,7 +74,6 @@ public class Ch1_Pan : BasePossessable
             isFalling = false;
         });
         SaveManager.MarkPuzzleSolved("후라이팬");
-        UIManager.Instance.PromptUI.ShowPrompt("으악! 소리가 너무 커");
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
