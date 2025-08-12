@@ -17,10 +17,10 @@ public class Ch03_Memory01_Savedata : MemoryFragment
         var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
         ChapterEndingManager.Instance.RegisterScannedMemory(data.memoryID, chapter);
 
-        SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
+        SaveManager.SaveWhenCutScene(data.memoryID, data.memoryTitle,
             SceneManager.GetActiveScene().name,
-            GameManager.Instance.Player.transform.position,
-            checkpointId: data.memoryID,
+            //GameManager.Instance.Player.transform.position,
+            //checkpointId: data.memoryID,
             autosave: true);
 
         Debug.Log($"[MemoryFragment] 진행도 저장됨 : {data.memoryID} / {data.memoryTitle}");

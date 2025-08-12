@@ -579,6 +579,69 @@ public static class SaveManager
         if (autosave) SaveGame();
     }
 
+
+    public static void SaveWhenCutScene(string memoryID, string title,
+    string sceneName, string checkpointId = null, bool autosave = true)
+    {
+        AddCollectedMemoryID(memoryID);
+        AddScannedMemoryTitle(title);
+
+        // 오브젝트 SetAcitve 상태, 위치 저장
+        foreach (var p in GameObject.FindObjectsOfType<BasePossessable>(true))
+        {
+            if (p.TryGetComponent(out UniqueId uid))
+            {
+                SetActiveState(uid.Id, p.gameObject.activeSelf);
+                SetObjectPosition(uid.Id, p.transform.position);
+
+                SetPossessableState(uid.Id, p.HasActivated);
+            }
+        }
+
+        foreach (var m in GameObject.FindObjectsOfType<MemoryFragment>(true))
+        {
+            if (m.TryGetComponent(out UniqueId uid))
+            {
+                SetActiveState(uid.Id, m.gameObject.activeSelf);
+                SetObjectPosition(uid.Id, m.transform.position);
+
+                SetMemoryFragmentScannable(uid.Id, m.IsScannable);
+            }
+        }
+
+        // 문 상태 저장
+        foreach (var door in GameObject.FindObjectsOfType<BaseDoor>(true))
+        {
+            if (door.TryGetComponent(out UniqueId uid))
+                SaveManager.SetDoorLocked(uid.Id, door.IsLocked);
+        }
+
+        // 플레이어 인벤토리 상태 저장
+        var inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
+        SnapshotPlayerInventory(inv);
+
+        // 빙의 대상 인벤토리 상태 저장
+        SnapshotAllPossessableInventories();
+
+        var cem = ChapterEndingManager.Instance;
+        if (cem != null)
+        {
+            Debug.Log($"[SAVE] ch1 clues now={cem.CurrentCh1ClueCount}");
+
+            // 최종단서 진행도 스냅샷
+            SetChapterProgress(1, cem.GetClueIds(1), cem.GetAllCollected(1));
+            SetChapterProgress(2, cem.GetClueIds(2), cem.GetAllCollected(2));
+
+            // 스캔된 기억 스냅샷
+            SetChapterScannedMemories(1, cem.GetScannedMemoryIds(1));
+            SetChapterScannedMemories(2, cem.GetScannedMemoryIds(2));
+            SetChapterScannedMemories(3, cem.GetScannedMemoryIds(3));
+        }
+
+       
+
+        if (autosave) SaveGame();
+    }
     public static void SnapshotAllPossessableInventories()
     {
         foreach (var have in GameObject.FindObjectsOfType<HaveItem>(true))
