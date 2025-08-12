@@ -66,6 +66,8 @@ public class MemoryFragment : BaseInteractable
         isScannable = false;
         canStore = true;
 
+        MemoryManager.Instance.TryCollect(data);
+
         if (TryGetComponent(out UniqueId uid))
             SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
 
@@ -80,7 +82,6 @@ public class MemoryFragment : BaseInteractable
 
         Debug.Log($"[MemoryFragment] 진행도 저장됨 : {data.memoryID} / {data.memoryTitle}");
 
-        MemoryManager.Instance.TryCollect(data);
 
         Sprite dropSprite = GetFragmentSpriteByType(data.type);
         if (fragmentDropPrefab == null || dropSprite == null) return;
@@ -241,7 +242,7 @@ public class MemoryFragment : BaseInteractable
 
     public virtual void AfterScan() { }
 
-    private int DetectChapterFromScene(string sceneName)
+    protected int DetectChapterFromScene(string sceneName)
     {
         if (string.IsNullOrEmpty(sceneName)) return 0;
         if (sceneName.Contains("Ch01")) return 1;
