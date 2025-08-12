@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class YameScan_correct : BaseInteractable
 {
@@ -12,6 +13,7 @@ public class YameScan_correct : BaseInteractable
     [SerializeField] private GameObject door; // 지하수로와 연결된 문
     [SerializeField] private GameObject shelf; // 문 막고 있는 책장
     [SerializeField] private GameObject clue_P; // 단서 P
+    [SerializeField] private List<ClueData> clueitems; 
     public bool clear_UnderGround = false;
     // [SerializeField] private GameObject e_key;
 
@@ -147,8 +149,14 @@ public class YameScan_correct : BaseInteractable
         clear_UnderGround = true;
         clue_P.SetActive(true);
         ChapterEndingManager.Instance.CollectCh2Clue("P");
+        ConsumeClue(clueitems);
         UIManager.Instance.PromptUI.ShowPrompt_2("으악...!!", "벽에 뭔가 나타났어...!");
         Debug.Log("지하수로와 연결된 문을 발견했습니다");
+    }
+
+    private void ConsumeClue(List<ClueData> clues)
+    {
+        UIManager.Instance.Inventory_PlayerUI.RemoveClue(clues.ToArray());
     }
 
     private void CancleScan(string reason)

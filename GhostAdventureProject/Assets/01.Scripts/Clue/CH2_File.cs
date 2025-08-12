@@ -53,7 +53,6 @@ public class CH2_File : MonoBehaviour
     private async void ResetCameraAsync()
     {
         await Task.Delay(1000); // 1초 대기
-        uimanager.InventoryExpandViewerUI.OnClueHidden -= ResetCameraAsync;
         UIManager.Instance.PromptUI.ShowPrompt("이건 힌트 같은데...", 2f);
         ZoomCamera.Priority = 5;
         SaveManager.MarkPuzzleSolved("금고");
