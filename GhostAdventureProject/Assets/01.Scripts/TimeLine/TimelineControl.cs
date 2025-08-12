@@ -17,7 +17,8 @@ public class TimelineControl : MonoBehaviour
     private float skipTimer = 0f; // S 키를 누른 시간을 측정하는 타이머
     private const float SKIP_DURATION = 3.0f; // 스킵에 필요한 시간 (3초)
     [SerializeField] private string prompt;
-    
+    private LoadSceneMode currentLoadMode = LoadSceneMode.Single;
+
     private MemoryScan memoryScan;
 
     private void Update()
@@ -38,7 +39,11 @@ public class TimelineControl : MonoBehaviour
             // 타이머가 3초를 넘으면 씬 닫기
             if (skipTimer >= SKIP_DURATION)
             {
-                CloseScene();
+                if (currentLoadMode == LoadSceneMode.Additive)
+                {
+                    CloseScene();
+                    //GoScene(nextSceneName);
+                }
             }
             ShowImage2Only();
         }
@@ -69,13 +74,20 @@ public class TimelineControl : MonoBehaviour
         {
             skip.fillAmount = 1f;
         }
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
     }
 
     private void Start()
     {
         flashingCoroutine = StartCoroutine(FlashImages());
-        memoryScan = GameManager.Instance.Player.GetComponent<MemoryScan>();
+        if(GameManager.Instance.Player != null)
+        {
+
+            memoryScan = GameManager.Instance.Player.GetComponent<MemoryScan>();
+        }
+
+
     }
 
     public void PauseTimeline()
@@ -137,5 +149,15 @@ public class TimelineControl : MonoBehaviour
 
         space1.enabled = false;
         space2.enabled = true;
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        currentLoadMode = mode; // 로드 모드 저장
     }
 }
