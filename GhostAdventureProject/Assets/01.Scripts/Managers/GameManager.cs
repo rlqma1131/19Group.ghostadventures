@@ -93,6 +93,13 @@ public class GameManager : Singleton<GameManager>
                 UIManager.Instance.PlayModeUI_OpenAll(); 
 
             TrySpawnPlayer();
+
+            // 현재 씬 이름과 플레이어 위치 저장
+            Vector3 playerPos = currentPlayer != null ? currentPlayer.transform.position : Vector3.zero;
+            SaveManager.SetSceneAndPosition(sceneName, playerPos);
+
+            // 바로 저장 실행
+            SaveManager.SaveGame();
         }
 
         if (sceneName == "StartScene")
@@ -114,7 +121,7 @@ public class GameManager : Singleton<GameManager>
 
         // 퍼즐 진척도 UI ( 씬에 맞게 로드 )
         UIManager.Instance.AutoSelectPuzzleStatusByScene();
-
+        
         Debug.Log($"씬 로드됨: {scene.name}");
 
         // 이어하기에 저장한 데이터 적용
