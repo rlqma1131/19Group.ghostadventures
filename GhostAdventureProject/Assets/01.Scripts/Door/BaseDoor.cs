@@ -20,7 +20,14 @@ public abstract class BaseDoor : BaseInteractable
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        UpdateDoorVisual();
+        UpdateDoorVisual(force: true);
+    }
+    
+    protected virtual void OnEnable()
+    {
+        UpdateDoorVisual(force: true);
+        // StartCoroutine(_LateRefresh()); // 혹시나 문제가 또 있다면 한프레임 뒤로 미뤄보기
+        // IEnumerator _LateRefresh(){ yield return null; UpdateDoorVisual(force:true); }
     }
     
     protected virtual void Update()
@@ -83,23 +90,22 @@ public abstract class BaseDoor : BaseInteractable
         Physics2D.IgnoreLayerCollision(pLayer, eLayer, false);
     }
 
-    protected void UpdateDoorVisual()
+    protected void UpdateDoorVisual(bool force = false)
     {
-        if(isLocked == previousLockedState)
-            return; // 상태변경없으면 무시
-        
+        if (!force && isLocked == previousLockedState)
+            return; // 상태변경없으면 무시 (기본 최적화)
+
         previousLockedState = isLocked;
-        
-        if(closedObject != null)
-            closedObject.SetActive(isLocked);
-        if(OpenObject != null)
-            OpenObject.SetActive(!isLocked);
+
+        if (closedObject != null) closedObject.SetActive(isLocked);
+        if (OpenObject   != null) OpenObject.SetActive(!isLocked);
     }
+
 
     public void SetLockedFromSave(bool value)
     {
         isLocked = value;
-        UpdateDoorVisual();
+        UpdateDoorVisual(force: true);
     }
 
     protected void MarkDoorStateChanged()

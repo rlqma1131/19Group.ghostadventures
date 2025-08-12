@@ -82,7 +82,7 @@ public class LockedDoor : BaseDoor
         {
             isLocked = true;
             Debug.Log($"{gameObject.name} 문이 잠겼습니다!");
-            UpdateDoorVisual();
+            UpdateDoorVisual(force: true);
             MarkDoorStateChanged();
         }
 
@@ -91,14 +91,14 @@ public class LockedDoor : BaseDoor
         {
             pairedDoor.isLocked = true;
             Debug.Log($"{pairedDoor.gameObject.name} 페어 문이 잠겼습니다!");
-            pairedDoor.UpdateDoorVisual();
+            pairedDoor.UpdateDoorVisual(force: true);
             pairedDoor.MarkDoorStateChanged();
         }
     }
 
     private void OnDoorUnlocked()
     {
-        UpdateDoorVisual();
+        UpdateDoorVisual(force: true);
     }
 
     private void PlaySound(AudioClip clip)
