@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class Ch3_MemoryNegative_02_Paper : MemoryFragment
 {
-    private bool colected = false;
-    public bool Colected => colected;
-
     public void ActivatePaper()
     {
         isScannable = true;
@@ -17,7 +14,5 @@ public class Ch3_MemoryNegative_02_Paper : MemoryFragment
     public override void Scanning()
     {
         base.Scanning();
-        colected = true;
-        Debug.Log("종이 기억 수집 됨");
     }
 }
