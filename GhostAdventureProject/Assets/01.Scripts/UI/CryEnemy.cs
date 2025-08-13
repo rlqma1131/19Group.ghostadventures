@@ -175,8 +175,8 @@ public class CryEnemy : MonoBehaviour
             currentState = CryEnemyState.Chase;
         }
         else
-            anim.SetBool("ChangeState", false);
             anim.SetBool("BackState", true);
+            anim.SetBool("ChangeState", false);
     }
 
     public void OnBackeStateAnimationEnd()
