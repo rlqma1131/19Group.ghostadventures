@@ -14,6 +14,7 @@ public class PlayerInteractSystem : MonoBehaviour
     public GameObject CurrentClosest => currentClosest;// 디버깅용
     
     private HashSet<GameObject> nearbyInteractables = new();
+
     //오브젝트 겹치는 Collider2D 모음(같은 오브젝트의 다중 콜라이더/겹침 대응)
     private readonly Dictionary<GameObject, HashSet<Collider2D>> objectToCols = new();
 
