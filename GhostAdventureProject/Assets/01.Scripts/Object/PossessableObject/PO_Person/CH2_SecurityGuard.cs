@@ -113,7 +113,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         }
 
         targetPerson.SetCondition(targetPerson.currentCondition);
-
+        
         if (!isPossessed)
             return;
 
@@ -321,14 +321,14 @@ public class CH2_SecurityGuard : MoveBasePossessable
             hasActivated = false;
             MarkActivatedChanged();
 
-            targetPerson.currentCondition = PersonCondition.Unknown;
+            targetPerson.currentCondition = PersonCondition.Vital;
         }
     }
     private void OnTriggerStay2D(Collider2D other)
     {
         if(other.CompareTag("In"))
         {
-            targetPerson.currentCondition = PersonCondition.Unknown;
+            targetPerson.currentCondition = PersonCondition.Vital;
         }
     }
     
@@ -388,4 +388,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
     {
         UIManager.Instance.PromptUI.ShowPrompt("잃어버린 게 뭘까...? 사람일까, 기억일까.", 2f);
     }
+
+    
 }
