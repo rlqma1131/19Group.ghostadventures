@@ -91,7 +91,9 @@ public class Inventory_PossessableObject : MonoBehaviour
     {
         Clear();
         gameObject.SetActive(false);
-        InventoryInputFocus.Current = InvSide.Player; 
+        InventoryInputFocus.Current = InvSide.Player;
+        Inventory_Player.FocusIsPlayer = true;
+        inventory_Player.RefreshUI();
     }
 
     // 슬롯을 삭제. 슬롯리스트 안의 데이터도 삭제.
