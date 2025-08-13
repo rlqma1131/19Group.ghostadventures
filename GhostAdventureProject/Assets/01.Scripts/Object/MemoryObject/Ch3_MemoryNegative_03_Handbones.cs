@@ -14,8 +14,8 @@ public class Ch3_MemoryNegative_03_Handbones : MemoryFragment
 
     public override void AfterScan()
     {
-        colected = true;
-
         base.AfterScan();
+        colected = true;
+        Debug.Log("손모양 뼈 기억 수집 됨");
     }
 }
