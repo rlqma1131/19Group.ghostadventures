@@ -12,9 +12,9 @@ public class Ch3_MemoryNegative_03_Handbones : MemoryFragment
         isScannable = true;
     }
 
-    public override void AfterScan()
+    public override void Scanning()
     {
-        base.AfterScan();
+        base.Scanning();
         colected = true;
         Debug.Log("손모양 뼈 기억 수집 됨");
     }

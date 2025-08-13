@@ -14,9 +14,9 @@ public class Ch3_MemoryNegative_02_Paper : MemoryFragment
             SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
     }
 
-    public override void AfterScan()
+    public override void Scanning()
     {
-        base.AfterScan();
+        base.Scanning();
         colected = true;
         Debug.Log("종이 기억 수집 됨");
     }

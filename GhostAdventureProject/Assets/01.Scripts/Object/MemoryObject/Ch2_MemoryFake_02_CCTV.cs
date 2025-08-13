@@ -11,10 +11,10 @@ public class Ch2_MemoryFake_02_CCTV : MemoryFragment
         isScannable = true;
     }
 
-    public override void AfterScan()
+    public override void Scanning()
     {
         cctvMonitor.ActivateCCTVMonitor();
 
-        base.AfterScan();
+        base.Scanning();
     }
 }

@@ -65,6 +65,7 @@ public class MemoryFragment : BaseInteractable
         if (!isScannable) return;
         isScannable = false;
         canStore = true;
+        Scanning();
 
         MemoryManager.Instance.TryCollect(data);
 
@@ -240,6 +241,7 @@ public class MemoryFragment : BaseInteractable
         }
     }
 
+    public virtual void Scanning() { }
     public virtual void AfterScan() { }
 
     protected int DetectChapterFromScene(string sceneName)

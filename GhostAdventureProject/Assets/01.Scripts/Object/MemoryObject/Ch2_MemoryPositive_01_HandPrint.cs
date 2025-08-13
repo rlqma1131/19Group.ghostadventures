@@ -13,10 +13,10 @@ public class Ch2_MemoryPositive_01_HandPrint : MemoryFragment
             SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
     }
 
-    public override void AfterScan() 
+    public override void Scanning() 
     {
         exit.ActivateClearDoor();
 
-        base.AfterScan();
+        base.Scanning();
     }
 }

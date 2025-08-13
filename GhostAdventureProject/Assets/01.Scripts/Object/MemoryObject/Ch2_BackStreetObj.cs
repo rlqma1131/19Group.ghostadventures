@@ -21,8 +21,8 @@ public class Ch2_BackStreetObj : MonoBehaviour
 
     public void OnFinalClueActivated()
     {
-        EnemyAI.PauseAllEnemies();
         Sequence seq = DOTween.Sequence();
+        EnemyAI.PauseAllEnemies();
 
         // 1. 어두운 물체 빠르게 나타남
         shadowObject.color = new Color(1, 1, 1, 0);

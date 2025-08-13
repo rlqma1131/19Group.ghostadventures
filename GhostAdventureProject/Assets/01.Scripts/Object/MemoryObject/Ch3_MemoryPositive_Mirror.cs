@@ -18,10 +18,10 @@ public class Ch3_MemoryPositive_Mirror : MemoryFragment
             SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
     }
 
-    public override void AfterScan()
+    public override void Scanning()
     {
         scanner.ActiveScanner();
 
-        base.AfterScan();
+        base.Scanning();
     }
 }
