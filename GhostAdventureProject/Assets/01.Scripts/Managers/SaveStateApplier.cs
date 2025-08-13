@@ -32,12 +32,15 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (SaveManager.CurrentData != null)
+        {
             StartCoroutine(ApplyNextFrame()); // 다음 프레임에 적용
+        }
     }
 
     private IEnumerator ApplyNextFrame()
     {
-        yield return null; // 모든 Start() 이후
+        // 한 프레임 이후 시작 해 모든 Start() 이후
+        yield return null;
         ApplySavedStatesInScene();
     }
 
@@ -49,19 +52,21 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
         // BasePossessable 위치 적용
         foreach (var p in FindObjectsOfType<BasePossessable>(true))
         {
-            if (p.TryGetComponent(out UniqueId uid) &&
-                SaveManager.TryGetObjectPosition(uid.Id, out var pos))
+            if (p.TryGetComponent(out UniqueId uid))
             {
-                if (p.TryGetComponent<Rigidbody2D>(out var rb))
-                    rb.position = pos;
-                else
-                    p.transform.position = pos;
-            }
+                if (SaveManager.TryGetObjectPosition(uid.Id, out var pos))
+                {
+                    if (p.TryGetComponent<Rigidbody2D>(out var rb))
+                        rb.position = pos;
+                    else
+                        p.transform.position = pos;
+                }
 
-            if (SaveManager.TryGetPossessableState(uid.Id, out var has))
-            {
-                p.ApplyHasActivatedFromSave(has);
-                // 만약 공개 세터가 있으면: p.HasActivated = has;
+                if (SaveManager.TryGetPossessableState(uid.Id, out var has))
+                {
+                    Debug.Log($"SaveStateApplier : {uid}, 위치 : {has}");
+                    p.ApplyHasActivatedFromSave(has);
+                }
             }
         }
 
