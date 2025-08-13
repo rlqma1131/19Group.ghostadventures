@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class Ch2_ClearDoor : BaseInteractable
 {
     private bool playerNearby = false;
-   [SerializeField] private bool canOpenDoor = false;
+    [SerializeField] private Ch2_MemoryPositive_01_HandPrint handPrint;
 
     private void Update()
     {
@@ -14,7 +14,7 @@ public class Ch2_ClearDoor : BaseInteractable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (!canOpenDoor)
+            if (!SaveManager.HasCollectedMemoryID(handPrint.data.memoryID))
             {
                 UIManager.Instance.PromptUI.ShowPrompt("아직은 나갈 수 없어", 2f);
                 return;
@@ -48,10 +48,5 @@ public class Ch2_ClearDoor : BaseInteractable
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
             playerNearby = false;
         }
-    }
-
-    public void ActivateClearDoor()
-    {
-        canOpenDoor = true;
     }
 }
