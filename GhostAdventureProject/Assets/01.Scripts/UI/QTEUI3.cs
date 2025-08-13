@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -155,7 +155,7 @@ public class QTEUI3 : MonoBehaviour
         while (zones.Count < count && attempts++ < 500)
         {
             float size = UnityEngine.Random.Range(minSize, maxSize);
-            float start = UnityEngine.Random.Range(0f, 360f);
+            float start = UnityEngine.Random.Range(90f, 340f); // 성공 지점 스폰 범위
             float end = (start + size) % 360f;
 
             var candidate = new QTERingZone { startAngle = start, endAngle = end };
