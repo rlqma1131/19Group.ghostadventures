@@ -115,7 +115,7 @@ public class Prompt : MonoBehaviour
     [SerializeField] private GameObject PromptPrefab;         // TMP_Text + CanvasGroup 포함
 
     [Header("Anim Settings")]
-    [SerializeField] private float spawnScale = 1.25f;        // 처음 크게
+    [SerializeField] private float spawnScale = 0.95f;        // 처음 크게
     [SerializeField] private float settleScale = 1.0f;        // 자리잡는 기본 크기
     [SerializeField] private float shiftUpY = 48f;            // 기존 프롬프트가 위로 밀리는 거리
     [SerializeField] private float shrinkFactor = 0.85f;      // 기존 프롬프트 스케일 축소 비율
@@ -193,8 +193,8 @@ public class Prompt : MonoBehaviour
                 newItem.life?.Kill();
                 newItem.life = DOTween.Sequence()
                     .AppendInterval(delaytime)               // 여기서 '대기'
-                    .Append(cg.DOFade(0f, 0.5f))            // 사라지기
-                    .Join(rt.DOAnchorPosY(-12f, 0.2f))      // 살짝 내려가며
+                    .Append(cg.DOFade(0f, 1f))            // 사라지기
+                    // .Join(rt.DOAnchorPosY(-12f, 0.2f))      // 살짝 내려가며
                     .OnComplete(() => {
                         items.Remove(newItem);
                         if (newItem.rt) Destroy(newItem.rt.gameObject);
@@ -203,7 +203,7 @@ public class Prompt : MonoBehaviour
         // .SetUpdate(true); // 패널 비활성/일시정지 중에도 카운트 하려면 활성화        });
 
         // 5) 너무 많아지면 오래된 것부터 정리
-        // CompactIfNeeded();
+        CompactIfNeeded();
     }
 
     private void CompactIfNeeded()

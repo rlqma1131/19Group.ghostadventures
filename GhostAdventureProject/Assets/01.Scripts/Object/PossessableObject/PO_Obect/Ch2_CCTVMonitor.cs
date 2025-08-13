@@ -13,6 +13,7 @@ public class Ch2_CCTVMonitor : BasePossessable
 
     [Header("가짜 기억 02")]
     [SerializeField] private GameObject memoryH;
+    [SerializeField] private Ch2_MemoryFake_02_CCTV cctv;
     [SerializeField] private GameObject clueH;
     [SerializeField] private AudioClip reveal;
 
@@ -164,6 +165,7 @@ public class Ch2_CCTVMonitor : BasePossessable
         yield return new WaitForSeconds(4f);
 
         memoryH.SetActive(true);
+        cctv.ActivateCCTV();
         clueH.SetActive(true);
         SoundManager.Instance.PlaySFX(reveal);
         ChapterEndingManager.Instance.CollectCh2Clue("H");
