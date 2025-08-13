@@ -113,11 +113,13 @@ public class CryEnemy : MonoBehaviour
     // 울보가 있는 방과 플레이어가 있는 방이 같으면 울기 시작
     public void StartCrying()
     {
+        door.UnlockPair();
         isCrying = true;
         clearedBoxes.Clear();
         soundManager.PlayLoopingSFX(cry_small);
         cryingtrigger.gameObject.SetActive(true);
         cryingtrigger.SetActive(true);
+        
 
         // 오르골들에게 자신을 연결
         foreach (var box in myMusicBoxes)
@@ -173,6 +175,7 @@ public class CryEnemy : MonoBehaviour
             currentState = CryEnemyState.Chase;
         }
         else
+            anim.SetBool("ChangeState", false);
             anim.SetBool("BackState", true);
     }
 
