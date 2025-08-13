@@ -118,6 +118,7 @@ public class Ch2_DrawingClue : MonoBehaviour
     {
         // 1) 플레이어 잠금 + VCam Follow 끊기
         PossessionSystem.Instance.CanMove = false;
+        EnemyAI.PauseAllEnemies();
         var oldFollow = vcam.Follow;
         vcam.Follow = null;
 
@@ -148,6 +149,7 @@ public class Ch2_DrawingClue : MonoBehaviour
                {
                    vcam.Follow = oldFollow;
                    PossessionSystem.Instance.CanMove = true;
+                   EnemyAI.ResumeAllEnemies();
                });
     }
 
