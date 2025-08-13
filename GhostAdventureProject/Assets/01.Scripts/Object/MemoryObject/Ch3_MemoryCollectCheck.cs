@@ -16,6 +16,7 @@ public class Ch3_MemoryCollectCheck : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            Debug.Log($"{paper.Colected} & {handbones.Colected}");
             if (allMemoryCollected())
             {
                 gameObject.SetActive(false);

@@ -6,7 +6,6 @@ public class Ch1_MemoryFake_03_Baseball : MemoryFragment
 
     void Start()
     {
-        isScannable = true;
         alphabet_A.SetActive(false);
     }
 
@@ -18,6 +17,11 @@ public class Ch1_MemoryFake_03_Baseball : MemoryFragment
         UIManager.Instance.PromptUI.ShowPrompt("A");
 
         base.AfterScan();
+    }
+
+    public void ActivateBaseball()
+    {
+        isScannable = true;
     }
 
     protected override void PlusAction()

@@ -318,6 +318,27 @@ public static class SaveManager
         return true;
     }
 
+    /// UniqueID를 갖고 있는 오브젝트 활성화 상태 스냅샷
+    private static void SnapshotAllUniqueIdActivesAndPositions()
+    {
+        // true: 비활성 포함, 모든 로드된 씬 대상
+        var uids = GameObject.FindObjectsOfType<UniqueId>(true);
+
+        foreach (var uid in uids)
+        {
+            var go = uid.gameObject;
+
+            // DontDestroyOnLoad에 있는 전역 오브젝트는 스킵 (옵션)
+            var scn = go.scene;
+            if (!scn.IsValid() || !scn.isLoaded || scn.name == "DontDestroyOnLoad")
+                continue;
+
+            // 저장
+            SetActiveState(uid.Id, go.activeSelf);
+            SetObjectPosition(uid.Id, go.transform.position);
+        }
+    }
+
     // ===== 플레이어 인벤토리 상태 적용 =====
     public static void ApplyPlayerInventoryFromSave(Inventory_Player inv)
     {
@@ -414,10 +435,8 @@ public static class SaveManager
 
     public static SaveData LoadGame()
     {
-        Debug.Log($"[SaveManager] Try load from: {SavePath}");
         if (!File.Exists(SavePath))
         {
-            Debug.LogWarning("[SaveManager] No save file.");
             currentData = null;
             return null;
         }
@@ -435,7 +454,6 @@ public static class SaveManager
         }
         catch (System.Exception ex)
         {
-            Debug.LogError($"[SaveManager] Load FAILED at {SavePath}\n{ex}");
             currentData = new SaveData();
             EnsureData();
         }
@@ -521,6 +539,7 @@ public static class SaveManager
     {
         AddCollectedMemoryID(memoryID);
         AddScannedMemoryTitle(title);
+        SnapshotAllUniqueIdActivesAndPositions();
 
         // 오브젝트 SetAcitve 상태, 위치 저장
         foreach (var p in GameObject.FindObjectsOfType<BasePossessable>(true))
@@ -585,6 +604,7 @@ public static class SaveManager
     {
         AddCollectedMemoryID(memoryID);
         AddScannedMemoryTitle(title);
+        SnapshotAllUniqueIdActivesAndPositions();
 
         // 오브젝트 SetAcitve 상태, 위치 저장
         foreach (var p in GameObject.FindObjectsOfType<BasePossessable>(true))

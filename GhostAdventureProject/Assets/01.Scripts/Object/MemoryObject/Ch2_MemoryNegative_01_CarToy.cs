@@ -8,11 +8,10 @@ public class Ch2_MemoryNegative_01_CarToy : MemoryFragment
 
     void Start()
     {
-        isScannable = true;
         anim = GetComponentInChildren<Animator>();
     }
 
-    public void ActivateCake()
+    public void ActivateCar()
     {
         isScannable = true;
         if (TryGetComponent(out UniqueId uid))

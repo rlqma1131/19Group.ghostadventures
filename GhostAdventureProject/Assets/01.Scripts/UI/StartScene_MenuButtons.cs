@@ -100,8 +100,19 @@ public class StartScene_MenuButtons : MonoBehaviour
 
     private void OnConfirmNewGame()
     {
-        // 저장 데이터 삭제 후 새 게임 시작
+        // 저장 데이터 삭제
         SaveManager.DeleteSave();
+
+        // 진행도 비우기
+        ChapterEndingManager.Instance?.ResetAllAndNotify();
+
+        // 0.1초 뒤에 UI 닫고 새 게임 시작
+        StartCoroutine(DelayStartNewGame());
+    }
+
+    private IEnumerator DelayStartNewGame()
+    {
+        yield return new WaitForSeconds(0.1f);
         CloseNewGameConfirm();
         StartNewGameImmediate();
     }
