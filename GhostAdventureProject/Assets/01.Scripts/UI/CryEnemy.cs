@@ -117,7 +117,7 @@ public class CryEnemy : MonoBehaviour
         clear = true;
 
         soundManager.StopLoopingSFX();              // 기본울음 멈춤
-        soundManager.ChangeBGM(smile);                // 웃음소리 플레이
+        soundManager.PlayLoopingSFX(smile);                // 웃음소리 플레이
         soundManager.PlayLoopingSFX(successQTE_Sound);     // 오르골 소리 플레이
         playSound_successQTE = true;                // 오르골 소리 플레이 상태임
 
