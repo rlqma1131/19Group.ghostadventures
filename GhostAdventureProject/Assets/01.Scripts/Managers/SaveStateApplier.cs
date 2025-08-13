@@ -41,7 +41,7 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
     private IEnumerator ApplyNextFrame()
     {
         // 한 프레임 이후 시작 해 모든 Start() 이후
-        yield return null;
+        yield return new WaitForSeconds(0.2f);
         ApplySavedStatesInScene();
     }
 
