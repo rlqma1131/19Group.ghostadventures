@@ -31,6 +31,8 @@ public class CryEnemy : MonoBehaviour
 
     [SerializeField] string cryRoomName; // 울보가 있는 방의 이름
     private string roomName; // 플레이어가 있는 방의 이름
+    [SerializeField] LockedDoor door; // 연결된 문
+    
 
 
     private bool isCrying = false; // 울고 있는지 확인용
@@ -148,6 +150,7 @@ public class CryEnemy : MonoBehaviour
         soundManager.PlaySFX(cry_big);
         StartCoroutine(WaitAndChangeState(cry_big.length));
         attackMode = true;
+        door.LockPair();
     }
     private IEnumerator WaitAndChangeState(float delay)
     {
@@ -251,7 +254,7 @@ public class CryEnemy : MonoBehaviour
     public void OnMusicBoxFail()
     {
         failCount++;
-        if (failCount >= 3)
+        if (failCount >= 5)
         {
             StartBigCrying();
         }

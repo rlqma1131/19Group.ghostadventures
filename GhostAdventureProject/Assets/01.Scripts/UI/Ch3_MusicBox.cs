@@ -67,7 +67,7 @@ public class Ch3_MusicBox : BaseInteractable
             return;
         }
 
-        if(linkedEnemy.failCount >= 3)
+        if(linkedEnemy.failCount >= 5)
         {
             StopQTE();
             return;
@@ -83,7 +83,7 @@ public class Ch3_MusicBox : BaseInteractable
             if (IsDirectionPressed(dir))  SuccessArrow();
             else                          FailArrow();
 
-            if (linkedEnemy.failCount >= 3) { StopQTE(); return; }
+            if (linkedEnemy.failCount >= 5) { StopQTE(); return; }
 
             if (currentIndex >= targetSequence.Count)
             {
@@ -118,7 +118,7 @@ public class Ch3_MusicBox : BaseInteractable
         arrowImages[currentIndex].color = Color.red;
         currentIndex++;
         linkedEnemy.OnMusicBoxFail();
-        text.text = (linkedEnemy.failCount + " / 3").ToString();
+        text.text = (linkedEnemy.failCount + " / 5").ToString();
         UpdateHighlight();
     }
 
@@ -138,7 +138,7 @@ public class Ch3_MusicBox : BaseInteractable
         if (!isRunning) return;   // 중복 방지
         isRunning = false;
         linkedEnemy.OnMusicBoxFail();
-        text.text = (linkedEnemy.failCount + " / 3").ToString();
+        text.text = (linkedEnemy.failCount + " / 5").ToString();
         StopQTE();
         // linkedEnemy.OnMusicBoxFail();
     }
@@ -222,7 +222,7 @@ public class Ch3_MusicBox : BaseInteractable
     
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && linkedEnemy.failCount < 3 && !isQTESuccess)
+        if (collision.CompareTag("Player") && linkedEnemy.failCount < 5 && !isQTESuccess)
         {
             //SetHighlight(true);
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
@@ -231,7 +231,7 @@ public class Ch3_MusicBox : BaseInteractable
     }
     void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && linkedEnemy.failCount < 3 && isQTESuccess)
+        if(collision.CompareTag("Player") && linkedEnemy.failCount < 5 && isQTESuccess)
         {
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
         }
