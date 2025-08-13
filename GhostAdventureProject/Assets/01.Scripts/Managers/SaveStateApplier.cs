@@ -31,6 +31,7 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (mode == LoadSceneMode.Additive) return; // 컷씬이면 적용 안함
         if (SaveManager.CurrentData != null)
         {
             StartCoroutine(ApplyNextFrame()); // 다음 프레임에 적용
@@ -46,6 +47,7 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
 
     private void ApplySavedStatesInScene()
     {
+        Debug.Log($"SaveStateApplier : CurrentData가 존재하느냐? {SaveManager.CurrentData}");
         var data = SaveManager.CurrentData;
         if (data == null) return;
 
@@ -135,36 +137,6 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
         // 플레이어 인벤토리 적용
         var inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         SaveManager.ApplyPlayerInventoryFromSave(inv);
-
-        // 빙의 대상 인벤토리 적용
-        //foreach (var have in GameObject.FindObjectsOfType<HaveItem>(true))
-        //{
-        //    if (!have.TryGetComponent(out UniqueId uid)) continue;
-        //    if (!SaveManager.TryGetPossessableInventory(uid.Id, out var entries)) continue;
-
-        //    // 1) 기존 슬롯 정리
-        //    have.inventorySlots.RemoveAll(s => s == null || s.item == null || s.quantity <= 0);
-
-        //    // 2) 엔트리 기준으로 재구성
-        //    var newList = new List<InventorySlot_PossessableObject>();
-        //    foreach (var e in entries)
-        //    {
-        //        var item = Resources.Load<ItemData>("ItemData/" + e.itemKey);
-        //        if (item == null)
-        //        {
-        //            Debug.LogWarning($"[Restore] ItemData not found: {e.itemKey}");
-        //            continue;
-        //        }
-
-        //        var slotGo = new GameObject($"Slot_{e.itemKey}");
-        //        slotGo.transform.SetParent(have.transform, false);
-        //        var slot = slotGo.AddComponent<InventorySlot_PossessableObject>();
-        //        slot.item = item;
-        //        slot.quantity = e.quantity;
-        //        newList.Add(slot);
-        //    }
-        //    have.inventorySlots = newList;
-        //}
 
         // === 진행도 복원 ===
         // 1) MemoryManager 먼저 (ID -> MemoryData 매핑 확보)

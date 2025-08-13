@@ -449,6 +449,7 @@ public static class SaveManager
     {
         if (File.Exists(SavePath)) File.Delete(SavePath);
         currentData = null; // 조회 계열은 이후 false/기본값을 반환
+        Debug.Log($"SaveManager : {SavePath}를 지웠어요");
     }
 
     // 퍼즐 풀었을 때 기록

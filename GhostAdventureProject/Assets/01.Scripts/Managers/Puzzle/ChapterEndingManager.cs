@@ -131,6 +131,24 @@ public class ChapterEndingManager : Singleton<ChapterEndingManager>
         ProgressChanged?.Invoke();
     }
 
+    public void ResetAllAndNotify()
+    {
+        // 진행도 컨테이너 전부 초기화
+        collectedAllCh1Clue.Clear();
+        collectedAllCh2Clue.Clear();
+
+        scannedCh1Memories.Clear();
+        scannedCh2Memories.Clear();
+        scannedCh3Memories.Clear();
+
+        allCh1CluesCollected = false;
+
+        // 저장에서 복구 가드 해제 (필요 시 다시 ApplyFromSave 가능)
+        appliedFromSaveOnce = false;
+
+        // UI 강제 갱신
+        ProgressChanged?.Invoke();
+    }
 
     //public void ApplyFromSave(SaveData data, MemoryManager mm = null)
     //{
