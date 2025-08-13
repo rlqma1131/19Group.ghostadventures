@@ -35,6 +35,22 @@ public class QTEUI2 : MonoBehaviour
         qteUI.SetActive(false);
         isdead = false;
     }
+
+    private void Update()
+    {
+        if (currentTime >= 2f)
+        {
+            timeText.color = Color.red; // 시간 초과시 빨간색으로 표시
+        }
+        else if (currentTime >= 1f)
+        {
+            timeText.color = Color.yellow; // 절반 시간은 노란색으로 표시
+        }
+        else
+        {
+            timeText.color = Color.white; // 정상 시간은 흰색으로 표시
+        }
+    }
     public void StartQTE()
     {
         if (isRunning) return;
@@ -93,6 +109,8 @@ public class QTEUI2 : MonoBehaviour
             isSuccess = true;
 
             SoundManager.Instance.PlaySFX(escape);
+
+            UIManager.Instance.PromptUI.ShowPrompt("다음에 잡히면 죽을거야... 잘 피해다니자", 2f);
         }
         
         // 탈출 실패시
