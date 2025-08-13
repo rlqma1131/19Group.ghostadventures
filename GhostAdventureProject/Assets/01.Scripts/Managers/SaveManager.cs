@@ -333,6 +333,8 @@ public static class SaveManager
             if (!scn.IsValid() || !scn.isLoaded || scn.name == "DontDestroyOnLoad")
                 continue;
 
+            Debug.Log($"[SaveManager] 오브젝트 : {uid.Id}, 활성화 상태 : {go.activeSelf}");
+
             // 저장
             SetActiveState(uid.Id, go.activeSelf);
             SetObjectPosition(uid.Id, go.transform.position);

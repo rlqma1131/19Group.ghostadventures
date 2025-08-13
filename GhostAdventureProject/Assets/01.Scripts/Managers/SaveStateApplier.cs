@@ -41,70 +41,49 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
     private IEnumerator ApplyNextFrame()
     {
         // 한 프레임 이후 시작 해 모든 Start() 이후
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSecondsRealtime(0.2f);
         ApplySavedStatesInScene();
     }
 
     private void ApplySavedStatesInScene()
     {
-        Debug.Log($"SaveStateApplier : CurrentData가 존재하느냐? {SaveManager.CurrentData}");
         var data = SaveManager.CurrentData;
         if (data == null) return;
 
-        // BasePossessable 위치 적용
-        foreach (var p in FindObjectsOfType<BasePossessable>(true))
+        // === PASS 1: 위치 복원 (모든 UniqueId) ===
+        var allUids = FindObjectsOfType<UniqueId>(true);
+        foreach (var uid in allUids)
         {
-            if (p.TryGetComponent(out UniqueId uid))
+            var go = uid.gameObject;
+            if (SaveManager.TryGetObjectPosition(uid.Id, out var pos))
             {
-                if (SaveManager.TryGetObjectPosition(uid.Id, out var pos))
-                {
-                    if (p.TryGetComponent<Rigidbody2D>(out var rb))
-                        rb.position = pos;
-                    else
-                        p.transform.position = pos;
-                }
-
-                if (SaveManager.TryGetPossessableState(uid.Id, out var has))
-                {
-                    Debug.Log($"SaveStateApplier : {uid}, 위치 : {has}");
-                    p.ApplyHasActivatedFromSave(has);
-                }
+                if (go.TryGetComponent<Rigidbody2D>(out var rb)) rb.position = pos;
+                else go.transform.position = pos;
             }
         }
 
-        // MemoryFragment 스캔 가능/불가 적용
+        // === PASS 2: 타입별 세부 상태 복원 ===
+        foreach (var p in FindObjectsOfType<BasePossessable>(true))
+        {
+            if (!p.TryGetComponent(out UniqueId uid)) continue;
+            if (SaveManager.TryGetPossessableState(uid.Id, out var has))
+                p.ApplyHasActivatedFromSave(has);
+        }
+
         foreach (var m in FindObjectsOfType<MemoryFragment>(true))
         {
             if (!m.TryGetComponent(out UniqueId uid)) continue;
 
-            // 1) 저장에 명시적으로 있으면 그 값 사용
             if (SaveManager.TryGetMemoryFragmentScannable(uid.Id, out bool scannable))
             {
                 m.ApplyFromSave(scannable);
-                continue;
             }
-            // 2) 이미 수집된 MemoryData면 스캔 불가
-            if (SaveManager.HasCollectedMemoryID(m.data.memoryID))
+            else if (SaveManager.HasCollectedMemoryID(m.data.memoryID))
             {
-                m.ApplyFromSave(false);
-            }
-            // 3) 그 외엔 인스펙터 기본값 유지
-        }
-
-        // MemoryFragment 위치 적용
-        foreach (var m in FindObjectsOfType<MemoryFragment>(true))
-        {
-            if (m.TryGetComponent(out UniqueId uid) &&
-                SaveManager.TryGetObjectPosition(uid.Id, out var pos))
-            {
-                if (m.TryGetComponent<Rigidbody2D>(out var rb))
-                    rb.position = pos;
-                else
-                    m.transform.position = pos;
+                m.ApplyFromSave(false); // 이미 수집된 건 스캔 불가
             }
         }
 
-        // 문 잠금 상태 적용
         foreach (var door in FindObjectsOfType<BaseDoor>(true))
         {
             if (door.TryGetComponent(out UniqueId uid) &&
@@ -114,35 +93,34 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
             }
         }
 
-        // BasePossessable 활성/비활성 적용
-        foreach (var p in FindObjectsOfType<BasePossessable>(true))
+        // === PASS 3: 활성/비활성 복원 (모든 UniqueId, 부모 -> 자식) ===
+        var uidList = new List<UniqueId>(allUids);
+        uidList.Sort((a, b) => GetDepth(a.transform).CompareTo(GetDepth(b.transform))); // 부모 먼저
+
+        int savedActiveCount = SaveManager.CurrentData?.activeObjectStates?.Count ?? 0;
+        int applied = 0;
+        foreach (var uid in uidList)
         {
-            if (p.TryGetComponent(out UniqueId uid) &&
-                SaveManager.TryGetActiveState(uid.Id, out bool activeGO))
+            if (SaveManager.TryGetActiveState(uid.Id, out bool activeGO))
             {
-                p.gameObject.SetActive(activeGO);
+                uid.gameObject.SetActive(activeGO);
+                applied++;
             }
         }
+        Debug.Log($"[SaveStateApplier] Active states applied: {applied}/{savedActiveCount}");
 
-        // MemoryFragment 활성/비활성 적용
-        foreach (var m in FindObjectsOfType<MemoryFragment>(true))
-        {
-            if (m.TryGetComponent(out UniqueId uid) &&
-                SaveManager.TryGetActiveState(uid.Id, out bool activeGO))
-            {
-                m.gameObject.SetActive(activeGO);
-            }
-        }
-
-        // 플레이어 인벤토리 적용
+        // === 인벤토리/진행도 ===
         var inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         SaveManager.ApplyPlayerInventoryFromSave(inv);
-
-        // === 진행도 복원 ===
-        // 1) MemoryManager 먼저 (ID -> MemoryData 매핑 확보)
         MemoryManager.Instance?.WarmStartFromSave();
-
-        // 2) CEM에 저장값 주입 → Notify()로 UI(PuzzleStatus) 자동 갱신
         ChapterEndingManager.Instance?.ApplyFromSave();
+
+        // 로컬 함수: 트랜스폼 깊이(루트=0)
+        static int GetDepth(Transform t)
+        {
+            int d = 0;
+            while (t.parent != null) { d++; t = t.parent; }
+            return d;
+        }
     }
 }
