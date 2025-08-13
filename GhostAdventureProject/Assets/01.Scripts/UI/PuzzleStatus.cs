@@ -9,6 +9,7 @@ public class PuzzleStatus : MonoBehaviour
 
     [SerializeField] private Chapter currentChapter;
     [SerializeField] private TextMeshProUGUI clue;
+    [SerializeField] private TextMeshProUGUI id;
     [SerializeField] private TextMeshProUGUI scannedMemory;
 
     [SerializeField] private int maxCh1Clues = 4, maxCh1Memories = 4;
@@ -35,12 +36,15 @@ public class PuzzleStatus : MonoBehaviour
         switch (currentChapter)
         {
             case Chapter.Chapter1:
+                var ordered = chapterEndingManager.GetClueIdsOrdered(1);
                 if (clue) clue.text = $"• 최종 단서 {chapterEndingManager.CurrentCh1ClueCount} / {maxCh1Clues}";
+                if (clue) id.text = string.Join(", ", chapterEndingManager.GetClueIdsOrdered(1));
                 if (scannedMemory) scannedMemory.text = $"• 기억 수집 {chapterEndingManager.CurrentCh1MemoryCount} / {maxCh1Memories}";
                 break;
 
             case Chapter.Chapter2:
                 if (clue) clue.text = $"• 최종 단서 {chapterEndingManager.CurrentCh2ClueCount} / {maxCh2Clues}";
+                if (clue) id.text = string.Join(", ", chapterEndingManager.GetClueIdsOrdered(2));
                 if (scannedMemory) scannedMemory.text = $"• 기억 수집 {chapterEndingManager.CurrentCh2MemoryCount} / {maxCh2Memories}";
                 break;
 

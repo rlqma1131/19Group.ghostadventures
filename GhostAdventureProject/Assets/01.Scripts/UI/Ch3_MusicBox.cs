@@ -98,6 +98,7 @@ public class Ch3_MusicBox : BaseInteractable
     {
         if(isRunning) return;
         currentIndex = 0;
+        text.text = (linkedEnemy.failCount + " / 5").ToString();
         isRunning = true;
         PossessionSystem.Instance.CanMove = false;
         QTEUI_MusicBox.SetActive(true);
