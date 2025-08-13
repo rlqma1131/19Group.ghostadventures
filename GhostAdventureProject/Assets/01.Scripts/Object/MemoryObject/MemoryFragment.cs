@@ -65,6 +65,7 @@ public class MemoryFragment : BaseInteractable
         if (!isScannable) return;
         isScannable = false;
         canStore = true;
+
         Scanning();
 
         MemoryManager.Instance.TryCollect(data);
