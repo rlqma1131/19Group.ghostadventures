@@ -51,6 +51,7 @@ public class EnemyQTEHandler : MonoBehaviour
     private IEnumerator StartQTESequence()
     {
         isQTERunning = true;
+        EnemyAI.IsAnyQTERunning = true;
         hasReturned = false;
         successAnimEnded = false;
         
@@ -89,6 +90,7 @@ public class EnemyQTEHandler : MonoBehaviour
             animator.updateMode = AnimatorUpdateMode.UnscaledTime;
             animator.SetTrigger("QTESuccess");
             PlayerLifeManager.Instance.LosePlayerLife();
+            EnemyAI.IsAnyQTERunning = false;
             
             const float safetyMax = 5f; // 이벤트 누락 대비 상한
             float waited = 0f;
@@ -119,6 +121,7 @@ public class EnemyQTEHandler : MonoBehaviour
                 enemy.ChangeState(enemy.PatrolState);
                 animator.updateMode = AnimatorUpdateMode.Normal;
                 isQTERunning = false;
+                // EnemyAI.IsAnyQTERunning = false;
                 successAnimEnded = true;
             }
         }
@@ -128,6 +131,7 @@ public class EnemyQTEHandler : MonoBehaviour
             qteEffect?.EndQTEEffects(true);
             PlayerLifeManager.Instance.HandleGameOver();
             isQTERunning = false;
+            EnemyAI.IsAnyQTERunning = false;
             yield break;
         }
 
@@ -153,6 +157,7 @@ public class EnemyQTEHandler : MonoBehaviour
         enemy.ChangeState(enemy.PatrolState);
         animator.updateMode = AnimatorUpdateMode.Normal;
         isQTERunning = false;
+        // EnemyAI.IsAnyQTERunning = false;
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), false);
     }
     

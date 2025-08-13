@@ -34,6 +34,12 @@ public abstract class BaseDoor : BaseInteractable
     {
         if (PlayerInteractSystem.Instance.CurrentClosest != gameObject)
             return;
+        
+        if (EnemyAI.IsAnyQTERunning)
+        {
+            SetHighlight(false);
+            return;
+        }
 
         if (playerNearby && Input.GetKeyDown(KeyCode.E))
         {
@@ -65,6 +71,8 @@ public abstract class BaseDoor : BaseInteractable
 
     protected void TeleportPlayer()
     {
+        if (EnemyAI.IsAnyQTERunning) return;
+        
         GameObject player = GameManager.Instance?.Player;
         if (player == null)
             return;
