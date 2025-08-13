@@ -45,7 +45,8 @@ public class CH2_SecurityGuard : MoveBasePossessable
         isInOffice = true;
         haveitem = GetComponent<HaveItem>();
         targetPerson = GetComponent<PersonConditionUI>();
-        targetPerson.currentCondition = PersonCondition.Unknown;
+        targetPerson.currentCondition = PersonCondition.Tired;
+        conditionHandler = new TiredConditionHandler();
         cols = GetComponentsInChildren<BoxCollider2D>();
     }
 

@@ -7,6 +7,7 @@ public class Ch2_MosPerson : BasePossessable
 {
     [SerializeField] GameObject q_key;
     private PersonConditionUI targetPerson;
+    private PersonConditionHandler conditionHandler;
     private HaveItem haveitem;
     private bool UseAllItem = false;
 
@@ -16,6 +17,7 @@ public class Ch2_MosPerson : BasePossessable
         haveitem = GetComponent<HaveItem>();
         targetPerson = GetComponent<PersonConditionUI>();
         targetPerson.currentCondition = PersonCondition.Tired;
+        conditionHandler = new TiredConditionHandler();
     }
 
     protected override void Update()

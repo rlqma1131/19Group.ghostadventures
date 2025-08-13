@@ -180,11 +180,17 @@ public class Ch3_Nurse : MoveBasePossessable
         if (state == NurseState.Work)
         {
             state = NurseState.Rest;
+            isAnimatingWork = false;
+            hasWorked = false;
+            isWaiting = false;
         }
         else
         {
             state = NurseState.Work;
             currentWorkIndex = 0;
+            isWaiting = false;
+            isAnimatingWork = false;
+            hasWorked = false; 
             isWaiting = false;
         }
     }

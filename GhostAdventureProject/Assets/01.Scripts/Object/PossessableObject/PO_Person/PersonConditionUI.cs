@@ -22,11 +22,13 @@ public class PersonConditionUI : MonoBehaviour
     public GameObject normalUI; // 보통UI
     public GameObject tiredUI; // 피곤UI
     [SerializeField] private BasePossessable targetPerson;
-
+    void Awake()
+    {
+        // currentCondition = PersonCondition.Vital;
+        // conditionHandler = new VitalConditionHandler();
+    }
     void Start()
     {   
-        // currentCondition = PersonCondition.Vital;
-        conditionHandler = new VitalConditionHandler();
         targetPerson = GetComponent<BasePossessable>();
         ShowConditionUI();
     }
