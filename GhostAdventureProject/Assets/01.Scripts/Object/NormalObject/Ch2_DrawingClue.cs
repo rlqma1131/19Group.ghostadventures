@@ -24,6 +24,9 @@ public class Ch2_DrawingClue : MonoBehaviour
     [SerializeField] private Ch2_BackStreetObj finalObjectToActivate; 
     [SerializeField] private CinemachineVirtualCamera vcam;
 
+    public bool HasActivated => hasActivated;                       // 저장용 getter
+    public void ApplyHasActivatedFromSave(bool v) => hasActivated = v; // 복원용 setter
+    
     void Start()
     {
         cluePickup = GetComponent<CluePickup>();

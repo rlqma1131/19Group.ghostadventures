@@ -565,6 +565,17 @@ public static class SaveManager
                 SetMemoryFragmentScannable(uid.Id, m.IsScannable);
             }
         }
+        
+        // === Ch2_DrawingClue 상태 저장 추가 ===
+        foreach (var clue in GameObject.FindObjectsOfType<Ch2_DrawingClue>(true))
+        {
+            if (clue.TryGetComponent(out UniqueId uid))
+            {
+                SetActiveState(uid.Id, clue.gameObject.activeSelf);
+                SetObjectPosition(uid.Id, clue.transform.position);
+                SetPossessableState(uid.Id, clue.HasActivated); // <-- hasActivated 저장
+            }
+        }
 
         // 문 상태 저장
         foreach (var door in GameObject.FindObjectsOfType<BaseDoor>(true))

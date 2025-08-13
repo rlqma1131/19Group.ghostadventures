@@ -92,6 +92,13 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 door.SetLockedFromSave(locked);
             }
         }
+        
+        foreach (var clue in FindObjectsOfType<Ch2_DrawingClue>(true))
+        {
+            if (!clue.TryGetComponent(out UniqueId uid)) continue;
+            if (SaveManager.TryGetPossessableState(uid.Id, out bool has))
+                clue.ApplyHasActivatedFromSave(has); // <-- 저장된 값 복원
+        }
 
         // === PASS 3: 활성/비활성 복원 (모든 UniqueId, 부모 -> 자식) ===
         var uidList = new List<UniqueId>(allUids);
