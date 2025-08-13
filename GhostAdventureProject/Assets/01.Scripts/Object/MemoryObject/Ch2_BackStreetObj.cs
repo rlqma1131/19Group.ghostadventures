@@ -22,7 +22,6 @@ public class Ch2_BackStreetObj : MonoBehaviour
     public void OnFinalClueActivated()
     {
         Sequence seq = DOTween.Sequence();
-        EnemyAI.PauseAllEnemies();
 
         // 1. 어두운 물체 빠르게 나타남
         shadowObject.color = new Color(1, 1, 1, 0);
@@ -49,7 +48,7 @@ public class Ch2_BackStreetObj : MonoBehaviour
         //         memoryFragmentObject.ActivateBackStreetObj();
         //     }
         // });
-        EnemyAI.ResumeAllEnemies();
+        
         TutorialManager.Instance.Show(TutorialStep.BlackShadow);
         ChapterEndingManager.Instance.CollectCh2Clue("L");
     }
