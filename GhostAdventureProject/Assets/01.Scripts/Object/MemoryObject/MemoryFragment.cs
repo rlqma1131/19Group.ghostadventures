@@ -201,6 +201,7 @@ public class MemoryFragment : BaseInteractable
         yield return new WaitForSeconds(5f); // 흡수 될때까지 기다림
 
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
+        SceneManager.LoadScene(data.CutSceneName, LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
         Time.timeScale = 0;
         ApplyMemoryEffect(); // 메모리 효과 적용
         PlusAction();
