@@ -133,7 +133,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // ESC메뉴 열기
     public void ESCMenu_Open()
     {
-        if(!UIManager.Instance.playModeUI.gameObject.activeInHierarchy) return;
+        // if(!UIManager.Instance.playModeUI.gameObject.activeInHierarchy) return;
         UIManager.Instance.SetDefaultCursor();
         escMenuUI.SetActive(true);
         general.SetActive(true);
