@@ -6,12 +6,12 @@ public class PlayerRoomTracker : MonoBehaviour
 {
     [SerializeField] private UITweenAnimator uITweenAnimator; // UI 애니메이션 컴포넌트
     [SerializeField] private TextMeshProUGUI text; // 프롬프트 컴포넌트
-    private string prevRoomInfo;
     public string roomName_RoomTracker;
+    public string prevRoomInfo;
 
     private void Start()
     {
-        // 방문 수 로드
+        // 저장된 방문 수 로드
         var rooms = FindObjectsOfType<RoomInfo>();
         foreach (var room in rooms)
         {
@@ -19,23 +19,29 @@ public class PlayerRoomTracker : MonoBehaviour
                 room.roomCount = count;
         }
 
-        // UI 참조
-        if (uITweenAnimator == null)
-            uITweenAnimator = UIManager.Instance.GetComponentInChildren<UITweenAnimator>(true);
-        if (text == null && uITweenAnimator != null)
-            text = uITweenAnimator.GetComponentInChildren<TextMeshProUGUI>(true);
+        // UI 참조 세팅
+        uITweenAnimator = UIManager.Instance.GetComponentInChildren<UITweenAnimator>();
+        if (uITweenAnimator != null)
+            text = uITweenAnimator.GetComponent<TextMeshProUGUI>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 태그보다 컴포넌트 존재로 판별하는 편이 안전
-        var room = other.GetComponent<RoomInfo>() ?? other.GetComponentInParent<RoomInfo>();
+        if (!other.CompareTag("Room")) return;
+
+        var room = other.GetComponent<RoomInfo>();
         if (room == null) return;
 
         room.roomCount++;
+
+        // 저장 데이터 반영
         SaveManager.SetRoomVisitCount(room.roomName, room.roomCount);
 
-        // 같은 방이면 UI 재출력 안 함
+        // UI 표시
+        roomName_RoomTracker = room.roomName;
+        // if (text != null) text.text = room.roomName;
+        // if (uITweenAnimator != null) uITweenAnimator.FadeInAndOut();
+                // 같은 방이면 UI 재출력 안 함
         if (prevRoomInfo != room.roomName)
         {
             if (text != null) text.text = room.roomName;
@@ -43,15 +49,17 @@ public class PlayerRoomTracker : MonoBehaviour
             prevRoomInfo = room.roomName;              // 여기서 갱신!
         }
 
-        roomName_RoomTracker = room.roomName;
-
-        // 첫 방문 튜토리얼
+        // 첫 방문 시 튜토리얼
         if (room.roomCount == 1)
         {
-            if (room.roomName == "거실")
+            if (room.roomName == "거실" && !TutorialManager.Instance.HasCompleted(TutorialStep.LivingRoomIntro_Start))
                 TutorialManager.Instance.Show(TutorialStep.LivingRoomIntro_Start);
-            else if (room.roomName == "다용도실")
+            else if (room.roomName == "다용도실" && !TutorialManager.Instance.HasCompleted(TutorialStep.LaundryRoom))
                 TutorialManager.Instance.Show(TutorialStep.LaundryRoom);
+            // else if (room.roomName == "놀이터")
+            //     TutorialManager.Instance.Show(TutorialStep.Test);
+            // else if (room.roomName == "일반병동 - 1F 로비")
+            //     TutorialManager.Instance.Show(TutorialStep.Test);
         }
     }
 }
