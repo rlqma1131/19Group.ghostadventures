@@ -7,6 +7,7 @@ public class PlayerRoomTracker : MonoBehaviour
     [SerializeField] private UITweenAnimator uITweenAnimator; // UI 애니메이션 컴포넌트
     [SerializeField] private TextMeshProUGUI text; // 프롬프트 컴포넌트
     public string roomName_RoomTracker;
+    public string prevRoomInfo;
 
     private void Start()
     {
@@ -38,8 +39,15 @@ public class PlayerRoomTracker : MonoBehaviour
 
         // UI 표시
         roomName_RoomTracker = room.roomName;
-        if (text != null) text.text = room.roomName;
-        if (uITweenAnimator != null) uITweenAnimator.FadeInAndOut();
+        // if (text != null) text.text = room.roomName;
+        // if (uITweenAnimator != null) uITweenAnimator.FadeInAndOut();
+                // 같은 방이면 UI 재출력 안 함
+        if (prevRoomInfo != room.roomName)
+        {
+            if (text != null) text.text = room.roomName;
+            uITweenAnimator?.FadeInAndOut();
+            prevRoomInfo = room.roomName;              // 여기서 갱신!
+        }
 
         // 첫 방문 시 튜토리얼
         if (room.roomCount == 1)
