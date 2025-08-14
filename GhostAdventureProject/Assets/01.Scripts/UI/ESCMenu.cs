@@ -28,6 +28,18 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     [SerializeField] private Button rebindJumpButton;
 
     private bool isPaused = false;
+//     private bool escEnabled = true;
+
+//     public void SetESCEnabled(bool enabled)
+// {
+//     escEnabled = enabled;
+// }
+
+// ESC 허용 여부 확인
+// public bool IsESCEnabled()
+// {
+//     return escEnabled;
+// }
     
     private void Awake()
     {
@@ -121,6 +133,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // ESC메뉴 열기
     public void ESCMenu_Open()
     {
+        // if(!UIManager.Instance.playModeUI.gameObject.activeInHierarchy) return;
         UIManager.Instance.SetDefaultCursor();
         escMenuUI.SetActive(true);
         general.SetActive(true);
@@ -199,6 +212,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
 
     void Update()
     {
+        //  if (!escEnabled) return;
         if(IsOpen())
         {
             UIManager.Instance.SetDefaultCursor();
