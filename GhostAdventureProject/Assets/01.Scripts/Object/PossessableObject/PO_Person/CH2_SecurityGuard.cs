@@ -55,6 +55,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         if (radio != null && radio.IsPlaying)
         {
             // anim.Play("Idle");
+            targetPerson.currentCondition = PersonCondition.Tired;
             state = GuardState.MovingToRadio;
         }
         
@@ -324,13 +325,13 @@ public class CH2_SecurityGuard : MoveBasePossessable
             targetPerson.currentCondition = PersonCondition.Vital;
         }
     }
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if(other.CompareTag("In"))
-        {
-            targetPerson.currentCondition = PersonCondition.Vital;
-        }
-    }
+    // private void OnTriggerStay2D(Collider2D other)
+    // {
+    //     if(other.CompareTag("In"))
+    //     {
+    //         targetPerson.currentCondition = PersonCondition.Vital;
+    //     }
+    // }
     
     protected override void OnTriggerExit2D(Collider2D collision)
     {
