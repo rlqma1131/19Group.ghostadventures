@@ -77,7 +77,7 @@ public class UIManager : Singleton<UIManager>
 
 
     [Header("UICanvas 전체 키고 끌때 사용")]
-    [SerializeField] private GameObject playModeUI; // 플레이모드 모든 UI(Canvas)
+    [SerializeField] public GameObject playModeUI; // 플레이모드 모든 UI(Canvas)
     [SerializeField] private GameObject startEndingUI; // 게임 시작/엔딩 모든 UI(Canvas)
     [SerializeField] private GameObject TutorialUI; // 튜토리얼 모든 UI(Canvas)
     [SerializeField] private GameObject interactUI; // 상호작용 모든 UI(Canvas)
