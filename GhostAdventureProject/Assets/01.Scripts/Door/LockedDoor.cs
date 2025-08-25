@@ -131,13 +131,13 @@ public class LockedDoor : BaseDoor
     void OnMouseEnter()
     {
         if(isLocked)
-            UIManager.Instance.LockDoorCursor();
+            UIManager.Instance.SetCursor(UIManager.CursorType.LockDoor);
         else
-            UIManager.Instance.OpenDoorCursor();
+            UIManager.Instance.SetCursor(UIManager.CursorType.OpenDoor);
     }
     void OnMouseExit() 
     {
-        UIManager.Instance.SetDefaultCursor();    
+        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
     }
 
 }

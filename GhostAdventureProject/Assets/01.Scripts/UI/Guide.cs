@@ -21,7 +21,6 @@ public class Guide : MonoBehaviour, IUIClosable
     void OnDisable()
     {
         EnemyAI.ResumeAllEnemies();
-        // UIManager.Instance.SetDefaultCursor();
         UIManager.Instance.PlayModeUI_OpenAll();
     }
 
@@ -35,7 +34,7 @@ public class Guide : MonoBehaviour, IUIClosable
 
     public void GuideOpen()
     {
-        UIManager.Instance.SetDefaultCursor();
+        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
         gameObject.SetActive(true);
         Time.timeScale = 0f;
         isOpen = true;

@@ -59,10 +59,10 @@ public class HideArea : BasePossessable
 
     public void OnMouseEnter() 
     {
-        UIManager.Instance.HideAreaCursor();
+        UIManager.Instance.SetCursor(UIManager.CursorType.HideArea);
     }
     public void OnMouseExit()
     {
-        UIManager.Instance.SetDefaultCursor();
+        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
     }
 }

@@ -6,6 +6,6 @@ public class OnMouse : MonoBehaviour
 {
     void OnMouseEnter()
     {
-        UIManager.Instance.SetDefaultCursor();
+        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
     }
 }

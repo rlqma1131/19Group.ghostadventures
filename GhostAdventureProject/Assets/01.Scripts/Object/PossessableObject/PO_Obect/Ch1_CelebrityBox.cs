@@ -39,8 +39,6 @@ public class Ch1_CelebrityBox : BasePossessable
     {
         hasActivated = true;
         MarkActivatedChanged();
-
-        UIManager.Instance.Hide_Q_Key();
         
         // 박스 애니메이션 트리거
         if(animator != null)
