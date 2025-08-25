@@ -134,7 +134,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     public void ESCMenu_Open()
     {
         // if(!UIManager.Instance.playModeUI.gameObject.activeInHierarchy) return;
-        UIManager.Instance.SetDefaultCursor();
+        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
         escMenuUI.SetActive(true);
         general.SetActive(true);
         optionMenu.SetActive(false);
@@ -215,7 +215,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         //  if (!escEnabled) return;
         if(IsOpen())
         {
-            UIManager.Instance.SetDefaultCursor();
+            UIManager.Instance.SetCursor(UIManager.CursorType.Default);
         }
     }
 
@@ -301,7 +301,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
 
     private void OnMouseEnter()
     {
-        UIManager.Instance.SetDefaultCursor();
+        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
     }
         
 }

@@ -16,11 +16,11 @@ public class CluePickup : MonoBehaviour
 
     void OnMouseEnter()
     {
-        UIManager.Instance.FindClueCursor();
+        UIManager.Instance.SetCursor(UIManager.CursorType.FindClue);
     }
     void OnMouseExit()
     {
-        UIManager.Instance.SetDefaultCursor();
+        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
     }
     
     public void PickupClue()
