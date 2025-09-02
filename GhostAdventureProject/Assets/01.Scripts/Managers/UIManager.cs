@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public interface IUIClosable // Esc키로 닫을 수 있는 UI 인터페이스
+public interface IUIClosable // Esc키로 닫을 수 있는 UI
 {
     void Close();
     bool IsOpen();
@@ -127,45 +127,45 @@ public class UIManager : Singleton<UIManager>
 
         if (Input.GetMouseButtonDown(0)) // ** 어떤 오브젝트가 클릭되는지 확인할때 사용 **
         {
-            //   PointerEventData pointerData = new PointerEventData(eventSystem)
-            //     {
-            //         position = Input.mousePosition
-            //     };
+            PointerEventData pointerData = new PointerEventData(eventSystem)
+            {
+                position = Input.mousePosition
+            };
 
-            //     List<RaycastResult> results = new List<RaycastResult>();
-            //     EventSystem.current.RaycastAll(pointerData, results);
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerData, results);
 
-            //     if (results.Count > 0)
-            //     {
-            //         GameObject uiObject = results[0].gameObject;
-            //         Canvas parentCanvas = uiObject.GetComponentInParent<Canvas>();
+            if (results.Count > 0)
+            {
+                GameObject uiObject = results[0].gameObject;
+                Canvas parentCanvas = uiObject.GetComponentInParent<Canvas>();
 
-            //         Debug.Log($"✅ 감지된 UI 오브젝트: {uiObject.name}");
+                Debug.Log($"✅ 감지된 UI 오브젝트: {uiObject.name}");
 
-            //         if (parentCanvas != null)
-            //         {
-            //             Debug.Log($"↳ 이 오브젝트는 Canvas '{parentCanvas.name}' 소속입니다.");
-            //         }
-            //         else
-            //         {
-            //             Debug.Log("⚠ 감지된 UI는 Canvas에 속해 있지 않습니다.");
-            //         }
+                if (parentCanvas != null)
+                {
+                    Debug.Log($"↳ 이 오브젝트는 Canvas '{parentCanvas.name}' 소속입니다.");
+                }
+                else
+                {
+                    Debug.Log("⚠ 감지된 UI는 Canvas에 속해 있지 않습니다.");
+                }
 
-            //         return; // UI 감지되었으면 여기서 종료
-            //     }
+                return; // UI 감지되었으면 여기서 종료
+            }
 
-            //     // 2D 오브젝트 감지
-            //     Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //     RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
+            // 2D 오브젝트 감지
+            Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
 
-            //     if (hit.collider != null)
-            //     {
-            //         Debug.Log("🎯 2D 오브젝트 감지됨: " + hit.collider.gameObject.name);
-            //     }
-            //     else
-            //     {
-            //         Debug.Log("❌ 아무것도 감지되지 않음!");
-            //     }
+            if (hit.collider != null)
+            {
+                Debug.Log("🎯 2D 오브젝트 감지됨: " + hit.collider.gameObject.name);
+            }
+            else
+            {
+                Debug.Log("❌ 아무것도 감지되지 않음!");
+            }
         }
     }
 
@@ -203,12 +203,14 @@ public class UIManager : Singleton<UIManager>
     public void PlayModeUI_OpenAll()
     {
         playModeUI.SetActive(true);
+        Debug.Log("플레이모드UI 켜기");
     }
     
     // 플레이모드UI Canvas 끄기
     public void PlayModeUI_CloseAll()
     {
         playModeUI.SetActive(false);
+        Debug.Log("플레이모드UI 끄기");
     }
 
     // 스타트엔딩UI 모두 켜기

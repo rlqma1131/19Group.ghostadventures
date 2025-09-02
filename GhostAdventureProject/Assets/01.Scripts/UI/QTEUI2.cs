@@ -8,30 +8,28 @@ public class QTEUI2 : MonoBehaviour
 {
     [Header("UI References")]
     public GameObject qteUI;
-    public Image gaugeBar;
-    public TMP_Text timeText;
-    public TextMeshProUGUI success;
-    public TextMeshProUGUI fail;
+    public Image gaugeBar;              // 게이지바
+    public TMP_Text timeText;           // 타임 텍스트
+    public TextMeshProUGUI resultText;  // 결과 텍스트
 
     [Header("QTE Settings")]
-    public AudioClip escape;
-    public int requiredPresses = 15;
-    public float timeLimit = 3f;
-    private int currentPressCount = 0;
-    private float currentTime = 0f;
-    private bool isRunning = false;
-    private bool isSuccess;
-    public bool isdead = false;
+    public AudioClip escape;            // 사운드
+    public int requiredPresses = 15;    // 탈출 위해 필요한 키 입력 수
+    public float timeLimit = 3f;        // 제한시간
+    private int currentPressCount = 0;  // 현재 키 입력 수
+    private float currentTime = 0f;     // 현재 시간
+    private bool isRunning = false;     // 실행중인지 확인
+    private bool isSuccess;             // 성공했는지 확인
+    public bool isdead = false;         // 플레이어가 죽었는지 확인
 
     private CinemachineVirtualCamera camera;
-    private float currentSize;
-    private float targetSize;
-
     private CinemachineBasicMultiChannelPerlin noise;
+    private float currentSize;          // 현재 확대 사이즈(카메라 효과)
+    private float targetSize;           // 적 확대 사이즈(카메라 효과)
+
     public void Start()
     {
-        success.gameObject.SetActive(false);
-        fail.gameObject.SetActive(false);
+        resultText.gameObject.SetActive(false);
         qteUI.SetActive(false);
         isdead = false;
     }
@@ -77,7 +75,8 @@ public class QTEUI2 : MonoBehaviour
            
             if (currentPressCount >= requiredPresses)
             {
-                success.gameObject.SetActive(true);
+                resultText.text = "탈출 성공!";
+                resultText.gameObject.SetActive(true);
                 isSuccess = true;
                 break;
             }
@@ -90,7 +89,7 @@ public class QTEUI2 : MonoBehaviour
             {
                  
                  
-                 targetSize = camera.m_Lens.OrthographicSize - currentSize * 0.05f;
+                targetSize = camera.m_Lens.OrthographicSize - currentSize * 0.05f;
                 DOTween.To(() => camera.m_Lens.OrthographicSize, x => camera.m_Lens.OrthographicSize = x, targetSize, 0.3f);
                 StartCoroutine(ShakeCamera(0.3f, 3f, 10f));
                 currentPressCount++;
@@ -105,7 +104,8 @@ public class QTEUI2 : MonoBehaviour
         if (currentPressCount >= requiredPresses)
         {
             DOTween.To(() => camera.m_Lens.OrthographicSize, x => camera.m_Lens.OrthographicSize = x, currentSize, 0.3f);
-            success.gameObject.SetActive(true);
+            resultText.text = "탈출 성공!";
+            resultText.gameObject.SetActive(true);
             isSuccess = true;
 
             SoundManager.Instance.PlaySFX(escape);
@@ -117,7 +117,8 @@ public class QTEUI2 : MonoBehaviour
         else
         {
             DOTween.To(() => camera.m_Lens.OrthographicSize, x => camera.m_Lens.OrthographicSize = x, currentSize, 0.3f);
-            fail.gameObject.SetActive(true);
+            resultText.text = "탈출 실패!";
+            resultText.gameObject.SetActive(true);
             isSuccess = false;
             isdead = true;
             UIManager.Instance.HideQTEEffectCanvas(); 
@@ -128,9 +129,7 @@ public class QTEUI2 : MonoBehaviour
         isRunning = false;
         yield return new WaitForSecondsRealtime(1.5f);
         qteUI.SetActive(false);
-        success.gameObject.SetActive(false);
-        fail.gameObject.SetActive(false);
-
+        resultText.gameObject.SetActive(false);
     }
     private IEnumerator ShakeCamera(float duration, float amplitude, float frequency)
     {
@@ -157,8 +156,7 @@ public class QTEUI2 : MonoBehaviour
         // UI 초기화
         if (gaugeBar) gaugeBar.fillAmount = 0f;
         if (timeText) timeText.text = timeLimit.ToString("F2");
-        if (success) success.gameObject.SetActive(false);
-        if (fail)    fail.gameObject.SetActive(false);
+        if (resultText) { resultText.text = null; resultText.gameObject.SetActive(false); }
         if (qteUI)   qteUI.SetActive(false);
 
         // 카메라 연출 원복(혹시 남았을 수 있으니 안전하게)

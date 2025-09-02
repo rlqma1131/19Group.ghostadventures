@@ -9,7 +9,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
 {   
     // [SerializeField] private LockedDoor door; //도어락 있는 문 //없어도 될 것 같음
     [SerializeField] private Ch2_DoorLock doorLock; // 도어락
-    [SerializeField] private SafeBox safeBox; // 금고
+    [SerializeField] private Ch2_SafeBox safeBox; // 금고
     [SerializeField] private Ch2_Radio radio; // 라디오
     public Transform Radio; // 라디오 위치
     public Transform bench; // 벤치 위치
@@ -25,7 +25,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
     private float roadingDuration = 5f; // 로딩시간
 
     public PersonConditionUI targetPerson;
-    public PersonConditionHandler conditionHandler;
     [SerializeField] private GameObject q_Key;
     // private bool isNearDoor = false;
     private HaveItem haveitem;
@@ -46,7 +45,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
         haveitem = GetComponent<HaveItem>();
         targetPerson = GetComponent<PersonConditionUI>();
         targetPerson.currentCondition = PersonCondition.Tired;
-        conditionHandler = new TiredConditionHandler();
         cols = GetComponentsInChildren<BoxCollider2D>();
     }
 
@@ -113,8 +111,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 break;
         }
 
-        targetPerson.SetCondition(targetPerson.currentCondition);
-        
         if (!isPossessed)
             return;
 

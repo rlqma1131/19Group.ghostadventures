@@ -6,17 +6,15 @@ public class YameScan_correct : BaseInteractable
 {
 
     [Header("Scan Settings")]
-    [SerializeField] private float scan_duration = 2f; //스캔 시간
-    [SerializeField] private GameObject scanPanel; //스캔 패널
-    [SerializeField] private Image scanCircleUI; //스캔 원 UI
+    [SerializeField] private float scan_duration = 2f;  // 스캔 시간
+    [SerializeField] private GameObject scanPanel;      // 스캔 패널
+    [SerializeField] private Image scanCircleUI;        // 스캔 원 UI
     [SerializeField] private GameObject player;
-    [SerializeField] private GameObject door; // 지하수로와 연결된 문
-    [SerializeField] private GameObject shelf; // 문 막고 있는 책장
-    [SerializeField] private GameObject clue_P; // 단서 P
-    [SerializeField] private List<ClueData> clueitems; 
-    public bool clear_UnderGround = false;
-    // [SerializeField] private GameObject e_key;
-
+    [SerializeField] private GameObject door;           // 지하수로와 연결된 문
+    [SerializeField] private GameObject shelf;          // 문 막고 있는 책장
+    [SerializeField] private GameObject clue_P;         // 단서 P
+    [SerializeField] private List<ClueData> clueitems;  // 소모되는 단서 아이템
+    public bool clear_UnderGround = false;              // 지하수로 문이 열렸는지 확인
 
 
     // 내부 상태 변수
@@ -36,12 +34,10 @@ public class YameScan_correct : BaseInteractable
         scanCircleUI?.gameObject.SetActive(false);
         player = FindObjectOfType<PlayerController>().gameObject;
         clue_P.SetActive(false);
-
     }
 
     void Update()
     {
-
         // 스캔 가능한 상태가 아니거나, 스캔 중이 아닐 때 입력을 받음
         if (isNearMemory && !isScanning && Input.GetKeyDown(KeyCode.E))
         {
@@ -80,9 +76,7 @@ public class YameScan_correct : BaseInteractable
 
     private void StartScan()
     {
-        // if (currentMemoryFragment.IsScannable)
         {
-
             isScanning = true;
             scanTime = 0f;
 
@@ -103,8 +97,6 @@ public class YameScan_correct : BaseInteractable
             Time.timeScale = 0.3f; // 슬로우 모션 시작
             SoulEnergySystem.Instance.Consume(1); // 에너지 소모
             Debug.Log("스캔 시작");
-
-
         }
     }
 
@@ -151,7 +143,6 @@ public class YameScan_correct : BaseInteractable
         ChapterEndingManager.Instance.CollectCh2Clue("P");
         ConsumeClue(clueitems);
         UIManager.Instance.PromptUI.ShowPrompt_2("으악...!!", "벽에 뭔가 나타났어...!");
-        Debug.Log("지하수로와 연결된 문을 발견했습니다");
     }
 
     private void ConsumeClue(List<ClueData> clues)
