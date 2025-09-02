@@ -31,8 +31,6 @@ public class QTEUI3 : MonoBehaviour
     [SerializeField] AudioClip successSound;            // 성공 사운드
     [SerializeField] AudioClip failSound;               // 실패 사운드
 
-
-
     void Update()
     {
         if (!isRunning) return;
@@ -120,6 +118,10 @@ public class QTEUI3 : MonoBehaviour
 
     public void ShowQTEUI3()
     {
+        BasePossessable possessed = PossessionSystem.Instance.CurrentTarget;
+        PersonConditionUI conditionUI = possessed.GetComponent<PersonConditionUI>();
+        conditionUI.SetCondition(conditionUI.currentCondition);
+
         isRunning = true;
         gameObject.SetActive(true);
         timer = 0f;
