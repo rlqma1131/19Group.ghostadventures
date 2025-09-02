@@ -92,7 +92,7 @@ public class Ch2_Radio : BasePossessable
         {
             triggerSound_Person.Play();
             hasTriggered_Person = true;
-            guard.targetPerson.SetCondition(PersonCondition.Tired);
+            guard.targetPerson.currentCondition = PersonCondition.Tired;
             Debug.Log(guard.targetPerson.conditionHandler);
             zoomRadio.SetActive(false);
             zoomCamera.Priority = 5;

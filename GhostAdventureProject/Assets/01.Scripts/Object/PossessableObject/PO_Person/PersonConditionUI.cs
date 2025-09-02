@@ -23,7 +23,6 @@ public class PersonConditionUI : MonoBehaviour
     {           
         targetPerson = GetComponent<BasePossessable>();
         ShowConditionUI();
-        SetCondition(currentCondition);
     }
     
     void Update()
@@ -37,7 +36,6 @@ public class PersonConditionUI : MonoBehaviour
         if (currentCondition != lastCondition)
             {
                 ShowConditionUI();
-                SetCondition(currentCondition);
                 lastCondition = currentCondition;
             }
 

@@ -15,8 +15,6 @@ public class Ch2_MosPerson : BasePossessable
         haveitem = GetComponent<HaveItem>();
         conditionUI = GetComponent<PersonConditionUI>();
         conditionUI.currentCondition = PersonCondition.Tired;
-        conditionUI.SetCondition(PersonCondition.Tired);
-        conditionUI.conditionHandler.GetQTESettings();
     }
 
     protected override void Update()
