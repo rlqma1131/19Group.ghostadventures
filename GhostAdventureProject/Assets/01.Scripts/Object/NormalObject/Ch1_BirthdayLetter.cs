@@ -10,9 +10,10 @@ public class Ch1_BirthdayLetter : MonoBehaviour
     [SerializeField] private CluePickup cluePickup;        
 
     private bool isZoomActive = false;
-    //private bool zoomActivatedOnce = false;
     private bool isPlayerInside = false;
     private bool PickupLetter = false;
+
+    private Collider2D letterCollider;
 
     private void Start()
     {
@@ -27,6 +28,7 @@ public class Ch1_BirthdayLetter : MonoBehaviour
         // 초기화
         letterZoom.SetActive(false);
         letterPosition.anchoredPosition = new Vector2(0, -Screen.height);
+        letterCollider = GetComponent<Collider2D>();
     }
 
     private void Update()
@@ -76,22 +78,17 @@ public class Ch1_BirthdayLetter : MonoBehaviour
             {
                 letterZoom.SetActive(false);
 
-                //if (!zoomActivatedOnce)
-                //{
-                //    Ch1_HideAreaEvent.Instance.AddHideAreaComponent();
-                //    zoomActivatedOnce = true;
-                //}
-
                 if (isPlayerInside)
                     PlayerInteractSystem.Instance.AddInteractable(gameObject);
             });
             
         cluePickup.PickupClue();
         PickupLetter = true;
+        letterCollider.enabled = false;
+
         SaveManager.MarkPuzzleSolved("편지");
         UIManager.Instance.PromptUI.ShowPrompt("누구 생일이었지… 8월… 14일");
         UIManager.Instance.NoticePopupUI.FadeInAndOut("숫자키 1~4: 인벤토리 단서 확인");
-        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
