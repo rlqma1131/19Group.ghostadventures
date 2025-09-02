@@ -18,14 +18,19 @@ public class CryEnemy : MonoBehaviour
     [SerializeField] private AudioClip smile;                   // 웃음 소리
     [SerializeField] private AudioClip successQTE_Sound;        // 오르골소리(3개 모두 작동 성공시)
 
-    [SerializeField] private ClueData needClue;                 // 원하는 단서 (추후 구현)
-    [SerializeField] private Ch3_MusicBox musicBox;             // 오르골
+    [Header("퍼즐")]
+    [SerializeField] private ClueData needClue;                 // 원하는 단서
+    [SerializeField] private GameObject speechBubble;           // 말풍선
     [SerializeField] private List<Ch3_MusicBox> myMusicBoxes;   // 연결된 3개의 오르골
-    private HashSet<Ch3_MusicBox> clearedBoxes = new HashSet<Ch3_MusicBox>(); // QTE 성공한 오르골
-
-    private string roomName;                                    // 플레이어가 있는 방의 이름
-    [SerializeField] string cryRoomName;                        // 울보가 있는 방의 이름
-    [SerializeField] LockedDoor door;                           // 문
+    public HashSet<Ch3_MusicBox> clearedBoxes = new HashSet<Ch3_MusicBox>(); // 작동 성공한 오르골
+    private string playerInRoomName;                            // 플레이어가 있는 방의 이름
+    [SerializeField] string cryEnemyInRoomName;                 // 울보가 있는 방의 이름
+    [SerializeField] LockedDoor door;                           // 방 문
+    
+    [Header("울보 설정")]
+    [SerializeField] private float moveSpeed = 4;               // 스피드
+    [SerializeField] private float chaseRange;                  // 추격 범위
+    [SerializeField] private float attackRange;                 // 공격 범위
 
     private GameObject player;
     private Rigidbody2D rb;
@@ -40,11 +45,6 @@ public class CryEnemy : MonoBehaviour
     private int successCount = 0;                               // QTE 성공 횟수
     private CryEnemyState currentState;                         // 상태
 
-    [Header("울보 설정")]
-    [SerializeField] private float moveSpeed = 4;               // 스피드
-    [SerializeField] private float chaseRange;                  // 추격 범위
-    [SerializeField] private float attackRange;                 // 공격 범위
-
     [SerializeField] private GameObject cryingtrigger;
     private Vector2 lastDirection;
     private bool attackMode = false;
@@ -57,24 +57,24 @@ public class CryEnemy : MonoBehaviour
         sr = GetComponentInChildren<SpriteRenderer>();
         anim = GetComponentInChildren<Animator>();
         soundManager = SoundManager.Instance;
+        
         cryingtrigger.SetActive(false);
-
         currentState = CryEnemyState.Known;
     }
 
     void Update()
     {
-        roomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
-        if (cryRoomName == roomName && !clear && !isCrying)
+        playerInRoomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
+        if (cryEnemyInRoomName == playerInRoomName && !clear && !isCrying)
         {
             StartCrying();
         }
-        else if (cryRoomName != roomName && isCrying)
+        else if (cryEnemyInRoomName != playerInRoomName && isCrying)
         {
             soundManager.StopLoopingSFX();
             isCrying = false;
         }
-        else if (cryRoomName != roomName && clear && !isCrying)
+        else if (cryEnemyInRoomName != playerInRoomName && clear && !isCrying)
         {
             soundManager.StopLoopingSFX();
         }
@@ -99,7 +99,7 @@ public class CryEnemy : MonoBehaviour
     {
         isCrying = true;
         
-        door.UnlockPair();                          // 락도어 - 열림     
+        door.UnlockPair();  // 락도어 - 열림     
         // clearedBoxes.Clear();
         cryingtrigger.SetActive(true);
         soundManager.PlayLoopingSFX(cry_small);
@@ -116,10 +116,10 @@ public class CryEnemy : MonoBehaviour
         isCrying = false;
         clear = true;
 
-        soundManager.StopLoopingSFX();              // 기본울음 멈춤
-        soundManager.PlayLoopingSFX(smile);                // 웃음소리 플레이
-        soundManager.PlayLoopingSFX(successQTE_Sound);     // 오르골 소리 플레이
-        playSound_successQTE = true;                // 오르골 소리 플레이 상태임
+        soundManager.StopLoopingSFX();                      // 기본울음 멈춤
+        soundManager.PlayLoopingSFX(smile);                 // 웃음소리 플레이
+        soundManager.PlayLoopingSFX(successQTE_Sound);      // 오르골 소리 플레이
+        playSound_successQTE = true;                        // 오르골 소리 플레이 상태임
 
         anim.SetBool("Jump", true);
         cryingtrigger.SetActive(false);
@@ -170,7 +170,7 @@ public class CryEnemy : MonoBehaviour
 
     private void ChasePlayer()
     {
-        if (roomName == cryRoomName)
+        if (playerInRoomName == cryEnemyInRoomName)
         {
             anim.SetBool("Chase", true);
             Vector2 direction = (player.transform.position - transform.position).normalized;
