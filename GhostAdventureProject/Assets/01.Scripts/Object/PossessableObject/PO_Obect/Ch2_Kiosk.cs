@@ -27,7 +27,7 @@ public class Ch2_Kiosk : BasePossessable
     private Vector2 hiddenPos = new(0, -800);
     private Vector2 visiblePos = new(0, 0);
     
-    [SerializeField] private SafeBox safeBox;
+    [SerializeField] private Ch2_SafeBox safeBox;
 
     protected override void Start()
     {

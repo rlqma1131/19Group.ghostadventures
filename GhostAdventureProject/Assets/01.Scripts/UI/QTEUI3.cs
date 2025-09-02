@@ -6,31 +6,30 @@ using UnityEngine.UI;
 public class QTEUI3 : MonoBehaviour
 {
     [Header("UI Elements")]
-    public RectTransform needle; // 바늘 피벗
-    public Transform ringTransform; // 성공영역 프리팹이 생성될 위치
-    public GameObject zonePrefab; // 성공 영역 프리팹
+    public RectTransform needle;        // 바늘 피벗
+    public Transform ringTransform;     // 성공영역 프리팹이 생성될 위치
+    public GameObject zonePrefab;       // 성공 영역 프리팹
 
-    [Header("Settings")] // - 난이도 셋팅용
-    public int successZoneCount = 2; // 성공 영역 개수
-    public float minZoneSize = 10f; // 
-    public float maxZoneSize = 40f; // 
-    public float rotationSpeed = 45f; // degrees per second
-    public float timeLimit = 3f; //
+    [Header("Settings")] // - 난이도 셋팅용(PersonConditionHandler에서 변경)
+    public int successZoneCount = 2;    // 성공 영역 개수
+    public float minZoneSize = 10f;     // 성공 영역 최소사이즈
+    public float maxZoneSize = 40f;     // 성공 영역 최대사이즈
+    public float rotationSpeed = 45f;   // degrees per second
+    public float timeLimit = 3f;        // 제한시간
 
-    private float currentAngle = 0f;
-    private float timer = 0f;
-
-    private List<QTERingZone> successZones = new();
-    private HashSet<int> clearedZoneIndices = new();
-
-    private bool isRunning = false;
+    private float currentAngle = 0f;    // 현재 각
+    private float previousAngle = 0f;   // 이전 각
+    private float timer = 0f;           // 현재 시간
+    private bool isRunning = false;     // 실행중인지 확인
     // private bool wasSuccess = false;
-    private Action<bool> resultCallback;
-    private float previousAngle = 0f;
-    private HashSet<int> pendingZoneIndices = new();
 
-    [SerializeField] AudioClip successSound;
-    [SerializeField] AudioClip failSound;
+    private List<QTERingZone> successZones = new();     // 성공 영역들 
+    private HashSet<int> clearedZoneIndices = new();    // 클리어한 성공 영역들
+    private HashSet<int> pendingZoneIndices = new();    // 아직 클리어하지 않은 성공 영역들
+    private Action<bool> resultCallback;                
+
+    [SerializeField] AudioClip successSound;            // 성공 사운드
+    [SerializeField] AudioClip failSound;               // 실패 사운드
 
 
 

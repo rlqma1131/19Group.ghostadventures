@@ -5,25 +5,22 @@ using UnityEngine;
 
 public class Ch2_MosPerson : BasePossessable
 {
-    [SerializeField] GameObject q_key;
-    private PersonConditionUI targetPerson;
-    private PersonConditionHandler conditionHandler;
-    private HaveItem haveitem;
-    private bool UseAllItem = false;
+    private PersonConditionUI conditionUI;              // 컨디션 UI
+    private HaveItem haveitem;                          // 가지고있는 아이템
+    private bool UseAllItem = false;                    // 모든 아이템 사용했는지 확인
 
     protected override void Start()
     {
         base.Start();
         haveitem = GetComponent<HaveItem>();
-        targetPerson = GetComponent<PersonConditionUI>();
-        targetPerson.currentCondition = PersonCondition.Tired;
-        conditionHandler = new TiredConditionHandler();
+        conditionUI = GetComponent<PersonConditionUI>();
+        conditionUI.currentCondition = PersonCondition.Tired;
+        conditionUI.SetCondition(PersonCondition.Tired);
+        conditionUI.conditionHandler.GetQTESettings();
     }
 
     protected override void Update()
     {
-        targetPerson.currentCondition = PersonCondition.Tired;
-        targetPerson.SetCondition(targetPerson.currentCondition);
         if (!isPossessed)
             return;
 
@@ -42,20 +39,6 @@ public class Ch2_MosPerson : BasePossessable
             {
                 UIManager.Instance.PromptUI.ShowPrompt("뭔가 더 얻을 수 있는게 있을것 같아");
             }
-            // if (haveitem.inventorySlots.All(s => s.item == null))
-            // {
-        
-            //     Unpossess();
-            //     hasActivated = false;
-            // }
-
-        //     bool allEmpty = haveitem.inventorySlots.All(slot => 
-        //     slot.item == null || slot.quantity <= 0);
-
-        //     if (allEmpty)
-        //     {
-        //         Unpossess();
-        //  }
         }
     }
 
@@ -71,7 +54,6 @@ public class Ch2_MosPerson : BasePossessable
     public override void Unpossess()
     {
         base.Unpossess();
-        targetPerson.currentCondition = PersonCondition.Normal; 
         UIManager.Instance.tabkeyUI.SetActive(false);
     }
     

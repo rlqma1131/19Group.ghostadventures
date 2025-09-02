@@ -93,7 +93,7 @@ public class Ch2_Radio : BasePossessable
             triggerSound_Person.Play();
             hasTriggered_Person = true;
             guard.targetPerson.SetCondition(PersonCondition.Tired);
-            Debug.Log(guard.conditionHandler);
+            Debug.Log(guard.targetPerson.conditionHandler);
             zoomRadio.SetActive(false);
             zoomCamera.Priority = 5;
             UIManager.Instance.PlayModeUI_OpenAll();
@@ -112,7 +112,7 @@ public class Ch2_Radio : BasePossessable
             triggerSound_Enemy.Play();
             hasTriggered_Enemy = true;
             SoundTrigger.TriggerSound(transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
-            Debug.Log(guard.conditionHandler);
+            Debug.Log(guard.targetPerson.conditionHandler);
             zoomRadio.SetActive(false);
             zoomCamera.Priority = 5;
             UIManager.Instance.PlayModeUI_OpenAll();

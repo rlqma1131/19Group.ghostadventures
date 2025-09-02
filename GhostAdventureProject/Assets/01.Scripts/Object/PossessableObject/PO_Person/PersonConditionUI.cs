@@ -1,36 +1,29 @@
 using UnityEngine;
 
-
-// 컨디션 * UI * 를 관리하는 스크립트입니다.
-
 public enum PersonCondition
 {
     Vital,   // 활력
     Normal,  // 보통
-    Tired,    // 피곤함
-    Unknown // 알 수 없음(빙의 불가)
+    Tired,   // 피곤함
 }
 
 public class PersonConditionUI : MonoBehaviour
 {
-    public PersonCondition currentCondition;
-    private PersonCondition lastCondition;
-    public PersonConditionHandler conditionHandler;
-    [SerializeField] private float yPos_UI = 2.5f; // UI의 y포지션 (오브젝트마다 알맞게 설정해주세요)
-    public GameObject UI;
-    public GameObject vitalUI; // 활력UI
-    public GameObject normalUI; // 보통UI
-    public GameObject tiredUI; // 피곤UI
-    [SerializeField] private BasePossessable targetPerson;
-    void Awake()
-    {
-        // currentCondition = PersonCondition.Vital;
-        // conditionHandler = new VitalConditionHandler();
-    }
+    public PersonCondition currentCondition;                // 현재 컨디션
+    private PersonCondition lastCondition;                  // 마지막 컨디션
+    public PersonConditionHandler conditionHandler;         // 컨디션 핸들러(QTE 난이도 변경)
+    [SerializeField] private float yPos_UI = 2.5f;          // UI의 y포지션 (오브젝트마다 알맞게 설정해주세요)
+    public GameObject UI;                                   // 컨디션UI
+    public GameObject vitalUI;                              // 활력UI
+    public GameObject normalUI;                             // 보통UI
+    public GameObject tiredUI;                              // 피곤UI
+    [SerializeField] private BasePossessable targetPerson;  // 타겟(사람)
+    
     void Start()
-    {   
+    {           
         targetPerson = GetComponent<BasePossessable>();
         ShowConditionUI();
+        SetCondition(currentCondition);
     }
     
     void Update()
@@ -44,6 +37,7 @@ public class PersonConditionUI : MonoBehaviour
         if (currentCondition != lastCondition)
             {
                 ShowConditionUI();
+                SetCondition(currentCondition);
                 lastCondition = currentCondition;
             }
 
@@ -55,13 +49,6 @@ public class PersonConditionUI : MonoBehaviour
     // 컨디션 UI 보여주는 함수
     public void ShowConditionUI()
     {
-        if (targetPerson.isPossessed)
-        {
-            Debug.Log("컨디션UI 없애기");
-            if (UI != null) UI.SetActive(false);
-            return;
-        }
-
         vitalUI.SetActive(false);
         normalUI.SetActive(false);
         tiredUI.SetActive(false);
@@ -84,7 +71,7 @@ public class PersonConditionUI : MonoBehaviour
     public void SetCondition(PersonCondition condition)
     {
         currentCondition = condition;
-        switch (condition)
+        switch (currentCondition)
         {
             case PersonCondition.Vital:
                 conditionHandler = new VitalConditionHandler();

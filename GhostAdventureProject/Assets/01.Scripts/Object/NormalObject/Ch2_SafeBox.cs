@@ -4,7 +4,7 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class SafeBox : BaseInteractable
+public class Ch2_SafeBox : BaseInteractable
 {   
     [SerializeField] private GameObject closeSafeBox; // 닫힌 금고
     [SerializeField] private GameObject openSafeBox; // 열린 금고
