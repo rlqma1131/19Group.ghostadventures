@@ -18,6 +18,7 @@ public class Ch1_TV : BasePossessable
     private Ch1_MemoryFake_01_BirthdayHat birthdayHat;
 
     private Collider2D col;
+    private bool wrongSoundPlayed = false;
     private bool isControlMode = false;
     private int channel = 1;
 
@@ -55,6 +56,9 @@ public class Ch1_TV : BasePossessable
         }
         UI.SetActive(true);
         spaceBar.SetActive(true);
+
+        if (wrongSoundPlayed)
+            return;
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -106,7 +110,16 @@ public class Ch1_TV : BasePossessable
 
             col.enabled = false;
             SaveManager.MarkPuzzleSolved("티비");
+        }
+        else if (channel != 9 && Input.GetKeyDown(KeyCode.Space))
+        {
+            // 오답 효과음 추가
+            wrongSoundPlayed = true;
+            SoundManager.Instance.SetBGMVolume(0.6f);
+            zoomAnim.SetTrigger("Change");
 
+            UIManager.Instance.PromptUI.ShowPrompt("아무 일도 일어나지 않았다...", 2f);
+            Invoke("ResetBGM", 1f);
         }
     }
 
@@ -147,8 +160,8 @@ public class Ch1_TV : BasePossessable
         UIManager.Instance.PlayModeUI_OpenAll();
 
         // BGM 복구
-        SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
-        SoundManager.Instance.RestoreLastBGM(1f);
+        //SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
+        //SoundManager.Instance.RestoreLastBGM(1f);
 
         spaceBar.SetActive(false);
         UI.SetActive(false);
@@ -159,6 +172,12 @@ public class Ch1_TV : BasePossessable
 
         UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 노란 빛을 띄는 오브젝트는 E키를 3초간 눌러 스캔할 수 있습니다.");
 
+    }
+
+    private void ResetBGM()
+    {
+        SoundManager.Instance.SetBGMVolume(0.4f);
+        wrongSoundPlayed = false;
     }
 
     public override void OnPossessionEnterComplete() 
@@ -174,8 +193,8 @@ public class Ch1_TV : BasePossessable
         channelTxt.text = "01"; // 초기 채널 표시
         UpdateChannelDisplay();
 
-        SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드 아웃
-        SoundManager.Instance.FadeInLoopingSFX(glitchSound, 1f, 0.5f);
+        //SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드 아웃
+        SoundManager.Instance.ChangeBGM(glitchSound, 1f, 0.3f);
 
         UIManager.Instance.PromptUI.ShowPrompt("힌트를 살펴보자", 2.5f);
     }

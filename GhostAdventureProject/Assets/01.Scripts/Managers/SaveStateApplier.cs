@@ -116,6 +116,77 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
         }
         Debug.Log($"[SaveStateApplier] Active states applied: {applied}/{savedActiveCount}");
 
+        // === PASS 4: Animator 복원 (부모 UniqueId 기준으로 자식 Animator 전부 적용)
+        var reassertList = new System.Collections.Generic.List<(Animator anim, AnimatorChildSnapshot snap)>();
+
+        foreach (var uid in allUids)
+        {
+            if (!SaveManager.TryGetAnimatorTree(uid.Id, out var tree) || tree?.animators == null) continue;
+
+            var root = uid.transform;
+
+            foreach (var child in tree.animators)
+            {
+                var t = SaveManager.FindChildByPath(root, child.childPath);
+                if (t == null) { Debug.LogWarning($"[APPLY] path not found: uid={uid.Id} '{child.childPath}'"); continue; }
+
+                var anim = t.GetComponent<Animator>();
+                if (anim == null) { Debug.LogWarning($"[APPLY] Animator missing at path: uid={uid.Id} '{child.childPath}'"); continue; }
+
+                bool prevEnabled = anim.enabled;
+                float prevSpeed = anim.speed;
+                anim.enabled = false;
+
+                // 남은 트리거 제거
+                foreach (var p in anim.parameters)
+                    if (p.type == AnimatorControllerParameterType.Trigger)
+                        anim.ResetTrigger(p.name);
+
+                // 내부 상태 초기화 + 강평가
+                anim.Rebind();
+                anim.Update(0f);
+
+                // 레이어별 상태/진행도 적용
+                foreach (var ly in child.layers)
+                {
+                    int l = ly.layer;
+                    if (l >= anim.layerCount) continue;
+
+                    float tNorm = ly.normalizedTime;
+                    if (!float.IsFinite(tNorm)) tNorm = 0f;
+                    tNorm = Mathf.Repeat(tNorm, 1f);
+                    if (tNorm <= 0f) tNorm = 0.001f;
+                    if (tNorm >= 0.999f) tNorm = 0.999f;
+
+                    bool ok = TryPlay(anim, ly.fullPathHash, l, tNorm) || TryCrossFade(anim, ly.fullPathHash, l, tNorm);
+                    anim.Update(0f);
+
+                    var cur = anim.GetCurrentAnimatorStateInfo(l);
+                    if (cur.fullPathHash != ly.fullPathHash && ly.shortNameHash != 0 && cur.shortNameHash != ly.shortNameHash)
+                    {
+                        // full 실패시 짧은 해시나 0초 CrossFade로 마지막 보정
+                        anim.CrossFade(ly.fullPathHash != 0 ? ly.fullPathHash : ly.shortNameHash, 0f, l, tNorm);
+                        anim.Update(0f);
+                    }
+                }
+
+                anim.enabled = prevEnabled;
+                anim.speed = prevSpeed;
+
+                // 다음 프레임에 한 번 더 보정(다른 초기화가 덮어써도 되돌림)
+                reassertList.Add((anim, child));
+            }
+        }
+
+        // 안전망: 다음 프레임에 재보정
+        StartCoroutine(ReassertNextFrameForChildren(reassertList));
+
+        // 헬퍼들 (지역 함수로 둬도 됨)
+        static bool TryPlay(Animator a, int hash, int layer, float t)
+        { if (hash == 0) return false; try { a.Play(hash, layer, t); return true; } catch { return false; } }
+        static bool TryCrossFade(Animator a, int hash, int layer, float t)
+        { if (hash == 0) return false; try { a.CrossFade(hash, 0f, layer, t); return true; } catch { return false; } }
+
         // === 인벤토리/진행도 ===
         var inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         SaveManager.ApplyPlayerInventoryFromSave(inv);
@@ -128,6 +199,35 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
             int d = 0;
             while (t.parent != null) { d++; t = t.parent; }
             return d;
+        }
+    }
+
+    private IEnumerator ReassertNextFrameForChildren(System.Collections.Generic.List<(Animator anim, AnimatorChildSnapshot snap)> list)
+    {
+        yield return null; // 모든 Start/OnEnable 이후 프레임
+
+        foreach (var (anim, child) in list)
+        {
+            if (anim == null || child == null) continue;
+            foreach (var ly in child.layers)
+            {
+                int l = ly.layer;
+                if (l >= anim.layerCount) continue;
+
+                float tNorm = ly.normalizedTime;
+                if (!float.IsFinite(tNorm)) tNorm = 0f;
+                tNorm = Mathf.Repeat(tNorm, 1f);
+                if (tNorm <= 0f) tNorm = 0.001f;
+                if (tNorm >= 0.999f) tNorm = 0.999f;
+
+                var cur = anim.GetCurrentAnimatorStateInfo(l);
+                if (cur.fullPathHash != ly.fullPathHash && (ly.shortNameHash == 0 || cur.shortNameHash != ly.shortNameHash))
+                {
+                    anim.Play(ly.fullPathHash != 0 ? ly.fullPathHash : ly.shortNameHash, l, tNorm);
+                    anim.Update(0f);
+                    // (선택) Debug.Log($"[Reassert] {anim.name} path ok -> L{l} {ly.clipName} @{tNorm:F3}");
+                }
+            }
         }
     }
 }

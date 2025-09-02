@@ -8,6 +8,14 @@ public class Ch1_CelebrityBox : BasePossessable
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject q_Key;
 
+    private Collider2D col;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        col = GetComponent<Collider2D>();
+    }
 
     protected override void Update()
     {
@@ -52,6 +60,8 @@ public class Ch1_CelebrityBox : BasePossessable
         StartCoroutine(ShowLetterWithDelay());
 
         hasActivated = false;
+        col.enabled = false;
+
         MarkActivatedChanged();
 
         SaveManager.MarkPuzzleSolved("깜짝상자");

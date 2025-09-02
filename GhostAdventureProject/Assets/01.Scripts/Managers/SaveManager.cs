@@ -60,19 +60,48 @@ public class DoorState
     public bool isLocked; // true=잠김, false=열림
 }
 
-// 빙의 대상 인벤토리 상태 저장
-//public class PossessableInventoryEntry
-//{
-//    public string itemKey;   // ItemData의 고유키(권장: 에셋 파일명 item.name)
-//    public int quantity;
-//}
+// 애니메이터 재생 클립 상태
+[System.Serializable]
+public class AnimatorClipLayerState
+{
+    public int layer;
+    public string clipName;    // 현재 재생 중인 첫 번째 클립 이름
+    public int stateHash;      // 현재 스테이트(fullPathHash)
+    public float normalizedTime;
+}
 
-//[System.Serializable]
-//public class PossessableInventoryState
-//{
-//    public string ownerId;                      // UniqueId.Id
-//    public List<PossessableInventoryEntry> items = new();
-//}
+[System.Serializable]
+public class AnimatorClipSnapshot
+{
+    public string id;  // UniqueId
+    public List<AnimatorClipLayerState> layers = new();
+}
+// 현재 상태를 담는 레이어 단위 스냅샷
+[System.Serializable]
+public class AnimatorChildLayerState
+{
+    public int layer;
+    public int fullPathHash;
+    public int shortNameHash;
+    public float normalizedTime;
+    public string clipName; // 디버깅/확인용
+}
+
+// UniqueId(부모) 아래 특정 자식 Animator 하나에 대한 스냅샷
+[System.Serializable]
+public class AnimatorChildSnapshot
+{
+    public string childPath; // UniqueId.transform 기준 상대 경로 ("Body/CatAnimator" 등)
+    public List<AnimatorChildLayerState> layers = new();
+}
+
+// UniqueId 단위 트리 스냅샷(= 부모 1개 + 그 하위 모든 Animator)
+[System.Serializable]
+public class AnimatorTreeSnapshot
+{
+    public string id; // UniqueId.Id
+    public List<AnimatorChildSnapshot> animators = new();
+}
 
 // 튜토리얼 진행도 저장용
 [System.Serializable]
@@ -89,12 +118,13 @@ public class SaveData
     public Vector3 playerPosition;
     public string checkpointId;
 
-    //public List<PossessableInventoryState> possessableInventories;
     public List<string> collectedClueNames;
     public List<string> collectedMemoryIDs;
     public List<string> scannedMemoryTitles;
     public List<string> solvedPuzzleIDs;
 
+    public List<AnimatorClipSnapshot> animatorClips = new();
+    public List<AnimatorTreeSnapshot> animatorTrees = new();
     public List<ChapterMemoryProgress> chapterMemoryProgress = new();
     public List<ChapterClueProgress> chapterClueProgress = new();
 
@@ -110,6 +140,62 @@ public class SaveData
 
 public static class SaveManager
 {
+    public static bool VerboseAnimatorLogging = true;
+    public static string GetRelativePath(Transform root, Transform target)
+    {
+        if (root == null || target == null) return null;
+        var stack = new System.Collections.Generic.Stack<string>();
+        var t = target;
+        while (t != null && t != root)
+        {
+            stack.Push(t.name);
+            t = t.parent;
+        }
+        if (t != root) return null; // target이 root 하위가 아님
+        var sb = new System.Text.StringBuilder();
+        while (stack.Count > 0)
+        {
+            if (sb.Length > 0) sb.Append('/');
+            sb.Append(stack.Pop());
+        }
+        return sb.ToString();
+    }
+
+    public static Transform FindChildByPath(Transform root, string path)
+    {
+        if (root == null || string.IsNullOrEmpty(path)) return null;
+        // Transform.Find("A/B/C")는 비활성 자식도 찾음
+        return root.Find(path);
+    }
+
+    static void DebugAnim(string msg)
+    {
+        if (VerboseAnimatorLogging) Debug.Log(msg);
+    }
+
+    // 저장된 AnimatorClipSnapshot들을 보기 좋은 형태로 찍어주는 유틸
+    public static void DumpAnimatorClipSnapshots(string header = "[Dump]", int maxObjects = 20, int maxLayers = 4)
+    {
+        int count = CurrentData?.animatorClips?.Count ?? 0;
+        DebugAnim($"{header} animatorClips count={count}");
+
+        if (count == 0) return;
+
+        int printed = 0;
+        foreach (var snap in CurrentData.animatorClips)
+        {
+            if (snap == null) continue;
+            DebugAnim($"{header} uid={snap.id} layers={snap.layers?.Count ?? 0}");
+            int lc = Mathf.Min(snap.layers?.Count ?? 0, maxLayers);
+            for (int i = 0; i < lc; i++)
+            {
+                var l = snap.layers[i];
+                DebugAnim($"{header}  └ layer={l.layer} stateHash={l.stateHash} norm={l.normalizedTime:F3} clip='{l.clipName}'");
+            }
+            printed++;
+            if (printed >= maxObjects) { DebugAnim($"{header} ...truncated"); break; }
+        }
+    }
     // ===== 공통 =====
     private static string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
     private static SaveData currentData;
@@ -119,14 +205,15 @@ public static class SaveManager
     private static void EnsureData()
     {
         if (currentData == null) currentData = new SaveData();
-        if (currentData.chapterMemoryProgress == null) currentData.chapterMemoryProgress = new List<ChapterMemoryProgress>();
-        if (currentData.chapterClueProgress == null) currentData.chapterClueProgress = new List<ChapterClueProgress>();
-        if (currentData.objectPositions == null) currentData.objectPositions = new List<ObjectPositionState>();
-        //if (currentData.possessableInventories == null) currentData.possessableInventories = new List<PossessableInventoryState>();
         if (currentData.collectedClueNames == null) currentData.collectedClueNames = new List<string>();
         if (currentData.collectedMemoryIDs == null) currentData.collectedMemoryIDs = new List<string>();
         if (currentData.scannedMemoryTitles == null) currentData.scannedMemoryTitles = new List<string>();
         if (currentData.solvedPuzzleIDs == null) currentData.solvedPuzzleIDs = new List<string>();
+        if (currentData.chapterMemoryProgress == null) currentData.chapterMemoryProgress = new List<ChapterMemoryProgress>();
+        if (currentData.chapterClueProgress == null) currentData.chapterClueProgress = new List<ChapterClueProgress>();
+        if (currentData.objectPositions == null) currentData.objectPositions = new List<ObjectPositionState>();
+        if (currentData.animatorClips == null) currentData.animatorClips = new List<AnimatorClipSnapshot>();
+        if (currentData.animatorTrees == null) currentData.animatorTrees = new List<AnimatorTreeSnapshot>();
         if (currentData.activeObjectStates == null) currentData.activeObjectStates = new List<ActiveObjectState>();
         if (currentData.doorStates == null) currentData.doorStates = new List<DoorState>();
         if (currentData.possessableStates == null) currentData.possessableStates = new List<PossessableState>();
@@ -202,7 +289,33 @@ public static class SaveManager
         return progress != null;
     }
 
+    // 애니메이터 읽고 쓰기
+    public static void SetAnimatorClips(string id, AnimatorClipSnapshot snap)
+    {
+        EnsureData();
+        int i = currentData.animatorClips.FindIndex(x => x.id == id);
+        if (i >= 0) currentData.animatorClips[i] = snap;
+        else currentData.animatorClips.Add(snap);
+    }
 
+    public static bool TryGetAnimatorClips(string id, out AnimatorClipSnapshot snap)
+    {
+        snap = currentData?.animatorClips?.Find(x => x.id == id);
+        return snap != null;
+    }
+    public static void SetAnimatorTree(string id, AnimatorTreeSnapshot snap)
+    {
+        EnsureData();
+        int i = currentData.animatorTrees.FindIndex(x => x.id == id);
+        if (i >= 0) currentData.animatorTrees[i] = snap;
+        else currentData.animatorTrees.Add(snap);
+    }
+
+    public static bool TryGetAnimatorTree(string id, out AnimatorTreeSnapshot snap)
+    {
+        snap = currentData?.animatorTrees?.Find(x => x.id == id);
+        return snap != null;
+    }
 
     // ===== 튜토리얼 진행도 저장/적용 =====
     public static void SetRoomVisitCount(string roomName, int count)
@@ -341,6 +454,102 @@ public static class SaveManager
         }
     }
 
+    // ===== 애니메이터 상태 스냅샷 =====
+
+    public static void SnapshotAllAnimatorTrees()
+    {
+        var uids = GameObject.FindObjectsOfType<UniqueId>(true);
+        DebugAnim($"[SNAP-TREE] UniqueIds={uids.Length}");
+
+        foreach (var uid in uids)
+        {
+            var root = uid.transform;
+            var anims = root.GetComponentsInChildren<Animator>(true);
+            if (anims == null || anims.Length == 0) continue;
+
+            var tree = new AnimatorTreeSnapshot { id = uid.Id };
+            var sb = new System.Text.StringBuilder();
+            sb.Append($"[SNAP-TREE] uid={uid.Id} go='{uid.gameObject.name}' animators={anims.Length}");
+
+            foreach (var anim in anims)
+            {
+                var childPath = GetRelativePath(root, anim.transform);
+                if (string.IsNullOrEmpty(childPath)) continue;
+
+                var childSnap = new AnimatorChildSnapshot { childPath = childPath };
+
+                int lc = anim.layerCount;
+                for (int l = 0; l < lc; l++)
+                {
+                    var info = anim.GetCurrentAnimatorStateInfo(l);
+
+                    string clipName = "";
+                    var clips = anim.GetCurrentAnimatorClipInfo(l);
+                    if (clips != null && clips.Length > 0 && clips[0].clip != null)
+                        clipName = clips[0].clip.name;
+
+                    childSnap.layers.Add(new AnimatorChildLayerState
+                    {
+                        layer = l,
+                        fullPathHash = info.fullPathHash,
+                        shortNameHash = info.shortNameHash,
+                        normalizedTime = info.normalizedTime,
+                        clipName = clipName
+                    });
+                }
+
+                tree.animators.Add(childSnap);
+                sb.Append($"\n  - path='{childPath}' layers={childSnap.layers.Count}");
+                foreach (var ly in childSnap.layers)
+                    sb.Append($" | L{ly.layer}: full={ly.fullPathHash} short={ly.shortNameHash} norm={ly.normalizedTime:F3} clip='{ly.clipName}'");
+            }
+
+            SetAnimatorTree(uid.Id, tree);
+            DebugAnim(sb.ToString());
+        }
+    }
+
+    //public static void SnapshotAllAnimatorCurrentClips()
+    //{
+    //    var uids = GameObject.FindObjectsOfType<UniqueId>(true);
+    //    DebugAnim($"[SNAP] scanning UniqueId count={uids.Length}");
+
+    //    foreach (var uid in uids)
+    //    {
+    //        if (!uid.TryGetComponent<Animator>(out var anim) || anim == null) continue;
+
+    //        var snap = new AnimatorClipSnapshot { id = uid.Id };
+    //        int lc = anim.layerCount;
+
+    //        // 보기 좋게 한 줄 요약
+    //        var sb = new System.Text.StringBuilder();
+    //        sb.Append($"[SNAP] uid={uid.Id} go='{uid.gameObject.name}' layers={lc}");
+
+    //        for (int l = 0; l < lc; l++)
+    //        {
+    //            var info = anim.GetCurrentAnimatorStateInfo(l);
+
+    //            string clipName = "";
+    //            var clips = anim.GetCurrentAnimatorClipInfo(l);
+    //            if (clips != null && clips.Length > 0 && clips[0].clip != null)
+    //                clipName = clips[0].clip.name;
+
+    //            snap.layers.Add(new AnimatorClipLayerState
+    //            {
+    //                layer = l,
+    //                clipName = clipName,
+    //                stateHash = info.fullPathHash,
+    //                normalizedTime = info.normalizedTime
+    //            });
+
+    //            sb.Append($" | L{l}: state={info.fullPathHash} norm={info.normalizedTime:F3} clip='{clipName}'");
+    //        }
+
+    //        SetAnimatorClips(uid.Id, snap);
+    //        DebugAnim(sb.ToString());
+    //    }
+    //}
+
     // ===== 플레이어 인벤토리 상태 적용 =====
     public static void ApplyPlayerInventoryFromSave(Inventory_Player inv)
     {
@@ -358,26 +567,7 @@ public static class SaveManager
         }
     }
 
-    // ===== 빙의 대상 인벤토리 저장/조회 =====
-    //public static void SetPossessableInventory(string ownerId, List<PossessableInventoryEntry> items)
-    //{
-    //    EnsureData();
-    //    var list = currentData.possessableInventories;
-    //    int i = list.FindIndex(x => x.ownerId == ownerId);
-    //    if (i >= 0) list[i].items = items ?? new List<PossessableInventoryEntry>();
-    //    else list.Add(new PossessableInventoryState { ownerId = ownerId, items = items ?? new List<PossessableInventoryEntry>() });
-    //}
-
-    //public static bool TryGetPossessableInventory(string ownerId, out List<PossessableInventoryEntry> items)
-    //{
-    //    items = null;
-    //    var s = currentData?.possessableInventories?.Find(x => x.ownerId == ownerId);
-    //    if (s == null) return false;
-    //    items = new List<PossessableInventoryEntry>(s.items ?? new List<PossessableInventoryEntry>());
-    //    return true;
-    //}
     
-
 
     // ===== 조회(읽기) 계열 =====
     public static bool HasSaveFile() => File.Exists(SavePath);
@@ -404,7 +594,6 @@ public static class SaveManager
         => currentData?.checkpointId ?? string.Empty;
 
 
-    // ===== 변경(쓰기) 계열 =====
     public static void SaveGame(SaveData data = null)
     {
         if (data != null) currentData = data;
@@ -418,10 +607,13 @@ public static class SaveManager
             if (File.Exists(SavePath)) File.Delete(SavePath);
             File.Move(tmp, SavePath);
 
+            int animClipCount = currentData.animatorClips?.Count ?? 0;
+
             Debug.Log($"[SaveManager] Saved to: {SavePath}\n" +
                       $" scene={currentData.sceneName}" +
                       $" memIDs={currentData.collectedMemoryIDs?.Count ?? 0}" +
                       $" clues={currentData.collectedClueNames?.Count ?? 0}" +
+                      $" animClips={animClipCount}" +     // <-- 추가
                       $" bytes={json.Length}");
         }
         catch (System.Exception ex)
@@ -429,12 +621,12 @@ public static class SaveManager
             Debug.LogError($"[SaveManager] Save FAILED at {SavePath}\n{ex}");
         }
 
-        // 팝업 Null-safe
         var popup = UIManager.Instance != null ? UIManager.Instance.SaveNoticePopupUI : null;
         if (popup != null) popup.FadeInAndOut("게임이 저장되었습니다.");
     }
 
 
+    // ===== 변경(쓰기) 계열 =====
     public static SaveData LoadGame()
     {
         if (!File.Exists(SavePath))
@@ -449,19 +641,24 @@ public static class SaveManager
             currentData = JsonUtility.FromJson<SaveData>(json) ?? new SaveData();
             EnsureData();
 
+            int animClipCount = currentData.animatorClips?.Count ?? 0;
+
             Debug.Log($"[SaveManager] Loaded. scene={currentData.sceneName}" +
                       $" memIDs={currentData.collectedMemoryIDs?.Count ?? 0}" +
                       $" clues={currentData.collectedClueNames?.Count ?? 0}" +
+                      $" animClips={animClipCount}" +     // <-- 추가
                       $" bytes={json.Length}");
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
             currentData = new SaveData();
             EnsureData();
         }
 
-        Loaded?.Invoke(currentData);
+        // 로드된 내용 요약 덤프
+        DumpAnimatorClipSnapshots("[LOAD] snapshot summary", maxObjects: 10, maxLayers: 2);
 
+        Loaded?.Invoke(currentData);
         return currentData;
     }
 
@@ -589,7 +786,7 @@ public static class SaveManager
         SnapshotPlayerInventory(inv);
 
         // 빙의 대상 인벤토리 상태 저장
-        SnapshotAllPossessableInventories();
+        //SnapshotAllPossessableInventories();
 
         var cem = ChapterEndingManager.Instance;
         if (cem != null)
@@ -607,6 +804,9 @@ public static class SaveManager
         }
 
         SetSceneAndPosition(sceneName, playerPos, checkpointId, autosave);
+        // 애니메이터 상태 스탭샷
+        SnapshotAllAnimatorTrees();
+        DumpAnimatorClipSnapshots("[SAVE] snapshot summary", maxObjects: 10, maxLayers: 2);
 
         if (autosave) SaveGame();
     }
@@ -654,7 +854,7 @@ public static class SaveManager
         SnapshotPlayerInventory(inv);
 
         // 빙의 대상 인벤토리 상태 저장
-        SnapshotAllPossessableInventories();
+        //SnapshotAllPossessableInventories();
 
         var cem = ChapterEndingManager.Instance;
         if (cem != null)
@@ -671,32 +871,35 @@ public static class SaveManager
             SetChapterScannedMemories(3, cem.GetScannedMemoryIds(3));
         }
 
-       
+        // 애니메이터 상태 스탭샷
+        SnapshotAllAnimatorTrees();
+        DumpAnimatorClipSnapshots("[SAVE] snapshot summary", maxObjects: 10, maxLayers: 2);
 
         if (autosave) SaveGame();
     }
-    public static void SnapshotAllPossessableInventories()
-    {
-        foreach (var have in GameObject.FindObjectsOfType<HaveItem>(true))
-        {
-            if (!have.TryGetComponent(out UniqueId uid)) continue;
-            //var items = new List<PossessableInventoryEntry>();
 
-            // InventorySlot_PossessableObject -> (itemKey, quantity)
-            //foreach (var slot in have.inventorySlots)
-            //{
-            //    if (slot == null || slot.item == null) continue;
-            //    if (slot.quantity <= 0) continue;
+    //public static void SnapshotAllPossessableInventories()
+    //{
+    //    foreach (var have in GameObject.FindObjectsOfType<HaveItem>(true))
+    //    {
+    //        if (!have.TryGetComponent(out UniqueId uid)) continue;
+    //        //var items = new List<PossessableInventoryEntry>();
 
-            //    items.Add(new PossessableInventoryEntry
-            //    {
-            //        itemKey = slot.item.name,   // 권장: 에셋 파일명 사용
-            //        quantity = slot.quantity
-            //    });
-            //}
+    //        // InventorySlot_PossessableObject -> (itemKey, quantity)
+    //        //foreach (var slot in have.inventorySlots)
+    //        //{
+    //        //    if (slot == null || slot.item == null) continue;
+    //        //    if (slot.quantity <= 0) continue;
 
-            //SaveManager.SetPossessableInventory(uid.Id, items);
-        }
-    }
+    //        //    items.Add(new PossessableInventoryEntry
+    //        //    {
+    //        //        itemKey = slot.item.name,   // 권장: 에셋 파일명 사용
+    //        //        quantity = slot.quantity
+    //        //    });
+    //        //}
+
+    //        //SaveManager.SetPossessableInventory(uid.Id, items);
+    //    }
+    //}
 }
 

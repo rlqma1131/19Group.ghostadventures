@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4134046223844422119}
   - component: {fileID: 643280441172904569}
+  - component: {fileID: 1032216474465910992}
   m_Layer: 0
   m_Name: Ch1_Closet
   m_TagString: Untagged
@@ -47,6 +48,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseball: {fileID: 1727160261382674069}
+--- !u!114 &1032216474465910992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466101826683303971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch1_Closet
 --- !u!1 &644462598283471934
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,13 +175,14 @@ GameObject:
   - component: {fileID: 2559906320894238739}
   - component: {fileID: 7978475181466858523}
   - component: {fileID: 458013222782774413}
+  - component: {fileID: 4466846138329866203}
   m_Layer: 10
   m_Name: Ch1_Baseball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2559906320894238739
 Transform:
   m_ObjectHideFlags: 0
@@ -177,7 +192,7 @@ Transform:
   m_GameObject: {fileID: 1727160261382674069}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.89, y: -2.67, z: 0}
+  m_LocalPosition: {x: -0.56, y: -2.719, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -247,6 +262,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.7
+--- !u!114 &4466846138329866203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727160261382674069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch1_Baseball
 --- !u!1 &3908708974919136555
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,7 +291,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1298488826860867035
 Transform:
   m_ObjectHideFlags: 0
@@ -272,13 +300,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3908708974919136555}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.11040638, w: 0.99388653}
-  m_LocalPosition: {x: -0.325, y: 0.363, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: 0.084602624, w: 0.9964148}
+  m_LocalPosition: {x: -0.456, y: 0.261, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2559906320894238739}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 12.677}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 9.706}
 --- !u!212 &1663903232450127368
 SpriteRenderer:
   m_ObjectHideFlags: 0
