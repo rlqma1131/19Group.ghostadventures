@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,6 +7,7 @@ public class StartScene_MenuButtons : MonoBehaviour
 {
     [Header("Windows")]
     [SerializeField] private GameObject optionWindow;
+    [SerializeField] private GameObject credit;
 
     [Header("Buttons")]
     [SerializeField] private Button continueButton;
@@ -38,6 +39,25 @@ public class StartScene_MenuButtons : MonoBehaviour
         if (newGameConfirmPanel != null) newGameConfirmPanel.SetActive(false);
     }
 
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            // ESC 키로 확인창 닫기
+            if (newGameConfirmPanel != null && newGameConfirmPanel.activeSelf)
+            {
+                CloseNewGameConfirm();
+            }
+            else if (optionWindow != null && optionWindow.activeSelf)
+            {
+                optionWindow.SetActive(false);
+            }
+            else if (credit != null && credit.activeSelf)
+            {
+                credit.SetActive(false);
+            }
+        }
+    }
     // 이어하기 버튼 셋업
     private void UpdateContinueButtonState()
     {
@@ -158,6 +178,12 @@ public class StartScene_MenuButtons : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    public void OnClickCredit()
+    {
+        if(credit != null)
+            credit.gameObject.SetActive(true);
     }
     
     public void OpenURL()
