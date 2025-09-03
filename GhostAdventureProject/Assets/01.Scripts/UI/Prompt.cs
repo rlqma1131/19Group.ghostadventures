@@ -5,14 +5,20 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using System.Threading.Tasks;
+using UnityEngine.UIElements;
+using System;
 
 public class Prompt : MonoBehaviour
 {
     private GameObject PromptPanel; // 프롬프트 패널 이미지
-    private TMP_Text PromptText; // 프롬프트 텍스트
-    private Queue<string> PromptQueue = new Queue<string>();
+    [SerializeField] private TextMeshProUGUI PromptText; // 프롬프트 텍스트
+    public Queue<string> PromptQueue = new Queue<string>();
     private bool isActive = false;
-    private Tween promptTween;
+    private string[] pendingChoices;
+    private System.Action choiceCallback;  
+    public Action attack;
+    SecretNPC_Dialogue dialogueUI;
+    public bool attackmode;
 
     private void Start()
     {
@@ -24,36 +30,68 @@ public class Prompt : MonoBehaviour
 
 
     // ===================== 대화용 - 클릭시 넘어감 ============================
-    // public void ShowPrompt_Click(params string[] lines)
-    // {
-    //     PromptQueue.Clear();
-    //     foreach (var line in lines)
-    //         PromptQueue.Enqueue(line);
+    public void ShowPrompt_Click(SecretNPC_Dialogue dialogue, string[] choices = null, 
+                                System.Action onChoiceSelected = null, params string[] lines)
+    {
+        dialogueUI = dialogue;
+        PromptQueue.Clear();
+        foreach (var line in lines)
+            PromptQueue.Enqueue(line);
 
-    //     PromptPanel.SetActive(true);
-    //     enabled = true; // Update 실행 가능하게
-    //     ShowNextLine();
-    // }
+        PromptPanel.SetActive(true);
+        enabled = true; // Update 실행 가능하게
 
-    // private void ShowNextLine()
-    // {
-    //     if (PromptQueue.Count > 0)
-    //     {
-    //         string nextLine = PromptQueue.Dequeue();
-    //         PromptText.text = nextLine;
-    //     }
-    //     else
-    //     {
-    //         PromptPanel.SetActive(false);
-    //         enabled = false; // Update 비활성화
-    //     }
-    // }
 
-    // private void Update()
-    // {
-    //     if (Input.GetMouseButtonDown(0))
-    //         ShowNextLine();
-    // }
+        pendingChoices = choices;
+        choiceCallback = onChoiceSelected;
+        ShowNextLine();
+    }
+
+    private void ShowNextLine()
+    {
+        if (PromptQueue.Count > 0)
+        {
+            isActive = true;
+            string nextLine = PromptQueue.Dequeue();
+            PromptText.text = nextLine;
+            PromptText.color = Color.blue;
+            
+            if (PromptQueue.Count == 0 && pendingChoices != null)
+            {
+                
+                dialogueUI.ShowChoices(pendingChoices, index =>
+                {
+                    HidePrompt();
+                    choiceCallback?.Invoke();
+                });
+            }
+        }
+        else
+        {   
+            HidePrompt(); 
+        }
+        
+    }
+
+    public void HidePrompt()
+    {
+        PromptQueue.Clear();
+        isActive = false;
+        PromptPanel.SetActive(false);
+        enabled = false;
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0) && isActive && PromptQueue.Count > 0)
+            ShowNextLine();
+        if (Input.GetMouseButtonDown(0) && isActive && PromptQueue.Count == 0 && attackmode)
+        {
+            HidePrompt();
+            attack?.Invoke();
+        }
+
+    }
     // public void ShowPrompt(List<string> lines) //, System.Action onComplete = null
     // {
     //     PromptQueue.Clear();
@@ -323,7 +361,7 @@ public class Prompt : MonoBehaviour
 
      public void ShowPrompt_Random(params string[] lines)
     {
-        string chosenLine = lines[Random.Range(0, lines.Length)];
+        string chosenLine = lines[UnityEngine.Random.Range(0, lines.Length)];
         ShowPrompt(chosenLine);
 
     }
