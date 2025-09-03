@@ -4264,6 +4264,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8842671305838587156}
+  - component: {fileID: 6918988955465375453}
   m_Layer: 0
   m_Name: Inventory
   m_TagString: Untagged
@@ -4293,6 +4294,18 @@ RectTransform:
   m_AnchoredPosition: {x: -910, y: -450}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: -2.18, y: 0.65}
+--- !u!114 &6918988955465375453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466694018990122623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 641cc15996a654108be4d8396da71b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1486712112776383615
 GameObject:
   m_ObjectHideFlags: 0
@@ -9610,6 +9623,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PromptText: {fileID: 6294301292524300214}
+  attackmode: 0
   PromptContainer: {fileID: 1177212883881194904}
   PromptPrefab: {fileID: 5624292579140530279, guid: 6f4d7c2cec2f040019074e1cc36ce4d4, type: 3}
   spawnScale: 1
@@ -24057,13 +24071,12 @@ MonoBehaviour:
   - {fileID: 7782927918429901902}
   - {fileID: 8100159800662023363}
   - {fileID: 7127295108696476438}
-  frontKeys: 31000000320000003300000034000000
-  inventorySlots: []
   frontRow: {fileID: 7914558540257767091}
   backRow: {fileID: 6368234108161033526}
   flipDur: 0.25
   gapDur: 0.05
   flipEase: 4
+  frontKeys: 31000000320000003300000034000000
 --- !u!1 &8054407306981761391
 GameObject:
   m_ObjectHideFlags: 0

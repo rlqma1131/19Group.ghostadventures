@@ -25,14 +25,12 @@ public class Inventory_PossessableObject : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        inventory_Player = FindObjectOfType<Inventory_Player>();
+        inventory_Player = UIManager.Instance.Inventory_PlayerUI;
     }
-
-
 
      private void Update()
     {
-        if (InventoryInputFocus.Current != InvSide.Possess) return;
+        // if (InventoryInputFocus.Current != InvSide.Possess) return;
 
         // 비활성/빈 인벤이면 무시
         if (!gameObject.activeSelf || spawnedSlots.Count == 0) return;
@@ -44,11 +42,23 @@ public class Inventory_PossessableObject : MonoBehaviour
             var keypad = KeyCode.Keypad1 + i;
             if (Input.GetKeyDown(alpha) || Input.GetKeyDown(keypad))
             {
-                if (Inventory_Player.FocusIsPlayer) return;
+                if (InventoryInputToggle.FocusIsPlayer) return;
                 SelectSlot(i);
                 break;
             }
         }
+    }
+
+    public void OpenInventory(BasePossessable target)
+    {
+        haveItem = target.GetComponent<HaveItem>();
+        if (haveItem != null)
+        {
+            ShowInventory(haveItem.inventorySlots);
+            // InventoryInputFocus.Current = InvSide.Possess;
+            return;
+        }
+        HideInventory();
     }
     
     // slotPrefab을 slotParent에 생성하고 spawnedSlots에 추가함
@@ -71,28 +81,16 @@ public class Inventory_PossessableObject : MonoBehaviour
             spawnedSlots.Add(obj);
             
         }
-        SetKeyLabelsVisible(!Inventory_Player.FocusIsPlayer);
+        SetKeyLabelsVisible(!InventoryInputToggle.FocusIsPlayer); // false.
         gameObject.SetActive(true);   
-    }
-
-    public void OpenInventory(BasePossessable target)
-    {
-        haveItem = target.GetComponent<HaveItem>();
-        if (haveItem != null)
-        {
-            ShowInventory(haveItem.inventorySlots);
-            InventoryInputFocus.Current = InvSide.Possess;
-            return;
-        }
-        HideInventory();
     }
 
     public void HideInventory()
     {
         Clear();
         gameObject.SetActive(false);
-        InventoryInputFocus.Current = InvSide.Player;
-        Inventory_Player.FocusIsPlayer = true;
+        // InventoryInputFocus.Current = InvSide.Player;
+        InventoryInputToggle.FocusIsPlayer = true;
         inventory_Player.RefreshUI();
     }
 
@@ -195,23 +193,6 @@ public class Inventory_PossessableObject : MonoBehaviour
 
     public void UseItem(ItemData item, int amount)
     {
-        // InventorySlot_PossessableObject slot = spawnedSlots
-        // .ConvertAll(s => s.GetComponent<InventorySlot_PossessableObject>())
-        // .Find(s => s.item == item);        
-        
-        // if (slot != null)
-        // {
-        //     slot.UseItem(amount);
-        //     // if (HaveItem.Instance.inventorySlots.Contains(slot))
-        //     // {
-        //         HaveItem.Instance.inventorySlots.Remove(slot);
-        //         Debug.Log("인벤토리슬롯 개수: " + HaveItem.Instance.inventorySlots.Count);
-        //     // }
-
-        //     // UpdateUI(); // UI 새로고침 (선택사항: 자동 갱신되면 생략 가능)
-        // }
-        // else
-        //     HaveItem.Instance.inventorySlots.Clear();
         InventorySlot_PossessableObject slot = spawnedSlots
             .ConvertAll(s => s.GetComponent<InventorySlot_PossessableObject>())
             .Find(s => s.item == item);
@@ -222,13 +203,10 @@ public class Inventory_PossessableObject : MonoBehaviour
 
             if (slot.IsEmpty())
             {
-                // haveItem.inventorySlots.Clear();
-                // haveItem.inventorySlots.Remove(slot);
                 haveItem.inventorySlots.RemoveAll(s => s.item == item);
                 Debug.Log("해브아이템" + haveItem.inventorySlots.Count);
             }
         }
-
         // 아이템 사용 시 상태 저장 (기록)
     }
 
@@ -241,23 +219,22 @@ public class Inventory_PossessableObject : MonoBehaviour
         }
     }
 
-    
-
     public ItemData selectedItem() => selectedSlot != null ? selectedSlot.item : null;
+    public bool IsSpawnslots() => spawnedSlots.Count > 0 ? true: false;
 
 
-//     public void ClearAllSlotHighlights()
-// {
-//     foreach (GameObject slotObj in spawnedSlots)
-//     {
-//         var slot = slotObj.GetComponent<InventorySlot_PossessableObject>();
-//         if (slot != null)
-//             slot.keyText_PO.gameObject.SetActive(false);
-//     }
+    // public void ClearAllSlotHighlights() // 슬롯 선택 하이라이트 없애기
+    // {
+    //     foreach (GameObject slotObj in spawnedSlots)
+    //     {
+    //         var slot = slotObj.GetComponent<InventorySlot_PossessableObject>();
+    //         if (slot != null)
+    //             slot.keyText_PO.gameObject.SetActive(false);
+    //     }
 
-//     selectedSlot = null;
-//     selectedSlotIndex = -1;
-// }
+    //     selectedSlot = null;
+    //     selectedSlotIndex = -1;
+    // }
 
 
 }

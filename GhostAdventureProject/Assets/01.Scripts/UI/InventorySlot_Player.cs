@@ -12,16 +12,15 @@ public class InventorySlot_Player : MonoBehaviour
     public Image clearSlotIcon;
     public int clueIndex;
     public TMP_Text keyText;
-[Header("Dim Settings")]
+
+    [Header("Dim Settings")]
     [Range(0f,1f)] public float dimAlpha = 0.6f; // 뒷면 투명도
     private float normalAlpha = 1f;
-    // public TextMeshProUGUI clueName;
 
     public void Setup(ClueData clue)
     {
         icon.sprite = clue.clue_Icon;
         icon.enabled = true; // 아이콘 표시
-        // clueName.text = clue.clue_Name;
     }
 
     internal void Clear()
@@ -29,7 +28,6 @@ public class InventorySlot_Player : MonoBehaviour
         icon.sprite = null;
         icon.enabled = false; // 아이콘 숨기기
     }
-
 
     private void Start()
     {
@@ -39,11 +37,13 @@ public class InventorySlot_Player : MonoBehaviour
         SetDim(false);
     }
 
+    // 인벤토리 숫자키 표시 활성화/비활성화
     public void SetKeyVisible(bool visible)
     {
         if (keyText != null) keyText.gameObject.SetActive(visible);
     }
 
+    // 아이콘 투명하게 만들기 활성화/비활성화
     public void SetDim(bool dim)
     {
         if (icon == null) return;
@@ -60,7 +60,7 @@ public class InventorySlot_Player : MonoBehaviour
         }
     }
 
-    public void UpdateKeyText()
+    public void UpdateKeyText() // 옵션메뉴-키변경시 keyText변경
     {
         if (keyText == null || UIManager.Instance.ESCMenuUI == null) return;
         KeyCode key = UIManager.Instance.ESCMenuUI.GetKey(clueIndex);
