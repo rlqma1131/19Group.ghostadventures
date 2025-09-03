@@ -193,6 +193,10 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
         MemoryManager.Instance?.WarmStartFromSave();
         ChapterEndingManager.Instance?.ApplyFromSave();
 
+        // === 튜토리얼 완료 단계 복원 ===
+        if (SaveManager.TryGetCompletedTutorialSteps(out var steps))
+            TutorialManager.Instance?.ApplyFromSave(steps);
+
         // 로컬 함수: 트랜스폼 깊이(루트=0)
         static int GetDepth(Transform t)
         {
@@ -225,7 +229,6 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 {
                     anim.Play(ly.fullPathHash != 0 ? ly.fullPathHash : ly.shortNameHash, l, tNorm);
                     anim.Update(0f);
-                    // (선택) Debug.Log($"[Reassert] {anim.name} path ok -> L{l} {ly.clipName} @{tNorm:F3}");
                 }
             }
         }

@@ -1,19 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 public class Ch1_MemoryFake_02_Cake : MemoryFragment
 {
     private Animator anim;
-    private ParticleSystem _particleSystem;
-    private Light2D _light;
+    [SerializeField] private GameObject _particleSystem;
+    [SerializeField] private GameObject _light;
 
     void Start()
     {
         isScannable = false;
         anim = GetComponentInChildren<Animator>();
-        _particleSystem = GetComponentInChildren<ParticleSystem>();
-        _light = GetComponentInChildren<Light2D>();
     }
 
     public void ActivateCake()
@@ -23,26 +22,29 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
             SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
     }
 
-    public override void AfterScan()
+    public override void Scanning()
     {
+        anim.SetBool("Show", true);
+
         ChapterEndingManager.Instance.CollectCh1Clue("H");
-
-
-        anim.SetTrigger("Show");
 
         AfterScanEffect(); // 애니메이션 재생 후 효과 실행
 
-        Debug.Log("[Cake] AfterScan 호출됨");
-
         Invoke("HighlightOff", 1f);
+    }
 
-        base.AfterScan();
+    public override void AfterScan()
+    {
+        SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
+            SceneManager.GetActiveScene().name,
+            GameManager.Instance.Player.transform.position,
+            checkpointId: data.memoryID,
+            autosave: true);
     }
 
     void HighlightOff()
     {
         highlight.SetActive(false); // 하이라이트 비활성화
-        Debug.Log("하이라이트 오프함");
     }
 
     protected override void PlusAction()
@@ -52,8 +54,8 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
 
     private void AfterScanEffect()
     {
-        _particleSystem.Play();
-        _light.enabled = true;
+        _particleSystem.SetActive(true);
+        _light.SetActive(true);
     }
 
     protected override void OnTriggerEnter2D(Collider2D other)

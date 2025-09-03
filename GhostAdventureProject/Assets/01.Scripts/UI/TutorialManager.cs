@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -54,6 +54,9 @@ public class TutorialManager : Singleton<TutorialManager>
         if (completedSteps.Contains(step)) return;
 
         completedSteps.Add(step);
+
+        // [저장] 튜토리얼 완료 기록
+        SaveManager.SetCompletedTutorialSteps(completedSteps);
 
         switch (step)
         {
@@ -166,6 +169,14 @@ public class TutorialManager : Singleton<TutorialManager>
             });
     }
     public bool HasCompleted(TutorialStep step) => completedSteps.Contains(step);
+
+    // 저장된 튜토리얼 상태 불러오기
+    public void ApplyFromSave(IEnumerable<TutorialStep> steps)
+    {
+        completedSteps = steps != null
+            ? new HashSet<TutorialStep>(steps)
+            : new HashSet<TutorialStep>();
+    }
 }
 
 

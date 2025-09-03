@@ -14,8 +14,6 @@ public class Ch3_Drawers : BasePossessable
     [SerializeField] private Ch3_Xray_Monitor xrayMonitor;
     [SerializeField] private Ch3_PatientDocumentIndex[] documentIndex;
 
-    private bool isFirstCheck = false;
-
     protected override void Start()
     {
         isPossessed = false;

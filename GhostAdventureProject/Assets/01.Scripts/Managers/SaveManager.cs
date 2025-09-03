@@ -36,7 +36,7 @@ public class ObjectPositionState
     public Vector3 position;
 }
 
-// 빙의오브젝트 활성화 상태
+// 빙의오브젝트 hasActivated 상태
 [System.Serializable]
 public class PossessableState
 {
@@ -44,7 +44,7 @@ public class PossessableState
     public bool hasActivated;
 }
 
-// 기억오브젝트 스캔 가능 상태
+// 기억오브젝트 isScannable 상태
 [System.Serializable]
 public class MemoryFragmentState
 {
@@ -76,6 +76,7 @@ public class AnimatorClipSnapshot
     public string id;  // UniqueId
     public List<AnimatorClipLayerState> layers = new();
 }
+
 // 현재 상태를 담는 레이어 단위 스냅샷
 [System.Serializable]
 public class AnimatorChildLayerState
@@ -91,7 +92,7 @@ public class AnimatorChildLayerState
 [System.Serializable]
 public class AnimatorChildSnapshot
 {
-    public string childPath; // UniqueId.transform 기준 상대 경로 ("Body/CatAnimator" 등)
+    public string childPath;
     public List<AnimatorChildLayerState> layers = new();
 }
 
@@ -123,11 +124,15 @@ public class SaveData
     public List<string> scannedMemoryTitles;
     public List<string> solvedPuzzleIDs;
 
+    // 애니메이터 상태 스냅샷
     public List<AnimatorClipSnapshot> animatorClips = new();
     public List<AnimatorTreeSnapshot> animatorTrees = new();
+
+    // 챕터별 진행도 저장
     public List<ChapterMemoryProgress> chapterMemoryProgress = new();
     public List<ChapterClueProgress> chapterClueProgress = new();
 
+    // UniqueID를 갖고 있는 오브젝트 활성화 상태 스냅샷
     public List<ActiveObjectState> activeObjectStates;
     public List<ObjectPositionState> objectPositions;
     public List<DoorState> doorStates;
@@ -136,6 +141,7 @@ public class SaveData
 
     // 튜토리얼 진행도 저장용
     public List<RoomVisitEntry> roomVisitCounts = new();
+    public List<TutorialStep> completedTutorialSteps = new();
 }
 
 public static class SaveManager
@@ -168,16 +174,10 @@ public static class SaveManager
         return root.Find(path);
     }
 
-    static void DebugAnim(string msg)
-    {
-        if (VerboseAnimatorLogging) Debug.Log(msg);
-    }
-
     // 저장된 AnimatorClipSnapshot들을 보기 좋은 형태로 찍어주는 유틸
     public static void DumpAnimatorClipSnapshots(string header = "[Dump]", int maxObjects = 20, int maxLayers = 4)
     {
         int count = CurrentData?.animatorClips?.Count ?? 0;
-        DebugAnim($"{header} animatorClips count={count}");
 
         if (count == 0) return;
 
@@ -185,15 +185,12 @@ public static class SaveManager
         foreach (var snap in CurrentData.animatorClips)
         {
             if (snap == null) continue;
-            DebugAnim($"{header} uid={snap.id} layers={snap.layers?.Count ?? 0}");
             int lc = Mathf.Min(snap.layers?.Count ?? 0, maxLayers);
             for (int i = 0; i < lc; i++)
             {
                 var l = snap.layers[i];
-                DebugAnim($"{header}  └ layer={l.layer} stateHash={l.stateHash} norm={l.normalizedTime:F3} clip='{l.clipName}'");
             }
             printed++;
-            if (printed >= maxObjects) { DebugAnim($"{header} ...truncated"); break; }
         }
     }
     // ===== 공통 =====
@@ -275,14 +272,13 @@ public static class SaveManager
         return p;
     }
 
-    // 스냅샷 세팅
+    // 기억 스냅샷 세팅
     public static void SetChapterScannedMemories(int chapter, IEnumerable<string> ids)
     {
         var p = GetOrCreateChapterMemory(chapter);
         p.memoryIds = ids != null ? new List<string>(ids) : new List<string>();
     }
 
-    // 로드시 읽기
     public static bool TryGetChapterScannedMemories(int chapter, out ChapterMemoryProgress progress)
     {
         progress = currentData?.chapterMemoryProgress?.Find(x => x.chapter == chapter);
@@ -318,6 +314,7 @@ public static class SaveManager
     }
 
     // ===== 튜토리얼 진행도 저장/적용 =====
+    // 방문횟수
     public static void SetRoomVisitCount(string roomName, int count)
     {
         EnsureData();
@@ -334,6 +331,21 @@ public static class SaveManager
         if (e == null) return false;
         count = e.count;
         return true;
+    }
+
+    // 튜토리얼 완료 목록 상태
+    public static void SetCompletedTutorialSteps(IEnumerable<TutorialStep> steps)
+    {
+        EnsureData();
+        currentData.completedTutorialSteps = steps != null
+            ? new List<TutorialStep>(steps)
+            : new List<TutorialStep>();
+    }
+
+    public static bool TryGetCompletedTutorialSteps(out List<TutorialStep> steps)
+    {
+        steps = currentData?.completedTutorialSteps;
+        return steps != null && steps.Count > 0;
     }
 
     // ===== 오브젝트 활성화 상태 저장/적용 =====
@@ -459,7 +471,6 @@ public static class SaveManager
     public static void SnapshotAllAnimatorTrees()
     {
         var uids = GameObject.FindObjectsOfType<UniqueId>(true);
-        DebugAnim($"[SNAP-TREE] UniqueIds={uids.Length}");
 
         foreach (var uid in uids)
         {
@@ -505,50 +516,8 @@ public static class SaveManager
             }
 
             SetAnimatorTree(uid.Id, tree);
-            DebugAnim(sb.ToString());
         }
     }
-
-    //public static void SnapshotAllAnimatorCurrentClips()
-    //{
-    //    var uids = GameObject.FindObjectsOfType<UniqueId>(true);
-    //    DebugAnim($"[SNAP] scanning UniqueId count={uids.Length}");
-
-    //    foreach (var uid in uids)
-    //    {
-    //        if (!uid.TryGetComponent<Animator>(out var anim) || anim == null) continue;
-
-    //        var snap = new AnimatorClipSnapshot { id = uid.Id };
-    //        int lc = anim.layerCount;
-
-    //        // 보기 좋게 한 줄 요약
-    //        var sb = new System.Text.StringBuilder();
-    //        sb.Append($"[SNAP] uid={uid.Id} go='{uid.gameObject.name}' layers={lc}");
-
-    //        for (int l = 0; l < lc; l++)
-    //        {
-    //            var info = anim.GetCurrentAnimatorStateInfo(l);
-
-    //            string clipName = "";
-    //            var clips = anim.GetCurrentAnimatorClipInfo(l);
-    //            if (clips != null && clips.Length > 0 && clips[0].clip != null)
-    //                clipName = clips[0].clip.name;
-
-    //            snap.layers.Add(new AnimatorClipLayerState
-    //            {
-    //                layer = l,
-    //                clipName = clipName,
-    //                stateHash = info.fullPathHash,
-    //                normalizedTime = info.normalizedTime
-    //            });
-
-    //            sb.Append($" | L{l}: state={info.fullPathHash} norm={info.normalizedTime:F3} clip='{clipName}'");
-    //        }
-
-    //        SetAnimatorClips(uid.Id, snap);
-    //        DebugAnim(sb.ToString());
-    //    }
-    //}
 
     // ===== 플레이어 인벤토리 상태 적용 =====
     public static void ApplyPlayerInventoryFromSave(Inventory_Player inv)

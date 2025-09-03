@@ -205,7 +205,6 @@ public class MemoryFragment : BaseInteractable
         Time.timeScale = 0;
         ApplyMemoryEffect(); // 메모리 효과 적용
         PlusAction();
-
     }
 
     private Sprite GetFragmentSpriteByType(MemoryData.MemoryType type)

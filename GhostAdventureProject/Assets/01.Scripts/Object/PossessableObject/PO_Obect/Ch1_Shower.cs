@@ -15,7 +15,7 @@ public class Ch1_Shower : BasePossessable
 
     private bool isWater = false;
     private bool isWaterSoundPlaying = false;
-    private bool isPlayerNear = false;
+    //private bool isPlayerNear = false;
 
     private int temperature = 0;
 
@@ -102,7 +102,7 @@ public class Ch1_Shower : BasePossessable
         if (other.CompareTag("Player"))
         {
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
-            isPlayerNear = true;
+            //isPlayerNear = true;
 
             if (isWater)
             {
@@ -117,7 +117,7 @@ public class Ch1_Shower : BasePossessable
         if (other.CompareTag("Player"))
         {
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
-            isPlayerNear = false;
+            //isPlayerNear = false;
 
             if (PossessionSystem.Instance.CanMove)
             {
