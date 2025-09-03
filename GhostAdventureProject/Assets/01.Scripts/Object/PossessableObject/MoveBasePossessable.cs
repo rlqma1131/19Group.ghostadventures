@@ -28,6 +28,7 @@ public class MoveBasePossessable : BasePossessable
         {
             zoomCamera.Priority = 5;
             Unpossess();
+            anim.SetBool("Move", false);
         }
     }
 
@@ -61,6 +62,7 @@ public class MoveBasePossessable : BasePossessable
             }
         }
     }
+
     protected virtual void OnDoorInteract()
     { // 자식클래스에서 설정
     }
