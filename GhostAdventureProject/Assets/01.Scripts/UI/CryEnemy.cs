@@ -38,9 +38,9 @@ public class CryEnemy : MonoBehaviour
     private SoundManager soundManager;
     private Animator anim;
 
-    private bool isCrying = false;                              // 울고 있는지 확인용
-    private bool playSound_successQTE = false;                  // 오르골소리 플레이 여부 확인용 
-    private bool clear = false;
+    private bool isCrying = false;                              // 울고 있는지 확인
+    private bool playSound_successQTE = false;                  // 오르골소리 플레이 여부 확인
+    private bool clear = false;                                 // 오르골3개 성공 확인
     public int failCount = 0;                                   // QTE 실패 횟수
     private int successCount = 0;                               // QTE 성공 횟수
     private CryEnemyState currentState;                         // 상태
@@ -228,7 +228,7 @@ public class CryEnemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && currentState == CryEnemyState.Known)
+        if(collision.CompareTag("Player") && currentState == CryEnemyState.Known && !clear)
         {
             anim.SetBool("ChangeState", true);
             soundManager.PlaySFX(cry_big);

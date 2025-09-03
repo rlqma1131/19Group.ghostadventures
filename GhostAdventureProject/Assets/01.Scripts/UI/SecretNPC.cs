@@ -1,88 +1,97 @@
-// using System.Collections;
-// using System.Collections.Generic;
-// using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Assertions.Must;
 
-// public class SecretNPC : MonoBehaviour
-// {
-//     public SecretNPC_Dialogue dialogueUI;
-//     public SpriteRenderer npcSprite;
-//     public Sprite trueFormSprite;
-//     public Color redEyeColor = Color.red;
-//     public Prompt prompt;
+public class SecretNPC : MonoBehaviour
+{
+    public SecretNPC_Dialogue dialogueUI;
+    public SpriteRenderer npcSprite;
+    public Sprite trueFormSprite;
+    private Prompt prompt;
+    private Animator anim;
+    private bool clear = false;
 
-//     // public EnemyChaseAI chaseAI;
+    [SerializeField] private int currentStep = 0;
+    [SerializeField] private SoundEventConfig soundConfig;
 
-//     private int currentStep = 0;
+    void Start()
+    {
+        prompt = UIManager.Instance.PromptUI;
+    }
 
-//     void Start()
-//     {
-//         StartDialogue();
-//         prompt = UIManager.Instance.PromptUI;
-//     }
+    public void StartDialogue()
+    {
+        ShowCurrentStep();
+    }
 
-//     public void StartDialogue()
-//     {
-//         ShowCurrentStep();
-//     }
+    void ShowCurrentStep()
+    {
+        switch (currentStep)
+        {
+            case 0:
+                prompt.ShowPrompt_Click(
+                    dialogueUI, new string[] { "과거의 기록", "현재의 해석", "환영" }, 
+                    OnChoiceSelected,
+                    "기억, 자아, 진실…세 가지를 묻겠다.", "첫 번째, 기억이란 무엇인가?"); 
+                break;
 
-//     void ShowCurrentStep()
-//     {
-//         switch (currentStep)
-//         {
-//             case 0:
-//                 prompt.ShowPrompt_Click(
-//                 "기억, 자아, 진실…세 가지를 묻겠다.",
-//                 "첫 번째, 기억이란 무엇인가?");
-//                 dialogueUI.ShowChoices(
-//                     new string[] { "과거의 기록", "현재의 해석", "환영" },
-//                     OnChoiceSelected
-//                 );
-//                 break;
+            case 1:
+                prompt.ShowPrompt_Click(
+                    dialogueUI, new string[] { "이 몸 (육체)", "축적된 기억", "내가 수행하는 역할" },
+                    OnChoiceSelected,
+                    "두 번째: ‘나는 누구인가?’");
+                break;
 
-//             case 1:
-//                 prompt.ShowPrompt_Click("두 번째: ‘나는 누구인가?’");
-//                 dialogueUI.ShowChoices(
-//                     new string[] { "이 몸 (육체)", "축적된 기억", "내가 수행하는 역할" },
-//                     OnChoiceSelected
-//                 );
-//                 break;
+            case 2:
+                prompt.ShowPrompt_Click(
+                    dialogueUI, new string[] { "발견하는 것", "만들어 내는 것", "되돌아보는 것" },
+                    OnChoiceSelected,
+                    "마지막이다. ‘진실이란 무엇인가? 꺠̴̢̰͌̊진̸̰͗͊̇ ̴̰͌͆̿͋");
+                break;
 
-//             case 2:
-//                 prompt.ShowPrompt_Click("마지막이다. ‘진실이란 무엇인가? 꺠̴̢̰͌̊진̸̰͗͊̇ ̴̰͌͆̿͋");
-//                 dialogueUI.ShowChoices(  
-//                     new string[] { "발견하는 것", "만들어 내는 것", "되돌아보는 것" },
-//                     OnChoiceSelected
-//                 );
-//                 break;
+            case 3:
+                RevealAndAttack();
+                break;
+            case 4:
+                prompt.attackmode = true;
+                TransAttackMode();
+                break;
+        }
+    }
 
-//             case 3:
-//                 RevealAndAttack();
-//                 break;
-//         }
-//     }
+    void OnChoiceSelected()
+    {
+        currentStep++;
+        ShowCurrentStep();
+    }
 
-//     void OnChoiceSelected(int choiceIndex)
-//     {
-//         currentStep++;
-//         ShowCurrentStep();
-//     }
 
-//     void RevealAndAttack()
-//     {
-//         prompt.ShowPrompt_Click("답은 중요하지 않아", "ㄱ̷̮̰̙̻̏̇̆ㅏ̸̫͎͚͝͠ㅎ̶̛̛̰̗͕͉̻̇̐̈̋ㅈ̴̢̢͎̠͍̭͈̈̆̓̈́̀̇̏̕라는 게 중요하지");
+    void RevealAndAttack()
+    {
+        prompt.attackmode = true;
+        prompt.ShowPrompt_Click(
+            dialogueUI, null, null, 
+            "답은 중요하지 않아.\nㄱ̷̮̰̙̻̏̇̆ㅏ̸̫͎͚͝͠ㅎ̶̛̛̰̗͕͉̻̇̐̈̋ㅈ̴̢̢͎̠͍̭͈̈̆̓̈́̀̇̏̕ 라는 게 중요하지");
+        
+        prompt.attack += TransAttackMode;
+            
+    }
 
-//         // 외형 교체 + 눈 색상 + 글리치 효과 등
-//         npcSprite.sprite = trueFormSprite;
-//         npcSprite.color = redEyeColor;
+    void TransAttackMode()
+    {
+        EnemyAI enemy = FindObjectOfType<EnemyAI>();
+            enemy.StartInvestigate(transform);
+            
+        this.gameObject.SetActive(false);
+    }
 
-//         // 공격 시작
-//         // chaseAI.BeginChase();
-//     }
-
-//     //구간	설명
-// // StartDialogue()	처음 대화 시작 (NPC 접근 시 호출)
-// // ShowCurrentStep()	현재 단계에 맞는 대사/선택지 표시
-// // ShowChoices()	버튼으로 선택지 표시, 클릭 시 콜백
-// // OnChoiceSelected()	선택하면 다음 단계로 이동
-// // RevealAndAttack()	위장 해제 + AI 추격 시작
-// }
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Player") && !clear) // 또는 같은 방 입장시
+        {
+        //     UIManager.Instance.PromptUI.ShowPrompt_2("사신..! 도망쳐야 해!", "잠깐.. 왜 아무 반응이 없지..? 더 가까이 가볼까.."); // 튜토리얼로 변경해도 될 듯
+            StartDialogue();
+        }
+    }
+}
