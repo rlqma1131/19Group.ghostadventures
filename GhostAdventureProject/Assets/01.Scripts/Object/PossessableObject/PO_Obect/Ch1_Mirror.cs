@@ -35,7 +35,7 @@ public class Ch1_Mirror : MonoBehaviour
         SetAlpha(alpha);
         if (!revealed && alpha >= 0.3f && !ShowPrompt)
         {
-            UIManager.Instance.PromptUI.ShowPrompt("…글씨…?"); 
+            UIManager.Instance.PromptUI.ShowPrompt("거울에…저건 뭐지…?"); 
             ShowPrompt = true;      
         }
 
@@ -44,6 +44,8 @@ public class Ch1_Mirror : MonoBehaviour
             revealed = true;
             ChapterEndingManager.Instance.CollectCh1Clue("W");
             SaveManager.MarkPuzzleSolved("욕실");
+
+            shower.InActiveShower();
         }
     }
 

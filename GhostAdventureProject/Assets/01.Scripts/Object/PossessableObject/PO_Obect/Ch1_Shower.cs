@@ -15,6 +15,7 @@ public class Ch1_Shower : BasePossessable
 
     private bool isWater = false;
     private bool isWaterSoundPlaying = false;
+    private bool isHotWater = false;
     //private bool isPlayerNear = false;
 
     private int temperature = 0;
@@ -78,6 +79,15 @@ public class Ch1_Shower : BasePossessable
         if (steamEffect != null)
         {
             steamEffect.SetActive(isWater && temperature == 3);
+            if (steamEffect.activeSelf && !isHotWater)
+            {
+                isHotWater = true;
+                UIManager.Instance.PromptUI.ShowPrompt("따뜻하니 김이 나네...");
+            }
+            if (!steamEffect.activeSelf && isHotWater)
+            {
+                isHotWater = false;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -134,6 +144,11 @@ public class Ch1_Shower : BasePossessable
             float zAngle = temperature * 20f;
             Needle.transform.rotation = Quaternion.Euler(0f, 0f, zAngle);
         }
+    }
+
+    public void InActiveShower()
+    {
+        hasActivated = false;
     }
 
     public override void OnPossessionEnterComplete() 

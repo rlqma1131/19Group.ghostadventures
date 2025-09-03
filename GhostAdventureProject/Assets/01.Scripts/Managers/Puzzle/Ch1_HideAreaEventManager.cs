@@ -37,9 +37,23 @@ public class Ch1_HideAreaEventManager : MonoBehaviour
             return;
 
         currentOrder.Add(id);
-        Debug.Log($"현재 순서: {string.Join(" ", currentOrder)}");
 
-        if (currentOrder.Count == correctOrder.Count)
+        if (currentOrder.Count < correctOrder.Count)
+        {
+            switch (currentOrder.Count)
+            {
+                case 1:
+                    UIManager.Instance.PromptUI.ShowPrompt($"첫 번째...{currentOrder[0]}");
+                    break;
+                case 2:
+                    UIManager.Instance.PromptUI.ShowPrompt($"두 번째는...{currentOrder[1]}");
+                    break;
+                case 3:
+                    UIManager.Instance.PromptUI.ShowPrompt($"세 번째...{currentOrder[2]}");
+                    break;
+            }
+        }
+        else if (currentOrder.Count == correctOrder.Count)
         {
             if (IsCorrectOrder())
             {

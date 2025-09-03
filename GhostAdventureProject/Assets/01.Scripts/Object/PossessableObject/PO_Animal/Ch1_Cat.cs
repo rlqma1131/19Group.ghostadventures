@@ -141,11 +141,14 @@ public class Ch1_Cat : MoveBasePossessable
         yield return new WaitForSecondsRealtime(2f); // 2초 기다림
 
         zoomCamera.Priority = 5;
-        Unpossess();
-        anim.SetTrigger("Sleep");
         hasActivated = false;
-        MarkActivatedChanged();
+        Unpossess();
 
-        isActing = false;
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        anim.SetBool("Move", false);
+        anim.SetBool("Idle", false);
+        anim.SetTrigger("Sleep");
+        MarkActivatedChanged();
     }
 }

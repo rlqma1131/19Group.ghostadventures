@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 43062624348262054}
   - component: {fileID: 1179620992408725436}
   - component: {fileID: 2966718117603190549}
+  - component: {fileID: 5597480895986782575}
   m_Layer: 0
   m_Name: Gray_Door_Locked
   m_TagString: Door
@@ -314,7 +315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 6453356605219550770}
+  highlight: {fileID: 0}
   targetDoor: {fileID: 0}
   targetPos: {x: 0, y: 0}
   closedObject: {fileID: 4185023942432870819}
@@ -322,7 +323,21 @@ MonoBehaviour:
   puzzleId: 
   lockedSound: {fileID: 8300000, guid: 912654f847fdc504cb38e6cdd6b76a64, type: 3}
   unlockSound: {fileID: 8300000, guid: 1c242e13499b0164ca6a43e40b69e973, type: 3}
+  initiallyLocked: 1
   pairedDoor: {fileID: 0}
+--- !u!114 &5597480895986782575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7441378727112994656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 5b3cffa8ee824b698adf70fd2f941956
 --- !u!1001 &3437074190364154482
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -403,10 +418,5 @@ PrefabInstance:
 --- !u!4 &5909097452050190610 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
-  m_PrefabInstance: {fileID: 3437074190364154482}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6453356605219550770 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
   m_PrefabInstance: {fileID: 3437074190364154482}
   m_PrefabAsset: {fileID: 0}

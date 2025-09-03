@@ -182,6 +182,7 @@ GameObject:
   - component: {fileID: 6978169845089604590}
   - component: {fileID: 8934585864163841674}
   - component: {fileID: 5448746896013239017}
+  - component: {fileID: 4209676696417015415}
   m_Layer: 0
   m_Name: WoodDoor_Locked
   m_TagString: Door
@@ -337,7 +338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 1577631184184519351}
+  highlight: {fileID: 0}
   targetDoor: {fileID: 0}
   targetPos: {x: 0, y: 0}
   closedObject: {fileID: 990498077647705945}
@@ -345,6 +346,7 @@ MonoBehaviour:
   puzzleId: 
   lockedSound: {fileID: 8300000, guid: 912654f847fdc504cb38e6cdd6b76a64, type: 3}
   unlockSound: {fileID: 8300000, guid: 1c242e13499b0164ca6a43e40b69e973, type: 3}
+  initiallyLocked: 1
   pairedDoor: {fileID: 0}
 --- !u!82 &5448746896013239017
 AudioSource:
@@ -442,6 +444,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4209676696417015415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6680419365455399408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 33a1f6068c3846b2b7db5b6788f1230b
 --- !u!1001 &7194714071155607287
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -519,11 +534,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
---- !u!1 &1577631184184519351 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
-  m_PrefabInstance: {fileID: 7194714071155607287}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2191958082608926103 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}

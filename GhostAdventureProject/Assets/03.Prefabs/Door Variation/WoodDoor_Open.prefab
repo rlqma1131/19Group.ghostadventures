@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 1524281172236760906}
   - component: {fileID: 5646177509723499262}
   - component: {fileID: 7672899591115268388}
+  - component: {fileID: 4423024239540450941}
   m_Layer: 0
   m_Name: WoodDoor_Open
   m_TagString: Door
@@ -185,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaddd9e1e9a81d4ea2cd09c720564c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 2831716962142984028}
+  highlight: {fileID: 0}
   targetDoor: {fileID: 0}
   targetPos: {x: 0, y: 0}
   closedObject: {fileID: 0}
@@ -256,6 +257,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4423024239540450941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7900676842936227480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 6dfe57447fc941559c1de3fbdb836bc4
 --- !u!1001 &5868290313795320604
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -333,11 +347,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
---- !u!1 &2831716962142984028 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
-  m_PrefabInstance: {fileID: 5868290313795320604}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3225702020907085948 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
