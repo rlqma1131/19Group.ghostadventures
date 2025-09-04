@@ -8,8 +8,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
 {
     public static ESCMenu Instance {get; private set;}
 
-    [SerializeField] private GameObject escMenuUI; // ESCMenu Canvas
-    // [SerializeField] private SoundMenu soundMenu;
+    [SerializeField] private GameObject escMenuUI;
     [SerializeField] private GameObject general;
     [SerializeField] private GameObject optionMenu;
     [SerializeField] private GameObject sound;
@@ -28,34 +27,26 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     [SerializeField] private Button rebindJumpButton;
 
     private bool isPaused = false;
-//     private bool escEnabled = true;
-
-//     public void SetESCEnabled(bool enabled)
-// {
-//     escEnabled = enabled;
-// }
-
-// ESC 허용 여부 확인
-// public bool IsESCEnabled()
-// {
-//     return escEnabled;
-// }
     
-    private void Awake()
+    
+    void Awake()
     {
-        if (Instance == null) Instance = this;
-
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        
+        Instance = this;
+        
         // 기본 키 설정 (Clue1~5)
         for (int i = 0; i < 5; i++)
         {
             clueKeyBindings[i] = KeyCode.Alpha1 + i;
         }
+        escMenuUI.SetActive(false);
+        Debug.Log("esc메뉴 awake끄기");
     }
+    
 
     void Start()
     {
-        escMenuUI.SetActive(false);
-
         const float DEFAULT_SLIDER = 0.5f;
 
         if (masterVolumeSlider != null)
@@ -94,7 +85,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         }
     }
 
-    // 일반 버튼
+    // 일반(ESC) 버튼
     public void GeneralButton()
     {
         general.SetActive(true);
@@ -124,7 +115,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // ESC메뉴 토글(열기/닫기)
     public void ESCMenuToggle()
     {
-        if (isPaused)
+        if (IsOpen())
             Close();
         else
             ESCMenu_Open();
@@ -133,26 +124,29 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // ESC메뉴 열기
     public void ESCMenu_Open()
     {
-        // if(!UIManager.Instance.playModeUI.gameObject.activeInHierarchy) return;
-        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
         escMenuUI.SetActive(true);
+        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
         general.SetActive(true);
         optionMenu.SetActive(false);
         Time.timeScale = 0f;
         isPaused = true;
+        Debug.Log("esc메뉴오픈");
     }
+    
     // ESC메뉴 닫기
     public void Close()
     {
         escMenuUI.SetActive(false);
         Time.timeScale = 1f;
-        isPaused = false;      
+        isPaused = false;  
+        Debug.Log("esc메뉴클로즈");
+
     }
 
     // ESC메뉴가 열려있는지 확인
     public bool IsOpen()
     {
-        return UIManager.Instance.ESCMenuUI.gameObject.activeInHierarchy;
+        return escMenuUI.activeInHierarchy;
     }
 
     // 타이틀로
@@ -212,7 +206,6 @@ public class ESCMenu : MonoBehaviour, IUIClosable
 
     void Update()
     {
-        //  if (!escEnabled) return;
         if(IsOpen())
         {
             UIManager.Instance.SetCursor(UIManager.CursorType.Default);
@@ -297,12 +290,6 @@ public class ESCMenu : MonoBehaviour, IUIClosable
             // 기본 이름 그대로
             return name;
         }
-    }
-
-    private void OnMouseEnter()
-    {
-        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
-    }
-        
+    }   
 }
 

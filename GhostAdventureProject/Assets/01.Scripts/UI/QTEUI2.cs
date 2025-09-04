@@ -27,10 +27,15 @@ public class QTEUI2 : MonoBehaviour
     private float currentSize;          // 현재 확대 사이즈(카메라 효과)
     private float targetSize;           // 적 확대 사이즈(카메라 효과)
 
+    void Awake()
+    {
+        qteUI.SetActive(false);
+        Debug.Log("qteui 비활성화 awake");
+    }
+
     public void Start()
     {
         resultText.gameObject.SetActive(false);
-        qteUI.SetActive(false);
         isdead = false;
     }
 

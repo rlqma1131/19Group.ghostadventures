@@ -11,7 +11,7 @@ using System;
 public class Prompt : MonoBehaviour
 {
     private GameObject PromptPanel; // 프롬프트 패널 이미지
-    [SerializeField] private TextMeshProUGUI PromptText; // 프롬프트 텍스트
+    [SerializeField] private TextMeshProUGUI DialogueText; // 대사 텍스트
     public Queue<string> PromptQueue = new Queue<string>();
     private bool isActive = false;
     private string[] pendingChoices;
@@ -23,13 +23,14 @@ public class Prompt : MonoBehaviour
     private void Start()
     {
         PromptPanel = gameObject;
+        PromptContainer.gameObject.SetActive(true);
         // PromptText = gameObject.GetComponentInChildren<TextMeshProUGUI>();
         
         // PromptPanel.SetActive(false);
     }
 
 
-    // ===================== 대화용 - 클릭시 넘어감 ============================
+    // ===================== 위장NPC용 프롬프트 - 클릭시 넘어감 ============================
     public void ShowPrompt_Click(SecretNPC_Dialogue dialogue, string[] choices = null, 
                                 System.Action onChoiceSelected = null, params string[] lines)
     {
@@ -53,8 +54,11 @@ public class Prompt : MonoBehaviour
         {
             isActive = true;
             string nextLine = PromptQueue.Dequeue();
-            PromptText.text = nextLine;
-            PromptText.color = Color.blue;
+            DialogueText.text = nextLine;
+            DialogueText.color = Color.blue;
+
+            if(!DialogueText.gameObject.activeSelf)
+                DialogueText.gameObject.SetActive(true);
             
             if (PromptQueue.Count == 0 && pendingChoices != null)
             {
