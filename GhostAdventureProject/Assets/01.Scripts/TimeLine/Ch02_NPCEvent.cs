@@ -30,8 +30,10 @@ public class Ch02_NPCEvent : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") && !isTimelinePlaying && roomInfo.roomCount ==0)
         {
-            if (director != null)
+            if (director != null && !EventManager.Instance.IsEventCompleted(GetComponent<UniqueId>().Id))
             {
+                EventManager.Instance.MarkEventCompleted(GetComponent<UniqueId>().Id);
+
                 spriteRenderer = collision.gameObject.GetComponent<SpriteRenderer>();
                 GameObject player = collision.gameObject;
                 Vector3 scale = player.transform.localScale;

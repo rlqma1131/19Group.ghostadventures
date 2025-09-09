@@ -20,7 +20,12 @@ public class Ch2_LaserTriggerManager : MonoBehaviour
                 controller.ActivateController();
             }
 
-            StartCoroutine(LaserEvent());
+            if(!EventManager.Instance.IsEventCompleted(GetComponent<UniqueId>().Id))
+            {
+                EventManager.Instance.MarkEventCompleted(GetComponent<UniqueId>().Id);
+
+                StartCoroutine(LaserEvent());
+            }
         }
     }
 
