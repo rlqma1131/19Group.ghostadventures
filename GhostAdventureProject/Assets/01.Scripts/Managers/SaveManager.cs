@@ -52,6 +52,14 @@ public class MemoryFragmentState
     public bool isScannable;
 }
 
+// 이벤트 재생 상태
+[System.Serializable]
+public class EventCompletedState
+{
+    public string id;
+    public bool eventCompleted;
+}
+
 // 문 열림, 잠김 상태
 [System.Serializable]
 public class DoorState
@@ -138,6 +146,7 @@ public class SaveData
     public List<DoorState> doorStates;
     public List<PossessableState> possessableStates;
     public List<MemoryFragmentState> memoryFragmentStates;
+    public List<EventCompletedState> eventCompletedStates;
 
     // 튜토리얼 진행도 저장용
     public List<RoomVisitEntry> roomVisitCounts = new();
@@ -215,6 +224,7 @@ public static class SaveManager
         if (currentData.doorStates == null) currentData.doorStates = new List<DoorState>();
         if (currentData.possessableStates == null) currentData.possessableStates = new List<PossessableState>();
         if (currentData.memoryFragmentStates == null) currentData.memoryFragmentStates = new List<MemoryFragmentState>();
+        if (currentData.eventCompletedStates == null) currentData.eventCompletedStates = new List<EventCompletedState>();
     }
 
     // ===== 챕터 최종단서 수집 진행도 저장/적용 =====
@@ -330,6 +340,25 @@ public static class SaveManager
         var e = currentData?.roomVisitCounts?.Find(x => x.roomName == roomName);
         if (e == null) return false;
         count = e.count;
+        return true;
+    }
+
+    // 이벤트 완료 목록 상태
+    public static void SetEventCompleted(string id, bool completed)
+    {
+        EnsureData();
+        var list = currentData.eventCompletedStates;
+        int i = list.FindIndex(x => x.id == id);
+        if (i >= 0) list[i].eventCompleted = completed;
+        else list.Add(new EventCompletedState { id = id, eventCompleted = completed });
+    }
+
+    public static bool TryGetCompletedEventIds(string id, out bool completed)
+    {
+        completed = false;
+        var s = currentData?.eventCompletedStates?.Find(x => x.id == id);
+        if (s == null) return false;
+        completed = s.eventCompleted;
         return true;
     }
 

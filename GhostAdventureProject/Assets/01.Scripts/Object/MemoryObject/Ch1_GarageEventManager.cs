@@ -44,13 +44,12 @@ public class Ch1_GarageEventManager : MonoBehaviour
             }
             else
             {
-                if(!isCutscenePlaying && !cutscene_NPC.isCutscenePlaying)
+                if(!isCutscenePlaying && !EventManager.Instance.IsEventCompleted("Ch1_NPCEvent"))
                 {
                     UIManager.Instance.PromptUI.ShowPrompt("아이방에서 누군가의 기척이 느껴져..", 2f);
-
                 }
 
-                if (!isCutscenePlaying && cutscene_NPC.isCutscenePlaying)
+                if (!isCutscenePlaying && EventManager.Instance.IsEventCompleted("Ch1_NPCEvent"))
                 {
                     PlayerInteractSystem.Instance.eKey.SetActive(false);
                     // [컷씬] 꼬마유령 이벤트

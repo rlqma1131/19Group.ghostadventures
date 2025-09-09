@@ -3,39 +3,29 @@ using UnityEngine.Playables;
 public class Cutscene_NPC : MonoBehaviour
 {
     [SerializeField] private PlayableDirector director;
+    [SerializeField] private GameObject GarageDoor;
+    public RoomInfo roomInfo;
 
     public bool isCutscenePlaying = false;
-    
-    public RoomInfo roomInfo;
-    [SerializeField] private GameObject GarageDoor;
+
     void Start()
     {
-
-        // 타임라인 재생 끝났을 때 호출될 함수 등록
-        director.stopped += OnTimelineStopped;
-        
+        if (director != null)
+            director.stopped += OnTimelineStopped;
     }
-
-
-
-
 
     private void Play_NPCscene()
     {
-
-
-        if (director != null)
+        if (director != null && !EventManager.Instance.IsEventCompleted(GetComponent<UniqueId>().Id))
         {
+            EventManager.Instance.MarkEventCompleted(GetComponent<UniqueId>().Id);
+
             director.Play();
             EnemyAI.PauseAllEnemies();
             GarageDoor.SetActive(false);
             isCutscenePlaying = true;
             PossessionSystem.Instance.CanMove = false;
             UIManager.Instance.PlayModeUI_CloseAll();
-        }
-        else
-        {
-            Debug.LogError("PlayableDirector is not assigned or missing.");
         }
     }
 
@@ -49,11 +39,9 @@ public class Cutscene_NPC : MonoBehaviour
 
     private void OnTimelineStopped(PlayableDirector director)
     {
-
-
         PossessionSystem.Instance.CanMove = true;
         UIManager.Instance.PlayModeUI_OpenAll();
         EnemyAI.ResumeAllEnemies();
-        UIManager.Instance.PromptUI.ShowPrompt("차고의 문이 조금 열렸어.", 2f); 
+        UIManager.Instance.PromptUI.ShowPrompt("차고의 문이 조금 열렸어.", 2f);
     }
 }

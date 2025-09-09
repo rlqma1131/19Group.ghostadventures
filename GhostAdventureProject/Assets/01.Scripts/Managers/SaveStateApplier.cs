@@ -187,11 +187,21 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
         static bool TryCrossFade(Animator a, int hash, int layer, float t)
         { if (hash == 0) return false; try { a.CrossFade(hash, 0f, layer, t); return true; } catch { return false; } }
 
-        // === 인벤토리/진행도 ===
+        // === 인벤토리/진행도 복원 ===
         var inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         SaveManager.ApplyPlayerInventoryFromSave(inv);
         MemoryManager.Instance?.WarmStartFromSave();
         ChapterEndingManager.Instance?.ApplyFromSave();
+
+        // === 이벤트 완료 상태 복원 ===
+        if (SaveManager.CurrentData?.eventCompletedStates != null)
+        {
+            foreach (var state in SaveManager.CurrentData.eventCompletedStates)
+            {
+                if (state == null || !state.eventCompleted) continue;
+                EventManager.Instance?.ApplyEventCompletedFromSave(state.id, true);
+            }
+        }
 
         // === 튜토리얼 완료 단계 복원 ===
         if (SaveManager.TryGetCompletedTutorialSteps(out var steps))
