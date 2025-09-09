@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 /// <summary>
 /// TeddyBear 한테 붙는 클래스
 /// </summary>
