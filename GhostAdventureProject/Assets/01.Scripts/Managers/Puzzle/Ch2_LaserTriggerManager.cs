@@ -6,13 +6,15 @@ public class Ch2_LaserTriggerManager : MonoBehaviour
     [Header("레이저 컨트롤러")]
     [SerializeField] private Ch2_LaserController[] laserControllers;
 
-    private bool isTriggered = false; // 처음 한번만 이벤트 발생
+    //private bool isTriggered = false; // 처음 한번만 이벤트 발생
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !isTriggered)
+        if (other.CompareTag("Player") 
+            //&& !isTriggered
+            )
         {
-            isTriggered = true;
+            //isTriggered = true;
 
             // 레이저컨트롤러 활성화
             foreach(Ch2_LaserController controller in laserControllers)
@@ -53,5 +55,7 @@ public class Ch2_LaserTriggerManager : MonoBehaviour
         // 플레이어 조작 가능
         UIManager.Instance.PlayModeUI_OpenAll();
         PossessionSystem.Instance.CanMove = true;
+
+        gameObject.SetActive(false);
     }
 }

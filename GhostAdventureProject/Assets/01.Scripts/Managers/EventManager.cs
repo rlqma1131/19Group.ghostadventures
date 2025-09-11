@@ -26,7 +26,7 @@ public class EventManager : MonoBehaviour
         if (completedEvents.Add(eventId))
         {
             SaveManager.SetEventCompleted(eventId, true);
-            SaveManager.SaveGame();
+            //SaveManager.SaveGame();
         }
     }
 
