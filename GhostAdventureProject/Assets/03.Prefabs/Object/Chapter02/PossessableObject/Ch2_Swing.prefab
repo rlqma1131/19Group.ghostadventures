@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8496343516830001215}
   - component: {fileID: 6705347142781910505}
   - component: {fileID: 1224153906202643149}
+  - component: {fileID: 879606180834159704}
   m_Layer: 0
   m_Name: Ch2_LeftSwing
   m_TagString: Untagged
@@ -55,7 +56,6 @@ MonoBehaviour:
   isPossessed: 0
   swingSFX: {fileID: 8300000, guid: 74fef9de0a2fd5f4cbcb5f2291ac6a4c, type: 3}
   targetKiosk: {fileID: 0}
-  targetComputer: {fileID: 0}
   q_Key: {fileID: 4981201734779445688}
 --- !u!61 &1224153906202643149
 BoxCollider2D:
@@ -102,6 +102,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 2.2408173}
   m_EdgeRadius: 0
+--- !u!114 &879606180834159704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372747242327844668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 26bb97c4b3b44bc9bc30ba432be90ff2
 --- !u!1 &1790750071208732579
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +208,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4249510895846554091}
+  - component: {fileID: 2637185661651736442}
   m_Layer: 0
   m_Name: Ch2_Swing
   m_TagString: Untagged
@@ -220,6 +234,19 @@ Transform:
   - {fileID: 311566725956510747}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2637185661651736442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072852325089984250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch2_Swing
 --- !u!1 &2477461889509786980
 GameObject:
   m_ObjectHideFlags: 0
@@ -433,6 +460,7 @@ GameObject:
   - component: {fileID: 311566725956510747}
   - component: {fileID: 8712793615014080520}
   - component: {fileID: 8878580479980643942}
+  - component: {fileID: 8396696054800193516}
   m_Layer: 0
   m_Name: Ch2_RightSwing
   m_TagString: Untagged
@@ -522,6 +550,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 2.239945}
   m_EdgeRadius: 0
+--- !u!114 &8396696054800193516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4459595144025878218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: b2937a7ccb3648a4a7b10aa7af0d58a3
 --- !u!1 &4995127474295923150
 GameObject:
   m_ObjectHideFlags: 0

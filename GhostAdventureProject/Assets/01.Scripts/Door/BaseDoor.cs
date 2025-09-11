@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public abstract class BaseDoor : BaseInteractable
 {
@@ -19,13 +20,26 @@ public abstract class BaseDoor : BaseInteractable
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        UpdateDoorVisual();
+        UpdateDoorVisual(force: true);
+    }
+    
+    protected virtual void OnEnable()
+    {
+        UpdateDoorVisual(force: true);
+        // StartCoroutine(_LateRefresh()); // 혹시나 문제가 또 있다면 한프레임 뒤로 미뤄보기
+        // IEnumerator _LateRefresh(){ yield return null; UpdateDoorVisual(force:true); }
     }
     
     protected virtual void Update()
     {
         if (PlayerInteractSystem.Instance.CurrentClosest != gameObject)
             return;
+        
+        if (EnemyAI.IsAnyQTERunning)
+        {
+            SetHighlight(false);
+            return;
+        }
 
         if (playerNearby && Input.GetKeyDown(KeyCode.E))
         {
@@ -57,26 +71,55 @@ public abstract class BaseDoor : BaseInteractable
 
     protected void TeleportPlayer()
     {
+        if (EnemyAI.IsAnyQTERunning) return;
+        
         GameObject player = GameManager.Instance?.Player;
         if (player == null)
             return;
+        
+        // 1) 충돌 무시 시작
+        int playerLayer = player.layer;
+        int enemyLayer  = LayerMask.NameToLayer("Enemy");
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true);
 
-        Vector3 teleportPosition = targetDoor != null ? targetDoor.position : (Vector3)targetPos;
-
+        // 2) 순간이동
+        Vector3 teleportPosition = targetDoor != null 
+            ? targetDoor.position 
+            : (Vector3)targetPos;
         player.transform.position = teleportPosition;
+
+        // 3) 1초 후 다시 충돌 허용
+        StartCoroutine(RestoreCollision(playerLayer, enemyLayer, 1.5f));
     }
 
-    protected void UpdateDoorVisual()
+    private IEnumerator RestoreCollision(int pLayer, int eLayer, float delay)
     {
-        if(isLocked == previousLockedState)
-            return; // 상태변경없으면 무시
-        
+        yield return new WaitForSecondsRealtime(delay);
+        Physics2D.IgnoreLayerCollision(pLayer, eLayer, false);
+    }
+
+    protected void UpdateDoorVisual(bool force = false)
+    {
+        if (!force && isLocked == previousLockedState)
+            return; // 상태변경없으면 무시 (기본 최적화)
+
         previousLockedState = isLocked;
-        
-        if(closedObject != null)
-            closedObject.SetActive(isLocked);
-        if(OpenObject != null)
-            OpenObject.SetActive(!isLocked);
+
+        if (closedObject != null) closedObject.SetActive(isLocked);
+        if (OpenObject   != null) OpenObject.SetActive(!isLocked);
+    }
+
+
+    public void SetLockedFromSave(bool value)
+    {
+        isLocked = value;
+        UpdateDoorVisual(force: true);
+    }
+
+    protected void MarkDoorStateChanged()
+    {
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetDoorLocked(uid.Id, isLocked);
     }
 
     // Enemy가 접근할 수 있는 public 메서드들

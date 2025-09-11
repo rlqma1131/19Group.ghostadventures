@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using DG.Tweening;
 
 public class InventorySlot_Player : MonoBehaviour
 {
@@ -12,13 +13,14 @@ public class InventorySlot_Player : MonoBehaviour
     public int clueIndex;
     public TMP_Text keyText;
 
-    // public TextMeshProUGUI clueName;
+    [Header("Dim Settings")]
+    [Range(0f,1f)] public float dimAlpha = 0.6f; // 뒷면 투명도
+    private float normalAlpha = 1f;
 
     public void Setup(ClueData clue)
     {
         icon.sprite = clue.clue_Icon;
         icon.enabled = true; // 아이콘 표시
-        // clueName.text = clue.clue_Name;
     }
 
     internal void Clear()
@@ -27,14 +29,38 @@ public class InventorySlot_Player : MonoBehaviour
         icon.enabled = false; // 아이콘 숨기기
     }
 
-
     private void Start()
     {
-        UpdateKeyText();
+        // UpdateKeyText();
         icon.enabled = false;
+        SetKeyVisible(true);
+        SetDim(false);
     }
 
-    public void UpdateKeyText()
+    // 인벤토리 숫자키 표시 활성화/비활성화
+    public void SetKeyVisible(bool visible)
+    {
+        if (keyText != null) keyText.gameObject.SetActive(visible);
+    }
+
+    // 아이콘 투명하게 만들기 활성화/비활성화
+    public void SetDim(bool dim)
+    {
+        if (icon == null) return;
+        var c = icon.color;
+        c.a = dim ? dimAlpha : normalAlpha;
+        icon.color = c;
+
+        // 빈 슬롯 배경도 같이 처리하고 싶으면
+        if (clearSlotIcon != null)
+        {
+            var bc = clearSlotIcon.color;
+            bc.a = dim ? dimAlpha : normalAlpha;
+            clearSlotIcon.color = bc;
+        }
+    }
+
+    public void UpdateKeyText() // 옵션메뉴-키변경시 keyText변경
     {
         if (keyText == null || UIManager.Instance.ESCMenuUI == null) return;
         KeyCode key = UIManager.Instance.ESCMenuUI.GetKey(clueIndex);

@@ -28,7 +28,7 @@ public class MemoryFragment : BaseInteractable
     [SerializeField] private float ellipseRadiusX = 0.8f;
     [SerializeField] private float ellipseRadiusZ = 1.5f;
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     private void OnValidate()
     {
         if (!Application.isPlaying) return;
@@ -66,7 +66,24 @@ public class MemoryFragment : BaseInteractable
         isScannable = false;
         canStore = true;
 
+        Scanning();
+
         MemoryManager.Instance.TryCollect(data);
+
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
+
+        var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
+        ChapterEndingManager.Instance.RegisterScannedMemory(data.memoryID, chapter);
+
+        SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
+            SceneManager.GetActiveScene().name,
+            GameManager.Instance.Player.transform.position,
+            checkpointId: data.memoryID,
+            autosave: true);
+
+        Debug.Log($"[MemoryFragment] 진행도 저장됨 : {data.memoryID} / {data.memoryTitle}");
+
 
         Sprite dropSprite = GetFragmentSpriteByType(data.type);
         if (fragmentDropPrefab == null || dropSprite == null) return;
@@ -183,12 +200,11 @@ public class MemoryFragment : BaseInteractable
 
         yield return new WaitForSeconds(5f); // 흡수 될때까지 기다림
 
-        SceneManager.LoadScene(data.CutSceneName, LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
+        SceneManager.LoadScene(data.CutSceneName, LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
         Time.timeScale = 0;
         ApplyMemoryEffect(); // 메모리 효과 적용
         PlusAction();
-
     }
 
     private Sprite GetFragmentSpriteByType(MemoryData.MemoryType type)
@@ -225,6 +241,22 @@ public class MemoryFragment : BaseInteractable
         }
     }
 
-    public virtual void AfterScan(){}
+    public virtual void Scanning() { }
+    public virtual void AfterScan() { }
+
+    protected int DetectChapterFromScene(string sceneName)
+    {
+        if (string.IsNullOrEmpty(sceneName)) return 0;
+        if (sceneName.Contains("Ch01")) return 1;
+        if (sceneName.Contains("Ch02")) return 2;
+        if (sceneName.Contains("Ch03")) return 3;
+        return 0;
+    }
+
     protected virtual void PlusAction(){}
+
+    public void ApplyFromSave(bool scannable)
+    {
+        isScannable = scannable;
+    }
 }

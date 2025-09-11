@@ -1,10 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 
 // 튜토리얼은 1회만 작동됩니다. 
 public enum TutorialStep
@@ -23,7 +24,9 @@ public enum TutorialStep
     SecurityGuard_InOffice,
     BlackShadow,
     CollectedAllMemoClue,
-    Test
+    Test,
+    TouchBat,
+    MemoryStorageGuide
 }
 public class TutorialManager : Singleton<TutorialManager>
 {
@@ -51,6 +54,9 @@ public class TutorialManager : Singleton<TutorialManager>
         if (completedSteps.Contains(step)) return;
 
         completedSteps.Add(step);
+
+        // [저장] 튜토리얼 완료 기록
+        SaveManager.SetCompletedTutorialSteps(completedSteps);
 
         switch (step)
         {
@@ -92,7 +98,7 @@ public class TutorialManager : Singleton<TutorialManager>
                 break;
 
             case TutorialStep.Cake_Prompt:
-                prompt.ShowPrompt_2("쥐는 어디로 갔을라나?", "아무튼 이제 케잌을 살펴보자");
+                prompt.ShowPrompt("쥐는 어디로 갔을라나? 아무튼 이제 케잌을 살펴보자");
                 break;
             case TutorialStep.SecurityGuard_GoToRadio:
                 prompt.ShowPrompt("나왔다... 지금이 기회야");
@@ -110,7 +116,19 @@ public class TutorialManager : Singleton<TutorialManager>
             case TutorialStep.CollectedAllMemoClue:
                 CollectedAllMemoClue();
                 break;
-
+            case TutorialStep.TouchBat:
+                prompt.ShowPrompt("박쥐를 건드리면 안돼");
+                break;
+            case TutorialStep.MemoryStorageGuide:
+                PossessionSystem.Instance.CanMove = false;
+                uimanager.guidBlackPanel.SetActive(true);
+                uimanager.memoryStorageButton.GetComponent<Button>().
+                onClick.AddListener(() => {
+                    uimanager.guidBlackPanel.SetActive(false);
+                    PossessionSystem.Instance.CanMove = true;
+                    UIManager.Instance.guidButton.SetActive(true);
+                    }); // 클릭되면 실행
+                break;
 
             // case TutorialStep.HideGuide:
             //     ToastUI.Instance.Show("※ 특정 오브젝트 빙의는 쉽지 않을 수 있습니다.\n숨을 수 있어!", 3f);
@@ -125,7 +143,7 @@ public class TutorialManager : Singleton<TutorialManager>
     {   
         PossessionSystem.Instance.CanMove = false;
         await Task.Delay(2000);
-        prompt.ShowPrompt_2("나도 모르게 여기로 들어왔어..", "여기서 기억을 찾을 수 있을까?");
+        prompt.ShowPrompt_2("나도 모르게 여기로 들어왔어..", "여기서 기억을 찾을 수 있을까?..");
         await Task.Delay(3000);
         notice.FadeInAndOut("※ 이 집 안에 흩어진 기억 조각을 찾아 수집하세요.");
         await Task.Delay(3000);
@@ -151,6 +169,14 @@ public class TutorialManager : Singleton<TutorialManager>
             });
     }
     public bool HasCompleted(TutorialStep step) => completedSteps.Contains(step);
+
+    // 저장된 튜토리얼 상태 불러오기
+    public void ApplyFromSave(IEnumerable<TutorialStep> steps)
+    {
+        completedSteps = steps != null
+            ? new HashSet<TutorialStep>(steps)
+            : new HashSet<TutorialStep>();
+    }
 }
 
 

@@ -6,12 +6,14 @@ public class MoveBasePossessable : BasePossessable
     [SerializeField] protected CinemachineVirtualCamera zoomCamera;
     [SerializeField] protected float moveSpeed = 3f;
     protected SpriteRenderer spriteRenderer;
+    protected SpriteRenderer highlightSpriteRenderer;
 
 
     protected override void Start()
     {
         base.Start();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        highlightSpriteRenderer = highlight.GetComponent<SpriteRenderer>();
         anim = GetComponentInChildren<Animator>();
     }
 
@@ -26,6 +28,7 @@ public class MoveBasePossessable : BasePossessable
         {
             zoomCamera.Priority = 5;
             Unpossess();
+            anim.SetBool("Move", false);
         }
     }
 
@@ -59,6 +62,7 @@ public class MoveBasePossessable : BasePossessable
             }
         }
     }
+
     protected virtual void OnDoorInteract()
     { // 자식클래스에서 설정
     }

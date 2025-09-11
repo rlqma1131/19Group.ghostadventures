@@ -15,7 +15,8 @@ public class EnemyQTEHandler : MonoBehaviour
     
     public float qteFreezeDuration = 3f;
     private bool isQTERunning = false;
-    // private bool hasEscapedOnce = false;
+    private bool successAnimEnded = false;
+    private bool hasReturned = false;
 
     private void Awake()
     {
@@ -50,10 +51,17 @@ public class EnemyQTEHandler : MonoBehaviour
     private IEnumerator StartQTESequence()
     {
         isQTERunning = true;
+        EnemyAI.IsAnyQTERunning = true;
+        hasReturned = false;
+        successAnimEnded = false;
+        
         enemy.ChangeState(enemy.QTEState);
         animator.SetTrigger("QTEIn");
 
         PossessionSystem.Instance.CanMove = false;
+        // var playerCtrl = GameManager.Instance.Player.GetComponent<PlayerController>();
+        // if (playerCtrl != null) playerCtrl.enabled = false;
+        
         rb.velocity = Vector2.zero;
 
         if (qteEffect != null&& player != null)
@@ -65,41 +73,92 @@ public class EnemyQTEHandler : MonoBehaviour
 
         if (qteUI != null)
         {
+            qteUI.ResetState();  
             qteUI.gameObject.SetActive(true);
             qteUI.StartQTE();
         }
     
-        yield return new WaitForSeconds(qteFreezeDuration);
+        yield return new WaitForSecondsRealtime(qteFreezeDuration);
 
         bool success = qteUI != null && qteUI.IsSuccess();
 
         if (success)
         {
+            // if (playerCtrl != null) playerCtrl.enabled = true;
+            PossessionSystem.Instance.CanMove = true;
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), true);
+            animator.updateMode = AnimatorUpdateMode.UnscaledTime;
             animator.SetTrigger("QTESuccess");
             PlayerLifeManager.Instance.LosePlayerLife();
-            PossessionSystem.Instance.CanMove = true;
+            EnemyAI.IsAnyQTERunning = false;
+            
+            const float safetyMax = 5f; // 이벤트 누락 대비 상한
+            float waited = 0f;
+            while (!successAnimEnded && waited < safetyMax)
+            {
+                var st = animator.GetCurrentAnimatorStateInfo(0);
+                // 상태명이 정확히 "QTESuccess"가 아니어도, 현재 상태가 비루프 & 0.99 지나면 종료로 간주
+                if (!st.loop && st.normalizedTime >= 0.99f)
+                {
+                    break;
+                }
 
-            yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+                waited += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            
+            if (!successAnimEnded)
+            {
+                // 혹시 중간 이벤트가 누락됐으면 한 번은 원위치로 보정
+                if (!hasReturned)
+                {
+                    hasReturned = true;
+                    transform.position = startPosition;
+                }
 
-            transform.position = startPosition;
-            enemy.ChangeState(enemy.PatrolState);
+                qteEffect?.EndQTEEffects(true);
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), false);
+                enemy.ChangeState(enemy.PatrolState);
+                animator.updateMode = AnimatorUpdateMode.Normal;
+                isQTERunning = false;
+                // EnemyAI.IsAnyQTERunning = false;
+                successAnimEnded = true;
+            }
         }
         else
         {
             animator.SetTrigger("QTEFail");
+            qteEffect?.EndQTEEffects(true);
             PlayerLifeManager.Instance.HandleGameOver();
+            isQTERunning = false;
+            EnemyAI.IsAnyQTERunning = false;
             yield break;
         }
 
-        qteEffect?.EndQTEEffects();
+        qteEffect?.EndQTEEffects(true);
         qteUI?.gameObject.SetActive(false);
-        isQTERunning = false;
+        qteUI?.ResetState(); 
+        // isQTERunning = false;
     }
 
+    public void OnQTESuccessAnimationMiddle()
+    {
+        if (!hasReturned)
+        {
+            hasReturned = true;
+            transform.position = startPosition;
+        }
+        qteEffect?.EndQTEEffects(true);
+    }
+    
     public void OnQTESuccessAnimationEnd()
     {
-        transform.position = startPosition;
+        successAnimEnded = true;
         enemy.ChangeState(enemy.PatrolState);
+        animator.updateMode = AnimatorUpdateMode.Normal;
+        isQTERunning = false;
+        // EnemyAI.IsAnyQTERunning = false;
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), false);
     }
     
     public bool IsRunning()

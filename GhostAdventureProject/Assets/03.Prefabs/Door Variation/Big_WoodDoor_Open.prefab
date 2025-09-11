@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 4791768186367188107}
   - component: {fileID: 4939101158375408709}
   - component: {fileID: 8850244693849780797}
+  - component: {fileID: 8413675092785851349}
   m_Layer: 0
   m_Name: Big_WoodDoor_Open
   m_TagString: Door
@@ -184,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaddd9e1e9a81d4ea2cd09c720564c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 5990806172512766969}
+  highlight: {fileID: 0}
   targetDoor: {fileID: 0}
   targetPos: {x: 0, y: 0}
   closedObject: {fileID: 0}
@@ -234,6 +235,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.1333334, y: 3.2}
   m_EdgeRadius: 0
+--- !u!114 &8413675092785851349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9166867735154000640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: ed00677fed5b442aa5d7e720d41f44e5
 --- !u!1001 &2675000848128337849
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -311,11 +325,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
---- !u!1 &5990806172512766969 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
-  m_PrefabInstance: {fileID: 2675000848128337849}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6389524912771525849 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}

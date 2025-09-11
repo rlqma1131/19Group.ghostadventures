@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-//using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public interface IUIClosable
+public interface IUIClosable // Esc키로 닫을 수 있는 UI
 {
     void Close();
     bool IsOpen();
@@ -13,25 +13,23 @@ public interface IUIClosable
 
 public class UIManager : Singleton<UIManager>
 {
-    // ==============================================================================================
-
     // 1. 플레이모드 UI
-    [SerializeField] private SoulGauge soulGauge; // 영혼에너지 
-    [SerializeField] private Prompt prompt; // 프롬프트
-    [SerializeField] private Prompt_UnPlayMode prompt2; // 컷신용 프롬프트
-    [SerializeField] private QTEUI qte1;// QTE
-    [SerializeField] private QTEUI2 qte2; // QTE2
-    [SerializeField] private QTEUI3 qte3; // QTE3
-    public GameObject scanUI; // 스캔UI
-    [SerializeField] private MemoryStorage memoryStorage;// 기억저장소
-    [SerializeField] private Inventory_Player inventory_Player; // 인벤토리-플레이어
+    [SerializeField] private SoulGauge soulGauge;                   // 영혼에너지 
+    [SerializeField] private Prompt prompt;                         // 프롬프트
+    [SerializeField] private Prompt_UnPlayMode prompt2;             // 컷신용 프롬프트
+    [SerializeField] private QTEUI qte1;                            // QTE
+    [SerializeField] private QTEUI2 qte2;                           // QTE2
+    [SerializeField] private QTEUI3 qte3;                           // QTE3
+    public GameObject scanUI;                                       // 스캔UI
+    [SerializeField] private MemoryStorage memoryStorage;           // 기억저장소
+    [SerializeField] private Inventory_Player inventory_Player;     // 인벤토리-플레이어
     [SerializeField] private Inventory_PossessableObject inventory_PossessableObject; // 인벤토리-빙의오브젝트
     [SerializeField] private InventoryExpandViewer inventoryExpandViewer; // 인벤토리 확대뷰어
-    [SerializeField] private ESCMenu escMenu; // ESC 메뉴
-    [SerializeField] private NoticePopup noticePopup;
-
-    // QTE 이펙트 캔버스 추가
-    [SerializeField] private GameObject qteEffectCanvas; // QTE 이펙트 캔버스
+    [SerializeField] private ESCMenu escMenu;                       // ESC 메뉴
+    [SerializeField] private NoticePopup noticePopup;               // 알림팝업 (왼쪽 상단)
+    [SerializeField] private NoticePopup saveNoticePopup;           // 저장팝업 (오른쪽 하단)
+    [SerializeField] private GameObject[] puzzleStatusPanels;       // * 퍼즐상태 (오른쪽 상단)
+    [SerializeField] private GameObject qteEffectCanvas;            // QTE 이펙트 캔버스
 
     // 외부 접근용
     public SoulGauge SoulGaugeUI => soulGauge;
@@ -46,29 +44,35 @@ public class UIManager : Singleton<UIManager>
     public InventoryExpandViewer InventoryExpandViewerUI => inventoryExpandViewer;
     public ESCMenu ESCMenuUI => escMenu;
     public NoticePopup NoticePopupUI => noticePopup;
-
-    // QTE 이펙트 캔버스 외부 접근용
+    public NoticePopup SaveNoticePopupUI => saveNoticePopup;
     public GameObject QTEEffectCanvas => qteEffectCanvas;
+    public GameObject memoryStorageButton;  // 기억저장소 버튼
+    public GameObject guidButton;           // 가이드버튼
+    public GameObject guidBlackPanel;       // 가이드 UI
 
     // -------------------------------------------------------------------------------------------
 
     // 2. 게임 시작/엔딩 UI
-    public GameObject gameover; // 게임오버(텍스트)
+    public GameObject gameover;     // 게임오버
 
     // -------------------------------------------------------------------------------------------
 
     // 3. 상호작용 UI
-    public GameObject q_Key;
-    public GameObject a_Key;
-    public GameObject d_Key;
-    public GameObject spacebar_Key;
-    public GameObject interactInfo;
+    public GameObject q_Key;        // Q키
+    public GameObject a_Key;        // A키
+    public GameObject d_Key;        // D키
+    
+    // 4. 미니토스트 UI------------------------------------------------------------------------------
+    
+    public GameObject spacebar_Key; // Space키
+    public GameObject unpossessKey; // E키
+    public GameObject tabkeyUI;     // Tab키
     
     // --------------------------------------------------------------------------------------------
 
 
     [Header("UICanvas 전체 키고 끌때 사용")]
-    [SerializeField] private GameObject playModeUI; // 플레이모드 모든 UI(Canvas)
+    [SerializeField] public GameObject playModeUI; // 플레이모드 모든 UI(Canvas)
     [SerializeField] private GameObject startEndingUI; // 게임 시작/엔딩 모든 UI(Canvas)
     [SerializeField] private GameObject TutorialUI; // 튜토리얼 모든 UI(Canvas)
     [SerializeField] private GameObject interactUI; // 상호작용 모든 UI(Canvas)
@@ -78,59 +82,52 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private List<MonoBehaviour> closableUI; // ESC키로 닫을 모든 UI List
     [SerializeField] private List<GameObject> allUIs; // 모든 UI (현재 미사용)
 
-
-    // ===========================================================================================    
+    // ---------------------------------------------------------------------------------------
 
     // 커서 관리
     [Header("커서 셋팅")]
-    [SerializeField] private Texture2D defaultCursor; // 기본
-    [SerializeField] private Texture2D findClueCursor; // 단서
-    [SerializeField] private Texture2D hideAreaCursor; // 은신처
-    [SerializeField] private Texture2D lockDoorCursor; // 잠긴문
-    [SerializeField] private Texture2D openDoorCursor; // 열린문
-    private GameObject lastHovered;
-    [SerializeField] private Vector2 hotspot = Vector2.zero;
-    [SerializeField] private EventSystem eventSystem;
+    [SerializeField] private Texture2D defaultCursor;   // 기본
+    [SerializeField] private Texture2D findClueCursor;  // 단서
+    [SerializeField] private Texture2D hideAreaCursor;  // 은신처
+    [SerializeField] private Texture2D lockDoorCursor;  // 잠긴문
+    [SerializeField] private Texture2D openDoorCursor;  // 열린문
+    [SerializeField] private Texture2D moveAbleCursor;  // 움직임가능하다는표시 커서
+    [SerializeField] private Texture2D swipeCursor;     // 드래그 가능하다는 표시 커서
+    [SerializeField] private Vector2 hotspot = Vector2.zero; // 클릭판정지점
+    [SerializeField] private EventSystem eventSystem;   // 이벤트시스템
 
     // -------------------------------------------------------------------------------------------
-    
-    // private void Start()
-    // {
-    //     playModeUI.SetActive(false);
-    //     startEndingUI.SetActive(true);
-    //     gameover.SetActive(false);
-    //     // gameover.SetActive(false);
-    // }
+    public AudioClip clickSound;                        // UI 클릭 사운드
+    // -------------------------------------------------------------------------------------------
+   
 
     private void Start()
     {
-        SetDefaultCursor();
+        SetCursor(CursorType.Default);
+
         if(SceneManager.GetActiveScene().name == "IntroScene_Real" || SceneManager.GetActiveScene().name =="Ch01_To_Ch02"
             || SceneManager.GetActiveScene().name == "Ch02_To_Ch03" || SceneManager.GetActiveScene().name == "Ch03_To_Ch04" || SceneManager.GetActiveScene().name == "StartScene")
         {
             PlayModeUI_CloseAll();
         }
+        
         eventSystem = FindObjectOfType<EventSystem>();
-    
+
+        Button[] buttons = FindObjectsOfType<Button>(true);
+        foreach (Button btn in buttons)
+        {
+            btn.onClick.AddListener(() => ButtonClickSound());
+        }
     }
-    private void Update() {
 
-    if (Input.GetMouseButtonDown(0)) // 클릭 시 확인
+    private void Update() 
     {
-        // Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
+        if (Input.GetKeyDown(KeyCode.Escape))
+            TryCloseTopUI();
 
-        // if (hit.collider != null)
+        // if (Input.GetMouseButtonDown(0)) // ** 어떤 오브젝트가 클릭되는지 확인할때 사용 **
         // {
-        //     Debug.Log("감지됨: " + hit.collider.gameObject.name);
-        // }
-        // else
-        // {
-        //     Debug.Log("히트 안 됨!");
-        // }
-
-        //============================================================================
-        //   PointerEventData pointerData = new PointerEventData(eventSystem)
+        //     PointerEventData pointerData = new PointerEventData(eventSystem)
         //     {
         //         position = Input.mousePosition
         //     };
@@ -169,109 +166,63 @@ public class UIManager : Singleton<UIManager>
         //     {
         //         Debug.Log("❌ 아무것도 감지되지 않음!");
         //     }
-        //============================================================================
-        
-    
+        // }
     }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        TryCloseTopUI();
-
-
-    }
-
-    public void TutorialUI_CloseAll()
+    // 커서 바꾸기
+    public enum CursorType {Default, FindClue, HideArea, LockDoor, OpenDoor}
+    public void SetCursor(CursorType type, Texture2D customCursor = null)
     {
-        TutorialUI.SetActive(false);
-    }
-
-    public void TutorialUI_OpenAll()
-    {
-        TutorialUI.SetActive(true);
-        StartCoroutine(CloseAfterDelay(3f));
-    }
-    IEnumerator CloseAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        TutorialUI.SetActive(false);
-    }
-
-
-    public void SetCursor(Texture2D cursor)
-    {
-        Cursor.SetCursor(cursor, hotspot, CursorMode.Auto);
-    }
-    // 기본 커서
-    public void SetDefaultCursor()
-    {
-        Cursor.SetCursor(defaultCursor, hotspot, CursorMode.Auto);
-    }
-    // 단서 커서
-    public void FindClueCursor()
-    {
-        Cursor.SetCursor(findClueCursor, hotspot, CursorMode.Auto);
-    }
-    // 은신처 커서
-    public void HideAreaCursor()
-    {
-        Debug.Log("HideAreaCursor 호출됨!");
-        Cursor.SetCursor(hideAreaCursor, hotspot, CursorMode.Auto);
-    }
-    public void LockDoorCursor()
-    {
-        Cursor.SetCursor(lockDoorCursor, hotspot, CursorMode.Auto);
-    }
-    public void OpenDoorCursor()
-    {
-        Cursor.SetCursor(openDoorCursor, hotspot, CursorMode.Auto);
-    }
-
-    public void ClearCursor()
-    {
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-    }
-
-    // targetUI 하나만 보이게 하기
-    public void ShowOnly(GameObject targetUI)
-    {
-        foreach (GameObject ui in allUIs)
+        switch(type)
         {
-            ui.SetActive(ui == targetUI);
+            case CursorType.Default:
+            customCursor = defaultCursor;
+            break;
+            
+            case CursorType.FindClue:
+            customCursor = findClueCursor;
+            break;
+
+            case CursorType.HideArea:
+            customCursor = hideAreaCursor;
+            break;
+
+            case CursorType.LockDoor:
+            customCursor = lockDoorCursor;
+            break;
+
+            case CursorType.OpenDoor:
+            customCursor = openDoorCursor;
+            break;
         }
-    }
-
-    // 모든 UI 보이게 하기(play버튼 제외)
-    // public void ShowAll()
-    // {
-    //     foreach (GameObject ui in allUIs)
-    //     {
-    //         ui.SetActive(true);
-    //     }
-    //     playbutton.gameObject.SetActive(false);
-    // }
-
-    // 플레이모드UI Canvas 끄기
-    public void PlayModeUI_CloseAll()
-    {
-        playModeUI.SetActive(false);
-    }
-
-    // 스타트엔딩UI Canvas 끄기
-    public void startEndingUI_CloseAll()
-    {
-        startEndingUI.SetActive(false);
-    }
+        
+        Cursor.SetCursor(customCursor, hotspot, CursorMode.Auto);
+    }    
 
     // 플레이모드UI 모두 켜기
     public void PlayModeUI_OpenAll()
     {
         playModeUI.SetActive(true);
+        Debug.Log("플레이모드UI 켜기");
+    }
+    
+    // 플레이모드UI Canvas 끄기
+    public void PlayModeUI_CloseAll()
+    {
+        playModeUI.SetActive(false);
+        Debug.Log("플레이모드UI 끄기");
     }
 
     // 스타트엔딩UI 모두 켜기
     public void startEndingUI_OpenAll()
     {
         startEndingUI.SetActive(true);
+    }
+
+    // 스타트엔딩UI Canvas 끄기
+    public void startEndingUI_CloseAll()
+    {
+        startEndingUI.SetActive(false);
     }
 
     // QTE 이펙트 캔버스 제어 메서드들
@@ -282,7 +233,6 @@ public class UIManager : Singleton<UIManager>
             qteEffectCanvas.SetActive(true);
         }
     }
-
     public void HideQTEEffectCanvas()
     {
         if (qteEffectCanvas != null)
@@ -290,7 +240,6 @@ public class UIManager : Singleton<UIManager>
             qteEffectCanvas.SetActive(false);
         }
     }
-
     public void ToggleQTEEffectCanvas()
     {
         if (qteEffectCanvas != null)
@@ -310,102 +259,62 @@ public class UIManager : Singleton<UIManager>
                 return;
             }
         }
-        // 아무 UI도 안 켜져 있으면 ESC 메뉴 토글
+        // 아무 UI도 안 켜져 있으면 ESC 메뉴 열기
         escMenu.ESCMenuToggle();
     }
-
-
-    // Q_Key 보이기 / 숨기기
-    public void Show_Q_Key(Vector3 worldPosition)
-    {
-        q_Key.SetActive(true);
-        Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
-        screenPos.y += 40f;
-        q_Key.transform.position = screenPos;
-    }
-    public void Hide_Q_Key()
-    {
-        q_Key.SetActive(false);
-    }
-
-    // A_Key 보이기 / 숨기기
-    public void Show_A_Key(Vector3 worldPosition)
-    {
-        Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
-        screenPos.y += 360f;
-        a_Key.transform.position = screenPos;
-        a_Key.SetActive(true);
-    }
-    public void Hide_A_Key()
-    {
-        a_Key.SetActive(false);
-    }
-
-    // D_Key 보이기 / 숨기기
-    public void Show_D_Key(Vector3 worldPosition)
-    {
-        Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
-        screenPos.y += 360f;
-        d_Key.transform.position = screenPos;
-        d_Key.SetActive(true);
-    }
-    public void Hide_D_Key()
-    {
-        a_Key.SetActive(false);
-    }
-
-    // SpaceBar_Key 보이기 / 숨기기
-    public void Show_SpaceBar_Key()
-    {
-        spacebar_Key.SetActive(true);
-    }
-    public void Hide_SpaceBar_Key()
-    {
-        spacebar_Key.SetActive(false);
-    }
-
-    // public Vector3 SetPosition_Q_Key(Vector3 target, float amount)
-    // {
-    //     Vector2 targetPos = Camera.main.WorldToScreenPoint(target);
-    //     targetPos.y += amount;
-    //     return targetPos;
-    // }
-
-    public Vector3 SetPosition_Q_Key(Vector3 target)
-    {
-        Vector3 worldPos;
-        Vector2 screenPos = Camera.main.WorldToScreenPoint(target);
-
-        RectTransform canvasRect = q_Key.GetComponent<RectTransform>();
-
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(
-            canvasRect,
-            screenPos,
-            Camera.main,
-            out worldPos
-        );
-        return worldPos;
-    }
-
-    // public void Show_Q_Key(Vector3 worldPosition)
-    // {
-    //     q_Key.SetActive(true);
-    //     Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
-    //     screenPos.y += 40f;
-    //     q_Key.transform.position = screenPos;
-    // }
-    // public void Update_Q_Key(BasePossessable current)
-    // {
-    //     if (current != null && current.IsPossessed() && !current.HasActivated())
-    //     {
-    //         Show_Q_Key(current.transform.position);
-    //     }
-    //     else
-    //     {
-    //         Hide_Q_Key();
-    //     }
-    // }
     
-    
+    // 튜토리얼UI 키고 3초 뒤 끄기    
+    public void TutorialUI_OpenAll()
+    {
+        TutorialUI.SetActive(true);
+        StartCoroutine(CloseAfterDelay(3f));
+    }
+    IEnumerator CloseAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        TutorialUI.SetActive(false);
+    }
+
+    // 퍼즐 진척도 UI 관리
+    public void ShowPuzzleStatus(PuzzleStatus.Chapter chapter)
+    {
+        int target = (int)chapter;
+        for (int i = 0; i < puzzleStatusPanels.Length; i++)
+        {
+            var go = puzzleStatusPanels[i];
+            if (go == null) continue;
+
+            bool active = (i == target);
+            go.SetActive(active);
+
+            var cg = go.GetComponent<CanvasGroup>();
+            if (cg != null) { cg.alpha = active ? 1f : 0f; cg.interactable = active; cg.blocksRaycasts = active; }
+        }
+    }
+
+    public void AutoSelectPuzzleStatusByScene()
+    {
+        var name = SceneManager.GetActiveScene().name;
+        var chapter = DetectChapter(name);
+        ShowPuzzleStatus(chapter);
+    }
+
+    private PuzzleStatus.Chapter DetectChapter(string sceneName)
+    {
+        if (sceneName.Contains("Ch01")) return PuzzleStatus.Chapter.Chapter1;
+        if (sceneName.Contains("Ch02")) return PuzzleStatus.Chapter.Chapter2;
+        if (sceneName.Contains("Ch03")) return PuzzleStatus.Chapter.Chapter3;
+
+        return PuzzleStatus.Chapter.Chapter1; // 기본값
+    }
+
+   // 버튼 클릭시 사운드    
+   void ButtonClickSound()
+    {
+        if (clickSound != null)
+            SoundManager.Instance.PlaySFX(clickSound, 0.2f);
+    }
 }
+    
+
 

@@ -15,7 +15,7 @@ public class MoveScene : MonoBehaviour
 
     [SerializeField] Image space1;
     [SerializeField] Image space2;
-
+    private LoadSceneMode currentLoadMode = LoadSceneMode.Single;
     private bool isHolding = false;
     private Coroutine flashingCoroutine;
 
@@ -23,6 +23,7 @@ public class MoveScene : MonoBehaviour
     {
         if (skip != null)
             skip.fillAmount = 1f;
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
     private void Start()
     {
@@ -65,8 +66,11 @@ public class MoveScene : MonoBehaviour
 
         if (isSkipActive)
         {
-            // 타임라인 스킵이 활성화되면 씬 이동
-            GoScene(nextSceneName);
+            if (currentLoadMode != LoadSceneMode.Additive)
+            {
+                GoScene(nextSceneName);
+            }
+            //GoScene(nextSceneName);
             isSkipActive = false; // 스킵 상태 초기화
         }
     }
@@ -74,7 +78,7 @@ public class MoveScene : MonoBehaviour
     public void GoScene(string Scenename)
     {
         // 타임라인이 종료되면 씬 이동
-        SceneManager.LoadScene(Scenename);
+        GameManager.LoadThroughLoading(Scenename);
         //if (!GameManager.Instance.Player.activeSelf)
         //{
         //    //GameManager.Instance.Player.gameObject.SetActive(true); // 플레이어 활성화
@@ -84,13 +88,21 @@ public class MoveScene : MonoBehaviour
         if(GameManager.Instance.Player != null)
         {
         PossessionSystem.Instance.CanMove = true; // 플레이어 이동 가능하도록 설정
-
-
+        
+        
         }
 
         //}
     }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        currentLoadMode = mode; // 로드 모드 저장
+    }
     private IEnumerator FlashImages()
     {
         while (!isHolding)

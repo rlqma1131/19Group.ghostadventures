@@ -26,6 +26,7 @@ public class Ch2_MorseKey : BasePossessable
 
     private Ch2_MemoryPositive_01_HandPrint memory;
     private bool isSuccessAnimating = false;
+    private bool isTweening = false;
     private Coroutine shakeCoroutine;
 
     private Dictionary<string, char> morseToChar = new Dictionary<string, char>()
@@ -100,7 +101,7 @@ public class Ch2_MorseKey : BasePossessable
             isPressing = true;
             pressStartTime = Time.time;
         }
-        else if (Input.GetKeyDown(KeyCode.E))
+        else if (Input.GetKeyDown(KeyCode.E) && !isTweening)
         {
             Unpossess();
 
@@ -113,7 +114,8 @@ public class Ch2_MorseKey : BasePossessable
             currentMorseChar = "";
             UpdateUI();
         }
-        else if (Input.GetKeyDown(KeyCode.Q)) // 치트키
+#if UNITY_EDITOR
+        else if (Input.GetKeyDown(KeyCode.Q)) // 치트키 (에디터 전용)
         {
             decodedLetters.Clear();
             decodedLetters.AddRange(new char[] { 'H', 'E', 'L', 'P' });
@@ -121,6 +123,7 @@ public class Ch2_MorseKey : BasePossessable
 
             StartSuccessShake(); // 진동 + 확대 + 빨갛게
         }
+#endif
 
         if (isPressing && Input.GetMouseButtonUp(0))
         {
@@ -159,12 +162,6 @@ public class Ch2_MorseKey : BasePossessable
         }
     }
 
-    public override void OnPossessionEnterComplete() 
-    { 
-        EnemyAI.PauseAllEnemies();
-        UIManager.Instance.PlayModeUI_CloseAll();
-        StartCoroutine(FadeInPanel(1.0f)); // 판넬 페이드 인
-    }
 
     private void UpdateUI()
     {
@@ -312,6 +309,7 @@ public class Ch2_MorseKey : BasePossessable
 
     private IEnumerator ShakeSuccess()
     {
+        isTweening = true;
         isSuccessAnimating = true;
 
         decodedDisplayText.ForceMeshUpdate();
@@ -379,12 +377,23 @@ public class Ch2_MorseKey : BasePossessable
 
         yield return StartCoroutine(FadeOutPanel(0.2f));
 
+
         revealMemory(); // 기억 조각 나타남
         memory.ActivateHandPrint();
+
+        Unpossess();
+
+        isTweening = false;
+        UIManager.Instance.PlayModeUI_OpenAll();
+
+        hasActivated = false; // 더 이상 빙의 불가능
+        MarkActivatedChanged();
     }
 
     private IEnumerator FadeInPanel(float duration)
     {
+        isTweening = true;
+
         panelCanvasGroup.alpha = 0f;
         panelCanvasGroup.interactable = true;
         panelCanvasGroup.blocksRaycasts = true;
@@ -398,7 +407,10 @@ public class Ch2_MorseKey : BasePossessable
             yield return null;
         }
 
+
         panelCanvasGroup.alpha = 1f;
+
+        isTweening = false;
     }
 
     private IEnumerator FadeOutPanel(float duration)
@@ -412,11 +424,6 @@ public class Ch2_MorseKey : BasePossessable
             float t = timer / duration;
             panelCanvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, t); // 점점 투명하게
             yield return null;
-
-            hasActivated = false; // 더 이상 빙의 불가능
-            UIManager.Instance.PlayModeUI_OpenAll();
-
-            Unpossess();
         }
 
         panelCanvasGroup.alpha = 0f;
@@ -448,5 +455,11 @@ public class Ch2_MorseKey : BasePossessable
     {
         SoundManager.Instance.PlaySFX(mudSFX); // 진흙 소리
         handprint.SetActive(true);
+    }
+    public override void OnPossessionEnterComplete() 
+    { 
+        EnemyAI.PauseAllEnemies();
+        UIManager.Instance.PlayModeUI_CloseAll();
+        StartCoroutine(FadeInPanel(1.0f)); // 판넬 페이드 인
     }
 }

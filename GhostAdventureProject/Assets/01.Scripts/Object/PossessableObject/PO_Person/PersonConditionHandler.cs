@@ -53,23 +53,3 @@ public class TiredConditionHandler : PersonConditionHandler
         maxZoneSize = 50f
     };
 }
-
-// public class PersonConditionRouter
-// {
-//     public static void Apply(PersonCondition condition, QTEUI3 qteUI)
-//     {
-//         PersonConditionHandler handler = condition switch
-//         {
-//             PersonCondition.Vital => new VitalConditionHandler(),
-//             PersonCondition.Normal => new NormalConditionHandler(),
-//             PersonCondition.Tired => new TiredConditionHandler(),
-//             _ => null
-//         };
-
-//         if (handler != null)
-//         {
-//             var settings = handler.GetQTESettings();
-//             qteUI.ApplySettings(settings);
-//         }
-//     }
-// }

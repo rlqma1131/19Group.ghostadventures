@@ -33,6 +33,7 @@ public class Ch3_Nurse : MoveBasePossessable
     private bool isWaiting = false;
     private bool hasWorked = false;
     private bool isAnimatingWork = false;
+    private bool isFirstPossessionIn = true;
 
     protected override void Start()
     {
@@ -45,7 +46,8 @@ public class Ch3_Nurse : MoveBasePossessable
     {
         // 빙의 상태
         if (isPossessed)
-        {
+        {   
+            UIManager.Instance.tabkeyUI.SetActive(true);
             if (!PossessionSystem.Instance.CanMove)
                 return;
              
@@ -81,6 +83,11 @@ public class Ch3_Nurse : MoveBasePossessable
 
         // 컨디션 UI & QTE 업데이트
         SetCondition(condition.currentCondition);
+    }
+
+    void LateUpdate()
+    {
+        highlightSpriteRenderer.flipX = spriteRenderer.flipX;
     }
 
     private void HandleWork()
@@ -173,11 +180,17 @@ public class Ch3_Nurse : MoveBasePossessable
         if (state == NurseState.Work)
         {
             state = NurseState.Rest;
+            isAnimatingWork = false;
+            hasWorked = false;
+            isWaiting = false;
         }
         else
         {
             state = NurseState.Work;
             currentWorkIndex = 0;
+            isWaiting = false;
+            isAnimatingWork = false;
+            hasWorked = false; 
             isWaiting = false;
         }
     }
@@ -229,9 +242,28 @@ public class Ch3_Nurse : MoveBasePossessable
         highlightAnimator.Play(currentStateHash, 0, stateInfo.normalizedTime);
     }
 
+    public void InactiveNurse()
+    {
+        hasActivated = false;
+        MarkActivatedChanged();
+
+        zoomCamera.Priority = 5;
+    }
+
     public override void OnPossessionEnterComplete() 
     {
         zoomCamera.Priority = 20;
         anim.SetBool("Move", false);
+        if (isFirstPossessionIn)
+        {
+            isFirstPossessionIn = false;
+            UIManager.Instance.PromptUI.ShowPrompt("이 카드키로 콘솔을 조작할 수 있겠어");
+        }
+    }
+
+    public override void Unpossess()
+    {
+        base.Unpossess();
+        UIManager.Instance.tabkeyUI.SetActive(false);
     }
 }

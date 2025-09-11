@@ -14,7 +14,6 @@ public abstract class BasePossessable : BaseInteractable
     {
         isPossessed = false;
         hasActivated = true;
-        // 해금 안된 오브젝트는 hasActivated 값 false로 초기화 해주기
     }
 
     protected virtual void Update()
@@ -60,7 +59,6 @@ public abstract class BasePossessable : BaseInteractable
     public void OnQTEFailure()
     {
         isPossessed = false;
-        SoulEnergySystem.Instance.Consume(1);
     }
 
     // 빙의 애니메이션이 끝나면 호출되는 메서드
@@ -68,4 +66,22 @@ public abstract class BasePossessable : BaseInteractable
     public virtual void OnPossessionEnterComplete() { }
 
     public virtual void CantPossess() { }
+
+    // 로드 시 상태 셋업
+    public void ApplyHasActivatedFromSave(bool value)
+    {
+        if (hasActivated == value) return;
+        hasActivated = value;
+        OnRestoredHasActivated(value);
+    }
+
+    // 추후 VFX/콜라이더/애니 갱신 등
+    protected virtual void OnRestoredHasActivated(bool value) { }
+
+    // 상태 기록
+    protected void MarkActivatedChanged()
+    {
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetPossessableState(uid.Id, hasActivated);
+    }
 }

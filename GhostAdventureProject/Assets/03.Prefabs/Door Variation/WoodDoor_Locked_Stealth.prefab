@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 5113723469062210187}
   - component: {fileID: 5959662387442813048}
   - component: {fileID: 7875359625883740019}
+  - component: {fileID: 4484123842002488756}
   m_Layer: 0
   m_Name: WoodDoor_Locked_Stealth
   m_TagString: Door
@@ -254,7 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 1317516920830898520}
+  highlight: {fileID: 0}
   targetDoor: {fileID: 0}
   targetPos: {x: 0, y: 0}
   closedObject: {fileID: 762158793540392997}
@@ -262,6 +263,7 @@ MonoBehaviour:
   puzzleId: 
   lockedSound: {fileID: 8300000, guid: 912654f847fdc504cb38e6cdd6b76a64, type: 3}
   unlockSound: {fileID: 8300000, guid: 1c242e13499b0164ca6a43e40b69e973, type: 3}
+  initiallyLocked: 1
   pairedDoor: {fileID: 0}
 --- !u!114 &5959662387442813048
 MonoBehaviour:
@@ -278,6 +280,7 @@ MonoBehaviour:
   detectionRange: 3
   fadeSpeed: 2
   maxAlpha: 1
+  extraTargets: []
 --- !u!82 &7875359625883740019
 AudioSource:
   m_ObjectHideFlags: 0
@@ -374,6 +377,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4484123842002488756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2397489759409252698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: b1db38311f97492f90328cccd6bc2709
 --- !u!1 &6487295281109847358
 GameObject:
   m_ObjectHideFlags: 0
@@ -535,11 +551,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
---- !u!1 &1317516920830898520 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
-  m_PrefabInstance: {fileID: 7238656554061831448}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1857589571171587704 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}

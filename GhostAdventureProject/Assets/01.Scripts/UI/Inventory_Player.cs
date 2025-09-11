@@ -1,13 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class Inventory_Player : MonoBehaviour
 {
     public List<ClueData> collectedClues = new List<ClueData>(); // 단서데이터를 모아놓은 리스트
-    public List<InventorySlot_Player> inventorySlots; // 슬롯 4개
-    private int currentPage = 0;
-    private int cluesPerPage = 4;
-    // [SerializeField] TextMeshProUGUI currentPageText; // 현재 페이지 표시
+    
+    [Header("Slots")]
+    public List<InventorySlot_Player> frontSlots; // 앞면 4칸(아래줄)
+    public List<InventorySlot_Player> backSlots;  // 뒷면 4칸(윗줄)
+
+    [Header("Row Containers")]
+    [SerializeField] private RectTransform frontRow; // 앞줄(아래)
+    [SerializeField] private RectTransform backRow;  // 뒷줄(위)
+
+    [Header("Toggle Anim")]
+    [SerializeField] private float flipDur = 0.25f;   // 반쪽 회전 시간
+    [SerializeField] private float gapDur  = 0.05f;   // 살짝 끊어가는 연출
+    [SerializeField] private Ease flipEase = Ease.InOutSine;
+    private bool isAnimating = false;
+
+    private const int cluesPerFace = 4;
+    private bool frontShowsFirstPage = true; 
+    [SerializeField] KeyCode[] frontKeys = 
+        { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4 };
+
+
+    void Start()
+    {
+        frontRow.localScale = Vector3.one; 
+        backRow.localScale  = Vector3.one * 0.8f;;
+    }
 
     public void AddClue(ClueData clue)
     {
@@ -79,96 +103,111 @@ public class Inventory_Player : MonoBehaviour
         RefreshUI();
     }
 
-    public void RefreshUI()
+    // 플레이어인벤토리UI 표시
+     public void RefreshUI()
     {
-        int startIndex = currentPage * cluesPerPage;
+        // 앞/뒤 시작 인덱스 결정
+        int frontStart = frontShowsFirstPage ? 0 : cluesPerFace;
+        int backStart  = frontShowsFirstPage ? cluesPerFace : 0; 
 
-        for(int i=0; i<inventorySlots.Count; i++)
+        // 앞면 세팅: 번호/키 표시 ON
+        BindSlots(frontSlots, frontStart, showKey:true, dim:false);
+
+        // 뒷면 세팅: 번호/키 표시 OFF
+        BindSlots(backSlots,  backStart,  showKey:false, dim:true);
+
+        SetPlayerKeyLabelsVisible(InventoryInputToggle.FocusIsPlayer);
+    }
+
+    // 슬롯에 숫자키(텍스트) 표시
+    private void BindSlots(List<InventorySlot_Player> slots, int startIndex, bool showKey, bool dim)
+    {
+        for (int i = 0; i < slots.Count; i++)
         {
             int clueIndex = startIndex + i;
-            if(clueIndex < collectedClues.Count)
-            {
-                inventorySlots[i].Setup(collectedClues[clueIndex]); //4번째 단서까지만 보이게
-            }
-            else 
-            {
-                inventorySlots[i].Clear(); //5번째 단서는 보이지 않음
-            }
-            // currentPageText.text = currentPage.ToString(); //현재 페이지 표시 
-        }
-    }
-    public void NextPage() // 다음 페이지로
-    {
-        int maxPage = (collectedClues.Count - 1) / cluesPerPage;
-        if (currentPage < maxPage)
-        {
-            currentPage++;
-            Debug.Log("다음 페이지: " + currentPage);
-            RefreshUI();
+            var slot = slots[i];
+            // slot.SetKeyVisible(showKey && InventoryInputToggle.FocusIsPlayer);
+            slot.SetDim(dim);
+
+            if (clueIndex < collectedClues.Count)
+                slot.Setup(collectedClues[clueIndex]);
+            else
+                slot.Clear();
         }
     }
 
-    public void PrevPage() // 이전 페이지로
+    // 버튼에 연결되어있음. 앞면/뒷면 바꾸기
+    public void ToggleFace()
     {
-        if (currentPage > 0)
-        {
-            currentPage--;
-            RefreshUI();
-        }
+        if(isAnimating) return;
+        StartCoroutine(ToggleFaceFlipAnim());
     }
-
-    public void ResetPage() // 처음 페이지로 (아직 미사용)
+    
+    // Toggle 애니메이션
+    private IEnumerator ToggleFaceFlipAnim()
     {
-        currentPage = 0;
+        if (isAnimating) yield break;
+        isAnimating = true;
+
+        Vector3 smallScale  = Vector3.one * 0.8f;
+        Vector3 normalScale = Vector3.one;
+
+        // 스왑 "이전" 상태 저장
+        bool wasFrontShowingFirst = frontShowsFirstPage; 
+        // wasFrontShowingFirst == true 면 현재 frontRow가 앞(크고), backRow가 뒤(작음)
+
+        // 1) 0 → 90도 (스케일은 건드리지 않음)
+        Sequence s1 = DOTween.Sequence();
+        s1.Join(frontRow.DOLocalRotate(new Vector3(90, 0, 0), flipDur).SetEase(flipEase))
+        .Join(backRow.DOLocalRotate(new Vector3(90, 0, 0), flipDur).SetEase(flipEase));
+        yield return s1.WaitForCompletion();
+
+        yield return new WaitForSeconds(gapDur);
+
+        // 2) 데이터 스왑 + UI 갱신
+        frontShowsFirstPage = !frontShowsFirstPage;
         RefreshUI();
+
+        // 3) 90 → 0도 (여기서도 스케일은 추가 변경 없음)
+        Sequence s2 = DOTween.Sequence();
+        s2.Join(frontRow.DOLocalRotate(Vector3.zero, flipDur).SetEase(flipEase))
+        .Join(backRow.DOLocalRotate(Vector3.zero, flipDur).SetEase(flipEase));
+        yield return s2.WaitForCompletion();
+
+        isAnimating = false;
     }
 
-    // private void Update()
-    // {
-    //     for (int i = 1; i <= 5; i++)
-    //     {
-    //         if (Input.GetKeyDown(KeyCode.Alpha0 + i))
-    //         {
-    //             int slotIndex = i - 1;
-    //             int clueIndex = currentPage * cluesPerPage + slotIndex;
-
-    //             if (InventoryExpandViewer.Instance.IsShowing())
-    //             {
-    //                 InventoryExpandViewer.Instance.HideClue();
-    //             }
-    //             else if (clueIndex < collectedClues.Count)
-    //             {
-    //                 InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
-    //             }
-    //         }
-    //     }
-    // }
-
-
+    // 키 입력 받고 해당 단서 확대
     private void Update()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 4; i++)
         {
-            if(ESCMenu.Instance != null)
+            var alpha = frontKeys[i];
+            var keypad = KeyCode.Keypad1 + i;
+            if (Input.GetKeyDown(alpha) || Input.GetKeyDown(keypad))
             {
-            KeyCode key = ESCMenu.Instance.GetKey(i);
-            if (Input.GetKeyDown(key))
-            {
-                int clueIndex = currentPage * cluesPerPage + i;
+                if(!InventoryInputToggle.FocusIsPlayer) return;
+                int frontStart = frontShowsFirstPage ? 0 : cluesPerFace;
+                int clueIndex = frontStart + i;
 
-                if (InventoryExpandViewer.Instance.IsShowing())
-                {
-                    InventoryExpandViewer.Instance.HideClue();
-                }
+                if (UIManager.Instance.InventoryExpandViewerUI.IsShowing())
+                    UIManager.Instance.InventoryExpandViewerUI.HideClue();
                 else if (clueIndex < collectedClues.Count)
-                {
-                    InventoryExpandViewer.Instance.ShowClue(collectedClues[clueIndex]);
-                }
-            }}
+                    UIManager.Instance.InventoryExpandViewerUI.ShowClue(collectedClues[clueIndex]);
+            }
         }
     }
+
+    public void SetPlayerKeyLabelsVisible(bool on)
+    {
+        if (frontSlots != null)
+            foreach (var s in frontSlots) s.SetKeyVisible(on);
+
+        if (backSlots != null)
+            foreach (var s in backSlots) s.SetKeyVisible(false);
+    }
+
+    
 }
-
-
 
 

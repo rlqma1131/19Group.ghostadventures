@@ -1049,7 +1049,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2059531157
   m_SortingLayer: 4
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 5774d4ec72d972b418a47c7b6faf779b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1127,8 +1127,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.86020005, y: 0.43440008, z: 0}
-    m_Extent: {x: 4.3825, y: 2.9575, z: 0}
+    m_Center: {x: -0.86010015, y: 0.43375003, z: 0}
+    m_Extent: {x: 4.3827, y: 2.9570498, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -1345,6 +1345,7 @@ GameObject:
   - component: {fileID: 8500962481414910757}
   - component: {fileID: 8149273678448401252}
   - component: {fileID: 3506323030872883332}
+  - component: {fileID: 5831282458706140604}
   m_Layer: 0
   m_Name: Ch1_TV
   m_TagString: Untagged
@@ -1444,6 +1445,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4, y: 3}
   m_EdgeRadius: 0
+--- !u!114 &5831282458706140604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8491455659268840351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch1_TV
 --- !u!1 &8545944110308684203
 GameObject:
   m_ObjectHideFlags: 0
@@ -1703,6 +1717,10 @@ PrefabInstance:
     - target: {fileID: 5601138170063719656, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
       propertyPath: m_SortingOrder
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6339741782628707061, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
+      propertyPath: m_SortingOrder
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7672997842026072314, guid: 9cc627ba5b3153b4381120990adb17b3, type: 3}
       propertyPath: m_LocalScale.x

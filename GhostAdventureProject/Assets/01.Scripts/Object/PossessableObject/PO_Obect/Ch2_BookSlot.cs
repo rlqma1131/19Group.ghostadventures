@@ -27,6 +27,10 @@ public class Ch2_BookSlot : MonoBehaviour
     private Vector3 originalPosition;
     private Vector3 originalScale;
     private bool isPushed = false;
+    
+    private Transform nameOriginalParent;
+    private Vector3   nameOriginalLocalPos;
+    private Vector3   nameOriginalLocalScale;
 
     public bool IsCorrectBook => isCorrectBook;
     public bool IsPushed => isPushed;
@@ -36,10 +40,30 @@ public class Ch2_BookSlot : MonoBehaviour
         originalPosition = transform.localPosition;
         originalScale = transform.localScale;
 
+        if (booknameRenderer != null)
+        {
+            var t = booknameRenderer.transform;
+            nameOriginalParent     = t.parent;
+            nameOriginalLocalPos   = t.localPosition;
+            nameOriginalLocalScale = t.localScale;
+        }
+        
         if (bookRenderer == null)
             bookRenderer = GetComponent<SpriteRenderer>();
 
         originalColor = bookRenderer.color;
+    }
+    
+    public void ResetNameTransform()
+    {
+        if (booknameRenderer == null) return;
+        
+        var t = booknameRenderer.transform;
+        DOTween.Kill(t);  // 혹시 걸려있는 트윈 있으면 중지
+        t.SetParent(nameOriginalParent);
+        t.localPosition   = nameOriginalLocalPos;
+        t.localScale      = nameOriginalLocalScale;
+        booknameRenderer.color = defaultColor;
     }
 
     public void ToggleBook()
@@ -62,7 +86,10 @@ public class Ch2_BookSlot : MonoBehaviour
             bookRenderer.DOColor(originalColor, animDuration);
             
             if(booknameRenderer != null)
+            {
                 booknameRenderer.color = defaultColor;
+                ResetNameTransform();
+            }
         }
     }
 }

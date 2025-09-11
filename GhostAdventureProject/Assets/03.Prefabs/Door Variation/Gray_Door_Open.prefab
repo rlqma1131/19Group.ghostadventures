@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 3732283591376104304}
   - component: {fileID: 7537533740529131480}
   - component: {fileID: 3496537867485706657}
+  - component: {fileID: 7945355960672322678}
   m_Layer: 0
   m_Name: Gray_Door_Open
   m_TagString: Door
@@ -184,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaddd9e1e9a81d4ea2cd09c720564c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 611400989415685882}
+  highlight: {fileID: 0}
   targetDoor: {fileID: 0}
   targetPos: {x: 0, y: 0}
   closedObject: {fileID: 0}
@@ -234,6 +235,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.6, y: 2.9333334}
   m_EdgeRadius: 0
+--- !u!114 &7945355960672322678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4732976139016957083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: ad9c207c2f454fea92efd230e451e16a
 --- !u!1001 &9097337862183457466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -314,10 +328,5 @@ PrefabInstance:
 --- !u!4 &284738889173146074 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
-  m_PrefabInstance: {fileID: 9097337862183457466}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &611400989415685882 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
   m_PrefabInstance: {fileID: 9097337862183457466}
   m_PrefabAsset: {fileID: 0}

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MemoryScan : MonoBehaviour
@@ -16,7 +17,7 @@ public class MemoryScan : MonoBehaviour
     private bool isScanning = false;
     private bool isNearMemory = false;
     [SerializeField] private GameObject currentScanObject; // 현재 스캔 대상 오브젝트
-    [SerializeField] private MemoryFragment currentMemoryFragment;
+    [SerializeField] public MemoryFragment currentMemoryFragment;
 
     [SerializeField] private AudioClip scanSound;
 
@@ -153,6 +154,26 @@ public class MemoryScan : MonoBehaviour
         isScanning = false;
         Time.timeScale = 1f; // 시간 흐름을 원래대로 복구
 
+        // 저장하기
+        //if (currentMemoryFragment != null)
+        //{
+        //    // 저장한 기억 챕터 진행도에 반영
+        //    //var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
+        //    //ChapterEndingManager.Instance.RegisterScannedMemory(currentMemoryFragment.data.memoryID, chapter);
+
+        //    //SaveManager.SaveWhenScanAfter(
+        //    //    currentMemoryFragment.data.memoryID,
+        //    //    currentMemoryFragment.data.memoryTitle,
+        //    //    SceneManager.GetActiveScene().name,
+        //    //    playerTransform.position,
+        //    //    checkpointId: currentScanObject != null ? currentScanObject.name : null,
+        //    //    autosave: true  // 저장 팝업 띄움
+        //    //    // 수집한 최종 단서도 저장하고 있음
+        //    //);
+
+        //    //Debug.Log($"[ChapterEndingManager] 챕터{chapter}에서 {currentMemoryFragment.data.memoryID}가 기록 되었습니다");
+        //}
+
         scanPanel?.SetActive(false);
         scanCircleUI?.gameObject.SetActive(false);
 
@@ -167,34 +188,17 @@ public class MemoryScan : MonoBehaviour
         }
 
         currentScanObject.GetComponentInChildren<SpriteRenderer>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f); // 스캔 완료 후 색상 변경
-
-        // 여기에 스캔 완료 후 처리 로직 추가 (예: UI 업데이트, 사운드 재생 등)
-
-        //SceneManager.LoadScene($"{currentMemoryFragment.data.CutSceneName}", LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
-        //Time.timeScale = 0f; // 시간 흐름을 원래대로 복구
-
-        //각 오브젝트 별로 기억 재생 이후 구현할 메서드
-
-        currentMemoryFragment.AfterScan();
-
-        // 저장
-        //SaveData data = new SaveData
-        //{
-        //    checkpointId = currentScanObject.name,
-        //    sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
-        //    playerPosition = playerTransform.position,
-
-        //    collectedClueNames = inventory_Player.collectedClues.Select(c => c.clue_Name).ToList(),
-
-        //    collectedMemoryIDs = MemoryManager.Instance.collectedMemoryIDs.ToList(),
-
-        //    scannedMemoryTitles = MemoryManager.Instance.ScannedMemories.Select(m => m.memoryTitle).ToList()
-        //};
-
-        //SaveManager.SaveGame(data);
-        //Debug.Log($"[MemoryScan] 기억조각 스캔 완료 및 저장됨: {data.checkpointId}");
-
     }
+
+    // 씬 이름으로 챕터진행도 추적
+    //private int DetectChapterFromScene(string sceneName)
+    //{
+    //    if (string.IsNullOrEmpty(sceneName)) return 0;
+    //    if (sceneName.Contains("Ch01")) return 1;
+    //    if (sceneName.Contains("Ch02")) return 2;
+    //    if (sceneName.Contains("Ch03")) return 3;
+    //    return 0;
+    //}
 
     private void CancleScan(string reason)
     {

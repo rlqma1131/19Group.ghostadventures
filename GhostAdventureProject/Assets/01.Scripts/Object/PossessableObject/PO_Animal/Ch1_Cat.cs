@@ -10,6 +10,7 @@ public class Ch1_Cat : MoveBasePossessable
     [SerializeField] private AudioClip catMeow;
 
     private bool isNearDoor = false;
+    private bool isActing = false;
 
     protected override void Start()
     {
@@ -36,7 +37,20 @@ public class Ch1_Cat : MoveBasePossessable
             q_Key.SetActive(false);
         }
 
-        base.Update();
+        if (!isPossessed || !PossessionSystem.Instance.CanMove)
+            return;
+
+        if (isActing)
+            return;
+
+        Move();
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            zoomCamera.Priority = 5;
+            Unpossess();
+            anim.SetBool("Move", false);
+        }
 
         if (Input.GetKeyDown(KeyCode.Q) && isNearDoor)
         {
@@ -44,6 +58,11 @@ public class Ch1_Cat : MoveBasePossessable
             // 문 열기
             StartCoroutine(CatAct());
         }
+    }
+
+    void LateUpdate()
+    {
+        highlightSpriteRenderer.flipX = spriteRenderer.flipX;
     }
 
     public override void OnQTESuccess()
@@ -63,7 +82,7 @@ public class Ch1_Cat : MoveBasePossessable
             isNearDoor = true;
         }
 
-        if(collision.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("후라이팬"))
+        if(collision.CompareTag("Player") && !SaveManager.IsPuzzleSolved("후라이팬"))
         {
             UIManager.Instance.PromptUI.ShowPrompt("잠들어 있어..깨워볼까?");
         }
@@ -107,20 +126,29 @@ public class Ch1_Cat : MoveBasePossessable
         jumpSequence.AppendCallback(() =>
         {
             hasActivated = true;
+            MarkActivatedChanged();
             anim.SetBool("Idle", true);
         });
     }
 
     IEnumerator CatAct()
     {
+        isActing = true;
+
         anim.SetTrigger("Open");
         door.SolvePuzzle();
 
-        yield return new WaitForSeconds(2f); // 2초 기다림
+        yield return new WaitForSecondsRealtime(2f); // 2초 기다림
 
         zoomCamera.Priority = 5;
-        Unpossess();
-        anim.Play("Cat_Sleeping");
         hasActivated = false;
+        Unpossess();
+
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        anim.SetBool("Move", false);
+        anim.SetBool("Idle", false);
+        anim.SetTrigger("Sleep");
+        MarkActivatedChanged();
     }
 }

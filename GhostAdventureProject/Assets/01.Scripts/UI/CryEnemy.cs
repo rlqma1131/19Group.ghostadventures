@@ -13,40 +13,41 @@ public enum CryEnemyState { Known, Chase, Attack }
 public class CryEnemy : MonoBehaviour
 {
     [Header("사운드")]
-    [SerializeField] private AudioClip cry_small; // 기본울음
-    [SerializeField] private AudioClip cry_big; // 큰울음
-    [SerializeField] private AudioClip smile; // 웃음
-    [SerializeField] private AudioClip successQTE_Sound; // 오르골소리(3개 모두 작동시)
-    [SerializeField] private AudioSource cryMusic;
+    [SerializeField] private AudioClip cry_small;               // 기본울음 소리
+    [SerializeField] private AudioClip cry_big;                 // 큰울음 소리
+    [SerializeField] private AudioClip smile;                   // 웃음 소리
+    [SerializeField] private AudioClip successQTE_Sound;        // 오르골소리(3개 모두 작동 성공시)
 
-    [SerializeField] private ClueData needClue; // 원하는 단서
-    [SerializeField] private Ch3_MusicBox musicBox;
+    [Header("퍼즐")]
+    [SerializeField] private ClueData needClue;                 // 원하는 단서
+    [SerializeField] private GameObject speechBubble;           // 말풍선
+    [SerializeField] private List<Ch3_MusicBox> myMusicBoxes;   // 연결된 3개의 오르골
+    public HashSet<Ch3_MusicBox> clearedBoxes = new HashSet<Ch3_MusicBox>(); // 작동 성공한 오르골
+    private string playerInRoomName;                            // 플레이어가 있는 방의 이름
+    [SerializeField] string cryEnemyInRoomName;                 // 울보가 있는 방의 이름
+    [SerializeField] LockedDoor door;                           // 방 문
+    
+    [Header("울보 설정")]
+    [SerializeField] private float moveSpeed = 4;               // 스피드
+    [SerializeField] private float chaseRange;                  // 추격 범위
+    [SerializeField] private float attackRange;                 // 공격 범위
+
     private GameObject player;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private SoundManager soundManager;
-    [SerializeField] private List<Ch3_MusicBox> myMusicBoxes; // 연결된 3개의 오르골
-    private HashSet<Ch3_MusicBox> clearedBoxes = new HashSet<Ch3_MusicBox>(); // QTE 성공한 오르골
     private Animator anim;
 
-    [SerializeField] string cryRoomName; // 울보가 있는 방의 이름
-    private string roomName; // 플레이어가 있는 방의 이름
+    private bool isCrying = false;                              // 울고 있는지 확인
+    private bool playSound_successQTE = false;                  // 오르골소리 플레이 여부 확인
+    private bool clear = false;                                 // 오르골3개 성공 확인
+    public int failCount = 0;                                   // QTE 실패 횟수
+    private int successCount = 0;                               // QTE 성공 횟수
+    private CryEnemyState currentState;                         // 상태
 
-
-    private bool isCrying = false; // 울고 있는지 확인용
-    private bool playSound_successQTE = false;
-    public int failCount = 0;
-    private int successCount = 0;
     [SerializeField] private GameObject cryingtrigger;
-
-    private CryEnemyState currentState;
-
-    [Header("울보 설정")]
-    [SerializeField] private float moveSpeed = 4; // 스피드
-    [SerializeField] private float chaseRange; // 추격 범위
-    [SerializeField] private float attackRange; // 공격 범위
-
     private Vector2 lastDirection;
+    private bool attackMode = false;
 
 
     void Start()
@@ -56,29 +57,27 @@ public class CryEnemy : MonoBehaviour
         sr = GetComponentInChildren<SpriteRenderer>();
         anim = GetComponentInChildren<Animator>();
         soundManager = SoundManager.Instance;
+        
         cryingtrigger.SetActive(false);
-
         currentState = CryEnemyState.Known;
-        // StartCrying(); // 임시
     }
 
     void Update()
     {
-        roomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
-        if (cryRoomName == roomName && !isCrying)
+        playerInRoomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
+        if (cryEnemyInRoomName == playerInRoomName && !clear && !isCrying)
         {
             StartCrying();
         }
-        if (successCount >= 3 && cryRoomName != roomName && playSound_successQTE)
+        else if (cryEnemyInRoomName != playerInRoomName && isCrying)
         {
-            soundManager.StopSFX();
-            playSound_successQTE = false;
+            soundManager.StopLoopingSFX();
+            isCrying = false;
         }
-        // else if(clearedBoxes.Count >= 3 && cryRoomName == roomName && !playSound_successQTE)
-        // {
-        //     soundManager.PlaySFX(successQTE_Sound);
-        //     playSound_successQTE = true;
-        // }
+        else if (cryEnemyInRoomName != playerInRoomName && clear && !isCrying)
+        {
+            soundManager.StopLoopingSFX();
+        }
     }
 
     void FixedUpdate()
@@ -86,22 +85,10 @@ public class CryEnemy : MonoBehaviour
         switch(currentState)
         {
             case CryEnemyState.Chase:
-                // if (roomName != cryRoomName)
-                // {
-                //     StopChase();
-                //     return;
-                // }
                 ChasePlayer();
                 break;
 
             case CryEnemyState.Attack:
-                // if (roomName != cryRoomName)
-                // {
-                //     StopChase();
-                //     return;
-                // }
-
-                
                 AttackPlayer();
                 break;
         }
@@ -111,11 +98,11 @@ public class CryEnemy : MonoBehaviour
     public void StartCrying()
     {
         isCrying = true;
-        clearedBoxes.Clear();
-        soundManager.PlayLoopingSFX(cry_small);
-        cryingtrigger.gameObject.SetActive(true);
+        
+        door.UnlockPair();  // 락도어 - 열림     
+        // clearedBoxes.Clear();
         cryingtrigger.SetActive(true);
-
+        soundManager.PlayLoopingSFX(cry_small);
         // 오르골들에게 자신을 연결
         foreach (var box in myMusicBoxes)
         {
@@ -123,30 +110,33 @@ public class CryEnemy : MonoBehaviour
         }
     }
 
-    // 울음 멈춤
+    // 울음 멈춤 -> 웃음
     private void StopCryingAndSmile()
     {
-        soundManager.StopLoopingSFX();
-        soundManager.PlaySFX(smile);
-        soundManager.PlaySFX(successQTE_Sound);
-        playSound_successQTE = true;
+        isCrying = false;
+        clear = true;
+
+        soundManager.StopLoopingSFX();                      // 기본울음 멈춤
+        soundManager.PlayLoopingSFX(smile);                 // 웃음소리 플레이
+        soundManager.PlayLoopingSFX(successQTE_Sound);      // 오르골 소리 플레이
+        playSound_successQTE = true;                        // 오르골 소리 플레이 상태임
+
         anim.SetBool("Jump", true);
         cryingtrigger.SetActive(false);
-    }
-
-    private void StopSuccessQTE_Sound()
-    {
-        soundManager.StopSFX();
-        playSound_successQTE = false;
     }
 
     // 오르골3개 실패시 - 큰 울음 소리
     private void StartBigCrying()
     {
+        door.LockPair();
+
         soundManager.StopLoopingSFX();
         soundManager.PlaySFX(cry_big);
         StartCoroutine(WaitAndChangeState(cry_big.length));
+        
+        attackMode = true;
     }
+
     private IEnumerator WaitAndChangeState(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -162,51 +152,48 @@ public class CryEnemy : MonoBehaviour
     // ChangeState 애니메이션 종료시 작동
     public void OnChangeStateAnimationEnd()
     {
-        anim.SetBool("ChangeState", false);
-        currentState = CryEnemyState.Chase;
+        if(attackMode)
+        {
+            anim.SetBool("ChangeState", false);
+            currentState = CryEnemyState.Chase;
+        }
+        else
+            anim.SetBool("BackState", true);
+            anim.SetBool("ChangeState", false);
+    }
+
+    // BackState 애니메이션 종료시 작동
+    public void OnBackeStateAnimationEnd()
+    {
+        anim.SetBool("BackState", false);
     }
 
     private void ChasePlayer()
     {
-        if (roomName == cryRoomName)
+        if (playerInRoomName == cryEnemyInRoomName)
         {
-        anim.SetBool("Chase", true);
-        Vector2 direction = (player.transform.position - transform.position).normalized;
-        lastDirection = direction;
-        // 이동
-        rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
-        
-        if(transform.position.x - player.transform.position.x >0)
-            sr.flipX = true;
-        else
-            sr.flipX = false;
+            anim.SetBool("Chase", true);
+            Vector2 direction = (player.transform.position - transform.position).normalized;
+            lastDirection = direction;
+            // 이동
+            rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
+            
+            if(transform.position.x - player.transform.position.x >0)
+                sr.flipX = true;
+            else
+                sr.flipX = false;
 
-        if (Mathf.Abs(transform.position.x - player.transform.position.x) < 0.1f)
-        {
-            currentState = CryEnemyState.Attack;
+            if (Mathf.Abs(transform.position.x - player.transform.position.x) < 0.1f)
+            {
+                currentState = CryEnemyState.Attack;
+            }
         }
-        }
-    // else
-    // {
-    //     // 방이 다르면 추적하지 않음
-    //     StopChase();
-    // }
     }
-    
-
-    // private void StopChase()
-    // {
-    //     rb.velocity = Vector2.zero; // 혹시라도 움직이는 중이라면 멈추기
-    //     anim.SetBool("Chase", false);
-    //     anim.SetBool("Attack", false);
-    //     anim.Play("CryEnemy_Idle"); // Idle 애니메이션
-    //     currentState = CryEnemyState.Known; // 다시 대기 상태로 전환
-    // }
 
     private void AttackPlayer()
     {
         anim.SetBool("Attack", true);
-        Debug.Log("AfterAttack");
+
         if (Mathf.Abs(transform.position.x - player.transform.position.x) >= 0.2f)
         {
             anim.SetBool("Attack", false);
@@ -218,31 +205,8 @@ public class CryEnemy : MonoBehaviour
     // Attack 애니메이션 종료시 작동
     public void AfterAttack()
     {   
-        PlayerLifeManager.Instance.currentPlayerLives = 1;
+        PlayerLifeManager.Instance.currentPlayerLives = 1;  // 공격당하면 무조건 죽음
         PlayerLifeManager.Instance.LosePlayerLife();
-    }
-
-    public void OnMusicBoxSuccess(Ch3_MusicBox box)
-    {
-        if (!clearedBoxes.Contains(box))
-        {
-            clearedBoxes.Add(box);
-            Debug.Log($"울보 오르골 {clearedBoxes.Count}개 해제됨");
-
-            if (clearedBoxes.Count >= 3)
-            {
-                StopCryingAndSmile();
-            }
-        }
-    }
-
-    public void OnMusicBoxFail()
-    {
-        failCount++;
-        if (failCount >= 3)
-        {
-            StartBigCrying();
-        }
     }
 
     public void OnMusicBoxSuccess()
@@ -253,14 +217,21 @@ public class CryEnemy : MonoBehaviour
             StopCryingAndSmile();
         }
     }
+    public void OnMusicBoxFail()
+    {
+        failCount++;
+        if (failCount >= 5)
+        {
+            StartBigCrying();
+        }
+    }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && currentState == CryEnemyState.Known)
+        if(collision.CompareTag("Player") && currentState == CryEnemyState.Known && !clear)
         {
-            // soundManager.StopLoopingSFX();
+            anim.SetBool("ChangeState", true);
             soundManager.PlaySFX(cry_big);
-            // soundManager.PlayLoopingSFX(cry_small);
         }
     }
 }

@@ -29,6 +29,7 @@ public class Ch3_CassettePlayer : BasePossessable
     [SerializeField] private GameObject pitchDial;
     [SerializeField] private GameObject distortDial;
     [SerializeField] private GameObject playBtn;
+    [SerializeField] private GameObject clueScreen;
 
     private bool isPlaying = false; // 재생 여부
     private bool isSolved = false; // 문제 해결 여부
@@ -36,6 +37,7 @@ public class Ch3_CassettePlayer : BasePossessable
     private float inputCooldown = 0.5f; // 조작키 입력 텀
     private float inputTimer = 0f;
     private bool canAdjust = true;
+    private bool isFirstPossessin = true;
 
     private float answerDistortion = 0f; // 정답 주파수 조정값
     private float answerPitch = 1f; // 정답 재생 속도
@@ -59,6 +61,7 @@ public class Ch3_CassettePlayer : BasePossessable
         distortion.distortionLevel = distortionValue;
         audioSource.pitch = playbackPitch;
 
+        clueScreen.SetActive(false);
         playBtn.SetActive(false);
         UpdateDialRotation();
     }
@@ -69,15 +72,18 @@ public class Ch3_CassettePlayer : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            if (isSolved)
+                return;
+
             EnemyAI.ResumeAllEnemies();
             Unpossess();
+
             zoomCamera.Priority = 5;
             UIManager.Instance.PlayModeUI_OpenAll();
+
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
-            SoundManager.Instance.PlaySFX(buttonPush);
-
             if (isSolved)
             {
                 SoundManager.Instance.StopBGM();
@@ -85,6 +91,8 @@ public class Ch3_CassettePlayer : BasePossessable
             }
             else
             {
+                SoundManager.Instance.PlaySFX(buttonPush);
+
                 if (!isPlaying)
                 {
                     playBtn.SetActive(true);
@@ -113,7 +121,7 @@ public class Ch3_CassettePlayer : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            distortionValue += 0.1f;
+            distortionValue += 0.2f;
             distortionValue = Mathf.Clamp(distortionValue, minDistort, maxDistort);
             distortion.distortionLevel = distortionValue;
             TriggerInputCooldown();
@@ -121,7 +129,7 @@ public class Ch3_CassettePlayer : BasePossessable
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            distortionValue -= 0.1f;
+            distortionValue -= 0.2f;
             distortionValue = Mathf.Clamp(distortionValue, minDistort, maxDistort);
             distortionValue = Mathf.Round(distortionValue * 100f) / 100f;
             distortion.distortionLevel = distortionValue;
@@ -130,7 +138,7 @@ public class Ch3_CassettePlayer : BasePossessable
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            playbackPitch += 0.2f;
+            playbackPitch += 0.5f;
             playbackPitch = Mathf.Clamp(playbackPitch, minPitch, maxPitch);
             audioSource.pitch = playbackPitch;
             TriggerInputCooldown();
@@ -138,7 +146,7 @@ public class Ch3_CassettePlayer : BasePossessable
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            playbackPitch -= 0.2f;
+            playbackPitch -= 0.5f;
             playbackPitch = Mathf.Clamp(playbackPitch, minPitch, maxPitch);
             audioSource.pitch = playbackPitch;
             TriggerInputCooldown();
@@ -197,7 +205,10 @@ public class Ch3_CassettePlayer : BasePossessable
             yield return new WaitForSeconds(1f);
         }
 
-        // 정답 도달 후 정상 문장 출력
+        // 정답 도달
+        UIManager.Instance.PromptUI.ShowPrompt("상담 내용..? 왜 이렇게 익숙하지..");
+
+        // 정상 문장 출력
         for (int i = 0; i < correctSentences.Length; i++)
         {
             string sentence = correctSentences[i];
@@ -280,12 +291,11 @@ public class Ch3_CassettePlayer : BasePossessable
 
         // 녹음본 내용 출력 끝
         Unpossess();
+
         EnemyAI.ResumeAllEnemies();
         zoomCamera.Priority = 5;
         UIManager.Instance.PlayModeUI_OpenAll();
-
-        //화면에 단서 출력
-        UIManager.Instance.PromptUI.ShowPrompt("카세트테이프 단서", 5f);
+        UIManager.Instance.PromptUI.ShowPrompt("일단 이 정보를 입력해보려면 치료실을 찾아보자");
     }
 
     string GenerateCorruptedText(float proximity)
@@ -351,14 +361,18 @@ public class Ch3_CassettePlayer : BasePossessable
 
     void CheckSolved()
     {
-        if (Mathf.Abs(distortionValue - answerDistortion) < 0.05f && Mathf.Abs(playbackPitch - answerPitch) < 0.05f)
+        if (Mathf.Abs(distortionValue - answerDistortion) < 0.1f && Mathf.Abs(playbackPitch - answerPitch) < 0.3f)
         {
             hasActivated = false;
+            MarkActivatedChanged();
+
             isPlaying = false;
             isSolved = true;
 
             SoundManager.Instance.StopBGM();
             SoundManager.Instance.PlaySFX(talkingSound);
+
+            clueScreen.SetActive(true);
         }
     }
 
@@ -369,6 +383,12 @@ public class Ch3_CassettePlayer : BasePossessable
         EnemyAI.PauseAllEnemies();
         UIManager.Instance.PlayModeUI_CloseAll();
         zoomCamera.Priority = 20;
+
+        if (isFirstPossessin)
+        {
+            isFirstPossessin = false;
+            UIManager.Instance.PromptUI.ShowPrompt("잡음 투성이야. 주파수랑 속도를 맞추면..");
+        }
     }
 }
 

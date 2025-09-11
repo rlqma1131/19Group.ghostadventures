@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 /// <summary>
 /// TeddyBear 한테 붙는 클래스
 /// </summary>
@@ -12,7 +13,13 @@ public class Ch1_GarageEventManager : MonoBehaviour
     [SerializeField] private PlayableDirector cutsceneDirector_correct;
     private bool isCutscenePlaying = false;
     private bool isCutscenePlaying2 = false;
+    [SerializeField] EnergyRestoreZone energyRestoreZone;
 
+    private bool playerNearby = false;
+    private bool openKeyboard = false;
+    [SerializeField] SpriteRenderer door;
+    //NPC컷신보고 상호작용 가능하게하기 위해 추가
+    [SerializeField]Cutscene_NPC cutscene_NPC;
     public KeyBoard_Enter Answer => answer;
 
     void Start()
@@ -24,23 +31,47 @@ public class Ch1_GarageEventManager : MonoBehaviour
 
     void Update()
     {
-        if (!bear.PlayerNearby)
+        //if (!bear.PlayerNearby)
+        //    return;
+        if (!playerNearby)
             return;
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (!ChapterEndingManager.Instance.AllCh1CluesCollected())
             {
-                UIManager.Instance.PromptUI.ShowPrompt("...아무 일도 일어나지 않았다.", 2f);
+                UIManager.Instance.PromptUI.ShowPrompt("단서가 부족해...", 2f);
             }
-            // 1장 단서 모두 모이고 상호작용 시 이벤트 발생
             else
             {
-                if (!isCutscenePlaying)
+                if(!isCutscenePlaying && !EventManager.Instance.IsEventCompleted("Ch1_NPCEvent"))
                 {
+                    UIManager.Instance.PromptUI.ShowPrompt("아이방에서 누군가의 기척이 느껴져..", 2f);
+                }
+
+                if (!isCutscenePlaying && EventManager.Instance.IsEventCompleted("Ch1_NPCEvent"))
+                {
+                    PlayerInteractSystem.Instance.eKey.SetActive(false);
                     // [컷씬] 꼬마유령 이벤트
                     PossessionSystem.Instance.CanMove = false;
+                    GameManager.Instance.PlayerController.animator.SetBool("Move", false);
+
                     UIManager.Instance.PlayModeUI_CloseAll();
+                    EnemyAI.PauseAllEnemies();
+
+                    SoulEnergySystem.Instance.DisableHealingEffect(); // 에너지 회복존 비활성화
+
                     cutsceneDirector.Play();
+                }
+                else if (isCutscenePlaying && !openKeyboard && !answer.correct)
+                {
+                    PlayerInteractSystem.Instance.eKey.SetActive(false);
+
+                    SoulEnergySystem.Instance.DisableHealingEffect(); // 에너지 회복존 비활성화
+
+                    openKeyboard = true;
+                    keyboard.OpenKeyBoard();
+                    PossessionSystem.Instance.CanMove = false;
                 }
             }
         }
@@ -62,21 +93,45 @@ public class Ch1_GarageEventManager : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            playerNearby = true;
+            PlayerInteractSystem.Instance.eKey.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            playerNearby = false;
+            PlayerInteractSystem.Instance.eKey.SetActive(false);
+        }
+    }
+
+    // 첫 상호작용, 벽에 피흐르는 이벤트 끝났을 때
     void OnTimelineFinished(PlayableDirector pd)
     {
         keyboard.OpenKeyBoard();
-        PossessionSystem.Instance.CanMove = true;
         UIManager.Instance.PlayModeUI_OpenAll();
         isCutscenePlaying = true;
     }
 
+    // 정답 이벤트 끝났을 때
     void OnTimelineFinished2(PlayableDirector pd)
     {
         SoundManager.Instance.RestoreLastBGM(1f);
         keyboard.Close();
+
+        SoulEnergySystem.Instance.EnableHealingEffect();
         EnemyAI.ResumeAllEnemies();
         PossessionSystem.Instance.CanMove = true;
         isCutscenePlaying2 = true;
+        energyRestoreZone.IsActive = true; // 에너지 회복존 비활성화
         UIManager.Instance.PlayModeUI_OpenAll();
+        door.color = new Color(door.color.r, door.color.g, door.color.b, 0f); // 문 투명하게
+
     }
 }

@@ -8,6 +8,14 @@ public class Ch1_CelebrityBox : BasePossessable
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject q_Key;
 
+    private Collider2D col;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        col = GetComponent<Collider2D>();
+    }
 
     protected override void Update()
     {
@@ -34,10 +42,11 @@ public class Ch1_CelebrityBox : BasePossessable
     {
         TutorialManager.Instance.Show(TutorialStep.Q_key_Interact);
     }
+
     private void TriggerBoxEvent()
     {
         hasActivated = true;
-        UIManager.Instance.Hide_Q_Key();
+        MarkActivatedChanged();
         
         // 박스 애니메이션 트리거
         if(animator != null)
@@ -51,7 +60,11 @@ public class Ch1_CelebrityBox : BasePossessable
         StartCoroutine(ShowLetterWithDelay());
 
         hasActivated = false;
-        PuzzleStateManager.Instance.MarkPuzzleSolved("깜짝상자");
+        col.enabled = false;
+
+        MarkActivatedChanged();
+
+        SaveManager.MarkPuzzleSolved("깜짝상자");
     }
     private IEnumerator ShowLetterWithDelay()
     {
@@ -69,7 +82,7 @@ public class Ch1_CelebrityBox : BasePossessable
         if (!hasActivated)
             return;
 
-        if (other.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("깜짝상자"))
+        if (other.CompareTag("Player") && !SaveManager.IsPuzzleSolved("깜짝상자"))
         {
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
             // UIManager.Instance.TutorialUI_CloseAll();

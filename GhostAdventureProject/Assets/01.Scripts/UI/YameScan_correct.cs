@@ -1,18 +1,20 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class YameScan_correct : BaseInteractable
 {
 
     [Header("Scan Settings")]
-    [SerializeField] private float scan_duration = 2f; //스캔 시간
-    [SerializeField] private GameObject scanPanel; //스캔 패널
-    [SerializeField] private Image scanCircleUI; //스캔 원 UI
+    [SerializeField] private float scan_duration = 2f;  // 스캔 시간
+    [SerializeField] private GameObject scanPanel;      // 스캔 패널
+    [SerializeField] private Image scanCircleUI;        // 스캔 원 UI
     [SerializeField] private GameObject player;
-    [SerializeField] private LockedDoor door; // 지하수로와 연결된 문
-    [SerializeField] private GameObject shelf; // 문 막고 있는 책장
-    // [SerializeField] private GameObject e_key;
-
+    [SerializeField] private GameObject door;           // 지하수로와 연결된 문
+    [SerializeField] private GameObject shelf;          // 문 막고 있는 책장
+    [SerializeField] private GameObject clue_P;         // 단서 P
+    [SerializeField] private List<ClueData> clueitems;  // 소모되는 단서 아이템
+    public bool clear_UnderGround = false;              // 지하수로 문이 열렸는지 확인
 
 
     // 내부 상태 변수
@@ -31,12 +33,11 @@ public class YameScan_correct : BaseInteractable
         scanCircleUI = UIManager.Instance.scanUI.transform.Find("CircleUI")?.GetComponent<Image>();
         scanCircleUI?.gameObject.SetActive(false);
         player = FindObjectOfType<PlayerController>().gameObject;
-
+        clue_P.SetActive(false);
     }
 
     void Update()
     {
-
         // 스캔 가능한 상태가 아니거나, 스캔 중이 아닐 때 입력을 받음
         if (isNearMemory && !isScanning && Input.GetKeyDown(KeyCode.E))
         {
@@ -75,9 +76,7 @@ public class YameScan_correct : BaseInteractable
 
     private void StartScan()
     {
-        // if (currentMemoryFragment.IsScannable)
         {
-
             isScanning = true;
             scanTime = 0f;
 
@@ -98,8 +97,6 @@ public class YameScan_correct : BaseInteractable
             Time.timeScale = 0.3f; // 슬로우 모션 시작
             SoulEnergySystem.Instance.Consume(1); // 에너지 소모
             Debug.Log("스캔 시작");
-
-
         }
     }
 
@@ -128,20 +125,29 @@ public class YameScan_correct : BaseInteractable
     private void CompleteScan()
     {
         Debug.Log("스캔 완료");
+        isNearMemory = false;
         isScanning = false;
         Time.timeScale = 1f; // 시간 흐름을 원래대로 복구
 
         scanPanel?.SetActive(false);
         scanCircleUI?.gameObject.SetActive(false);
 
-        door.SolvePuzzle();
+        door.SetActive(true);
         // Animator doorani = door.GetComponent<Animator>();
         // doorani.SetBool("Open", true);
         Vector3 shelfPos = shelf.transform.position;
-        shelfPos.x -= 3f;
+        shelfPos.x -= 5f;
         shelf.transform.position = shelfPos;
-        Debug.Log("지하수로와 연결된 문을 발견했습니다");
+        clear_UnderGround = true;
+        clue_P.SetActive(true);
+        ChapterEndingManager.Instance.CollectCh2Clue("P");
+        ConsumeClue(clueitems);
+        UIManager.Instance.PromptUI.ShowPrompt_2("으악...!!", "벽에 뭔가 나타났어...!");
+    }
 
+    private void ConsumeClue(List<ClueData> clues)
+    {
+        UIManager.Instance.Inventory_PlayerUI.RemoveClue(clues.ToArray());
     }
 
     private void CancleScan(string reason)
@@ -156,7 +162,7 @@ public class YameScan_correct : BaseInteractable
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && !clear_UnderGround)
         {
             isNearMemory = true;
             currentScanObject = collision.gameObject;

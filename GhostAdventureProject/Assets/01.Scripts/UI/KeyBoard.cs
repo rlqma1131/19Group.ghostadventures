@@ -5,6 +5,7 @@ using TMPro;
 
 public class KeyBoard : MonoBehaviour, IUIClosable
 {
+    [SerializeField] EnergyRestoreZone energyRestoreZone;
     public TMP_Text[] letterSlots = new TMP_Text[4];
     private int currentIndex = 0;
     public GameObject keyBoardPanel;
@@ -52,6 +53,8 @@ public class KeyBoard : MonoBehaviour, IUIClosable
     // 키보드UI 열기
     public void OpenKeyBoard()
     {
+        EnemyAI.PauseAllEnemies();
+
         UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 수집한 단서로 이름을 입력하세요.");
         keyBoardPanel.SetActive(true); // 키보드UI 열기
         UIManager.Instance.PlayModeUI_CloseAll();
@@ -60,8 +63,12 @@ public class KeyBoard : MonoBehaviour, IUIClosable
     // 키보드UI 닫기
     public void Close()
     {
+        SoulEnergySystem.Instance.EnableHealingEffect();
+        EnemyAI.ResumeAllEnemies();
+
         keyBoardPanel.SetActive(false);
         UIManager.Instance.PlayModeUI_OpenAll();
+        PossessionSystem.Instance.CanMove = true;
     }
 
     public bool IsOpen()

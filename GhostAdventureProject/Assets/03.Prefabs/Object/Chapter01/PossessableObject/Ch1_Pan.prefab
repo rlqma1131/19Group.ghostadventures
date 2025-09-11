@@ -200,9 +200,10 @@ GameObject:
   - component: {fileID: 8772321172049196733}
   - component: {fileID: 5876727824840312000}
   - component: {fileID: 109427476392736326}
+  - component: {fileID: -2072539789281940951}
   m_Layer: 0
   m_Name: Ch1_Pan
-  m_TagString: Object
+  m_TagString: SoundTrigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -240,8 +241,9 @@ MonoBehaviour:
   highlight: {fileID: 3466035112333870909}
   anim: {fileID: 0}
   hasActivated: 0
+  possessionSFX: {fileID: 0}
   isPossessed: 0
-  isFall: {fileID: 8300000, guid: ba48f3939907ec342aaf26cd682735a6, type: 3}
+  isFall: {fileID: 8300000, guid: 80f6c1a564007964b9ef6d7f7783c5a2, type: 3}
   startLocalPosition: {x: 2.493, y: 1.348, z: 0}
   startLocalRotation: {x: 0, y: 0, z: 0, w: 1}
   dropYPos: -3.3
@@ -249,6 +251,7 @@ MonoBehaviour:
   cake: {fileID: 0}
   mouse: {fileID: 0}
   q_Key: {fileID: 2401844526260599920}
+  soundConfig: {fileID: 11400000, guid: 2f2ba8ca3bec8444894a66b7c1179dab, type: 2}
 --- !u!61 &109427476392736326
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -294,6 +297,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.22, y: 0.56}
   m_EdgeRadius: 0
+--- !u!114 &-2072539789281940951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7136663940050885818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch1_Pan
 --- !u!1001 &243925546728914497
 PrefabInstance:
   m_ObjectHideFlags: 0

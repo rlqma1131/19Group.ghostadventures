@@ -39,6 +39,7 @@ public class PossessionQTESystem : MonoBehaviour
         isRunning = true;
         Debug.Log("Starting QTE");
         QTEUI.ShowQTEUI();
+        EnemyAI.PauseAllEnemies();
     }
 
     public void StartQTE3()
@@ -48,6 +49,7 @@ public class PossessionQTESystem : MonoBehaviour
         isRunning = true;
         Debug.Log("Starting QTE3");
         QTEUI3.ShowQTEUI3();
+        EnemyAI.PauseAllEnemies();
     }
 
     public void HandleQTEResult(bool success)
@@ -62,12 +64,14 @@ public class PossessionQTESystem : MonoBehaviour
         {
             Debug.Log("QTE succeeded");
             // ResetTimeScale();
+            EnemyAI.ResumeAllEnemies();
             GameManager.Instance.PlayerController.currentTarget?.OnQTESuccess();
             UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("빙의 성공!", 2f);
         }
         else
         {
             Debug.Log("QTE failed");
+            EnemyAI.ResumeAllEnemies();
             StartCoroutine(DelayedFailure());
             UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("빙의 실패!", 2f);
         }
@@ -85,6 +89,7 @@ public class PossessionQTESystem : MonoBehaviour
         GameManager.Instance.PlayerController.currentTarget?.OnQTEFailure();
     }
 
+    // BasePossessable
     //public void OnQTESuccess()
     //{
     //    Debug.Log("QTE 성공 - 빙의 완료");

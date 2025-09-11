@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -27,7 +27,7 @@ public class Ch2_Computer : BasePossessable
     [Header("Puzzle Settings")]
     [SerializeField] private string correctPassword;
     [SerializeField] private LockedDoor doorToOpen;
-    [SerializeField] private GameObject monitorOn;
+    // [SerializeField] private GameObject monitorOn;
 
     private Vector2 hiddenPos = new(0, -800);
     private Vector2 visiblePos = new(0, 0);
@@ -40,7 +40,7 @@ public class Ch2_Computer : BasePossessable
 
     protected override void Start()
     {
-        hasActivated = false;
+        hasActivated = true;
         monitorPanel.anchoredPosition = hiddenPos;
         monitorPanel.gameObject.SetActive(false);
         passwordPanel.SetActive(false);
@@ -128,7 +128,8 @@ public class Ch2_Computer : BasePossessable
 
     private void SubmitPassword()
     {
-        string input = passwordInput.text.Trim();
+        string input = passwordInput.text.Trim().ToUpper(); // 입력값을 대문자로 변환
+        string correct = correctPassword.Trim().ToUpper();  // 정답도 대문자로 변환
 
         if (input == correctPassword)
         {
@@ -136,12 +137,14 @@ public class Ch2_Computer : BasePossessable
             {
                 correctImage.SetActive(true);
             }
-            StartCoroutine(ShowCorrectImage());  
+            StartCoroutine(ShowCorrectImage());
+            UIManager.Instance.PromptUI.ShowPrompt("어디 문이 열린지..?", 2f);
         }
         else
         {
             passwordInput.text = "";
-            StartCoroutine(WrongFeedback());  
+            StartCoroutine(WrongFeedback());
+            UIManager.Instance.PromptUI.ShowPrompt("흠.. 주변을 둘러보자.", 2f);
         }
     }
     
@@ -174,9 +177,10 @@ public class Ch2_Computer : BasePossessable
         passwordInput.ActivateInputField();
     }
 
-    public void Activate()
-    {
-        hasActivated = true;
-        monitorOn.SetActive(false);
-    }
+    // public void Activate()
+    // {
+    //     hasActivated = true;
+    //     MarkActivatedChanged();
+    //     monitorOn.SetActive(false);
+    // }
 }

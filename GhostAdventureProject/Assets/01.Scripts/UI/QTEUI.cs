@@ -6,20 +6,20 @@ using UnityEngine.UI;
 
 public class QTEUI : MonoBehaviour
 {
-    public RectTransform needle;
-    public float rotateSpeed = 90f;
+    public RectTransform needle;            // 바늘
+    public float rotateSpeed = 90f;         // 스피드(1초에 몇도를 돌지)
     public KeyCode inputKey = KeyCode.Space;
-    public Image successArc;
-    public float minAngle;
-    public float maxAngle;
+    public Image successArc;                // 성공영역
+    public float minAngle;                  // 최소 각
+    public float maxAngle;                  // 최대 각
 
-    private float currentAngle = 0f;
-    private bool isRunning = false;
-    private bool goingBack = false; // 회전 방향
-    private bool wasSuccess = false;
-    
+    private float currentAngle = 0f;        // 현재 각
+    private bool isRunning = false;         // 실행중인지 확인
+    private bool goingBack = false;         // 회전 방향(false-시계방향/true-반시계방향)
+    private bool wasSuccess = false;        // QTE 성공했는지 확인
     private Action<bool> resultCallback;
 
+    // PossessionQTESystem에서 시작시 SetActive(false)됨
     public void ShowQTEUI()
     {
         ShowQTEUI(null);
@@ -42,7 +42,6 @@ public class QTEUI : MonoBehaviour
         if (!isRunning) return;
         
         float delta = rotateSpeed * Time.unscaledDeltaTime;
-        // currentAngle += rotateSpeed * Time.unscaledDeltaTime;
 
         if (!goingBack)
         {
@@ -77,28 +76,7 @@ public class QTEUI : MonoBehaviour
         {
             wasSuccess = currentAngle >= minAngle && currentAngle <= maxAngle;
             isRunning = false;
-            // gameObject.SetActive(false);
             InvokeResult(wasSuccess);
-            // if (currentAngle >= minAngle && currentAngle <= maxAngle)
-            // {
-            //     wasSuccess = true;
-            //     isRunning = false;
-            //     gameObject.SetActive(false);
-            //     PossessionQTESystem.Instance.HandleQTEResult(true);
-            // }
-            // else
-            // {
-            //     wasSuccess = false;
-            //     isRunning = false;
-            //     gameObject.SetActive(false);
-            //     PossessionQTESystem.Instance.HandleQTEResult(false);
-            //
-            //
-            // }
-            // isRunning = false;
-            // gameObject.SetActive(false);
-            // bool success = (currentAngle >= minAngle && currentAngle <= maxAngle);
-            // PossessionQTESystem.Instance.HandleQTEResult(success);
         }
     }
 

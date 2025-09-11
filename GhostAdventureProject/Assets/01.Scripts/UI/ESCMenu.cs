@@ -6,14 +6,9 @@ using UnityEngine.UI;
 
 public class ESCMenu : MonoBehaviour, IUIClosable
 {
-    //esc키를 옵션메뉴가 뜸
-    // 일반, 사운드, 키설정 중에 선택할 수 있음.
-    // 일반 버튼 선택할 경우  나머지 키설정 버튼은 Setactivefalse
-    
-    //=======================
     public static ESCMenu Instance {get; private set;}
-    [SerializeField] private GameObject escMenuUI; // ESCMenu Canvas
-    // [SerializeField] private SoundMenu soundMenu;
+
+    [SerializeField] private GameObject escMenuUI;
     [SerializeField] private GameObject general;
     [SerializeField] private GameObject optionMenu;
     [SerializeField] private GameObject sound;
@@ -23,6 +18,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     [SerializeField] private Slider masterVolumeSlider;
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
+    private const float DEFAULT_SLIDER = 0.5f;
 
     [Header("Language")]
     [SerializeField] private Dropdown languageDropdown;
@@ -32,62 +28,81 @@ public class ESCMenu : MonoBehaviour, IUIClosable
 
     private bool isPaused = false;
     
-    private void Awake()
+    
+    void Awake()
     {
-        if (Instance == null) Instance = this;
-
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        
+        Instance = this;
+        
         // 기본 키 설정 (Clue1~5)
         for (int i = 0; i < 5; i++)
         {
             clueKeyBindings[i] = KeyCode.Alpha1 + i;
         }
-    }    
+        escMenuUI.SetActive(false);
+        Debug.Log("esc메뉴 awake끄기");
+    }
+    
+
     void Start()
     {
-        escMenuUI.SetActive(false);
-        bgmSlider.value = SoundManager.Instance.BGMVolume;
-        sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
-        sfxSlider.value = SoundManager.Instance.SFXVolume;
-        // 초기화
+        const float DEFAULT_SLIDER = 0.5f;
+
         if (masterVolumeSlider != null)
         {
-            masterVolumeSlider.value = AudioListener.volume;
-            // masterVolumeSlider.onValueChanged.AddListener(OnVolumeChanged);
-            masterVolumeSlider.onValueChanged.AddListener(value => AudioListener.volume = value);
+            masterVolumeSlider.onValueChanged.RemoveAllListeners();
+            float masterVal = PlayerPrefs.GetFloat("MasterVol", DEFAULT_SLIDER);
+            masterVolumeSlider.SetValueWithoutNotify(masterVal);
+            AudioListener.volume = masterVal;
+            masterVolumeSlider.onValueChanged.AddListener(v => {
+                AudioListener.volume = v;
+                PlayerPrefs.SetFloat("MasterVol", v);
+            });
         }
-        if(sfxSlider != null)
+
+        if (bgmSlider != null)
         {
-            sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
+            bgmSlider.onValueChanged.RemoveAllListeners();
+            float bgmVal = PlayerPrefs.GetFloat("BGMVol", DEFAULT_SLIDER);
+            bgmSlider.SetValueWithoutNotify(bgmVal);
+            SoundManager.Instance.SetBGMVolume(bgmVal);
+            bgmSlider.onValueChanged.AddListener(v => {
+                SoundManager.Instance.SetBGMVolume(v);
+                PlayerPrefs.SetFloat("BGMVol", v);
+            });
         }
 
-        if (languageDropdown != null)
+        if (sfxSlider != null)
         {
-            languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
+            float sfxVal = PlayerPrefs.GetFloat("SFXVol", 0.5f);
+            sfxSlider.SetValueWithoutNotify(sfxVal);
+            SoundManager.Instance.SetSFXVolume(sfxVal);
+            sfxSlider.onValueChanged.AddListener(v => {
+                SoundManager.Instance.SetSFXVolume(v);
+                PlayerPrefs.SetFloat("SFXVol", v);
+            });
         }
-
-        if (rebindJumpButton != null)
-        {
-            rebindJumpButton.onClick.AddListener(() => StartRebind("Jump"));
-        }
-
-
     }
 
-    // 일반 버튼
+    // 일반(ESC) 버튼
     public void GeneralButton()
     {
         general.SetActive(true);
         sound.SetActive(false);
         keybind.SetActive(false);
     }
+
     // 사운드 버튼
     public void SoundButton()
     {
+        gameObject.SetActive(true);
         general.SetActive(false);
         optionMenu.SetActive(true);
         sound.SetActive(true);
         keybind.SetActive(false);
     }
+
     // 키설정 버튼
     public void KeyBindButton()
     {
@@ -100,7 +115,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // ESC메뉴 토글(열기/닫기)
     public void ESCMenuToggle()
     {
-        if (isPaused)
+        if (IsOpen())
             Close();
         else
             ESCMenu_Open();
@@ -109,30 +124,37 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // ESC메뉴 열기
     public void ESCMenu_Open()
     {
-        UIManager.Instance.SetDefaultCursor();
         escMenuUI.SetActive(true);
+        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
         general.SetActive(true);
         optionMenu.SetActive(false);
         Time.timeScale = 0f;
         isPaused = true;
+        Debug.Log("esc메뉴오픈");
     }
+    
     // ESC메뉴 닫기
     public void Close()
     {
         escMenuUI.SetActive(false);
         Time.timeScale = 1f;
-        isPaused = false;      
+        isPaused = false;  
+        Debug.Log("esc메뉴클로즈");
+
     }
 
     // ESC메뉴가 열려있는지 확인
     public bool IsOpen()
     {
-        return UIManager.Instance.ESCMenuUI.gameObject.activeInHierarchy;
+        return escMenuUI.activeInHierarchy;
     }
 
     // 타이틀로
     public void GoToMainMenu()
     {
+        UIManager.Instance.Inventory_PossessableObjectUI.Clear();
+        UIManager.Instance.Inventory_PossessableObjectUI.HideInventory();
+        UIManager.Instance.Inventory_PlayerUI.RemoveClueBeforeStage();
         UIManager.Instance.PlayModeUI_CloseAll();
         escMenuUI.SetActive(false);
         Time.timeScale = 1f;
@@ -160,6 +182,7 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         AudioListener.volume = value;
         Debug.Log($"Master Volume: {value}");
     }
+
     private void OnLanguageChanged(int index)
     {
         string selectedLang = languageDropdown.options[index].text;
@@ -181,6 +204,14 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         Debug.Log($"단서 {slotIndex + 1} 키 변경 대기 중...");
     }
 
+    void Update()
+    {
+        if(IsOpen())
+        {
+            UIManager.Instance.SetCursor(UIManager.CursorType.Default);
+        }
+    }
+
     // private void Update()
     // {
     //     if (waitingSlot != -1)
@@ -200,13 +231,13 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // }
 
 
-// using System;
-// using System.Collections.Generic;
-// using UnityEngine;
+    // using System;
+    // using System.Collections.Generic;
+    // using UnityEngine;
 
-// public class KeyBindingManager : MonoBehaviour, IUIClosable
-// {
-//     public static KeyBindingManager Instance;
+    // public class KeyBindingManager : MonoBehaviour, IUIClosable
+    // {
+    //     public static KeyBindingManager Instance;
 
     public Dictionary<int, KeyCode> clueKeyBindings = new Dictionary<int, KeyCode>();
 
@@ -229,39 +260,36 @@ public class ESCMenu : MonoBehaviour, IUIClosable
 
     public static class KeyNameHelper
     {
-    public static string GetDisplayName(KeyCode key)
-    {
-        string name = key.ToString();
-
-        // 숫자 키 (Alpha1 ~ Alpha9 → 1 ~ 9)
-        if (name.StartsWith("Alpha") && name.Length == 6)
+        public static string GetDisplayName(KeyCode key)
         {
-            return name.Substring(5);
-        }
+            string name = key.ToString();
 
-        // // Keypad 숫자 (Keypad1 ~ Keypad9 → KP1 ~ KP9)
-        // if (name.StartsWith("Keypad") && name.Length == 7)
-        // {
-        //     return "KP" + name.Substring(6);
-        // }
+            // 숫자 키 (Alpha1 ~ Alpha9 → 1 ~ 9)
+            if (name.StartsWith("Alpha") && name.Length == 6)
+            {
+                return name.Substring(5);
+            }
 
             // // Keypad 숫자 (Keypad1 ~ Keypad9 → KP1 ~ KP9)
-        // if (name.StartsWith("F") && name.Length == 2)
-        // {
-        //     return name;
-        // }
-        // // 스페이스 등 특수 키 포맷 조정 (예시)
-        // if (key == KeyCode.Space)
-        // {
-        //     return "Space";
-        // }
+            // if (name.StartsWith("Keypad") && name.Length == 7)
+            // {
+            //     return "KP" + name.Substring(6);
+            // }
 
-        // 기본 이름 그대로
-        return name;
-    }
+                // // Keypad 숫자 (Keypad1 ~ Keypad9 → KP1 ~ KP9)
+            // if (name.StartsWith("F") && name.Length == 2)
+            // {
+            //     return name;
+            // }
+            // // 스페이스 등 특수 키 포맷 조정 (예시)
+            // if (key == KeyCode.Space)
+            // {
+            //     return "Space";
+            // }
+
+            // 기본 이름 그대로
+            return name;
+        }
+    }   
 }
-
-
-}
-
 

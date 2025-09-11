@@ -9,7 +9,8 @@ public class Ch3_MemoryCollectCheck : MonoBehaviour
 
     private bool allMemoryCollected()
     {
-        return paper.Colected && handbones.Colected;
+        return SaveManager.HasCollectedMemoryID(paper.data.memoryID) &&
+            SaveManager.HasCollectedMemoryID(paper.data.memoryID);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

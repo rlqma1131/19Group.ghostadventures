@@ -15,6 +15,8 @@ public class Ch2_CCTV : BasePossessable
     [Header("하이라이트 애니메이터")]
     [SerializeField] private Animator highlightAnimator;
 
+    private bool isRight = false;
+
     protected override void Start()
     {
         isPossessed = false;
@@ -44,9 +46,7 @@ public class Ch2_CCTV : BasePossessable
         else if (Input.GetKeyDown(KeyCode.D))
         {
             anim.SetBool("Right", true);
-
-            if (highlightAnimator != null && highlightAnimator.runtimeAnimatorController != null && highlightAnimator.isActiveAndEnabled)
-                highlightAnimator.SetBool("Right", true);
+            isRight = true; 
 
             monitor?.SetMonitorAnimBool(index, "Right", true);
             CheckSolvedPrompt();
@@ -54,9 +54,7 @@ public class Ch2_CCTV : BasePossessable
         else if (Input.GetKeyDown(KeyCode.A))
         {
             anim.SetBool("Right", false);
-
-            if (highlightAnimator != null && highlightAnimator.runtimeAnimatorController != null && highlightAnimator.isActiveAndEnabled)
-                highlightAnimator.SetBool("Right", false);
+            isRight = false;
 
             monitor?.SetMonitorAnimBool(index, "Right", false);
             CheckSolvedPrompt();
@@ -74,11 +72,13 @@ public class Ch2_CCTV : BasePossessable
     public void ActivateCCTV()
     {
         hasActivated = true;
+        MarkActivatedChanged();
     }
 
     public void InactiveCCTV()
     {
         hasActivated = false;
+        MarkActivatedChanged();
     }
 
     public override void OnPossessionEnterComplete() 
@@ -94,24 +94,23 @@ public class Ch2_CCTV : BasePossessable
 
         if (other.CompareTag("Player"))
         {
-            SyncHighlightAnimator();
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
-        }
 
-        SyncHighlightAnimator();
+            Invoke(nameof(PlayHighlightAnim), 0.01f); // 0.01초 후 실행
+        }
     }
 
-    public void SyncHighlightAnimator()
+    private void PlayHighlightAnim()
     {
-        if (highlightAnimator == null || anim == null) return;
-
-        AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-
-        // 현재 상태 이름을 Hash로 가져오기
-        int currentStateHash = stateInfo.shortNameHash;
-
-        // 하이라이트 Animator에 동일한 상태 강제 재생
-        highlightAnimator.Play(currentStateHash, 0, stateInfo.normalizedTime);
+        if (highlightAnimator != null && highlightAnimator.gameObject.activeInHierarchy)
+        {
+            highlightAnimator.SetBool("Right", isRight);
+            Debug.Log($"CCTV 하이라이트 bool Right : {isRight}");
+        }
+        else
+        {
+            Debug.Log($"현재 하이라이터 상태 : {highlightAnimator.gameObject.activeInHierarchy}");
+        }
     }
 
     public override void CantPossess()

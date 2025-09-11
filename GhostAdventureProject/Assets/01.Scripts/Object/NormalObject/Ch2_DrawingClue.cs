@@ -1,5 +1,6 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -21,7 +22,11 @@ public class Ch2_DrawingClue : MonoBehaviour
     [SerializeField] private bool hasActivated = false;
     [SerializeField] private bool isLastClue = false;
     [SerializeField] private Ch2_BackStreetObj finalObjectToActivate; 
+    [SerializeField] private CinemachineVirtualCamera vcam;
 
+    public bool HasActivated => hasActivated;                       // 저장용 getter
+    public void ApplyHasActivatedFromSave(bool v) => hasActivated = v; // 복원용 setter
+    
     void Start()
     {
         cluePickup = GetComponent<CluePickup>();
@@ -93,8 +98,7 @@ public class Ch2_DrawingClue : MonoBehaviour
                     
                     if (isLastClue && finalObjectToActivate != null)
                     {
-                        // finalObjectToActivate.SendMessage("OnFinalClueActivated");
-                        finalObjectToActivate.OnFinalClueActivated();
+                        PlayFinalLightSequence();
                     }
 
                     if (nextClueObject != null)
@@ -111,6 +115,45 @@ public class Ch2_DrawingClue : MonoBehaviour
                 if (isPlayerInside)
                     PlayerInteractSystem.Instance.AddInteractable(gameObject);
             });
+    }
+    
+    private void PlayFinalLightSequence()
+    {
+        // 1) 플레이어 잠금 + VCam Follow 끊기
+        PossessionSystem.Instance.CanMove = false;
+        EnemyAI.PauseAllEnemies();
+        var oldFollow = vcam.Follow;
+        vcam.Follow = null;
+
+        // 2) VCam 트랜스폼 & 위치 계산
+        var camTrans = vcam.transform;
+        Vector3 orig = camTrans.position;
+        Vector3 dest = finalObjectToActivate.transform.position;
+        dest.z = orig.z;
+
+        // 3) 시퀀스 구성
+        float moveT   = 0.8f;
+        float revealT = finalObjectToActivate.fadeInTime
+                        + finalObjectToActivate.holdTime
+                        + finalObjectToActivate.fadeOutTime
+                        + finalObjectToActivate.moveDownTime;
+
+        DOTween.Sequence()
+               // 카메라(VCam) 이동
+               .Append(camTrans.DOMove(dest, moveT).SetEase(Ease.InOutSine))
+               // 단서 애니메이션 시작
+               .AppendCallback(() => finalObjectToActivate.OnFinalClueActivated())
+               // 애니메이션 전체 시간 대기
+               .AppendInterval(revealT)
+               // 카메라(VCam) 원위치 복귀
+               .Append(camTrans.DOMove(orig, moveT).SetEase(Ease.InOutSine))
+               // Follow 복구 & 플레이어 언락
+               .AppendCallback(() =>
+               {
+                   vcam.Follow = oldFollow;
+                   PossessionSystem.Instance.CanMove = true;
+                   EnemyAI.ResumeAllEnemies();
+               });
     }
 
     private void OnTriggerEnter2D(Collider2D other)

@@ -13,6 +13,9 @@ public class Ch2_CCTVMonitor : BasePossessable
 
     [Header("가짜 기억 02")]
     [SerializeField] private GameObject memoryH;
+    [SerializeField] private Ch2_MemoryFake_02_CCTV cctv;
+    [SerializeField] private GameObject clueH;
+    [SerializeField] private AudioClip reveal;
 
     private SpriteRenderer[] cctvScreenSpriteRenderer;
     private SpriteRenderer[] laserScreenSpriteRenderer;
@@ -56,6 +59,14 @@ public class Ch2_CCTVMonitor : BasePossessable
                 laserScreenSpriteRenderer[i].enabled = false;
             }
         }
+
+        Debug.Log(
+        $"CCTVMonitor : " +
+        $"{cctvScreenAnimators[0].GetBool("Right")}, " +
+        $"{cctvScreenAnimators[1].GetBool("Right")}, " +
+        $"{cctvScreenAnimators[2].GetBool("Right")}, " +
+        $"{cctvScreenAnimators[3].GetBool("Right")}"
+        );
     }
 
     protected override void Update()
@@ -154,7 +165,13 @@ public class Ch2_CCTVMonitor : BasePossessable
         yield return new WaitForSeconds(4f);
 
         memoryH.SetActive(true);
+        cctv.ActivateCCTV();
+        clueH.SetActive(true);
+        SoundManager.Instance.PlaySFX(reveal);
+        ChapterEndingManager.Instance.CollectCh2Clue("H");
+
         hasActivated = false; // 기억 스캔 전까지 빙의 불가
+        MarkActivatedChanged();
 
         EnemyAI.ResumeAllEnemies();
         zoomCamera.Priority = 5;
@@ -187,6 +204,7 @@ public class Ch2_CCTVMonitor : BasePossessable
     public void ActivateCCTVMonitor()
     {
         hasActivated = true;
+        MarkActivatedChanged();
 
         // 처음 활성화 됐을 때 프롬프트
         if(isActivatedFirst)
@@ -198,11 +216,17 @@ public class Ch2_CCTVMonitor : BasePossessable
 
     public bool SolvedCheck()
     {
-        cctvScreenAnimators[0].SetBool("Right", true);
-        cctvScreenAnimators[1].SetBool("Right", false);
-        cctvScreenAnimators[2].SetBool("Right", false);
-        cctvScreenAnimators[3].SetBool("Right", true);
-        return true;
+        bool[] expected = { true, false, false, true };
+        bool solved = true;
+
+        for (int i = 0; i < cctvScreenAnimators.Length && i < expected.Length; i++)
+        {
+            bool cur = cctvScreenAnimators[i].GetBool("Right");
+            Debug.Log($"CCTVMonitor Screen[{i}] Right = {cur}");
+            if (cur != expected[i]) solved = false;
+        }
+
+        return solved;
     }
 
     void ActivateFirst()

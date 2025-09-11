@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 1650780059422668246}
   - component: {fileID: 3326449299559611838}
   - component: {fileID: 3233268962244846005}
+  - component: {fileID: 8327496021061702880}
   m_Layer: 0
   m_Name: Gray_Door_Locked_Stealth
   m_TagString: Door
@@ -231,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 3457472709841329502}
+  highlight: {fileID: 0}
   targetDoor: {fileID: 0}
   targetPos: {x: 0, y: 0}
   closedObject: {fileID: 8380863550331271364}
@@ -239,6 +240,7 @@ MonoBehaviour:
   puzzleId: 
   lockedSound: {fileID: 8300000, guid: 912654f847fdc504cb38e6cdd6b76a64, type: 3}
   unlockSound: {fileID: 8300000, guid: 1c242e13499b0164ca6a43e40b69e973, type: 3}
+  initiallyLocked: 1
   pairedDoor: {fileID: 0}
 --- !u!114 &3233268962244846005
 MonoBehaviour:
@@ -255,6 +257,20 @@ MonoBehaviour:
   detectionRange: 3
   fadeSpeed: 2
   maxAlpha: 1
+  extraTargets: []
+--- !u!114 &8327496021061702880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8495596361175002404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: ace4eecc25054b60b6891b5cb43e907a
 --- !u!1 &9114153576940535993
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,10 +435,5 @@ PrefabInstance:
 --- !u!4 &2626953641736878718 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9057763694998424416, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
-  m_PrefabInstance: {fileID: 6469267467459539230}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &3457472709841329502 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
   m_PrefabInstance: {fileID: 6469267467459539230}
   m_PrefabAsset: {fileID: 0}

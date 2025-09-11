@@ -13,7 +13,10 @@ public class PlayerInteractSystem : MonoBehaviour
     [SerializeField] private GameObject currentClosest; 
     public GameObject CurrentClosest => currentClosest;// 디버깅용
     
-    private List<GameObject> nearbyInteractables = new();
+    private HashSet<GameObject> nearbyInteractables = new();
+
+    //오브젝트 겹치는 Collider2D 모음(같은 오브젝트의 다중 콜라이더/겹침 대응)
+    private readonly Dictionary<GameObject, HashSet<Collider2D>> objectToCols = new();
 
     private void Awake()
     {
@@ -71,6 +74,16 @@ public class PlayerInteractSystem : MonoBehaviour
         // 새 오브젝트 처리
         if (currentClosest != null)
         {
+            if(currentClosest.TryGetComponent<MemoryFragment>(out var memory))
+            {
+                if (!memory.IsScannable)
+                {
+                    eKey.SetActive(false);
+                    memory.SetHighlight(false);
+                    return;
+                }
+            }
+
             // 팝업 켜기
             if (currentClosest.TryGetComponent<BaseInteractable>(out var nextInteractable))
             {

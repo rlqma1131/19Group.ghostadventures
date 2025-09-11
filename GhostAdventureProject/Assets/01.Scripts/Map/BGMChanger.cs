@@ -15,10 +15,9 @@ public class BGMChanger : MonoBehaviour
         if (SoundManager.Instance == null)
             return;
 
-        AudioSource bgmSource = SoundManager.Instance.GetComponent<AudioSource>();
-
-        if (bgmSource.clip == mapBGM)
-            return; // 이미 같은 BGM이면 무시
+        // 이미 같은 BGM이면 무시
+        if (SoundManager.Instance.CurrentBGM == mapBGM)
+            return;
 
         SoundManager.Instance.ChangeBGM(mapBGM, fadeDuration, targetVolume);
     }

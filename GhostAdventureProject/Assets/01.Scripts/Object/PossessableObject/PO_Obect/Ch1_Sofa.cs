@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Ch1_Sofa : HideArea
 {
@@ -29,14 +29,15 @@ public class Ch1_Sofa : HideArea
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
-        if(collision.CompareTag("Player") && !PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
+        if(collision.CompareTag("Player") && !SaveManager.IsPuzzleSolved("시계"))
         {
             hasActivated = false;
 
         }
-        if(collision.CompareTag("Player")  && PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
+        if(collision.CompareTag("Player")  && SaveManager.IsPuzzleSolved("시계"))
         {
             hasActivated = true;
+            MarkActivatedChanged();
         }
 
     }

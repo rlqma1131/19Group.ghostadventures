@@ -6,6 +6,7 @@ public class Ch2_SandCastle : BaseInteractable
 {
     private CluePickup cluepickup; // 단서획득
     [SerializeField] GameObject carToy; // 장난감자동차 - Ch2_부정기억1
+    [SerializeField] private Ch2_MemoryNegative_01_CarToy car;
     [SerializeField] GameObject SandCastle_intactly; // 모래성
     [SerializeField] GameObject SandCastle_crumble; // 무너진 모래성
     [SerializeField] GameObject q_key;
@@ -32,15 +33,15 @@ public class Ch2_SandCastle : BaseInteractable
         {
             if(Input.GetKeyDown(KeyCode.Q))
             {
+                cluepickup.PickupClue();
+                UIManager.Instance.InventoryExpandViewerUI.ShowClue(cluepickup.clueData);
                 SandCastle_crumble.SetActive(true);
                 carToy.SetActive(true);
+                car.ActivateCar();
                 SandCastle_intactly.SetActive(false);
                 q_key.SetActive(false);
-                cluepickup.PickupClue();
                 crumbled = true;
-                UIManager.Instance.PromptUI.ShowPrompt("무너뜨릴까?");
             }
-
         }
     }
 
@@ -53,6 +54,7 @@ public class Ch2_SandCastle : BaseInteractable
         }
         if(collision.CompareTag("Animal") && raven.isPossessed && !crumbled)
         {
+            UIManager.Instance.PromptUI.ShowPrompt("무너뜨릴까?");
             crumbleAble = true;
             q_key.SetActive(true);
         }
@@ -68,6 +70,7 @@ public class Ch2_SandCastle : BaseInteractable
 
         if(other.CompareTag("Animal") && !crumbled)
         {
+            
             crumbleAble = true;
             q_key.SetActive(false);
         }

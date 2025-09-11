@@ -20,10 +20,14 @@ public class Ch3_Console : BaseInteractable
     [Header("기억 조각")]
     [SerializeField] private GameObject memoryFragment;
 
+    [Header("간호사")]
+    [SerializeField] private Ch3_Nurse nurse;
+
     Inventory_PossessableObject inventory; // 빙의 인벤토리(Item을 갖고 있는지 확인용)
 
     private bool canUse = false;
     private bool isZoomed = false;
+    private bool isFirstZoom = true;
 
     private Ch3_ConsoleButton currentActiveButton;
     private Ch3_MemoryNegative_02_Paper memoryPaper;
@@ -50,14 +54,11 @@ public class Ch3_Console : BaseInteractable
                 return;
 
             inventory = Inventory_PossessableObject.Instance;
-            
-            Debug.Log("인벤토리: " + inventory);
-            Debug.Log("카드키: " + cardKey);
 
             if (inventory == null || cardKey != inventory.selectedItem()
                 || !PossessionStateManager.Instance.IsPossessing())
             {
-                UIManager.Instance.PromptUI.ShowPrompt("조작하려면 카드키가 필요해보여", 2f);
+                UIManager.Instance.PromptUI.ShowPrompt("조작하려면 카드키가 필요해보여.. 방법이 없을까?", 2f);
                 return;
             }
 
@@ -68,6 +69,12 @@ public class Ch3_Console : BaseInteractable
                 qKey.SetActive(false);
                 zoomCamera.Priority = 20;
                 isZoomed = true;
+
+                if (isFirstZoom)
+                {
+                    isFirstZoom = false;
+                    UIManager.Instance.PromptUI.ShowPrompt("알맞은 정보를 입력해야 해");
+                }
                 return;
             }
             else if (cardKey == inventory.selectedItem() && cardKey != null && isZoomed)
@@ -159,6 +166,10 @@ public class Ch3_Console : BaseInteractable
             seq.AppendCallback(() =>
             {
                 ExitZoom();
+
+                nurse.InactiveNurse();
+                nurse.Unpossess();
+                UIManager.Instance.PromptUI.ShowPrompt("관찰기록지? 스캔해봐야겠어", 3f);
             });
         }
     }

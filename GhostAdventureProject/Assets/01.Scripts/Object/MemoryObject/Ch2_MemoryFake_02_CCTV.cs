@@ -6,14 +6,15 @@ public class Ch2_MemoryFake_02_CCTV : MemoryFragment
 {
     [SerializeField] private Ch2_CCTVMonitor cctvMonitor;
 
-    void Start()
+    public void ActivateCCTV()
     {
         isScannable = true;
     }
 
-    public override void AfterScan()
+    public override void Scanning()
     {
-        isScannable = false;
         cctvMonitor.ActivateCCTVMonitor();
+
+        base.Scanning();
     }
 }

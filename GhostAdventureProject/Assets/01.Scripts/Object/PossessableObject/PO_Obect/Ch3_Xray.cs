@@ -18,7 +18,10 @@ public class Ch3_Xray : BasePossessable
     [SerializeField] private GameObject dKey;
     [SerializeField] private GameObject spaceKey;
 
-    private int currentPhotoIndex = 0;
+    public int currentPhotoIndex = 0;
+
+    private bool isFirstPossess = true;
+    private bool isFirstScan = true;
 
     protected override void Start()
     {
@@ -66,6 +69,12 @@ public class Ch3_Xray : BasePossessable
         {
             SoundManager.Instance.PlaySFX(scan, 1f);
             Scan();
+
+            if (isFirstScan)
+            {
+                isFirstScan = false;
+                UIManager.Instance.PromptUI.ShowPrompt("촬영됐다. 모니터를 확인해볼까?");
+            }
         }
     }
     private void UpdateXrayDisplay()
@@ -83,11 +92,26 @@ public class Ch3_Xray : BasePossessable
         zoomPhotoScreen.sprite = zoomPhotos[currentPhotoIndex].sprite;
     }
 
+    public void ScanPrompt()
+    {
+        Sprite monitorPhoto = zoomPhotoScreen.sprite;
+
+        if(monitorPhoto = zoomPhotos[0].sprite)
+        {
+
+        }
+    }
 
     public override void OnPossessionEnterComplete()
     {
         aKey.SetActive(true);
         dKey.SetActive(true);
         spaceKey.SetActive(true);
+
+        if (isFirstPossess)
+        {
+            isFirstPossess = false;
+            UIManager.Instance.PromptUI.ShowPrompt("X-ray 기계인가? 촬영해볼까");
+        }
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2831965108395901335}
   - component: {fileID: 2942134735400146716}
   - component: {fileID: 7391581801400215680}
+  - component: {fileID: 6957488312199880002}
   m_Layer: 10
   m_Name: CarToy
   m_TagString: Untagged
@@ -51,6 +52,8 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 08007b2ab5f97f74a90ef738d81b3865, type: 2}
   isScannable: 0
   canStore: 0
+  audioSource1: {fileID: 8300000, guid: 5eb0767949ea1ec4a942757018b75080, type: 3}
+  audioSource2: {fileID: 8300000, guid: fa27c087c332d5c4cbbe37f78d8ab01a, type: 3}
   fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
   dropOffset: {x: 0, y: 0, z: 0}
   bounceHeight: 0.3
@@ -103,6 +106,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.3972111, y: 0.5251512}
   m_EdgeRadius: 0
+--- !u!114 &6957488312199880002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957998481030427894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: be40cc2e15b04a789049b7e0cff78c7c
 --- !u!1 &961473007843165560
 GameObject:
   m_ObjectHideFlags: 0
@@ -775,10 +791,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlight: {fileID: 7033566474485494804}
   carToy: {fileID: 957998481030427894}
+  car: {fileID: 0}
   SandCastle_intactly: {fileID: 8841180428040873154}
   SandCastle_crumble: {fileID: 1765167955261311383}
   q_key: {fileID: 2711913873873754189}
   raven: {fileID: 0}
+  crumbleAble: 0
 --- !u!1 &7033566474485494804
 GameObject:
   m_ObjectHideFlags: 0

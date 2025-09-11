@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,6 +22,11 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField] private AudioSource enemySource;
     private AudioClip currentClip;
 
+    [Header("SFX Pool")]
+    [SerializeField] private int sfxPoolSize = 10;
+    private List<AudioSource> sfxPool = new();
+    private int currentSFXIndex = 0;
+
     [Header("BGM Clips")]
     [SerializeField] private AudioClip bgm_StartScene;
     [SerializeField] private AudioClip bgm_Ch01_House;
@@ -30,8 +36,12 @@ public class SoundManager : Singleton<SoundManager>
     [Header("SFX List")]
     public AudioClip cluePickUP;
 
-    public float BGMVolume => bgmSource.volume;
-    public float SFXVolume => sfxSource.volume;
+    [Header("볼륨 조절")]
+    [SerializeField, Range(0f, 1f)] private float bgmMaster = 1f;
+    [SerializeField, Range(0f, 1f)] private float sfxMaster = 1f;
+    [SerializeField, Range(0f, 1f)] private float bgmTarget = 0.2f;
+
+    public float SFXMaster => sfxMaster;
     public AudioSource EnemySource => enemySource;
     //public bool IsBGMMuted => bgmSource.mute;
     //public bool IsSFXMuted => sfxSource.mute;
@@ -41,6 +51,8 @@ public class SoundManager : Singleton<SoundManager>
     // Enemy 음악이랑 교체될 때 필요
     private AudioClip lastBGMClip;
     private float lastBGMVolume = 0.2f;
+
+    public AudioClip CurrentBGM => bgmSource ? bgmSource.clip : null;
 
     private void OnEnable()
     {
@@ -52,7 +64,12 @@ public class SoundManager : Singleton<SoundManager>
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // 씬 이름 → SceneType 변환
+    private void Start()
+    {
+        InitSFXPool();
+    }
+
+    // 씬 이름에서 SceneType 변환
     private SceneType GetSceneType(string sceneName)
     {
         switch (sceneName)
@@ -97,28 +114,34 @@ public class SoundManager : Singleton<SoundManager>
 
     public void ChangeBGM(AudioClip newClip, float fadeDuration = 1f, float targetVolume = 0.2f)
     {
-        if (newClip == null) return;
+        if (bgmSource == null || newClip == null) return;
 
         lastBGMClip = newClip;
         lastBGMVolume = targetVolume;
+        bgmTarget = targetVolume;
 
-        if (bgmFadeCoroutine != null)
-            StopCoroutine(bgmFadeCoroutine);
+        if (bgmSource.clip == newClip && bgmSource.isPlaying)
+        {
+            if (!Mathf.Approximately(bgmSource.volume, bgmTarget * bgmMaster))
+            {
+                if (bgmFadeCoroutine != null) StopCoroutine(bgmFadeCoroutine);
+                bgmFadeCoroutine = StartCoroutine(FadeBGMVolumeTo(bgmTarget * bgmMaster, fadeDuration));
+            }
+            return;
+        }
 
-        bgmFadeCoroutine = StartCoroutine(FadeOutInBGM(newClip, fadeDuration, targetVolume));
-        Debug.Log($"BGM 실행됨 : {newClip}");
+        if (bgmFadeCoroutine != null) StopCoroutine(bgmFadeCoroutine);
+        bgmFadeCoroutine = StartCoroutine(FadeOutInBGM(newClip, fadeDuration, bgmTarget * bgmMaster));
     }
 
-    private IEnumerator FadeOutInBGM(AudioClip newClip, float duration, float targetVolume)
+    private IEnumerator FadeOutInBGM(AudioClip newClip, float duration, float finalVolume)
     {
         float startVolume = bgmSource.volume;
-        float timer = 0f;
-
-        // 페이드 아웃
-        while (timer < duration)
+        float t = 0f;
+        while (t < duration)
         {
-            timer += Time.deltaTime;
-            bgmSource.volume = Mathf.Lerp(startVolume, 0f, timer / duration);
+            t += Time.deltaTime;
+            bgmSource.volume = Mathf.Lerp(startVolume, 0f, t / duration);
             yield return null;
         }
 
@@ -127,16 +150,27 @@ public class SoundManager : Singleton<SoundManager>
         bgmSource.loop = true;
         bgmSource.Play();
 
-        // 페이드 인
-        timer = 0f;
-        while (timer < duration)
+        t = 0f;
+        while (t < duration)
         {
-            timer += Time.deltaTime;
-            bgmSource.volume = Mathf.Lerp(0f, targetVolume, timer / duration);
+            t += Time.deltaTime;
+            bgmSource.volume = Mathf.Lerp(0f, bgmTarget * bgmMaster, t / duration);
             yield return null;
         }
+        bgmSource.volume = bgmTarget * bgmMaster;
+    }
 
-        bgmSource.volume = targetVolume;
+    private IEnumerator FadeBGMVolumeTo(float target, float duration)
+    {
+        float start = bgmSource.volume;
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            bgmSource.volume = Mathf.Lerp(start, target, t / duration);
+            yield return null;
+        }
+        bgmSource.volume = target;
     }
 
     public void FadeOutAndStopBGM(float duration = 1f)
@@ -161,7 +195,7 @@ public class SoundManager : Singleton<SoundManager>
 
         bgmSource.Stop();
         bgmSource.clip = null;
-        bgmSource.volume = startVolume; // 나중 재사용을 위해 원복 (혹은 0 유지도 가능)
+        bgmSource.volume = startVolume;
     }
 
     // BGM 강제 정지
@@ -183,13 +217,25 @@ public class SoundManager : Singleton<SoundManager>
     // 효과음 재생
     public void PlaySFX(AudioClip clip, float volume = 0.6f)
     {
-        if (clip == null || sfxSource == null) return;
+        if (clip == null || sfxPool.Count == 0) return;
 
-        if (sfxSource.isPlaying && clip == currentClip)
-        return;
+        AudioSource source = sfxPool[currentSFXIndex];
+        currentSFXIndex = (currentSFXIndex + 1) % sfxPoolSize;
 
-        currentClip = clip;
-        sfxSource.PlayOneShot(clip, volume);
+        source.clip = clip;
+        source.volume = volume * sfxMaster;  // ★ 마스터 곱하기
+        source.Play();
+    }
+
+    private void InitSFXPool()
+    {
+        for (int i = 0; i < sfxPoolSize; i++)
+        {
+            var source = gameObject.AddComponent<AudioSource>();
+            source.playOnAwake = false;
+            source.loop = false;
+            sfxPool.Add(source);
+        }
     }
 
     public void StopSFX()
@@ -197,6 +243,15 @@ public class SoundManager : Singleton<SoundManager>
         if (sfxSource != null && sfxSource.isPlaying)
         {
             sfxSource.Stop();
+        }
+    }
+
+    public void StopAllSFX()
+    {
+        foreach (var source in sfxPool)
+        {
+            source.Stop();
+            source.clip = null;
         }
     }
 
@@ -222,25 +277,30 @@ public class SoundManager : Singleton<SoundManager>
 
         sfxSource.Stop();
         sfxSource.clip = null;
-        sfxSource.volume = startVolume; // 다시 사용할 수 있도록 원래 볼륨으로 복원
+        sfxSource.volume = startVolume;
     }
     // BGM 볼륨조절
-    public void SetBGMVolume(float sliderValue , AudioSource audioSource)
+    public void SetBGMVolume(float sliderValue)
     {
-        float adjustedVolume = Mathf.Pow(sliderValue, 2f); // 지수 적용
-        audioSource.volume = adjustedVolume;
+        float adjustedVolume = Mathf.Pow(sliderValue, 2f);
+        if (bgmSource) bgmSource.volume = adjustedVolume;
     }
 
     //SFX 볼륨조절
     public void SetSFXVolume(float sliderValue)
     {
-        float adjustedVolume = Mathf.Pow(sliderValue, 2f); // 지수 적용
-        bgmSource.volume = adjustedVolume;
+        // 선형 매핑: 0.0~1.0 슬라이더 값을 그대로 마스터로 사용
+        float newMaster = Mathf.Clamp01(sliderValue);
 
-        //foreach (var source in sfxPool)
-        //{
-        //    source.volume = adjustedVolume;
-        //}
+        // 이미 재생 중인 소스들도 비율로 즉시 반영
+        float ratio = (sfxMaster <= 0f) ? newMaster : newMaster / sfxMaster;
+        sfxMaster = newMaster;
+
+        if (sfxSource && sfxSource.isPlaying) sfxSource.volume *= ratio;
+        if (sfxLoopSource && sfxLoopSource.isPlaying) sfxLoopSource.volume *= ratio;
+        if (enemySource && enemySource.isPlaying) enemySource.volume *= ratio;
+        foreach (var src in sfxPool)
+            if (src.isPlaying) src.volume *= ratio;
     }
 
     //public void SetBGMMute(bool mute)
@@ -260,18 +320,13 @@ public class SoundManager : Singleton<SoundManager>
     // 루프 효과음 재생
     public void PlayLoopingSFX(AudioClip clip, float volume = 0.8f)
     {
-        if (clip == null || sfxLoopSource == null)
-            return;
-
-        if (sfxLoopSource.isPlaying && sfxLoopSource.clip == clip)
-            return; // 이미 재생 중이면 중복 실행 안 함
+        if (clip == null || sfxLoopSource == null) return;
+        if (sfxLoopSource.isPlaying && sfxLoopSource.clip == clip) return;
 
         sfxLoopSource.clip = clip;
-        sfxLoopSource.volume = volume;
+        sfxLoopSource.volume = volume * sfxMaster; // ★
         sfxLoopSource.loop = true;
         sfxLoopSource.Play();
-
-        Debug.Log($"Looping SFX started: {clip.name}");
     }
 
     public void StopLoopingSFX()
@@ -287,32 +342,26 @@ public class SoundManager : Singleton<SoundManager>
 
     public void FadeInLoopingSFX(AudioClip clip, float duration = 1f, float targetVolume = 0.5f)
     {
-        if (clip == null || sfxLoopSource == null)
-            return;
-
-        if (sfxLoopSource.isPlaying && sfxLoopSource.clip == clip)
-            return;
+        if (clip == null || sfxLoopSource == null) return;
+        if (sfxLoopSource.isPlaying && sfxLoopSource.clip == clip) return;
 
         sfxLoopSource.clip = clip;
         sfxLoopSource.volume = 0f;
         sfxLoopSource.loop = true;
         sfxLoopSource.Play();
-
         StartCoroutine(FadeInCoroutine(duration, targetVolume));
     }
 
     private IEnumerator FadeInCoroutine(float duration, float targetVolume)
     {
-        float timer = 0f;
-
-        while (timer < duration)
+        float t = 0f;
+        while (t < duration)
         {
-            timer += Time.deltaTime;
-            sfxLoopSource.volume = Mathf.Lerp(0f, targetVolume, timer / duration);
+            t += Time.deltaTime;
+            sfxLoopSource.volume = Mathf.Lerp(0f, targetVolume * sfxMaster, t / duration); // ★
             yield return null;
         }
-
-        sfxLoopSource.volume = targetVolume;
+        sfxLoopSource.volume = targetVolume * sfxMaster; // ★
     }
 
     public void FadeOutAndStopLoopingSFX(float duration = 1f)
@@ -340,4 +389,25 @@ public class SoundManager : Singleton<SoundManager>
         sfxLoopSource.volume = startVolume; // 나중 재사용 대비해서 복원
     }
 
+    public void FadeOutAndStopAllOneShotSFX(float duration = 0.3f)
+    {
+        StartCoroutine(FadeOutAndStopAllOneShotSFX_Cor(duration));
+    }
+
+    private IEnumerator FadeOutAndStopAllOneShotSFX_Cor(float duration)
+    {
+        float t = 0f;
+        var start = new float[sfxPool.Count];
+        for (int i = 0; i < sfxPool.Count; i++) start[i] = sfxPool[i].volume;
+
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float k = 1f - (t / duration);
+            for (int i = 0; i < sfxPool.Count; i++)
+                sfxPool[i].volume = start[i] * k;
+            yield return null;
+        }
+        StopAllSFX();
+    }
 }

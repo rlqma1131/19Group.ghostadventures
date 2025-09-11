@@ -15,11 +15,13 @@ public class Ch2_HideAreaPuzzleObj : HideArea
     public void HideAreaPuzzleActivate()
     {
         hasActivated = true;
+        MarkActivatedChanged();
     }
 
     public void HideAreaPuzzleDeactivate() 
     {
         hasActivated = false;
+        MarkActivatedChanged();
     }
 
     public override void OnPossessionEnterComplete() 

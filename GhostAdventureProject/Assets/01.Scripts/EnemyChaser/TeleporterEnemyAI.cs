@@ -28,6 +28,8 @@ public class TeleporterEnemyAI : EnemyAI
     protected override void Update()
     {
         base.Update();
+        
+        if (IsPaused) return;
 
         if (QTEHandler != null && QTEHandler.IsRunning())
             return;
@@ -48,7 +50,8 @@ public class TeleporterEnemyAI : EnemyAI
             
             if (IsPlayerInBoundary())
             {
-                TeleportBehindPlayer();
+                if (!IsPaused)
+                    TeleportBehindPlayer();
             }
 
             teleportTimer = teleportInterval;
@@ -57,7 +60,7 @@ public class TeleporterEnemyAI : EnemyAI
 
     private void TeleportBehindPlayer()
     {
-        if (isTeleporting) return;
+        if (IsPaused || isTeleporting) return;
         isTeleporting = true;
 
         Vector2 movementDir;

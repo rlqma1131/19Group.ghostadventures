@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 8404483439078872085}
   - component: {fileID: 7589659446836276489}
   - component: {fileID: 9212038285318052944}
+  - component: {fileID: 5308914591092682948}
   m_Layer: 0
   m_Name: BigWoodDoor_Locked_Stealth
   m_TagString: Door
@@ -232,7 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionInfo: {fileID: 4970624902330368571}
+  highlight: {fileID: 0}
   targetDoor: {fileID: 0}
   targetPos: {x: 0, y: 0}
   closedObject: {fileID: 2527520463346813558}
@@ -240,6 +241,7 @@ MonoBehaviour:
   puzzleId: 
   lockedSound: {fileID: 8300000, guid: 912654f847fdc504cb38e6cdd6b76a64, type: 3}
   unlockSound: {fileID: 8300000, guid: 1c242e13499b0164ca6a43e40b69e973, type: 3}
+  initiallyLocked: 1
   pairedDoor: {fileID: 0}
 --- !u!114 &7589659446836276489
 MonoBehaviour:
@@ -256,6 +258,7 @@ MonoBehaviour:
   detectionRange: 3
   fadeSpeed: 2
   maxAlpha: 1
+  extraTargets: []
 --- !u!82 &9212038285318052944
 AudioSource:
   m_ObjectHideFlags: 0
@@ -352,6 +355,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5308914591092682948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4228383699980938953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 18846c194bdd49bab943215f28bcfaf1
 --- !u!1 &4970624902330368571
 GameObject:
   m_ObjectHideFlags: 0

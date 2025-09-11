@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Ch1_Clock : BasePossessable
 {
+    [SerializeField] private Button initializeBtn;
     [SerializeField] private AudioClip ticktock;
     [SerializeField] private Image zoomPanel;
     [SerializeField] private RectTransform clockPos; // 두트윈 시작 위치
@@ -36,12 +37,14 @@ public class Ch1_Clock : BasePossessable
 
         // 시곗바늘 위치 초기화
         UpdateHands();
+
+        initializeBtn.onClick.AddListener(OnClickInitialize);
     }
 
     protected override void Update()
     {
-        if (!PuzzleStateManager.Instance.IsPuzzleSolved("편지")) return;
-        if (!PuzzleStateManager.Instance.IsPuzzleSolved("시계")) hasActivated = true;
+        if (!SaveManager.IsPuzzleSolved("편지")) return;
+        if (!SaveManager.IsPuzzleSolved("시계")) hasActivated = true;
         if (!isPossessed) return;
         
         UI.SetActive(true); 
@@ -79,11 +82,15 @@ public class Ch1_Clock : BasePossessable
         if (hour == 8 && minute == 14)
         {
             Debug.Log("정답");
-            PuzzleStateManager.Instance.MarkPuzzleSolved("시계");
+            SaveManager.MarkPuzzleSolved("시계");
             tvObject.ActivateTV();
             isControlMode = false;
             HideClockUI();
+            UIManager.Instance.PromptUI.ShowPrompt("어? 저 TV… 무언가 보여줄지도 몰라.");
+
             hasActivated = false;
+            MarkActivatedChanged();
+
             Unpossess();
             UI.SetActive(false); 
             
@@ -96,6 +103,19 @@ public class Ch1_Clock : BasePossessable
             hourHand.localRotation = Quaternion.Euler(0, 0, -30f * hour);
         if (minuteHand != null)
             minuteHand.localRotation = Quaternion.Euler(0, 0, -6f * minute);
+    }
+
+    private void OnClickInitialize()
+    {
+        if (hourHand != null)
+            hourHand.localRotation = Quaternion.Euler(0, 0, 0);
+        if (minuteHand != null)
+            minuteHand.localRotation = Quaternion.Euler(0, 0, 0);
+
+        hour = 0;
+        minute = 0;
+
+        SoundManager.Instance.PlaySFX(ticktock);
     }
 
     private void ShowClockUI()
@@ -122,7 +142,7 @@ public class Ch1_Clock : BasePossessable
             {
                 clockZoom.SetActive(false);
             });
-        UIManager.Instance.PromptUI.ShowPrompt("어? 저 TV… 무언가 보여줄지도 몰라.");
+        
         // UIManager.Instance.NoticePopupUI.FadeInAndOut("※목표 : TV 켜기 ");
     }
 
@@ -135,9 +155,9 @@ public class Ch1_Clock : BasePossessable
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
-        if(!PuzzleStateManager.Instance.IsPuzzleSolved("시계"))
+        if(collision.CompareTag("Player") && !SaveManager.IsPuzzleSolved("시계"))
         {
-            if(PuzzleStateManager.Instance.IsPuzzleSolved("편지"))
+            if(SaveManager.IsPuzzleSolved("편지"))
             {
                 UIManager.Instance.PromptUI.ShowPrompt("시간을 떠올릴만한 숫자를 본 거 같은데");
                 if(hasActivated)

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
@@ -75,80 +75,98 @@ public class Ch2_BookShelf : BasePossessable
     
     private void LateUpdate()
     {
-        if (!isControlMode || !Input.GetMouseButtonDown(0))
-            return;
+        if (!isControlMode || !Input.GetMouseButtonDown(0)) return;
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+        if (hit.collider == null) return;
 
-        if (hit.collider != null)
+        var slot = hit.collider.GetComponent<Ch2_BookSlot>();  // :contentReference[oaicite:0]{index=0}
+        if (slot == null) return;
+
+        if (slot.IsResetBook)
         {
-            Ch2_BookSlot slot = hit.collider.GetComponent<Ch2_BookSlot>();
-            
-            if (slot.IsResetBook)
-            {
-                ResetAllBooks();
-                return;
-            }
-
-            if (!HasAllClues())
-            {
-                UIManager.Instance.PromptUI.ShowPrompt("아직 단서가 부족해", 1.5f);
-                return;
-            }
-            
-            slot.ToggleBook();
-            
-            if (slot.IsPushed)
-                clickedSequence.Add(slot);
-            else
-                clickedSequence.Remove(slot);
-
-            CheckPuzzleSolved();
+            ResetAllBooks();
+            return;
         }
+
+        if (!HasAllClues())
+        {
+            UIManager.Instance.PromptUI.ShowPrompt("아직 단서가 부족해", 1.5f);
+            return;
+        }
+
+        // ▷ 6글자 초과 선택 제한
+        if (!slot.IsPushed && clickedSequence.Count >= correctSequence.Count)
+        {
+            UIManager.Instance.PromptUI.ShowPrompt($"정답은 {correctSequence.Count}글자입니다", 1.5f);
+            return;
+        }
+
+        // 토글 후 시퀀스 업데이트
+        slot.ToggleBook();  // :contentReference[oaicite:1]{index=1}
+        if (slot.IsPushed)
+        {
+            clickedSequence.Add(slot);
+            // ▷ 선택 글자 moveTargets 위치로 이동·확대
+            int idx = clickedSequence.Count - 1;
+            if (idx < moveTargets.Count)
+            {
+                var txtT = slot.booknameRenderer.transform;
+                // world로 분리하고
+                txtT.SetParent(null);
+                txtT.DOMove(moveTargets[idx].position, 0.2f).SetEase(Ease.InOutSine);
+                txtT.DOScale(1.2f,         0.2f).SetEase(Ease.OutQuad);
+            }
+        }
+        else
+        {
+            clickedSequence.Remove(slot);
+            slot.ResetNameTransform();
+        }
+
+        CheckPuzzleSolved();
     }
 
     private void CheckPuzzleSolved()
     {
-        if (clickedSequence.Count != correctSequence.Count)
-            return;
+        if (clickedSequence.Count != correctSequence.Count) return;
 
+        // ▷ 오답 처리
         for (int i = 0; i < correctSequence.Count; i++)
         {
             if (clickedSequence[i] != correctSequence[i])
-                return;
-        }
-        
-        Sequence moveSequence = DOTween.Sequence();
-
-        for (int i = 0; i < correctSequence.Count; i++)
-        {
-            var slot = correctSequence[i];
-            var target = moveTargets[i];
-
-            if (slot != null && target != null && slot.booknameRenderer != null)
             {
-                var imgTransform = slot.booknameRenderer.transform;
-
-                moveSequence.Join(
-                    imgTransform.DOMove(target.position, 1.0f).SetEase(Ease.InOutSine)
-                );
-
-                moveSequence.Join(
-                    imgTransform.DOScale(3f, 1.0f).SetEase(Ease.OutQuad)
-                );
+                UIManager.Instance.PromptUI.ShowPrompt("힌트들을 보고 더 생각해보자...", 2f);
+                ResetAllBooks();
+                clickedSequence.Clear();
+                return;
             }
         }
         
-        moveSequence.AppendInterval(2f);
-        
-        moveSequence.OnComplete(() =>
+        Sequence seq = DOTween.Sequence().AppendInterval(0.5f);
+        for (int i = 0; i < correctSequence.Count; i++)
+        {
+            var slot   = correctSequence[i];
+            var target = moveTargets[i];
+            var txtT   = slot.booknameRenderer.transform;
+
+            seq.Join(txtT.DOMove(target.position, 0.5f).SetEase(Ease.InOutSine));
+            seq.Join(txtT.DOScale(1.5f,           0.5f).SetEase(Ease.OutQuad));
+        }
+        seq.AppendInterval(1.5f);
+        seq.OnComplete(() =>
         {
             doorToOpen.SetActive(true);
             ExitControlMode();
+
             hasActivated = false;
+            MarkActivatedChanged();
+
             Unpossess();
             ConsumeClue(needClues);
+
+            // 책장 흔들고 이동
             transform.DOShakePosition(shakeDuration, shakeStrength)
                      .OnComplete(() =>
                      {
@@ -164,6 +182,8 @@ public class Ch2_BookShelf : BasePossessable
         {
             if (slot.IsPushed)
                 slot.ToggleBook();
+            
+            slot.ResetNameTransform();
         }
         // currentIndex = 0;
         clickedSequence.Clear();
@@ -187,10 +207,10 @@ public class Ch2_BookShelf : BasePossessable
     private void CheckCollectedAllClue()
     {
         if(
-        PuzzleStateManager.Instance.IsPuzzleSolved("“닫힌 문... 잃어버린 무언가... 계속 이어지는 느낌이야.”") &&
-        PuzzleStateManager.Instance.IsPuzzleSolved("“혹시 나도 잃어버린 존재...?”") &&
-        PuzzleStateManager.Instance.IsPuzzleSolved("책 제목같아... 무슨의미일까?") &&
-        PuzzleStateManager.Instance.IsPuzzleSolved("메모3"))
+            SaveManager.IsPuzzleSolved("“닫힌 문... 잃어버린 무언가... 계속 이어지는 느낌이야.”") &&
+            SaveManager.IsPuzzleSolved("“혹시 나도 잃어버린 존재...?”") &&
+            SaveManager.IsPuzzleSolved("책 제목같아... 무슨의미일까?") &&
+            SaveManager.IsPuzzleSolved("메모3"))
         {
             TutorialManager.Instance.Show(TutorialStep.CollectedAllMemoClue);
         }

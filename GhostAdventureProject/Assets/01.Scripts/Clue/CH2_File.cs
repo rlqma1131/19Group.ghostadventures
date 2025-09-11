@@ -1,5 +1,6 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,6 +12,7 @@ public class CH2_File : MonoBehaviour
     [SerializeField] private ClueData fileClue; // 파일단서
     [SerializeField] private CinemachineVirtualCamera ZoomCamera;
     private UIManager uimanager;
+    private bool showfile = false;
 
     void Start()
     {
@@ -24,36 +26,37 @@ public class CH2_File : MonoBehaviour
 
     private void OnMouseExit()
     {
-        if(highlightObject != null)
-        {
-            highlightObject.SetActive(false);
-            return;
-        }
-    }
-
-    private void OnMouseDown()
-    {
         if(fileClue == null) return;
-        
+        if(showfile == true) return;
+        if(highlightObject == null) return;
+            
+        highlightObject.SetActive(false);
         uimanager.Inventory_PlayerUI.AddClue(fileClue);
         uimanager.InventoryExpandViewerUI.ShowClue(fileClue);
-        uimanager.InventoryExpandViewerUI.OnClueHidden += CloseViewer;
+        uimanager.InventoryExpandViewerUI.OnClueHidden += ResetCameraAsync;
+        showfile = true;
+
+        return;
+        
     }
 
-    private void CloseViewer()
+    // private void OnMouseDown()
+    // {
+    //     if(fileClue == null) return;
+    //     if(showfile == true) return;
+        
+        
+        
+        
+    // }
+
+    private async void ResetCameraAsync()
     {
-        StartCoroutine(ResetCamera());
-    }
-    
-    IEnumerator ResetCamera()
-    {
-        yield return new WaitForSeconds(1f);
-        ZoomCamera.Priority = 5;
+        await Task.Delay(1000); // 1초 대기
         UIManager.Instance.PromptUI.ShowPrompt("이건 힌트 같은데...", 2f);
-        PuzzleStateManager.Instance.MarkPuzzleSolved("금고");
-        yield return new WaitForSeconds(2f);
-        uimanager.InventoryExpandViewerUI.OnClueHidden -= CloseViewer;
-        yield return new WaitForSeconds(1f);
-        Destroy(zoomSafeBox);
+        ZoomCamera.Priority = 5;
+        SaveManager.MarkPuzzleSolved("금고");
+        await Task.Delay(2000); // 2초 대기
+        zoomSafeBox.SetActive(false);
     }
 }

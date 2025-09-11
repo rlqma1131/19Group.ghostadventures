@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4134046223844422119}
   - component: {fileID: 643280441172904569}
+  - component: {fileID: 1032216474465910992}
   m_Layer: 0
   m_Name: Ch1_Closet
   m_TagString: Untagged
@@ -31,6 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7901676273905936890}
+  - {fileID: 1298488826860867035}
   - {fileID: 2559906320894238739}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -47,6 +49,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseball: {fileID: 1727160261382674069}
+--- !u!114 &1032216474465910992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466101826683303971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch1_Closet
 --- !u!1 &644462598283471934
 GameObject:
   m_ObjectHideFlags: 0
@@ -144,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8f6d3c6e4250e84192f5b34ce9e71bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  glowColor: {r: 1, g: 1, b: 1, a: 1}
+  glowColor: {r: 0.9647059, g: 1, b: 0.76862746, a: 1}
   glowBrightness: 2.7
   outlineWidth: 1.14
   alphaThreshold: 0.038
@@ -161,6 +176,7 @@ GameObject:
   - component: {fileID: 2559906320894238739}
   - component: {fileID: 7978475181466858523}
   - component: {fileID: 458013222782774413}
+  - component: {fileID: 4466846138329866203}
   m_Layer: 10
   m_Name: Ch1_Baseball
   m_TagString: Untagged
@@ -177,13 +193,12 @@ Transform:
   m_GameObject: {fileID: 1727160261382674069}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.89, y: -2.67, z: 0}
+  m_LocalPosition: {x: -0.56, y: -2.719, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4545415248446873150}
   - {fileID: 3857532999935726613}
-  - {fileID: 1298488826860867035}
   m_Father: {fileID: 4134046223844422119}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7978475181466858523
@@ -247,6 +262,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.7
+--- !u!114 &4466846138329866203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727160261382674069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch1_Baseball
 --- !u!1 &3908708974919136555
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,7 +291,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1298488826860867035
 Transform:
   m_ObjectHideFlags: 0
@@ -272,13 +300,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3908708974919136555}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 0.73, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: 0.084602624, w: 0.9964148}
+  m_LocalPosition: {x: -1.4719939, y: -2.197, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2559906320894238739}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 4134046223844422119}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 9.706}
 --- !u!212 &1663903232450127368
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -317,15 +345,15 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -832994387
-  m_SortingLayer: 5
+  m_SortingLayerID: -2059531157
+  m_SortingLayer: 4
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 3c9ecf3103313684896d7da2d20aca1e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5f1a1a0328e59a44998159c09120f5b6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 10.24, y: 10.24}
+  m_Size: {x: 0.85333335, y: 0.85333335}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

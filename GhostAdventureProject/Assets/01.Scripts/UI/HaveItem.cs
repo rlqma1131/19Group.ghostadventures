@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HaveItem : MonoBehaviour
 {
-    public static HaveItem Instance { get; private set; }
+    // public static HaveItem Instance { get; private set; }
 
     [Header("ItemData Scriptable Object를 넣어주세요")]
     public List<ItemData> initialItems = new List<ItemData>();
@@ -13,10 +14,10 @@ public class HaveItem : MonoBehaviour
 
     private void Start()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
+        // if (Instance == null)
+        // {
+        //     Instance = this;
+        // }
         //else
         //{
         //    Destroy(gameObject);
@@ -24,6 +25,10 @@ public class HaveItem : MonoBehaviour
         //}
 
         ConvertToSlots();
+    }
+
+    void Update()
+    {
     }
 
     private void ConvertToSlots()
@@ -42,5 +47,10 @@ public class HaveItem : MonoBehaviour
                 inventorySlots.Add(new InventorySlot_PossessableObject(item, 1));
             }
         }
+    }
+
+    public bool IsInventoryEmpty()
+    {
+        return inventorySlots.All(slot => slot.item == null ||  slot.quantity <= 0);
     }
 }

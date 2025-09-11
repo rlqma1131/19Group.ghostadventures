@@ -60,6 +60,7 @@ public class Ch2_LaserController : BasePossessable
     public void ActivateController()
     {
         hasActivated = true;
+        MarkActivatedChanged();
     }
 
     public override void OnPossessionEnterComplete() 

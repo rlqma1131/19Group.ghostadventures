@@ -8,6 +8,7 @@ public class Ch1_Mirror : MonoBehaviour
 
     private float fogTime = 0f;
     private bool revealed = false;
+    private bool ShowPrompt = false;
 
     private void Start()
     {
@@ -32,16 +33,19 @@ public class Ch1_Mirror : MonoBehaviour
 
         float alpha = Mathf.Clamp01(fogTime / fogDuration);
         SetAlpha(alpha);
-        if (!revealed && alpha >= 0.3f)
+        if (!revealed && alpha >= 0.3f && !ShowPrompt)
         {
-            UIManager.Instance.PromptUI.ShowPrompt("…글씨…?");       
+            UIManager.Instance.PromptUI.ShowPrompt("거울에…저건 뭐지…?"); 
+            ShowPrompt = true;      
         }
 
         if (!revealed && alpha >= 0.5f)
         {
             revealed = true;
             ChapterEndingManager.Instance.CollectCh1Clue("W");
-            PuzzleStateManager.Instance.MarkPuzzleSolved("욕실");
+            SaveManager.MarkPuzzleSolved("욕실");
+
+            shower.InActiveShower();
         }
     }
 
@@ -54,7 +58,7 @@ public class Ch1_Mirror : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && PuzzleStateManager.Instance.IsPuzzleSolved("욕실"))
+        if(collision.CompareTag("Player") && SaveManager.IsPuzzleSolved("욕실"))
         {
             UIManager.Instance.PromptUI.ShowPrompt("W", 3f);       
         }

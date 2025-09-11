@@ -26,7 +26,9 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject cutSceneManager;
     [SerializeField] private GameObject qteEffectManager;
     [SerializeField] private GameObject tutorialManager;
-    
+    [SerializeField] private GameObject saveStateApplier;
+    [SerializeField] private GameObject eventManager;
+
     public GameObject playerPrefab;
 
     [SerializeField] private GameObject currentPlayer;
@@ -64,15 +66,40 @@ public class GameManager : Singleton<GameManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         string sceneName = scene.name;
+        
+        bool IsChapterStart(string name)
+        {
+            return name == "Ch01_House" || name == "Ch02_PlayGround" || name == "Ch03_Hospital";
+        }
+        
+        if (IsChapterStart(sceneName) && !SceneLoadContext.CameThroughLoading)
+        {
+            Debug.Log($"[GameManager] 챕터 '{sceneName}'가 로딩씬 없이 열림 → 로딩씬 경유로 재진입");
+            LoadThroughLoading(sceneName);
+            return; // 이하 초기화/스폰 실행 안 함
+        }
+        
+        if (sceneName != "LoadingScene")
+            SceneLoadContext.CameThroughLoading = false;
+        
+        EnsureManagerExists<SaveStateApplier>(saveStateApplier);
 
         if (sceneName != "StartScene" && sceneName != "IntroScene_Real" 
-            && mode != LoadSceneMode.Additive && sceneName != "Ch01_To_Ch02" && sceneName != "Ch02_To_Ch03" && sceneName != "Ch03_To_Ch04" && sceneName != "Ch03_Memory01")
+            && mode != LoadSceneMode.Additive && sceneName != "Ch01_To_Ch02" && sceneName != "Ch02_To_Ch03" 
+            && sceneName != "Ch03_To_Ch04" && sceneName != "Ch03_Memory01"&& sceneName != "LoadingScene")
         {
             // 플레이모드 UI 열기
             if (UIManager.Instance != null)
                 UIManager.Instance.PlayModeUI_OpenAll(); 
 
             TrySpawnPlayer();
+
+            // 현재 씬 이름과 플레이어 위치 저장
+            Vector3 playerPos = currentPlayer != null ? currentPlayer.transform.position : Vector3.zero;
+            SaveManager.SetSceneAndPosition(sceneName, playerPos);
+
+            // 바로 저장 실행
+            SaveManager.SaveGame();
         }
 
         if (sceneName == "StartScene")
@@ -91,53 +118,19 @@ public class GameManager : Singleton<GameManager>
         EnsureManagerExists<CutsceneManager>(cutSceneManager);
         EnsureManagerExists<QTEEffectManager>(qteEffectManager);
         EnsureManagerExists<TutorialManager>(tutorialManager);
+        EnsureManagerExists<EventManager>(eventManager);
 
+        // 퍼즐 진척도 UI ( 씬에 맞게 로드 )
+        UIManager.Instance.AutoSelectPuzzleStatusByScene();
+        
         Debug.Log($"씬 로드됨: {scene.name}");
-
-        // 이어하기에 저장한 데이터 적용
-        //if (loadFromSave && pendingSaveData != null)
-        //{
-        //    ApplySaveData(pendingSaveData);
-        //}
     }
 
-    //public void SetPendingLoad(SaveData data)
-    //{
-    //    loadFromSave = true;
-    //    pendingSaveData = data;
-    //}
-
-    //private void ApplySaveData(SaveData data)
-    //{
-    //    //  Clue 복원
-    //    var inventory = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
-    //    inventory.RemoveClueBeforeStage();
-    //    foreach (string clueName in data.collectedClueNames)
-    //    {
-    //        ClueData clue = Resources.Load<ClueData>("ClueData/" + clueName);
-    //        if (clue != null)
-    //            inventory.AddClue(clue);
-    //    }
-
-    //    // Memory 복원
-    //    MemoryManager.Instance.ClearScannedDebug();
-    //    foreach (string memoryID in data.collectedMemoryIDs)
-    //    {
-    //        MemoryData memory = Resources.Load<MemoryData>("MemoryData/" + memoryID);
-    //        if (memory != null)
-    //            MemoryManager.Instance.TryCollect(memory);
-    //    }
-
-    //    foreach (string title in data.scannedMemoryTitles)
-    //    {
-    //        MemoryData memory = Resources.LoadAll<MemoryData>("MemoryData")
-    //            .FirstOrDefault(m => m.memoryTitle == title);
-    //        if (memory != null && !MemoryManager.Instance.IsCanStore(memory))
-    //            MemoryManager.Instance.TryCollect(memory);
-    //    }
-
-    //    Debug.Log("[GameManager] 저장된 인벤토리 및 기억 복원 완료");
-    //}
+    public void SetPendingLoad(SaveData data)
+    {
+        loadFromSave = true;
+        pendingSaveData = data;
+    }
 
     public void TrySpawnPlayer()
     {
@@ -210,20 +203,11 @@ public class GameManager : Singleton<GameManager>
             default: return ClueStage.Stage4;
         }
     }
-
-    //private void RunPlayer()
-    //{
-    //    if (currentPlayer != null)
-    //    {
-    //        PossessionSystem.Instance.CanMove = true;
-    //    }
-    //}
-
-    //private void PausePlayer() 
-    //{ 
-    //    if (currentPlayer != null)
-    //    {
-    //        PossessionSystem.Instance.CanMove = false;
-    //    }
-    //}
+    
+    public static void LoadThroughLoading(string nextScene, Color? bgBaseColor = null)
+    {
+        SceneLoadContext.RequestedNextScene = nextScene;
+        SceneLoadContext.RequestedBaseBgColor = bgBaseColor;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("LoadingScene");
+    }
 }

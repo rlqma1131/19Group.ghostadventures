@@ -114,6 +114,7 @@ GameObject:
   - component: {fileID: 8874385516369953404}
   - component: {fileID: 6288055694734750959}
   - component: {fileID: 445716841553930752}
+  - component: {fileID: -5007588506853101898}
   m_Layer: 0
   m_Name: Ch3_Lock
   m_TagString: Untagged
@@ -200,6 +201,8 @@ MonoBehaviour:
   hasActivated: 0
   possessionSFX: {fileID: 0}
   isPossessed: 0
+  open: {fileID: 0}
+  mainSprite: {fileID: 0}
   lockZoom: {fileID: 0}
   lockPos: {fileID: 0}
   zoomPanel: {fileID: 0}
@@ -213,9 +216,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 05dccae5371ae6743977c8b19b9c3cc9, type: 3}
   - {fileID: 21300000, guid: 23a75eb20c1f248479145ae454bf59a9, type: 3}
   bottoms:
-  - {fileID: 21300000, guid: f9316d9cd76b78b4184f38578be91a9c, type: 3}
   - {fileID: 21300000, guid: 0e741ac6826149f42a338d1fef75f919, type: 3}
   - {fileID: 21300000, guid: 4e15bb67f9bf76a4397d717720e631a1, type: 3}
+  - {fileID: 21300000, guid: f9316d9cd76b78b4184f38578be91a9c, type: 3}
   nums:
   - {fileID: 21300000, guid: 7205f6f1d9667f049aafb11b3babdb42, type: 3}
   - {fileID: 21300000, guid: b4f39b85aeeb54d40832d866b02dc0c4, type: 3}
@@ -227,8 +230,24 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1ef067032031e2c45be943983491c794, type: 3}
   - {fileID: 21300000, guid: 81b856e689db4594ab23ef879d24ede4, type: 3}
   - {fileID: 21300000, guid: b7ca1e8df8cc9cc4293bdb3c082f8551, type: 3}
+  shelf: {fileID: 0}
+  xrayMonitor: {fileID: 0}
+  documentIndex: []
   selectedType: 0
   selectedNumIndex: -1
+--- !u!114 &-5007588506853101898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5429761680367214135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch3_Lock
 --- !u!1 &5906533755897577972
 GameObject:
   m_ObjectHideFlags: 0

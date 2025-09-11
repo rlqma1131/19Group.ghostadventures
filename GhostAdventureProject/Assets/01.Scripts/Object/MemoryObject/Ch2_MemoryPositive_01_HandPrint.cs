@@ -9,10 +9,7 @@ public class Ch2_MemoryPositive_01_HandPrint : MemoryFragment
     public void ActivateHandPrint()
     {
         isScannable = true;
-    }
-
-    public override void AfterScan() 
-    {
-        exit.ActivateClearDoor();
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
     }
 }

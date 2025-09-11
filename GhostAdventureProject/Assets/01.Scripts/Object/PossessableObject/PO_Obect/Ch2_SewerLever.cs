@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -44,7 +44,9 @@ public class Ch2_SewerLever : BasePossessable
             mazeGroupToDisable.SetActive(false); // 미로 제거
             Unpossess();
             q_Key.SetActive(false);
+
             hasActivated = false;
+            MarkActivatedChanged();
         }
         
         q_Key.SetActive(true);

@@ -33,7 +33,7 @@ public class PossessionSystem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log($"트리거 충돌: {other.name}");
+        //Debug.Log($"트리거 충돌: {other.name}");
         var possessionObject = other.GetComponent<BasePossessable>();
         if (possessionObject != null)
         {
@@ -60,18 +60,6 @@ public class PossessionSystem : MonoBehaviour
             case "Cat":
                 break;
             
-            case "Animal":
-                if (!SoulEnergySystem.Instance.HasEnoughEnergy(2))
-                {
-                    UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
-                    return false;
-                }
-                else
-                {
-                    SoulEnergySystem.Instance.Consume(2);
-                }
-                break;
-
             case "Person":
                 // 사람 구현되면 피로도에 따라 소모량 조정
                 if (!SoulEnergySystem.Instance.HasEnoughEnergy(1))
@@ -100,16 +88,15 @@ public class PossessionSystem : MonoBehaviour
                 }
                 break;
 
-            case "SoundTrigger":
             default:
-                if (!SoulEnergySystem.Instance.HasEnoughEnergy(3))
+                if (!SoulEnergySystem.Instance.HasEnoughEnergy(1))
                 {
                     UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
                     return false;
                 }
                 else
                 {
-                    SoulEnergySystem.Instance.Consume(3);
+                    SoulEnergySystem.Instance.Consume(1);
                 }
                 break;
         }
@@ -174,6 +161,7 @@ public class PossessionSystem : MonoBehaviour
         Player.animator.SetTrigger("PossessIn");
         SoundManager.Instance.PlaySFX(possessIn);
 
+        EnemyAI.PauseAllEnemies();
     }
 
     public void StartPossessionOutSequence() // 빙의 해제 애니메이션
@@ -181,6 +169,9 @@ public class PossessionSystem : MonoBehaviour
         CanMove = false;
         StartCoroutine(DelayedPossessionOutPlay());
         SoundManager.Instance.PlaySFX(possessOut);
+
+        EnemyAI.PauseAllEnemies();
+
     }
 
     private IEnumerator DelayedPossessionOutPlay()
@@ -191,6 +182,7 @@ public class PossessionSystem : MonoBehaviour
 
     public void OnPossessionInAnimationComplete() // 빙의 시작 애니메이션 후 이벤트
     {
+        EnemyAI.ResumeAllEnemies();
         PossessionStateManager.Instance.PossessionInAnimationComplete();
 
         if (obssessingTarget != null)
@@ -208,5 +200,6 @@ public class PossessionSystem : MonoBehaviour
     public void OnPossessionOutAnimationComplete() // 빙의 해제 애니메이션 후 이벤트
     {
         PossessionStateManager.Instance.PossessionOutAnimationComplete();
+        EnemyAI.ResumeAllEnemies();
     }
 }

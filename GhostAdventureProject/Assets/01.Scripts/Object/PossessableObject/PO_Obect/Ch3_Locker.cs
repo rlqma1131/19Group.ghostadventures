@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Ch3_Locker : BasePossessable
 {
@@ -87,7 +87,8 @@ public class Ch3_Locker : BasePossessable
         }
         else
         {
-            UIManager.Instance.PromptUI.ShowPrompt("단서를 더 살펴보자.",2f);
+            if (lockerSelector.RemainingOpens == 1)
+                UIManager.Instance.PromptUI.ShowPrompt("신중하자", 2f);
             lockerSelector.OnWrongBodySelected();
             Unpossess();
         }
@@ -121,7 +122,7 @@ public class Ch3_Locker : BasePossessable
         
         if (lockerSelector.IsSolved)
         {
-            UIManager.Instance.PromptUI.ShowPrompt("정말 끔찍해...", 2f);
+            UIManager.Instance.PromptUI.ShowPrompt("정말 끔찍해..", 2f);
         }
     }
 }

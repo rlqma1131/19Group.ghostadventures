@@ -18,7 +18,9 @@ public class Ch2_DollPicture : BaseInteractable
             if(Input.GetKeyDown(KeyCode.E))
             {
                 cluePickup.PickupClue();
-                UIManager.Instance.PromptUI.ShowPrompt("모래성에서 본 그림과 다른데… 하나는 가짜야.");
+                UIManager.Instance.InventoryExpandViewerUI.ShowClue(cluePickup.clueData);
+                UIManager.Instance.InventoryExpandViewerUI.OnClueHidden += () =>
+                    UIManager.Instance.PromptUI.ShowPrompt("모래성에서 본 그림과 다른데… 하나는 가짜야.");
                 CompleteCluePickup = true;
             }
         }

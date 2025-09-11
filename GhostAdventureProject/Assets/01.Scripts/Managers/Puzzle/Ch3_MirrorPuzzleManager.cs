@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +6,7 @@ using DG.Tweening;
 
 public class Ch3_MirrorPuzzleManager : MonoBehaviour
 {
-    public static Ch3_MirrorPuzzleManager Instance;
+    public static Ch3_MirrorPuzzleManager Instance { get; private set; }
 
     private int roomsCleared = 0;
     public int totalRooms = 3;
@@ -39,10 +39,23 @@ public class Ch3_MirrorPuzzleManager : MonoBehaviour
     public void NotifyRoomCleared()
     {
         roomsCleared++;
+        
+        if (roomsCleared == 1 || roomsCleared == 2)
+        {
+            string[] prompts =
+            {
+                "거울 공간이 사라졌어..이런 공간이 더 있을까?",
+                "이런 병실을 더 찾아보자"
+            };
+            string randomPrompt = prompts[UnityEngine.Random.Range(0, prompts.Length)];
+            UIManager.Instance.PromptUI.ShowPrompt(randomPrompt, 2f);
+        }
+        
         if (roomsCleared >= totalRooms)
         {
-            ShowHintNearPlayer();
             memory.ActivateObj();
+            UIManager.Instance.PromptUI.ShowPrompt("이게 마지막인가..? 저기 뭔가 떨어져있어!", 2f);
+            ShowHintNearPlayer();
         }
     }
 

@@ -14,6 +14,10 @@ public class Ch1_Shower : BasePossessable
     [SerializeField] private GameObject q_key;
 
     private bool isWater = false;
+    private bool isWaterSoundPlaying = false;
+    private bool isHotWater = false;
+    //private bool isPlayerNear = false;
+
     private int temperature = 0;
 
     private Quaternion initialNeedleRotation;
@@ -21,6 +25,9 @@ public class Ch1_Shower : BasePossessable
     protected override void Start()
     {
         base.Start();
+
+        UI.SetActive(false);
+        q_key.SetActive(false);
         water.SetActive(false);
         temperatureArch.SetActive(false);
         Needle.SetActive(false);
@@ -30,23 +37,14 @@ public class Ch1_Shower : BasePossessable
     protected override void Update()
     {
         if (!isPossessed)
-        {   
-            UI.SetActive(false);
-            q_key.SetActive(false);
             return;
-        }
-        // if(isPossessed || !isWater)
-        //     q_key.SetActive(true);
 
-        if(isPossessed || isWater == false)
-      
-            q_key.SetActive(true);
-
-        if(isWater == true)
-        {
-            q_key.SetActive(false);
-            SoundManager.Instance.PlaySFX(onWaterSound);
-        }
+        // 조작키 UI 상태
+        q_key.SetActive(!isWater);
+        water.SetActive(isWater);
+        UI.SetActive(isWater);
+        temperatureArch.SetActive(isWater);
+        Needle.SetActive(isWater);
 
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -63,18 +61,33 @@ public class Ch1_Shower : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            UI.SetActive(true);
-            q_key.SetActive(false);
             isWater = !isWater;
-            water.SetActive(isWater);
-            temperatureArch.SetActive(isWater);
-            Needle.SetActive(isWater);
-            Debug.Log($"물 상태: {(isWater ? "ON" : "OFF")}, 온도: {temperature}");
+
+            // 물소리 껐다 켰다
+            if (!isWaterSoundPlaying)
+            {
+                SoundManager.Instance.PlayLoopingSFX(onWaterSound);
+                isWaterSoundPlaying = true;
+            }
+            else
+            {
+                SoundManager.Instance.FadeOutAndStopLoopingSFX();
+                isWaterSoundPlaying = false;
+            }
         }
 
         if (steamEffect != null)
         {
             steamEffect.SetActive(isWater && temperature == 3);
+            if (steamEffect.activeSelf && !isHotWater)
+            {
+                isHotWater = true;
+                UIManager.Instance.PromptUI.ShowPrompt("따뜻하니 김이 나네...");
+            }
+            if (!steamEffect.activeSelf && isHotWater)
+            {
+                isHotWater = false;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -94,24 +107,34 @@ public class Ch1_Shower : BasePossessable
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        if (!hasActivated)
-            return;
+        if (!hasActivated) return;
 
         if (other.CompareTag("Player"))
+        {
             PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            //isPlayerNear = true;
 
-        if (isWater)
-            SoundManager.Instance.PlaySFX(onWaterSound);
+            if (isWater)
+            {
+                SoundManager.Instance.PlayLoopingSFX(onWaterSound);
+                isWaterSoundPlaying = true;
+            }
+        }
     }
-
 
     protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
+        {
             PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            //isPlayerNear = false;
 
-        if (isWater)
-            SoundManager.Instance.FadeOutAndStopSFX();
+            if (PossessionSystem.Instance.CanMove)
+            {
+                SoundManager.Instance.FadeOutAndStopLoopingSFX();
+                isWaterSoundPlaying = false;
+            }
+        }
     }
 
     private void UpdateNeedleRotation()
@@ -121,5 +144,15 @@ public class Ch1_Shower : BasePossessable
             float zAngle = temperature * 20f;
             Needle.transform.rotation = Quaternion.Euler(0f, 0f, zAngle);
         }
+    }
+
+    public void InActiveShower()
+    {
+        hasActivated = false;
+    }
+
+    public override void OnPossessionEnterComplete() 
+    {
+        q_key.SetActive(!isWater);
     }
 }

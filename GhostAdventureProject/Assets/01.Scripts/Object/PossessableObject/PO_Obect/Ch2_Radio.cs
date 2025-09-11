@@ -1,4 +1,4 @@
-using Cinemachine;
+﻿using Cinemachine;
 using System.Collections;
 using UnityEngine;
 
@@ -21,17 +21,28 @@ public class Ch2_Radio : BasePossessable
     public bool IsPlaying=> triggerSound_Person.isPlaying; // 사운드 재생중 여부 - 사람
     [SerializeField] private SoundEventConfig soundConfig;
 
+    // 저장 확인용 불값 ( 저장 후 중복 저장 방지 )
+    private bool isSaved = false;
 
     protected override void Start()
     {
-        hasActivated = true;
+        base.Start();
         zoomRadio.SetActive(false);
     }
 
     protected override void Update()
     {
+        if (isSaved)
+            return;
 
-        if(IsPlaying)
+        if (guard.UseAllItem)
+        {
+            hasActivated = false;
+            MarkActivatedChanged();
+            isSaved = true;
+        }
+
+        if (IsPlaying)
         {
             speakerOn.SetBool("OnSpeaker", true); // 스피커 애니메이션 재생
             musicalNoteOn.SetActive(true);
@@ -81,9 +92,12 @@ public class Ch2_Radio : BasePossessable
         {
             triggerSound_Person.Play();
             hasTriggered_Person = true;
-            guard.targetPerson.SetCondition(PersonCondition.Tired);
-            Debug.Log(guard.conditionHandler);
-            // AttractPerson();
+            guard.targetPerson.currentCondition = PersonCondition.Tired;
+            Debug.Log(guard.targetPerson.conditionHandler);
+            zoomRadio.SetActive(false);
+            zoomCamera.Priority = 5;
+            UIManager.Instance.PlayModeUI_OpenAll();
+            Unpossess();
         }
         // needle의 위치가 트리거 위치에 멀어지면 사운드 중지.
         if (hasTriggered_Person && Mathf.Abs(needle.transform.localPosition.x - triggerX_Person) >= 0.01f)
@@ -98,7 +112,13 @@ public class Ch2_Radio : BasePossessable
             triggerSound_Enemy.Play();
             hasTriggered_Enemy = true;
             SoundTrigger.TriggerSound(transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
-            Debug.Log(guard.conditionHandler);
+            Debug.Log(guard.targetPerson.conditionHandler);
+            zoomRadio.SetActive(false);
+            zoomCamera.Priority = 5;
+            UIManager.Instance.PlayModeUI_OpenAll();
+            Unpossess();
+            
+            
             // AttractPerson();
             UIManager.Instance.PromptUI.ShowPrompt("음악이 나왔어. 누군가 반응할지도 몰라.");
             

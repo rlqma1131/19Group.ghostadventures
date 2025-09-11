@@ -59,6 +59,11 @@ public class Ch1_Mouse : MoveBasePossessable
         
     }
 
+    void LateUpdate()
+    {
+        highlightSpriteRenderer.flipX = spriteRenderer.flipX;
+    }
+
     private void InteractTutorial()
     {
         TutorialManager.Instance.Show(TutorialStep.Mouse_Possesse);
@@ -83,6 +88,7 @@ public class Ch1_Mouse : MoveBasePossessable
         transform.position = point2Transform.position;
         anim.SetBool("Move", false);
         hasActivated = true;
+        MarkActivatedChanged();
     }
 
     private IEnumerator MouseAct()
@@ -94,6 +100,8 @@ public class Ch1_Mouse : MoveBasePossessable
         yield return new WaitForSeconds(1f);
 
         hasActivated = false;
+        MarkActivatedChanged();
+
         Unpossess();
         zoomCamera.Priority = 5;
 
@@ -103,6 +111,7 @@ public class Ch1_Mouse : MoveBasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        zoomCamera.Priority = 20;
         SoundManager.Instance.PlaySFX(mouse);
     }
 }
