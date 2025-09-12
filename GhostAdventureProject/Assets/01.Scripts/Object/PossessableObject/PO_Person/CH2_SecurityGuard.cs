@@ -95,6 +95,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
             case GuardState.Work:
                 MoveTo(chair.position);
+                targetPerson.UI.SetActive(false);
                 break;
 
             case GuardState.Roading:
