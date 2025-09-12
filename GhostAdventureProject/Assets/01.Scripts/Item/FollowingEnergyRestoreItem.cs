@@ -40,7 +40,7 @@ public class FollowingEnergyRestoreItem : BaseInteractable
         SoulEnergySystem.Instance.EnableHealingEffect();
 
         PlayerInteractSystem.Instance.RemoveInteractable(this.gameObject);
-        if (highlight != null) highlight.SetActive(false);
+        if (Highlight != null) Highlight.SetActive(false);
         PlayerInteractSystem.Instance.GetEKey().SetActive(false);
     }
 
@@ -69,8 +69,8 @@ public class FollowingEnergyRestoreItem : BaseInteractable
         if (collision.CompareTag("Player"))
         {
             PlayerInteractSystem.Instance.RemoveInteractable(this.gameObject);
-            if (highlight != null)
-                highlight.SetActive(false);
+            if (Highlight != null)
+                Highlight.SetActive(false);
         }
     }
 }

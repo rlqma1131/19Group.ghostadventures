@@ -3,17 +3,16 @@ using UnityEngine;
 
 public class MoveBasePossessable : BasePossessable
 {
+    [Header("Movable BasePossessable References")]
     [SerializeField] protected CinemachineVirtualCamera zoomCamera;
     [SerializeField] protected float moveSpeed = 3f;
-    protected SpriteRenderer spriteRenderer;
-    protected SpriteRenderer highlightSpriteRenderer;
+    [SerializeField] protected SpriteRenderer spriteRenderer;
+    [SerializeField] protected SpriteRenderer highlightSpriteRenderer;
 
-
-    protected override void Start()
-    {
-        base.Start();
+    override protected void Awake() {
+        base.Awake();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        highlightSpriteRenderer = highlight.GetComponent<SpriteRenderer>();
+        highlightSpriteRenderer = Highlight?.GetComponent<SpriteRenderer>(); 
         anim = GetComponentInChildren<Animator>();
     }
 

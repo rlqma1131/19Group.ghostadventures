@@ -54,7 +54,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
                     PlayerInteractSystem.Instance.eKey.SetActive(false);
                     // [컷씬] 꼬마유령 이벤트
                     PossessionSystem.Instance.CanMove = false;
-                    GameManager.Instance.PlayerController.animator.SetBool("Move", false);
+                    GameManager.Instance.PlayerController.Animator.SetBool("Move", false);
 
                     UIManager.Instance.PlayModeUI_CloseAll();
                     EnemyAI.PauseAllEnemies();

@@ -35,7 +35,7 @@ public class Ch2_LaserTriggerManager : MonoBehaviour
     {
         // 플레이어 조작 불가
         PossessionSystem.Instance.CanMove = false;
-        GameManager.Instance.PlayerController.animator.SetBool("Move", false);
+        GameManager.Instance.PlayerController.Animator.SetBool("Move", false);
 
         // 카메라 이동 연출 (6초)
         yield return new WaitForSeconds(6f);

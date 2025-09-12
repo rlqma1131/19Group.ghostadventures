@@ -35,17 +35,20 @@ public class CH2_SecurityGuard : MoveBasePossessable
     public bool UseAllItem = false;
     private BoxCollider2D[] cols;
 
+    override protected void Awake() {
+        base.Awake();
+        haveitem = GetComponent<HaveItem>();
+        targetPerson = GetComponent<PersonConditionUI>();
+        cols = GetComponentsInChildren<BoxCollider2D>();
+    }
+
     // 처음 시작시 빙의불가(경비실안에 있음)
-    protected override void Start()
-    {
+    protected override void Start() {
         base.Start();
         moveSpeed = 2f;
         hasActivated = false;
         isInOffice = true;
-        haveitem = GetComponent<HaveItem>();
-        targetPerson = GetComponent<PersonConditionUI>();
         targetPerson.currentCondition = PersonCondition.Tired;
-        cols = GetComponentsInChildren<BoxCollider2D>();
     }
 
     protected override void Update()
@@ -377,7 +380,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         base.OnPossessionEnterComplete();
         radio.triggerSound_Person.DOFade(0f, 5f)
         .OnComplete(() => radio.triggerSound_Person.Stop());
-        highlight.SetActive(false);
+        Highlight.SetActive(false);
     }
 
     // 단서 획득시 대사 출력

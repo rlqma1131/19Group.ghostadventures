@@ -6,11 +6,12 @@ using UnityEngine;
 /// </summary>
 public class PlayerInteractSystem : MonoBehaviour
 {
-    // 싱글톤
-    public static PlayerInteractSystem Instance { get; private set; }
-
+    [Header("References")]
     [SerializeField] public GameObject eKey;
     [SerializeField] private GameObject currentClosest; 
+    
+    // 싱글톤
+    public static PlayerInteractSystem Instance { get; private set; }
     public GameObject CurrentClosest => currentClosest;// 디버깅용
     
     private HashSet<GameObject> nearbyInteractables = new();
@@ -18,10 +19,8 @@ public class PlayerInteractSystem : MonoBehaviour
     //오브젝트 겹치는 Collider2D 모음(같은 오브젝트의 다중 콜라이더/겹침 대응)
     private readonly Dictionary<GameObject, HashSet<Collider2D>> objectToCols = new();
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
+    private void Awake() {
+        if (Instance == null) {
             Instance = this;
         }
         else
@@ -33,8 +32,7 @@ public class PlayerInteractSystem : MonoBehaviour
 
     private void Update()
     {
-        if (nearbyInteractables.Count == 0)
-        {
+        if (nearbyInteractables.Count == 0) {
             UpdateClosest(null);
             return;
         }
@@ -115,8 +113,7 @@ public class PlayerInteractSystem : MonoBehaviour
         }
     }
 
-    public GameObject GetEKey()
-    {
+    public GameObject GetEKey() {
         return eKey;
     }
 }

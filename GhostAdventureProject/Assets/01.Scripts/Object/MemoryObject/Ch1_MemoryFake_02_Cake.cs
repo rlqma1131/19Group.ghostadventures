@@ -44,7 +44,7 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
 
     void HighlightOff()
     {
-        highlight.SetActive(false); // 하이라이트 비활성화
+        Highlight.SetActive(false); // 하이라이트 비활성화
     }
 
     protected override void PlusAction()

@@ -32,8 +32,10 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
     {
         Player.SetActive(false);
         PossessionSystem.Instance.CanMove = true;
-        /// 추가적인 연출이나 효과
-        /// 빙의오브젝트 강조효과, 사운드 등
+        
+        // 추가적인 연출이나 효과
+        // 빙의오브젝트 강조효과, 사운드 등
+        
         currentState = State.Possessing;
         Debug.Log("target" + possessedTarget);
         UIManager.Instance.unpossessKey.SetActive(true);
@@ -44,7 +46,7 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
     {
         PlayerTransform.position = possessedTarget.transform.position + spawnOffset;
         Player.SetActive(true);
-        PossessionSystem.Instance.StartPossessionOutSequence();
+        PossessionSystem.Instance.PlayPossessionOutSequence();
         UIManager.Instance.unpossessKey.SetActive(false);
         UIManager.Instance.Inventory_PossessableObjectUI.HideInventory(); // 빙의 인벤토리 사라짐
     }

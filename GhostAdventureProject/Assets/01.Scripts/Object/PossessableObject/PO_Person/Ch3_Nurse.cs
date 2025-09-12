@@ -35,11 +35,15 @@ public class Ch3_Nurse : MoveBasePossessable
     private bool isAnimatingWork = false;
     private bool isFirstPossessionIn = true;
 
+    protected override void Awake() {
+        base.Awake();
+        condition = GetComponent<PersonConditionUI>();
+    }
+
     protected override void Start()
-    {
+    {   
         base.Start();
         conditionHandler = new VitalConditionHandler();
-        condition = GetComponent<PersonConditionUI>();
     }
 
     protected override void Update()
@@ -152,7 +156,7 @@ public class Ch3_Nurse : MoveBasePossessable
     private void MoveTo(Vector3 target)
     {
         Vector3 direction = (target - transform.position).normalized;
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        transform.position += direction * (moveSpeed * Time.deltaTime);
 
         SetMoveAnimation(true);
         if (spriteRenderer != null)

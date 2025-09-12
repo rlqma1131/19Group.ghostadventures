@@ -2,43 +2,33 @@
 
 public abstract class BasePossessable : BaseInteractable
 {
+    [Header("Base Possessable Reference")]
     [SerializeField] protected Animator anim;
+    [SerializeField] protected AudioClip possessionSFX;
+    
+    [Header("Current State of Possessable Object")]
     [SerializeField] protected bool hasActivated; // 빙의가 가능한 상태인지 여부
-    [SerializeField] private AudioClip possessionSFX;
-
-    public bool isPossessed;
+    [SerializeField] public bool isPossessed;
+    
     public bool HasActivated => hasActivated;
     public bool IsPossessedState => isPossessed;
 
-    protected virtual void Start()
-    {
+    new protected virtual void Start() {
+        highlightObj?.SetActive(false);
         isPossessed = false;
         hasActivated = true;
     }
 
-    protected virtual void Update()
-    {
-        if (!isPossessed)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.E))
-            Unpossess();
+    protected virtual void Update() {
+        if (Input.GetKeyDown(KeyCode.E) && isPossessed) Unpossess();
+        TriggerEvent();
     }
-
+    
     // 상호작용 메시지 표시 대상 설정
-    protected override void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!hasActivated)
-            return;
+    protected override void OnTriggerEnter2D(Collider2D other) {
+        if (!hasActivated) return;
 
-        if (other.CompareTag("Player"))
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
-    }
-
-    protected override void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        base.OnTriggerEnter2D(other);
     }
 
     public virtual void Unpossess()

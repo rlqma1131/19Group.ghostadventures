@@ -68,7 +68,7 @@ public class TutorialManager : Singleton<TutorialManager>
                 PossessionSystem.Instance.CanMove = true;
                 uimanager.TutorialUI_OpenAll();
                 celebrityBox = FindObjectOfType<Ch1_CelebrityBox>();
-                celebrityBox.highlight.SetActive(true); 
+                celebrityBox.Highlight.SetActive(true); 
                 break;
             case TutorialStep.Test:
                 uimanager.TutorialUI_OpenAll();

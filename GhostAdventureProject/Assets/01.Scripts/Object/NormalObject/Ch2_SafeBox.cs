@@ -60,7 +60,7 @@ public class Ch2_SafeBox : BaseInteractable
         {
             if(!safeBoxOpen)
             {
-                highlight.SetActive(true);
+                Highlight.SetActive(true);
                 safeBoxOpenAble = true;
             }
         }
@@ -76,7 +76,7 @@ public class Ch2_SafeBox : BaseInteractable
     IEnumerator OpenSafeBox()
     {
         safeBoxOpen = true;
-        highlight.SetActive(false);
+        Highlight.SetActive(false);
         q_Key.SetActive(false);
         openSafeBox.SetActive(true);
         inventory.TryUseSelectedItem();

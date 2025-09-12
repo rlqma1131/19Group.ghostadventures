@@ -20,7 +20,6 @@ public class Ch1_Mouse : MoveBasePossessable
     protected override void Start()
     {
         base.Start();
-
         spriteRenderer.flipX = true;
         hasActivated = false;
 
@@ -56,7 +55,6 @@ public class Ch1_Mouse : MoveBasePossessable
             q_Key.SetActive(false);
             StartCoroutine(MouseAct());
         }
-        
     }
 
     void LateUpdate()
