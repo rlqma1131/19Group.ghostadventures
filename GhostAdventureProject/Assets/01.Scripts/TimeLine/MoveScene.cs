@@ -85,7 +85,7 @@ public class MoveScene : MonoBehaviour
         
         Debug.Log("씬 이동: " + Scenename);
 
-        if(GameManager.Instance.Player != null)
+        if(GameManager.Instance.PlayerObj != null)
         {
         PossessionSystem.Instance.CanMove = true; // 플레이어 이동 가능하도록 설정
         

@@ -16,8 +16,9 @@ public class Ch2_SafeBox : BaseInteractable
     public bool safeBoxOpen; // 금고를 열었는지 확인
     Inventory_PossessableObject inventory;
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         safeBoxOpenAble = false;
         safeBoxOpen = false;
         ZoomSafeBox.SetActive(false);

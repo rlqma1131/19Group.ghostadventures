@@ -32,9 +32,9 @@ public class StealthDoor : MonoBehaviour
         allTargets.Clear();
 
         // Player 자동 등록
-        if (GameManager.Instance?.Player != null)
+        if (GameManager.Instance?.PlayerObj != null)
         {
-            allTargets.Add(GameManager.Instance.Player.transform);
+            allTargets.Add(GameManager.Instance.PlayerObj.transform);
         }
 
         // 인스펙터로 받은 추가 타겟 등록
@@ -47,9 +47,9 @@ public class StealthDoor : MonoBehaviour
 
     private void Update()
     {
-        if (!playerRegistered && GameManager.Instance?.Player != null)
+        if (!playerRegistered && GameManager.Instance?.PlayerObj != null)
         {
-            allTargets.Add(GameManager.Instance.Player.transform);
+            allTargets.Add(GameManager.Instance.PlayerObj.transform);
             playerRegistered = true;
         }
 

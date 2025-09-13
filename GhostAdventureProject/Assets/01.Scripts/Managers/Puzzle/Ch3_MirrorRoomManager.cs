@@ -15,7 +15,7 @@ public class Ch3_MirrorRoomManager : MonoBehaviour
 
     private void Start()
     {
-        player = GameManager.Instance.Player;
+        player = GameManager.Instance.PlayerObj;
     }
 
     public void OnDifferenceFound(Ch3_MirrorObj obj)

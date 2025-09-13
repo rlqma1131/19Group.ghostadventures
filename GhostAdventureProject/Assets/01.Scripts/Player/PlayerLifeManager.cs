@@ -31,7 +31,6 @@ public class PlayerLifeManager : MonoBehaviour
             Destroy(this); // 컴포넌트만 제거
         }
         playerAnimator = GetComponentInChildren<Animator>();
-
     }
 
     private void Start()
@@ -72,7 +71,7 @@ public class PlayerLifeManager : MonoBehaviour
         
         UIManager.Instance.Inventory_PlayerUI.RemoveClueBeforeStage();
         UIManager.Instance.PlayModeUI_CloseAll();
-        GameObject player = GameManager.Instance.Player;
+        GameObject player = GameManager.Instance.PlayerObj;
         PlayableDirector director = player.GetComponentInChildren<PlayableDirector>();
         ParticleSystem[] particleSystems = player.GetComponentsInChildren<ParticleSystem>();
         if (volume != null)
@@ -169,5 +168,4 @@ public class PlayerLifeManager : MonoBehaviour
         if (EnemyVolumeOverlay.Instance != null)
             EnemyVolumeOverlay.Instance.Suspend(false);
     }
-
 }

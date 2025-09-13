@@ -9,8 +9,9 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
     [SerializeField] private GameObject _particleSystem;
     [SerializeField] private GameObject _light;
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         isScannable = false;
         anim = GetComponentInChildren<Animator>();
     }
@@ -37,7 +38,7 @@ public class Ch1_MemoryFake_02_Cake : MemoryFragment
     {
         SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
             SceneManager.GetActiveScene().name,
-            GameManager.Instance.Player.transform.position,
+            GameManager.Instance.PlayerObj.transform.position,
             checkpointId: data.memoryID,
             autosave: true);
     }

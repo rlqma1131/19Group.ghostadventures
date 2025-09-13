@@ -16,6 +16,7 @@ public class Ch3_Drawers : BasePossessable
 
     protected override void Start()
     {
+        base.Start();
         isPossessed = false;
         zoomCamera.Priority = 5;
     }

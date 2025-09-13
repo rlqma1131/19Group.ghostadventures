@@ -85,7 +85,7 @@ public class Ch1_CelebrityBox : BasePossessable
 
         if (other.CompareTag("Player") && !SaveManager.IsPuzzleSolved("깜짝상자"))
         {
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
             // UIManager.Instance.TutorialUI_CloseAll();
             UIManager.Instance.PromptUI.ShowPrompt("…상자? 왜 여기에 이런 게…");
             UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 파란 빛을 띄는 오브젝트는 E키로 빙의할 수 있습니다.");

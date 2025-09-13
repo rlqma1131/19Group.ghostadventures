@@ -31,7 +31,7 @@ public class EnemyQTEHandler : MonoBehaviour
     {
         qteUI = UIManager.Instance.QTE_UI_2;
         qteEffect = QTEEffectManager.Instance;
-        player = GameManager.Instance.Player.transform;
+        player = GameManager.Instance.PlayerObj.transform;
     }
 
     public void StartQTE()

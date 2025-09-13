@@ -34,7 +34,7 @@ public class AutoTeleport : MonoBehaviour
     private bool IsTeleportable(GameObject obj)
     {
         // GameManager에 등록된 Player
-        if (GameManager.Instance != null && obj == GameManager.Instance.Player)
+        if (GameManager.Instance != null && obj == GameManager.Instance.PlayerObj)
             return true;
 
         // Enemy AI

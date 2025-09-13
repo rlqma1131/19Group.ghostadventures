@@ -15,6 +15,7 @@ public abstract class BasePossessable : BaseInteractable
 
     new protected virtual void Start() {
         highlightObj?.SetActive(false);
+        player = GameManager.Instance.Player;
         isPossessed = false;
         hasActivated = true;
     }

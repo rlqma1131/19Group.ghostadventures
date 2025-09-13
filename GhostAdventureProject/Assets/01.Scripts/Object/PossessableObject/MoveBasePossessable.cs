@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class MoveBasePossessable : BasePossessable
 {
+    readonly static int MoveHash = Animator.StringToHash("Move");
+
     [Header("Movable BasePossessable References")]
     [SerializeField] protected CinemachineVirtualCamera zoomCamera;
     [SerializeField] protected float moveSpeed = 3f;
@@ -27,7 +29,7 @@ public class MoveBasePossessable : BasePossessable
         {
             zoomCamera.Priority = 5;
             Unpossess();
-            anim.SetBool("Move", false);
+            anim.SetBool(MoveHash, false);
         }
     }
 
@@ -52,7 +54,7 @@ public class MoveBasePossessable : BasePossessable
 
         if (isMoving)
         {
-            transform.position += move * moveSpeed * Time.deltaTime;
+            transform.position += move * (moveSpeed * Time.deltaTime);
 
             // 좌우 Flip
             if (spriteRenderer != null && Mathf.Abs(h) > 0.01f)

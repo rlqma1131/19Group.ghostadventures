@@ -1,4 +1,5 @@
 ﻿using System;
+using _01.Scripts.Player;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -11,36 +12,28 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] public BasePossessable currentTarget;
 
+    Player player;
     Vector3 move;
     float h;
     float v;
     
     public Animator Animator => animator;
-    
-    void Awake() {
-        animator = GetComponent<Animator>();
-        mainSprite = GetComponent<SpriteRenderer>();
-    }
 
-    void Start()
-    {
-        // GameManager에 Player 등록
-        if (GameManager.Instance != null) {
-            // GameManager의 SpawnPlayer에서 이미 처리되므로 여기서는 추가 확인만
-            Debug.Log("[PlayerController] Player 초기화 완료");
-        }
+    public void Initialize(Player player) {
+        this.player = player;
+        animator = player.Animator;
+        mainSprite = player.SpriteRenderer;
     }
 
     void Update()
     {
         if (PossessionSystem.Instance == null ||
             PossessionQTESystem.Instance == null ||
-            !PossessionSystem.Instance.CanMove ||
+            !player.PossessionSystem.CanMove ||
             PossessionQTESystem.Instance.isRunning)
             return;
 
         HandleMovement();
-
         HandlePossession();
     }
 
@@ -88,7 +81,7 @@ public class PlayerController : MonoBehaviour
     bool CurrentTargetIsPossessable() {
         // 가까운 대상이 빙의 가능 상태인지 확인
         return currentTarget != null
-            && PlayerInteractSystem.Instance.CurrentClosest == currentTarget.gameObject
+            && player.InteractSystem.CurrentClosest == currentTarget.gameObject
             && !currentTarget.IsPossessedState
             && currentTarget.HasActivated;
     }

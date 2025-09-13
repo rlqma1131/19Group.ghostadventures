@@ -7,8 +7,10 @@ public class Ch2_DollPicture : BaseInteractable
     private bool interactAble = false;
     private bool CompleteCluePickup = false;
     CluePickup cluePickup;
-    void Start()
+
+    override protected void Start()
     {
+        base.Start();
         cluePickup = GetComponent<CluePickup>();
     }
     void Update()
@@ -31,7 +33,7 @@ public class Ch2_DollPicture : BaseInteractable
         if (collision.CompareTag("Player") && !CompleteCluePickup)
         {
             interactAble = true;
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
         }
     }
 

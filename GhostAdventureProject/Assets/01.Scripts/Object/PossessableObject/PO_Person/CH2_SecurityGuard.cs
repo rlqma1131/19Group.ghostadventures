@@ -313,7 +313,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
         base.OnTriggerEnter2D(collision);
         // if (collision.CompareTag("Player"))
-        //     PlayerInteractSystem.Instance.AddInteractable(gameObject);
+        //     player.InteractSystem.AddInteractable(gameObject);
 
         if(collision.CompareTag("In"))
         {
@@ -336,7 +336,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     {
         base.OnTriggerExit2D(collision);
         // if (collision.CompareTag("Player"))
-        //     PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        //     player.InteractSystem.RemoveInteractable(gameObject);
 
         if(collision.CompareTag("In"))
         {

@@ -40,6 +40,9 @@ public class Ch2_Computer : BasePossessable
 
     protected override void Start()
     {
+        highlightObj?.SetActive(false);
+        player = GameManager.Instance.Player;
+        
         hasActivated = true;
         monitorPanel.anchoredPosition = hiddenPos;
         monitorPanel.gameObject.SetActive(false);

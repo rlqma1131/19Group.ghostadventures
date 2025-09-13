@@ -19,8 +19,9 @@ public class Ch2_SandCastle : BaseInteractable
     // 모래성이 무너진다.
     // 인형그림 단서를 획득하고 장난감 자동차가 나타난다.
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         carToy.SetActive(false);
         SandCastle_crumble.SetActive(false);
         q_key.SetActive(false);

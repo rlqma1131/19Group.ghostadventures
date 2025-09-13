@@ -227,7 +227,7 @@ public class Ch3_Nurse : MoveBasePossessable
         if (other.CompareTag("Player"))
         {
             SyncHighlightAnimator();
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
         }
 
         SyncHighlightAnimator();

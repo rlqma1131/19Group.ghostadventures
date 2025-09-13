@@ -1,5 +1,6 @@
 ﻿using System;
 using _01.Scripts.Extensions;
+using _01.Scripts.Player;
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +11,8 @@ public class BaseInteractable : MonoBehaviour, IInteractable
 {
     [Header("Base Interactable References")]
     [SerializeField] protected GameObject highlightObj;
+
+    protected Player player;
     
     // Properties
     public GameObject Highlight => highlightObj;
@@ -23,12 +26,15 @@ public class BaseInteractable : MonoBehaviour, IInteractable
             gameObject.GetComponentInChildren_SearchByName<Transform>("Highlight", true);
         highlightObj = component != null ? component.gameObject : null;
     }
-
+    
     /// <summary>
     /// Turn off the highlight Object at first
     /// </summary>
-    protected virtual void Start() => highlightObj?.SetActive(false);
-    
+    protected virtual void Start() {
+        player = GameManager.Instance.Player;
+        highlightObj?.SetActive(false);
+    }
+
     public void SetHighlight(bool pop) => highlightObj?.SetActive(pop);
 
     public virtual void TriggerEvent() { }
@@ -36,14 +42,14 @@ public class BaseInteractable : MonoBehaviour, IInteractable
     // 은신처일때만 적용 (외에는 각 스크립트에서 override 중)
     protected virtual void OnTriggerEnter2D(Collider2D collision) {
         if (collision.CompareTag("Player")) {
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
         }
     }
 
     protected virtual void OnTriggerExit2D(Collider2D other) {
         if (other.CompareTag("Player")) {
             SetHighlight(false);
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            player.InteractSystem.RemoveInteractable(gameObject);
         }
     }
 }

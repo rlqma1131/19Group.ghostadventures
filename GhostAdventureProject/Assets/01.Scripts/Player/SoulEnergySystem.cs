@@ -32,8 +32,7 @@ public class SoulEnergySystem : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
+    private void Start() {
         currentEnergy = maxEnergy;
     }
 

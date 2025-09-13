@@ -19,7 +19,7 @@ public class Ch2_Laser : MonoBehaviour
             GameManager.Instance.PlayerController.Animator.SetBool("Move", false);
             GameManager.Instance.PlayerController.Animator.Play("Hit");
 
-            Transform playerTr = GameManager.Instance.Player.transform;
+            Transform playerTr = GameManager.Instance.PlayerObj.transform;
             Vector3 knockbackTarget = playerTr.position + Vector3.left * knockbackDistance;
 
             playerTr.DOMove(knockbackTarget, knockbackDuration)

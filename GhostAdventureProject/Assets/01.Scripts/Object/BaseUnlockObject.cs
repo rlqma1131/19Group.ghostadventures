@@ -1,12 +1,15 @@
-﻿using UnityEngine;
+﻿using _01.Scripts.Player;
+using UnityEngine;
 
 public abstract class BaseUnlockObject : MonoBehaviour
 {
     protected Animator anim;
+    protected Player player;
 
     void Start()
     {
         anim = GetComponentInChildren<Animator>();
+        player = GameManager.Instance.Player;
     }
 
     public abstract void Unlock();
@@ -16,13 +19,13 @@ public abstract class BaseUnlockObject : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        PlayerInteractSystem.Instance.AddInteractable(gameObject);
+        player.InteractSystem.AddInteractable(gameObject);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 }

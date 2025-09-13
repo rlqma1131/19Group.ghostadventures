@@ -1,4 +1,5 @@
 ﻿using _01.Scripts.Extensions;
+using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.UI;
 using static _01.Scripts.Utilities.Timer;
@@ -21,6 +22,7 @@ public class MemoryScan : MonoBehaviour
     CountdownTimer scanTimer;
     Camera cam;
     Inventory_Player inventory_Player;
+    Player player;
 
     // 내부 상태 변수
     float scanTime;
@@ -33,10 +35,11 @@ public class MemoryScan : MonoBehaviour
     
     public MemoryFragment CurrentMemoryFragment => currentMemoryFragment;
 
-    void Start() {
+    public void Initialize(Player player) {
         // Reference 설정
         inventory_Player = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         cam = Camera.main;
+        this.player = player;
         
         // 초기 UI 상태 설정
         scanPanel = UIManager.Instance.scanUI;
@@ -56,7 +59,7 @@ public class MemoryScan : MonoBehaviour
     }
 
     void Update() {
-        if (PlayerInteractSystem.Instance.CurrentClosest != currentScanObject) return;
+        if (player.InteractSystem.CurrentClosest != currentScanObject) return;
 
         isScannable = currentMemoryFragment && currentMemoryFragment.IsScannable;
         if (!isScannable) return;

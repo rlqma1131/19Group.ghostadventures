@@ -24,7 +24,7 @@ public class Ch3_MirrorPuzzleManager : MonoBehaviour
 
     private void Start()
     {
-        player = GameManager.Instance.Player;
+        player = GameManager.Instance.PlayerObj;
     }
 
     public void NotifyFirstRoomEntered()

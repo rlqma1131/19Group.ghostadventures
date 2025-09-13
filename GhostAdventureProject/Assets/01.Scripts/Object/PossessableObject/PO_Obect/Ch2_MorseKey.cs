@@ -70,8 +70,9 @@ public class Ch2_MorseKey : BasePossessable
     private float pressStartTime;
     private const float dashThreshold = 0.25f;
 
-    private void Awake()
+    override protected void Awake()
     {
+        base.Awake();
         if (panelCanvasGroup != null)
         {
             panelCanvasGroup.alpha = 0f;          // 완전 투명

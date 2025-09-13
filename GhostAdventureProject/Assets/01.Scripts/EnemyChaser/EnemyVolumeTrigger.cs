@@ -23,7 +23,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
         _id = GetInstanceID();
 
         // 플레이어 캐시 1회
-        var playerObj = GameManager.Instance != null ? GameManager.Instance.Player : null;
+        var playerObj = GameManager.Instance != null ? GameManager.Instance.PlayerObj : null;
         if (playerObj != null) { player = playerObj.transform; PlayerFind = true; }
 
         // 매니저 없으면 자동 생성
@@ -39,7 +39,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
         // player 참조 보강
         if (!PlayerFind)
         {
-            var playerObj = GameManager.Instance != null ? GameManager.Instance.Player : null;
+            var playerObj = GameManager.Instance != null ? GameManager.Instance.PlayerObj : null;
             if (playerObj != null) { player = playerObj.transform; PlayerFind = true; }
         }
         if (player == null || EnemyVolumeOverlay.Instance == null) return;

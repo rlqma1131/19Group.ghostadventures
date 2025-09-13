@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,13 +30,14 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject saveStateApplier;
     [SerializeField] private GameObject eventManager;
 
-    public GameObject playerPrefab;
-
+    [Header("Player References")]
+    [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject currentPlayer;
-    private PlayerController playerController;
+    [SerializeField] private Player player;
 
-    public GameObject Player => currentPlayer;
-    public PlayerController PlayerController => playerController;
+    public GameObject PlayerObj => currentPlayer;
+    public Player Player => player;
+    public PlayerController PlayerController => player.Controller;
 
 
     // 게임 이어하기
@@ -107,7 +109,7 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("[GameManager] StartScene 로드됨 - Player 제거");
             Destroy(currentPlayer);
             currentPlayer = null;
-            playerController = null;
+            player = null;
             return;
         }
 
@@ -162,9 +164,9 @@ public class GameManager : Singleton<GameManager>
         }
 
         GameObject go = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
-        DontDestroyOnLoad(go);
         currentPlayer = go;
-        playerController = go.GetComponent<PlayerController>();
+        player = go.GetComponent<Player>();
+        DontDestroyOnLoad(go);
 
         Debug.Log("[GameManager] Player 스폰 완료");
 
@@ -178,7 +180,7 @@ public class GameManager : Singleton<GameManager>
         if (currentPlayer != null)
         {
             currentPlayer = null;
-            playerController = null;
+            player = null;
             Debug.Log("[GameManager] Player 파괴됨");
         }
     }

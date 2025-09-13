@@ -21,7 +21,7 @@ public class TeleporterEnemyAI : EnemyAI
     {
         base.Start();
         teleportTimer = teleportInterval;
-        player = GameManager.Instance.Player.transform;
+        player = GameManager.Instance.PlayerObj.transform;
         col = GetComponent<BoxCollider2D>();
     }
 

@@ -81,10 +81,10 @@ public class TimelineControl : MonoBehaviour
     private void Start()
     {
         flashingCoroutine = StartCoroutine(FlashImages());
-        if(GameManager.Instance.Player != null)
+        if(GameManager.Instance.PlayerObj != null)
         {
 
-            memoryScan = GameManager.Instance.Player.GetComponent<MemoryScan>();
+            memoryScan = GameManager.Instance.PlayerObj.GetComponent<MemoryScan>();
         }
 
 

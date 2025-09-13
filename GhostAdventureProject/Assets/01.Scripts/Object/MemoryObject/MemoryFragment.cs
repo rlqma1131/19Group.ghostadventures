@@ -51,13 +51,13 @@ public class MemoryFragment : BaseInteractable
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && isScannable)
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
     }
 
     protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            player.InteractSystem.RemoveInteractable(gameObject);
     }
 
     public void IsScannedCheck()
@@ -78,7 +78,7 @@ public class MemoryFragment : BaseInteractable
 
         SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
             SceneManager.GetActiveScene().name,
-            GameManager.Instance.Player.transform.position,
+            GameManager.Instance.PlayerObj.transform.position,
             checkpointId: data.memoryID,
             autosave: true);
 

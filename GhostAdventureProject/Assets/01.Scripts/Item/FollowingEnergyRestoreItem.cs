@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 
 public class FollowingEnergyRestoreItem : BaseInteractable
@@ -9,43 +10,45 @@ public class FollowingEnergyRestoreItem : BaseInteractable
     [SerializeField] private int bonusRestoreAmount = 5;
     [SerializeField] private float restoreInterval = 1f;
 
-    private Transform player;
+    Player player;
     private bool isFollowing = false;
+
+    override protected void Start() {
+        base.Start();
+        player = GameManager.Instance.Player;
+    }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
+        if (Input.GetKeyDown(KeyCode.E)) {
             TryActivate();
         }
 
-        if (isFollowing && player != null)
+        if (isFollowing && player)
         {
-            Vector3 targetPos = player.position + new Vector3(offsetX, 0, 0);
+            Vector3 targetPos = player.transform.position + new Vector3(offsetX, 0, 0);
             transform.position = Vector3.Lerp(transform.position, targetPos, followSpeed * Time.deltaTime);
         }
     }
 
     void TryActivate()
     {
-        if (PlayerInteractSystem.Instance.CurrentClosest != this.gameObject)
+        if (player.InteractSystem.CurrentClosest != this.gameObject)
             return;
 
         if (isFollowing) return;
-
-        player = GameManager.Instance.Player.transform;
+        
         isFollowing = true;
 
         SoulEnergySystem.Instance.SetRestoreBoost(restoreInterval, SoulEnergySystem.Instance.baseRestoreAmount + bonusRestoreAmount);
         SoulEnergySystem.Instance.EnableHealingEffect();
 
-        PlayerInteractSystem.Instance.RemoveInteractable(this.gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
         if (Highlight != null) Highlight.SetActive(false);
-        PlayerInteractSystem.Instance.GetEKey().SetActive(false);
+        player.InteractSystem.GetEKey().SetActive(false);
     }
 
-    public void DestroyItem()
-    {
+    public void DestroyItem() {
         if (isFollowing)
         {
             SoulEnergySystem.Instance.ResetRestoreBoost();
@@ -60,7 +63,7 @@ public class FollowingEnergyRestoreItem : BaseInteractable
     {
         if (collision.CompareTag("Player")&& !isFollowing)
         {
-            PlayerInteractSystem.Instance.AddInteractable(this.gameObject);
+            player.InteractSystem.AddInteractable(this.gameObject);
         }
     }
 
@@ -68,7 +71,7 @@ public class FollowingEnergyRestoreItem : BaseInteractable
     {
         if (collision.CompareTag("Player"))
         {
-            PlayerInteractSystem.Instance.RemoveInteractable(this.gameObject);
+            player.InteractSystem.RemoveInteractable(this.gameObject);
             if (Highlight != null)
                 Highlight.SetActive(false);
         }

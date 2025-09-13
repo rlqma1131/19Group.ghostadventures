@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _01.Scripts.Player;
+using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
@@ -14,11 +15,13 @@ public class Ch1_BirthdayLetter : MonoBehaviour
     private bool PickupLetter = false;
 
     private Collider2D letterCollider;
+    Player player;
 
     private void Start()
     {
         // 단서 획득 컴포넌트
         cluePickup = GetComponent<CluePickup>();
+        player = GameManager.Instance.Player;
 
         // UI 컴포넌트 초기화
         letterZoom = GameObject.Find("Ch1_BirthdayLetterZoom");
@@ -62,7 +65,7 @@ public class Ch1_BirthdayLetter : MonoBehaviour
         letterPosition.anchoredPosition = new Vector2(0, -Screen.height);
         letterPosition.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 
     private void HideLetterZoom()
@@ -74,12 +77,11 @@ public class Ch1_BirthdayLetter : MonoBehaviour
 
         letterPosition.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
             .SetEase(Ease.InCubic)
-            .OnComplete(() =>
-            {
+            .OnComplete(() => {
                 letterZoom.SetActive(false);
 
                 if (isPlayerInside)
-                    PlayerInteractSystem.Instance.AddInteractable(gameObject);
+                    player.InteractSystem.AddInteractable(gameObject);
             });
             
         cluePickup.PickupClue();
@@ -91,32 +93,28 @@ public class Ch1_BirthdayLetter : MonoBehaviour
         UIManager.Instance.NoticePopupUI.FadeInAndOut("숫자키 1~4: 인벤토리 단서 확인");
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
+    private void OnTriggerEnter2D(Collider2D other) {
         if (!other.CompareTag("Player")) return;
 
         isPlayerInside = true;
         
         if (!isZoomActive && !SaveManager.IsPuzzleSolved("편지"))
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
     }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
+    private void OnTriggerExit2D(Collider2D other) {
         if (!other.CompareTag("Player")) return;
 
         isPlayerInside = false;
 
         if (isZoomActive && !SaveManager.IsPuzzleSolved("편지"))
             HideLetterZoom();
-
     }
 
     private void OnTriggerStay2D(Collider2D other) 
     {
-        if(isZoomActive && !SaveManager.IsPuzzleSolved("편지"))
-        {
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        if(isZoomActive && !SaveManager.IsPuzzleSolved("편지")) {
+            player.InteractSystem.RemoveInteractable(gameObject);
         }
     }
 }

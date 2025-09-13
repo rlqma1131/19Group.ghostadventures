@@ -39,7 +39,7 @@ public class EnemyDetection : MonoBehaviour
     
     public bool CanSeePlayer()
     {
-        var player = GameManager.Instance != null ? GameManager.Instance.Player : null;
+        var player = GameManager.Instance != null ? GameManager.Instance.PlayerObj : null;
         if (player == null) return false;
         return IsInVision(player.transform);
     }

@@ -8,6 +8,7 @@ public class Ch2_HideAreaPuzzleObj : HideArea
 
     protected override void Start()
     {
+        base.Start();
         isPossessed = false;
         hasActivated = false;
     }

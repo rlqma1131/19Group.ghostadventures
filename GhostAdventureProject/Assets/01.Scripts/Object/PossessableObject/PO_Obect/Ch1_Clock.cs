@@ -21,6 +21,8 @@ public class Ch1_Clock : BasePossessable
 
     protected override void Start()
     {
+        highlightObj?.SetActive(false);
+        player = GameManager.Instance.Player;
         isPossessed = false;
         hasActivated = false;
 

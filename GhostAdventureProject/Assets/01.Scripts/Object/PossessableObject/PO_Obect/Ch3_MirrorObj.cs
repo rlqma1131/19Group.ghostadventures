@@ -10,8 +10,9 @@ public class Ch3_MirrorObj : BasePossessable
     [SerializeField] private bool isCorrect = false;
     [SerializeField] private GameObject q_Key;
 
-    private void Awake()
+    override protected void Awake()
     {
+        base.Awake();
         sr = GetComponent<SpriteRenderer>();
     }
 

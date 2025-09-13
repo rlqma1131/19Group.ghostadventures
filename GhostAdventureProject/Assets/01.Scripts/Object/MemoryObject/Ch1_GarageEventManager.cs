@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _01.Scripts.Player;
+using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 /// <summary>
@@ -6,24 +7,29 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class Ch1_GarageEventManager : MonoBehaviour
 {
-    private Ch1_MemoryPositive_01_TeddyBear bear;
+    [Header("References")]
     [SerializeField] private KeyBoard keyboard;
     [SerializeField] private KeyBoard_Enter answer;
     [SerializeField] private PlayableDirector cutsceneDirector;
     [SerializeField] private PlayableDirector cutsceneDirector_correct;
+    [SerializeField] EnergyRestoreZone energyRestoreZone;
+    [SerializeField] private Ch1_MemoryPositive_01_TeddyBear bear;
+    [SerializeField] SpriteRenderer door;
+    
+    //NPC컷신보고 상호작용 가능하게하기 위해 추가
+    [SerializeField] Cutscene_NPC cutscene_NPC;
+    
     private bool isCutscenePlaying = false;
     private bool isCutscenePlaying2 = false;
-    [SerializeField] EnergyRestoreZone energyRestoreZone;
-
     private bool playerNearby = false;
     private bool openKeyboard = false;
-    [SerializeField] SpriteRenderer door;
-    //NPC컷신보고 상호작용 가능하게하기 위해 추가
-    [SerializeField]Cutscene_NPC cutscene_NPC;
+    Player player;
+    
     public KeyBoard_Enter Answer => answer;
 
     void Start()
     {
+        player = GameManager.Instance.Player;
         bear = GetComponent<Ch1_MemoryPositive_01_TeddyBear>();
         cutsceneDirector.stopped += OnTimelineFinished;
         cutsceneDirector_correct.stopped += OnTimelineFinished2;
@@ -51,7 +57,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
 
                 if (!isCutscenePlaying && EventManager.Instance.IsEventCompleted("Ch1_NPCEvent"))
                 {
-                    PlayerInteractSystem.Instance.eKey.SetActive(false);
+                    player.InteractSystem.eKey.SetActive(false);
                     // [컷씬] 꼬마유령 이벤트
                     PossessionSystem.Instance.CanMove = false;
                     GameManager.Instance.PlayerController.Animator.SetBool("Move", false);
@@ -65,7 +71,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
                 }
                 else if (isCutscenePlaying && !openKeyboard && !answer.correct)
                 {
-                    PlayerInteractSystem.Instance.eKey.SetActive(false);
+                    player.InteractSystem.eKey.SetActive(false);
 
                     SoulEnergySystem.Instance.DisableHealingEffect(); // 에너지 회복존 비활성화
 
@@ -98,7 +104,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             playerNearby = true;
-            PlayerInteractSystem.Instance.eKey.SetActive(true);
+            player.InteractSystem.eKey.SetActive(true);
         }
     }
 
@@ -107,7 +113,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             playerNearby = false;
-            PlayerInteractSystem.Instance.eKey.SetActive(false);
+            player.InteractSystem.eKey.SetActive(false);
         }
     }
 
