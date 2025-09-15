@@ -37,7 +37,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
 
     private void Update()
     {
-        // player 참조 보강
+        // player 참조 보강 -> Nice!
         if (!PlayerFind) {
             player = GameManager.Instance ? GameManager.Instance.Player : GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
             if (player) PlayerFind = true;
@@ -50,11 +50,12 @@ public class EnemyVolumeTrigger : MonoBehaviour
         Transform target = null;
         if (PossessionStateManager.Instance
             && PossessionStateManager.Instance.IsPossessing()
+            && player
             && player.PossessionSystem.CurrentTarget)
         {
             target = player.PossessionSystem.CurrentTarget.transform;
         }
-        else
+        else if (player)
         {
             target = player.transform;
         }

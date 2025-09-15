@@ -17,8 +17,8 @@ public class Ch1_Shower : BasePossessable
     private int temperature;
     private Quaternion initialNeedleRotation;
 
-    public bool IsHotWater => isWater && temperature == 3;
-    
+    public bool IsHotWater { get; private set; }
+
     protected override void Start()
     {
         base.Start();
@@ -53,10 +53,15 @@ public class Ch1_Shower : BasePossessable
 
     void CheckForSteamEffect() {
         if (!steamEffect) return;
+
+        steamEffect.SetActive(isWater && temperature == 3);
         
-        steamEffect.SetActive(IsHotWater);
-        if (steamEffect.activeInHierarchy) {
+        if (steamEffect.activeInHierarchy && !IsHotWater) {
+            IsHotWater = true;
             UIManager.Instance.PromptUI.ShowPrompt("따뜻하니 김이 나네...");
+        }
+        if (!steamEffect.activeInHierarchy && IsHotWater) {
+            IsHotWater = false;
         }
     }
 

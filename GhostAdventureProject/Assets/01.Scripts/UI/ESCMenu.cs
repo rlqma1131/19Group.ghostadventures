@@ -44,7 +44,6 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         escMenuUI.SetActive(false);
         Debug.Log("esc메뉴 awake끄기");
     }
-    
 
     void Start()
     {

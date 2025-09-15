@@ -38,8 +38,7 @@ public class GameManager : Singleton<GameManager>
     public GameObject PlayerObj => currentPlayer;
     public Player Player => player;
     public PlayerController PlayerController => player.Controller;
-
-
+    
     // 게임 이어하기
     private bool loadFromSave = false;
     private SaveData pendingSaveData;
