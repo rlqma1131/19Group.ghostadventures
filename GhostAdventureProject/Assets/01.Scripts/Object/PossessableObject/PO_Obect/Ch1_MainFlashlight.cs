@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+// TODO: Implement Timer
 public class Ch1_MainFlashlight : BasePossessable
 {
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
@@ -57,7 +58,7 @@ public class Ch1_MainFlashlight : BasePossessable
 
                 // 타임오버 이벤트 발생 지점
                 // 플레이어 조작 멈춤 & Lives 1 로 만듦
-                PossessionSystem.Instance.CanMove = false;
+                player.PossessionSystem.CanMove = false;
 
                 // 적 호출 - SoundTriggerObject 사용
                 SoundTrigger.TriggerSound(transform.position, soundConfig.soundRange, soundConfig.chaseDuration);

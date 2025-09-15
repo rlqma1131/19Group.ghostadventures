@@ -37,7 +37,7 @@ public class Ch1_Cat : MoveBasePossessable
             q_Key.SetActive(false);
         }
 
-        if (!isPossessed || !PossessionSystem.Instance.CanMove)
+        if (!isPossessed || !player.PossessionSystem.CanMove)
             return;
 
         if (isActing)

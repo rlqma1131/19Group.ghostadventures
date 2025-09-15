@@ -33,8 +33,13 @@ public class Ch3_Nurse : MoveBasePossessable
     private bool isAnimatingWork = false;
     private bool isFirstPossessionIn = true;
 
+    protected override void Awake() {
+        base.Awake();
+        condition = GetComponent<PersonConditionUI>();
+    }
+
     protected override void Start()
-    {
+    {   
         base.Start();
         condition = GetComponent<PersonConditionUI>();
     }
@@ -45,7 +50,7 @@ public class Ch3_Nurse : MoveBasePossessable
         if (isPossessed)
         {   
             UIManager.Instance.tabkeyUI.SetActive(true);
-            if (!PossessionSystem.Instance.CanMove)
+            if (!player.PossessionSystem.CanMove)
                 return;
              
             Move();
@@ -146,7 +151,7 @@ public class Ch3_Nurse : MoveBasePossessable
     private void MoveTo(Vector3 target)
     {
         Vector3 direction = (target - transform.position).normalized;
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        transform.position += direction * (moveSpeed * Time.deltaTime);
 
         SetMoveAnimation(true);
         if (spriteRenderer != null)
@@ -197,7 +202,7 @@ public class Ch3_Nurse : MoveBasePossessable
         if (other.CompareTag("Player"))
         {
             SyncHighlightAnimator();
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
         }
 
         SyncHighlightAnimator();

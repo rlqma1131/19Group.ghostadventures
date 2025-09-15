@@ -13,12 +13,6 @@ public class Ch2_LeftSwing : BasePossessable
     private bool isQTESequenceRunning = false;
     //private QTEUI qteUI;
     private bool isShowPrompt = false;
-
-    protected override void Start()
-    {
-        base.Start();
-        // qteUI = FindObjectOfType<QTEUI>();
-    }
     
     protected override void Update()
     {

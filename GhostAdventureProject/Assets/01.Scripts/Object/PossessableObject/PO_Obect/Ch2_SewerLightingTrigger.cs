@@ -15,7 +15,7 @@ public class Ch2_SewerLightingTrigger : MonoBehaviour
 
     private void Start()
     {
-        player = GameManager.Instance.Player;
+        player = GameManager.Instance.PlayerObj;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

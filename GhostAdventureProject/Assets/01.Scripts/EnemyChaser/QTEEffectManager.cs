@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using _01.Scripts.Player;
 
 public class QTEEffectManager : MonoBehaviour
 {
@@ -19,7 +20,8 @@ public class QTEEffectManager : MonoBehaviour
     private float initialFOV;
     private Vector3 initialCamPosition;
 
-    [Header("QTE 대상")]
+    [Header("QTE 대상")] 
+    public Player player;
     public Transform playerTarget;
     public Transform enemyTarget;
 
@@ -52,6 +54,11 @@ public class QTEEffectManager : MonoBehaviour
     //         gameObject.SetActive(false);
     //     }
     // }
+
+    public void Initialize_Player(Player player) {
+        this.player = player;
+        playerTarget = player.transform;
+    }
     
     public void ResetImmediate()
     {

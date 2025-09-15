@@ -16,8 +16,9 @@ public class Ch2_SafeBox : BaseInteractable
     public bool safeBoxOpen; // 금고를 열었는지 확인
     Inventory_PossessableObject inventory;
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         safeBoxOpenAble = false;
         safeBoxOpen = false;
         ZoomSafeBox.SetActive(false);
@@ -60,7 +61,7 @@ public class Ch2_SafeBox : BaseInteractable
         {
             if(!safeBoxOpen)
             {
-                highlight.SetActive(true);
+                Highlight.SetActive(true);
                 safeBoxOpenAble = true;
             }
         }
@@ -76,7 +77,7 @@ public class Ch2_SafeBox : BaseInteractable
     IEnumerator OpenSafeBox()
     {
         safeBoxOpen = true;
-        highlight.SetActive(false);
+        Highlight.SetActive(false);
         q_Key.SetActive(false);
         openSafeBox.SetActive(true);
         inventory.TryUseSelectedItem();

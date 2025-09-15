@@ -8,16 +8,12 @@ public class Ch1_Plate : BasePossessable
 
     private Ch1_Cat cat;
 
-    protected override void Start()
-    {
-        base.Start();
+    override protected void Awake() {
+        base.Awake();
         cat = FindObjectOfType<Ch1_Cat>();
     }
 
-    protected override void Update()
-    {
-        base.Update();
-
+    public override void TriggerEvent() {
         if (!isPossessed)
         {
             q_Key.SetActive(false);
@@ -53,6 +49,4 @@ public class Ch1_Plate : BasePossessable
         // 고양이는 눈 깜빡이기만
         cat.Blink();
     }
-    
-
 }

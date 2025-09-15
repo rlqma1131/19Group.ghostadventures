@@ -13,14 +13,16 @@ public class Ch3_ClearDoor : BaseInteractable
     {
         if(Input.GetKeyDown(KeyCode.E) && isOpen && isPlayerNear)
         {
-            GameManager.Instance.Player.SetActive(false); // 플레이어 비활성화
+            GameManager.Instance.PlayerObj.SetActive(false); // 플레이어 비활성화
             playableDirector.Play();
             UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
         }
     }
 
-    private void Start()
+    override protected void Start()
     {
+        base.Start();
+        
         playableDirector.stopped += OnTimelineEnd;
     }
 

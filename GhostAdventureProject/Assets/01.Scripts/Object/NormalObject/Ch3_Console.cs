@@ -216,7 +216,7 @@ public class Ch3_Console : BaseInteractable
             SetHighlight(false);
             qKey.SetActive(false);
             canUse = false;
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            player.InteractSystem.RemoveInteractable(gameObject);
         }
     }
 }

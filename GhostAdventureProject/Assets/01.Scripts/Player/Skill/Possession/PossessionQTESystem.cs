@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using _01.Scripts.Player;
 using UnityEngine;
 
 public class PossessionQTESystem : MonoBehaviour
@@ -23,8 +24,7 @@ public class PossessionQTESystem : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
+    private void Start() {
         if(QTEUI != null)
             QTEUI.gameObject.SetActive(false);
         if(QTEUI3 != null)
@@ -56,7 +56,7 @@ public class PossessionQTESystem : MonoBehaviour
     {
         isRunning = false;
         // UIManager연동되면 스캔 때 까만 배경 비활성화
-        PossessionSystem.Instance.CanMove = true;
+        GameManager.Instance.Player.PossessionSystem.CanMove = true;
         
         ResetTimeScale();
         
@@ -94,14 +94,14 @@ public class PossessionQTESystem : MonoBehaviour
     //{
     //    Debug.Log("QTE 성공 - 빙의 완료");
 
-    //    PossessionSystem.Instance.CurrentTarget.isPossessed = true;
+    //    player.PossessionSystem.CurrentTarget.isPossessed = true;
     //    PossessionStateManager.Instance.StartPossessionTransition();
     //}
 
     //public void OnQTEFailure()
     //{
     //    Debug.Log("QTE 실패 - 빙의 취소");
-    //    PossessionSystem.Instance.CurrentTarget.isPossessed = false;
+    //    player.PossessionSystem.CurrentTarget.isPossessed = false;
     //    SoulEnergySystem.Instance.Consume(1);
     //}
 }

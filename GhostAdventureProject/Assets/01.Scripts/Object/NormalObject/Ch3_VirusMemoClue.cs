@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using _01.Scripts.Player;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,13 +9,14 @@ public class Ch3_VirusMemoClue : MonoBehaviour
     [SerializeField] private RectTransform virusMemoPos; // 드로잉 UI의 시작 위치
     [SerializeField] private Image zoomPanel;        // 배경 패널 (알파 페이드용)
     private CluePickup cluePickup;
-
+    Player player;
     private bool isPlayerInside = false;
     private bool isZoomActive = false;
 
     void Start()
     {
         cluePickup = GetComponent<CluePickup>();
+        player = GameManager.Instance.Player;
 
         // UI 초기화
         virusMemoZoom.SetActive(false);
@@ -53,7 +55,7 @@ public class Ch3_VirusMemoClue : MonoBehaviour
         virusMemoPos.anchoredPosition = new Vector2(0, -Screen.height);
         virusMemoPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 
     private void HideVirusMemoZoom()
@@ -70,7 +72,7 @@ public class Ch3_VirusMemoClue : MonoBehaviour
                 virusMemoZoom.SetActive(false);
 
                 if (isPlayerInside)
-                    PlayerInteractSystem.Instance.AddInteractable(gameObject);
+                    player.InteractSystem.AddInteractable(gameObject);
             });
 
         cluePickup.PickupClue();
@@ -83,7 +85,7 @@ public class Ch3_VirusMemoClue : MonoBehaviour
         isPlayerInside = true;
 
         if (!isZoomActive)
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -95,6 +97,6 @@ public class Ch3_VirusMemoClue : MonoBehaviour
         if (isZoomActive)
             HideVirusMemoZoom(); // 플레이어가 나가면 자동 닫기
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 }

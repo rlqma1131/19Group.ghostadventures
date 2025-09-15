@@ -10,8 +10,9 @@ public class Ch2_DoorLock : BaseInteractable
     private bool doorOpen; // 문을 열었는지 확인
     Inventory_PossessableObject inventory; // 빙의 인벤토리(needItem을 갖고 있는지 확인용)
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         doorOpenAble = false;
         doorOpen = false;
     }
@@ -77,7 +78,7 @@ public class Ch2_DoorLock : BaseInteractable
             SetHighlight(false);
             q_Key.SetActive(false);
             doorOpenAble = false;    
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            player.InteractSystem.RemoveInteractable(gameObject);
         }
     }
 

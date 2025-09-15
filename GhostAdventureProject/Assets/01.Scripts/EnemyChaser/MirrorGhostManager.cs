@@ -121,9 +121,9 @@ public class MirrorGhostManager : MonoBehaviour
     void FindPlayer()
     {
         // GameManager를 통해 플레이어 찾기
-        if (GameManager.Instance != null && GameManager.Instance.Player != null)
+        if (GameManager.Instance != null && GameManager.Instance.PlayerObj != null)
         {
-            player = GameManager.Instance.Player.transform;
+            player = GameManager.Instance.PlayerObj.transform;
             Debug.Log("GameManager를 통해 플레이어 찾음");
             return;
         }

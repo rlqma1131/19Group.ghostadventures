@@ -51,13 +51,13 @@ public class MemoryFragment : BaseInteractable
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && isScannable)
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
     }
 
     protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            player.InteractSystem.RemoveInteractable(gameObject);
     }
 
     public void IsScannedCheck()
@@ -78,7 +78,7 @@ public class MemoryFragment : BaseInteractable
 
         SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
             SceneManager.GetActiveScene().name,
-            GameManager.Instance.Player.transform.position,
+            GameManager.Instance.PlayerObj.transform.position,
             checkpointId: data.memoryID,
             autosave: true);
 
@@ -115,16 +115,15 @@ public class MemoryFragment : BaseInteractable
 
     private IEnumerator PlayDropSequence(GameObject drop)
     {
-        if (drop == null) yield break;
+        if (!drop) yield break;
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null) yield break;
+        if (!player) yield break;
 
         SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드아웃
         SoundManager.Instance.PlaySFX(audioSource1); // 스캔 사운드 재생
         Vector3 startPos = drop.transform.position;
         EnemyAI.PauseAllEnemies();
-        PossessionSystem.Instance.CanMove = false; // 플레이어 이동 비활성화
+        player.PossessionSystem.CanMove = false; // 플레이어 이동 비활성화
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
          // === 1. 튕기기 애니메이션 ===
         var bounceSeq = DOTween.Sequence()

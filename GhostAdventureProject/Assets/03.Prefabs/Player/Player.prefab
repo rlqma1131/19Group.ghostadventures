@@ -10902,7 +10902,9 @@ GameObject:
   - component: {fileID: 1557742075177261696}
   - component: {fileID: 3444247556733081424}
   - component: {fileID: 7916852254376772303}
+  - component: {fileID: 5872897658146390143}
   - component: {fileID: 6162963130353290279}
+  - component: {fileID: 599732365273098293}
   - component: {fileID: 7144567970523974118}
   - component: {fileID: 7723984142430952372}
   - component: {fileID: 4870225034165183840}
@@ -10910,7 +10912,6 @@ GameObject:
   - component: {fileID: 4379810804845301284}
   - component: {fileID: 1530469758118172769}
   - component: {fileID: 2133597005620292437}
-  - component: {fileID: 599732365273098293}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -11086,6 +11087,28 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5872897658146390143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5891190039501185461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be4f5efb9944e8e851eddb046f44eec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 1557742075177261696}
+  animator: {fileID: 7916852254376772303}
+  spriteRenderer: {fileID: 3202096706262006223}
+  controller: {fileID: 6162963130353290279}
+  playerCam: {fileID: 599732365273098293}
+  lifeManager: {fileID: 4379810804845301284}
+  interactSystem: {fileID: 6991356920413539432}
+  soulEnergySystem: {fileID: 4870225034165183840}
+  possessionSystem: {fileID: 7144567970523974118}
+  memoryScan: {fileID: 7723984142430952372}
 --- !u!114 &6162963130353290279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11098,8 +11121,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f32a59dc94fd9e489e60a0646a31dbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  mainSprite: {fileID: 0}
   moveSpeed: 5
   currentTarget: {fileID: 0}
+--- !u!114 &599732365273098293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5891190039501185461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fb9bba7fa099fa409eab6905ef30bfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentCam: {fileID: 0}
 --- !u!114 &7144567970523974118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11168,6 +11206,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eKey: {fileID: 207487314148586197}
   currentClosest: {fileID: 0}
+  detectableLayer:
+    serializedVersion: 2
+    m_Bits: 525313
+  radius: 0.5
+  checkInterval: 0.1
+  checkCountThreshold: 12
+  checkDistanceThreshold: 0.001
 --- !u!114 &4379810804845301284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11208,7 +11253,7 @@ MonoBehaviour:
   - {x: 0.32, y: -0.28, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 65960
+  m_InstanceId: 215450
   m_LocalBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0.32, y: 0.28, z: 0}
@@ -11262,19 +11307,6 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
---- !u!114 &599732365273098293
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5891190039501185461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fb9bba7fa099fa409eab6905ef30bfb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentCam: {fileID: 0}
 --- !u!1 &7063410647297230142
 GameObject:
   m_ObjectHideFlags: 0
@@ -11358,6 +11390,7 @@ MonoBehaviour:
   uITweenAnimator: {fileID: 0}
   text: {fileID: 0}
   roomName_RoomTracker: 
+  prevRoomInfo: 
 --- !u!1 &7898128142336362698
 GameObject:
   m_ObjectHideFlags: 0

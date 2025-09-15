@@ -31,6 +31,8 @@ public class Ch2_Kiosk : BasePossessable
 
     protected override void Start()
     {
+        highlightObj?.SetActive(false);
+        player = GameManager.Instance.Player;
         hasActivated = false;
         kioskPanel.anchoredPosition = hiddenPos;
         kioskPanel.gameObject.SetActive(false);

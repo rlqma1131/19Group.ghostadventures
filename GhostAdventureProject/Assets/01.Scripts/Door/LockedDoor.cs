@@ -12,7 +12,7 @@ public class LockedDoor : BaseDoor
     [Header("Pair Door System")]
     [SerializeField] private LockedDoor pairedDoor; // 페어 문 (양방향 연결)
 
-    private AudioSource audioSource;
+    AudioSource audioSource;
 
     protected override void Start()
     {
@@ -29,30 +29,23 @@ public class LockedDoor : BaseDoor
         }
     }
 
-    protected override void TryInteract()
-    {
-        if (isLocked)
-        {   
+    protected override void TryInteract() {
+        if (isLocked) {   
             Debug.Log("문이 잠겨있습니다!");
             PlaySound(lockedSound);
         }
-        else
-        {
-            TeleportPlayer();
-        }
+        else TeleportPlayer();
     }
 
     // 퍼즐 해결 시 호출하는 메서드
-    public void SolvePuzzle()
-    {
+    public void SolvePuzzle() {
         if(!isLocked) return;
         
         UnlockPair();
     }
 
     // 페어 문 함께 열기
-    public void UnlockPair()
-    {
+    public void UnlockPair() {
         // 자신 열기
         if (isLocked)
         {
@@ -75,8 +68,7 @@ public class LockedDoor : BaseDoor
     }
 
     // 페어 문 함께 잠그기
-    public void LockPair()
-    {
+    public void LockPair() {
         // 자신 잠그기
         if (!isLocked)
         {
@@ -96,48 +88,31 @@ public class LockedDoor : BaseDoor
         }
     }
 
-    private void OnDoorUnlocked()
+    void OnDoorUnlocked()
     {
         UpdateDoorVisual(force: true);
     }
 
-    private void PlaySound(AudioClip clip)
-    {
-        if (audioSource != null && clip != null)
-        {
-         
+    void PlaySound(AudioClip clip) {
+        if (audioSource && clip) {
             SoundManager.Instance.PlaySFX(clip);
         }
-        
     }
 
     // 테스트용 메서드들
     [ContextMenu("Test - Solve Puzzle")]
-    public void TestSolvePuzzle()
-    {
-        SolvePuzzle();
-    }
+    public void TestSolvePuzzle() => SolvePuzzle();
 
     [ContextMenu("Test - Lock Pair")]
-    public void TestLockPair()
-    {
-        LockPair();
-    }
+    public void TestLockPair() => LockPair();
 
     // 퍼즐 매니저에서 사용할 수 있는 프로퍼티
     public string PuzzleId => puzzleId;
-
-
-    void OnMouseEnter()
-    {
-        if(isLocked)
-            UIManager.Instance.SetCursor(UIManager.CursorType.LockDoor);
-        else
-            UIManager.Instance.SetCursor(UIManager.CursorType.OpenDoor);
+    
+    void OnMouseEnter() {
+        UIManager.Instance.SetCursor(isLocked ? UIManager.CursorType.LockDoor : UIManager.CursorType.OpenDoor);
     }
-    void OnMouseExit() 
-    {
+    void OnMouseExit() {
         UIManager.Instance.SetCursor(UIManager.CursorType.Default);
     }
-
 }

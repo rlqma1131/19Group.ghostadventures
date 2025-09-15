@@ -10,11 +10,15 @@ public class Ch2_Raven : MoveBasePossessable
     private bool sandCastleBreakAble = false;
     private Rigidbody2D rb;
 
+    override protected void Awake() {
+        base.Awake();
+        rb = GetComponent<Rigidbody2D>();        
+    }
+
     protected override void Start()
     {
         base.Start();
         hasActivated = true;
-        rb = GetComponent<Rigidbody2D>();        
     }
 
     protected override void Update()

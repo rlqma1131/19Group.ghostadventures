@@ -20,8 +20,10 @@ public class Ch3_Xray_Monitor : BaseInteractable
 
     private int lastFoundIndex = -1;
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
+        
         // UI 초기화
         monitorZoom.SetActive(false);
         monitorPos.anchoredPosition = new Vector2(0, -Screen.height);
@@ -73,7 +75,7 @@ public class Ch3_Xray_Monitor : BaseInteractable
         monitorPos.anchoredPosition = new Vector2(0, -Screen.height);
         monitorPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
 
         // 첫 번째 문양 발견
         if ((xray.currentPhotoIndex == 1 || xray.currentPhotoIndex == 3) && !isFirstFind)
@@ -103,7 +105,7 @@ public class Ch3_Xray_Monitor : BaseInteractable
                 monitorZoom.SetActive(false);
 
                 if (isPlayerInside)
-                    PlayerInteractSystem.Instance.AddInteractable(gameObject);
+                    player.InteractSystem.AddInteractable(gameObject);
             });
     }
 
@@ -114,7 +116,7 @@ public class Ch3_Xray_Monitor : BaseInteractable
         isPlayerInside = true;
 
         if (!isZoomActive)
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
     }
 
     protected override void OnTriggerExit2D(Collider2D other)
@@ -126,6 +128,6 @@ public class Ch3_Xray_Monitor : BaseInteractable
         if (isZoomActive)
             HidePhotoZoom(); // 플레이어가 나가면 자동 닫기
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 }

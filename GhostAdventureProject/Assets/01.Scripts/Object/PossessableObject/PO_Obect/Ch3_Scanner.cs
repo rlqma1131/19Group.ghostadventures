@@ -12,6 +12,7 @@ public class Ch3_Scanner : BasePossessable
 
     protected override void Start()
     {
+        base.Start();
         isPossessed = false;
         hasActivated = false;
 

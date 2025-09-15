@@ -22,10 +22,10 @@ public class CameraTargetSetter : MonoBehaviour
     private IEnumerator AssignPlayerWhenReady()
     {
 
-        yield return new WaitUntil(() => GameManager.Instance != null && GameManager.Instance.Player != null);
+        yield return new WaitUntil(() => GameManager.Instance != null && GameManager.Instance.PlayerObj != null);
 
 
-        Transform playerTransform = GameManager.Instance.Player.transform;
+        Transform playerTransform = GameManager.Instance.PlayerObj.transform;
         virtualCamera.Follow = playerTransform;
 
         Debug.Log("카메라 타겟이 플레이어로 설정되었습니다!");

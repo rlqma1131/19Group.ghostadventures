@@ -19,6 +19,8 @@ public class Ch2_CCTV : BasePossessable
 
     protected override void Start()
     {
+        highlightObj?.SetActive(false);
+        player = GameManager.Instance.Player;
         isPossessed = false;
         hasActivated = false;
 
@@ -94,7 +96,7 @@ public class Ch2_CCTV : BasePossessable
 
         if (other.CompareTag("Player"))
         {
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
 
             Invoke(nameof(PlayHighlightAnim), 0.01f); // 0.01초 후 실행
         }

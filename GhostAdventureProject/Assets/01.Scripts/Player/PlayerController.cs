@@ -1,89 +1,88 @@
-﻿using UnityEngine;
+﻿using System;
+using _01.Scripts.Player;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
+    readonly static int Move = Animator.StringToHash("Move");
+
+    [Header("References")] 
+    [SerializeField] Animator animator;
+    [SerializeField] SpriteRenderer mainSprite;
+    [SerializeField] float moveSpeed = 5f;
     [SerializeField] public BasePossessable currentTarget;
 
-    public Animator animator { get; private set; }
-    private SpriteRenderer mainSprite;
+    Player player;
+    Vector3 move;
+    float h;
+    float v;
+    
+    public Animator Animator => animator;
 
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
-        mainSprite = GetComponent<SpriteRenderer>();
-
-        // GameManager에 Player 등록
-        if (GameManager.Instance != null)
-        {
-            // GameManager의 SpawnPlayer에서 이미 처리되므로 여기서는 추가 확인만
-            Debug.Log("[PlayerController] Player 초기화 완료");
-        }
+    public void Initialize(Player player) {
+        this.player = player;
+        animator = player.Animator;
+        mainSprite = player.SpriteRenderer;
     }
 
     void Update()
     {
-        if (PossessionSystem.Instance == null ||
+        if (player.PossessionSystem == null ||
             PossessionQTESystem.Instance == null ||
-            !PossessionSystem.Instance.CanMove ||
+            !player.PossessionSystem.CanMove ||
             PossessionQTESystem.Instance.isRunning)
             return;
 
         HandleMovement();
+        HandlePossession();
+    }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if(currentTarget != null)
-            {
-                if (CurrentTargetIsPossessable() && currentTarget.HasActivated)
-                {
-                    PossessionSystem.Instance.TryPossess();
-                }
-                else if (!CurrentTargetIsPossessable() && !currentTarget.HasActivated)
-                {
-                    Debug.Log("빙의불가능 상태");
-                    currentTarget.CantPossess();
-                }
+    void HandlePossession() {
+        if (!currentTarget) return;
+
+        if (Input.GetKeyDown(KeyCode.E)) {
+            if (CurrentTargetIsPossessable()) {
+                player.PossessionSystem.TryPossess();
+            }
+            else {
+                Debug.Log("빙의불가능 상태");
+                currentTarget.CantPossess();
             }
         }
     }
 
-    private void HandleMovement()
-    {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        Vector3 move = new Vector3(h, v, 0);
-        transform.position += move * moveSpeed * Time.deltaTime;
-
-        // 회전
-        if (h > 0.01f)
-        {
-            mainSprite.flipX = false;
-        }
-        else if (h < -0.01f)
-        {
-            mainSprite.flipX = true;
-        }
-
-        bool isMoving = move.magnitude > 0.01f;
-        animator.SetBool("Move", isMoving);
-    }
-
-    private bool CurrentTargetIsPossessable()
-    {
-        // 가까운 대상이 빙의 가능 상태인지 확인
-        return currentTarget != null
-            && PlayerInteractSystem.Instance.CurrentClosest == currentTarget.gameObject
-            //&& currentTarget.HasActivated
-            && !currentTarget.IsPossessedState;
-    }
-
-    private void OnDestroy()
-    {
+    void OnDestroy() {
         // GameManager에 Player 파괴 알림
-        if (GameManager.Instance != null)
-        {
+        if (GameManager.Instance != null) {
             GameManager.Instance.OnPlayerDestroyed();
         }
+    }
+
+    void HandleMovement() {
+        // Get Input values
+        h = Input.GetAxis("Horizontal");
+        v = Input.GetAxis("Vertical");
+        
+        // Rotate Sprite which is defined by horizontal input
+        mainSprite.flipX = h switch {
+            > 0.01f => false,
+            < -0.01f => true,
+            _ => mainSprite.flipX
+        };
+
+        // Play Move Animation
+        animator.SetBool(Move, move.magnitude > 0.01f);
+        
+        // Move character
+        move = new Vector3(h, v, 0); 
+        transform.position += move * (moveSpeed * Time.deltaTime);
+    }
+
+    bool CurrentTargetIsPossessable() {
+        // 가까운 대상이 빙의 가능 상태인지 확인
+        return currentTarget != null
+            && player.InteractSystem.CurrentClosest == currentTarget.gameObject
+            && !currentTarget.IsPossessedState
+            && currentTarget.HasActivated;
     }
 }

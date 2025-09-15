@@ -42,7 +42,7 @@ public class EnemyMovementController : MonoBehaviour
 
     private void Start()
     {
-        player = GameManager.Instance.Player.transform;
+        player = GameManager.Instance.PlayerObj.transform;
         // PickRandomDirection();
         startTime = Time.time;
         lastPos = rb.position;
@@ -80,7 +80,7 @@ public class EnemyMovementController : MonoBehaviour
     {
         if (enemy.isTeleporting) return;
 
-        Vector2 delta = moveDir * patrolSpeed * Time.fixedDeltaTime;
+        Vector2 delta = moveDir * (patrolSpeed * Time.fixedDeltaTime);
         Vector2 pos   = rb.position;
         Vector2 newPos = pos;
 
@@ -170,7 +170,7 @@ public class EnemyMovementController : MonoBehaviour
         // 2) 플레이어 쫓기 (없으면 늦게 캐싱)
         if (player == null)
         {
-            var pObj = GameManager.Instance != null ? GameManager.Instance.Player : null;
+            var pObj = GameManager.Instance != null ? GameManager.Instance.PlayerObj : null;
             if (pObj != null) player = pObj.transform;
         }
         if (player == null) return;
@@ -255,7 +255,7 @@ public class EnemyMovementController : MonoBehaviour
 
     private void TeleportThroughDoor(BaseDoor door) {
         // 1) 충돌 무시 시작
-        int pLayer = GameManager.Instance.Player.layer;
+        int pLayer = GameManager.Instance.PlayerObj.layer;
         int eLayer = gameObject.layer;
         Physics2D.IgnoreLayerCollision(pLayer, eLayer, true);
 

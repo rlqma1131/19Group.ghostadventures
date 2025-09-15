@@ -13,7 +13,7 @@ public class Ch03_EndMemory : MemoryFragment
         {
             CutsceneManager.Instance.StartCoroutine(CutsceneManager.Instance.PlayCutscene());
             activeCutscene = true;
-            PossessionSystem.Instance.CanMove = false;
+            player.PossessionSystem.CanMove = false;
             UIManager.Instance.PlayModeUI_CloseAll();
             EnemyAI.PauseAllEnemies();
             StartCoroutine(LoadNextSceneAfterDelay(3f));
@@ -24,7 +24,7 @@ public class Ch03_EndMemory : MemoryFragment
     {
         yield return new WaitForSeconds(delay);
         
-        Inventory_Player _inventory = GameManager.Instance.Player.GetComponent<Inventory_Player>();
+        Inventory_Player _inventory = GameManager.Instance.PlayerObj.GetComponent<Inventory_Player>();
         MemoryManager.Instance.TryCollect(data);
         SoundManager.Instance.FadeOutAndStopLoopingSFX();
         SceneManager.LoadScene("Ch03_End", LoadSceneMode.Additive);
@@ -37,7 +37,7 @@ public class Ch03_EndMemory : MemoryFragment
 
         SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
             SceneManager.GetActiveScene().name,
-            GameManager.Instance.Player.transform.position,
+            GameManager.Instance.PlayerObj.transform.position,
             checkpointId: data.memoryID,
             autosave: true);
 

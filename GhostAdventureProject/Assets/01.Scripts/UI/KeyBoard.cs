@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 using TMPro;
 
@@ -9,6 +11,12 @@ public class KeyBoard : MonoBehaviour, IUIClosable
     public TMP_Text[] letterSlots = new TMP_Text[4];
     private int currentIndex = 0;
     public GameObject keyBoardPanel;
+
+    Player player;
+
+    void Start() {
+        player = GameManager.Instance.Player;
+    }
 
     public void AddLetter(string letter)
     {
@@ -68,7 +76,7 @@ public class KeyBoard : MonoBehaviour, IUIClosable
 
         keyBoardPanel.SetActive(false);
         UIManager.Instance.PlayModeUI_OpenAll();
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
     }
 
     public bool IsOpen()

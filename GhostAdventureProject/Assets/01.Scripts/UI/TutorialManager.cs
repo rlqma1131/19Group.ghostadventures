@@ -5,6 +5,7 @@ using DG.Tweening;
 using System;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using _01.Scripts.Player;
 using Unity.VisualScripting;
 
 // 튜토리얼은 1회만 작동됩니다. 
@@ -35,22 +36,25 @@ public class TutorialManager : Singleton<TutorialManager>
     private UIManager uimanager;
     private NoticePopup notice; // 알림창 (가이드안내)
     private Prompt prompt; // 프롬프트 (대사출력)
-    private bool canMove; // 플레이어 움직일 수 있는지
-
+    Player player;
+    
     // Ch1 Tutorial
     [SerializeField] private Ch1_CelebrityBox celebrityBox;
 
     private void Start()
     {
         uimanager = UIManager.Instance;
+        
         notice = uimanager.NoticePopupUI;
         prompt = uimanager.PromptUI;
-        
+    }
+
+    public void Initialize_Player(Player player) {
+        this.player = player;
     }
     
     public void Show(TutorialStep step)
     {
-        canMove = PossessionSystem.Instance.CanMove;
         if (completedSteps.Contains(step)) return;
 
         completedSteps.Add(step);
@@ -65,10 +69,10 @@ public class TutorialManager : Singleton<TutorialManager>
                 break;
 
             case TutorialStep.ShowControlKey_And_HighLightBithdayBox: // 튜토리얼 키 보여주기, 깜짝상자 하이라이트
-                PossessionSystem.Instance.CanMove = true;
+                player.PossessionSystem.CanMove = true;
                 uimanager.TutorialUI_OpenAll();
                 celebrityBox = FindObjectOfType<Ch1_CelebrityBox>();
-                celebrityBox.highlight.SetActive(true); 
+                celebrityBox.Highlight.SetActive(true); 
                 break;
             case TutorialStep.Test:
                 uimanager.TutorialUI_OpenAll();
@@ -120,12 +124,12 @@ public class TutorialManager : Singleton<TutorialManager>
                 prompt.ShowPrompt("박쥐를 건드리면 안돼");
                 break;
             case TutorialStep.MemoryStorageGuide:
-                PossessionSystem.Instance.CanMove = false;
+                player.PossessionSystem.CanMove = false;
                 uimanager.guidBlackPanel.SetActive(true);
                 uimanager.memoryStorageButton.GetComponent<Button>().
                 onClick.AddListener(() => {
                     uimanager.guidBlackPanel.SetActive(false);
-                    PossessionSystem.Instance.CanMove = true;
+                    player.PossessionSystem.CanMove = true;
                     UIManager.Instance.guidButton.SetActive(true);
                     }); // 클릭되면 실행
                 break;
@@ -141,7 +145,7 @@ public class TutorialManager : Singleton<TutorialManager>
     // 거실 진입시
     public async void LivingRoom_StartTutorial()
     {   
-        PossessionSystem.Instance.CanMove = false;
+        player.PossessionSystem.CanMove = false;
         await Task.Delay(2000);
         prompt.ShowPrompt_2("나도 모르게 여기로 들어왔어..", "여기서 기억을 찾을 수 있을까?..");
         await Task.Delay(3000);

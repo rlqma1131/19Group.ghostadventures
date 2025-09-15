@@ -14,14 +14,14 @@ public class HideArea : BasePossessable
 
     protected override void Update()
     {
-        if (!isPossessed)
-            return;
+        if (!isPossessed) return;
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
+        if (Input.GetKeyDown(KeyCode.E)) {
             isHiding = false;
             Unpossess();
         }
+        
+        TriggerEvent();
     }
 
     public override void OnQTESuccess()

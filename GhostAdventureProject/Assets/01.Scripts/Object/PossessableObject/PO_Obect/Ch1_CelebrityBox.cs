@@ -1,30 +1,31 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Ch1_CelebrityBox : BasePossessable
 {
     // [SerializeField] private GameObject effect;
+    [Header("References")]
     [SerializeField] private GameObject birthdayLetter;
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject q_Key;
 
     private Collider2D col;
 
-    protected override void Start()
-    {
-        base.Start();
-
+    override protected void Awake() {
+        base.Awake();
         col = GetComponent<Collider2D>();
     }
 
-    protected override void Update()
-    {
-        base.Update();
-        
-        if (!isPossessed || !hasActivated)
-        {
-            if(q_Key != null)
-            q_Key.SetActive(false);
+    override protected void Start() {
+        base.Start();
+        if (q_Key) q_Key.SetActive(false);
+    }
+
+    public override void TriggerEvent() {
+        if (!isPossessed || !hasActivated) {
+            if (q_Key) q_Key.SetActive(false);
             return;
         }
         
@@ -84,7 +85,7 @@ public class Ch1_CelebrityBox : BasePossessable
 
         if (other.CompareTag("Player") && !SaveManager.IsPuzzleSolved("깜짝상자"))
         {
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
             // UIManager.Instance.TutorialUI_CloseAll();
             UIManager.Instance.PromptUI.ShowPrompt("…상자? 왜 여기에 이런 게…");
             UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 파란 빛을 띄는 오브젝트는 E키로 빙의할 수 있습니다.");

@@ -51,10 +51,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca94c7768a752b4b80f3160ad779757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 3233216455326596002}
+  highlightObj: {fileID: 0}
   anim: {fileID: 0}
-  hasActivated: 0
   possessionSFX: {fileID: 0}
+  hasActivated: 0
   isPossessed: 0
   birthdayLetter: {fileID: 3008693456196701101}
   animator: {fileID: 8569117924005877291}
@@ -172,7 +172,8 @@ Transform:
   m_LocalPosition: {x: -0.00999999, y: -0.342, z: 0}
   m_LocalScale: {x: 0.8, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2770433041496492340}
   m_Father: {fileID: 4745678308619752202}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8951280771903734438
@@ -311,7 +312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 499cb42b5a18ebe44866759087d5f962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 6015012505560861729}
+  highlightObj: {fileID: 0}
 --- !u!114 &3052802349279589418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -578,7 +579,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3831187155471803421}
-  - {fileID: 2770433041496492340}
   - {fileID: 1234887231661710449}
   m_Father: {fileID: 8079314910651345469}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -711,12 +711,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6015012505560861729}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.20049654, w: 0.9796944}
-  m_LocalPosition: {x: 0.201, y: 0.116, z: 0.012940545}
-  m_LocalScale: {x: 0.85, y: 1.05, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0.20049654, w: 0.9796944}
+  m_LocalPosition: {x: 0.26374996, y: 0.45799994, z: 0.012940545}
+  m_LocalScale: {x: 1.0230285, y: 1.0834419, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4745678308619752202}
+  m_Father: {fileID: 3831187155471803421}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -23.132}
 --- !u!212 &6877382213710355620
 SpriteRenderer:

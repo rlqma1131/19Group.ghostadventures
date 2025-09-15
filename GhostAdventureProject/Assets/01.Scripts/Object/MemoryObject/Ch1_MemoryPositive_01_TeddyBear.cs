@@ -8,8 +8,9 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     public bool PlayerNearby = false;
     private Collider2D col;
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         isScannable = false;
     }
 
@@ -45,7 +46,7 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     //        }
     //        else if (ChapterEndingManager.Instance.AllCh1CluesCollected())
     //        {
-    //            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+    //            player.InteractSystem.AddInteractable(gameObject);
     //        }
     //    }
     //}
@@ -55,7 +56,7 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     //    if (other.CompareTag("Player"))
     //    {
     //        PlayerNearby = false;
-    //        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+    //        player.InteractSystem.RemoveInteractable(gameObject);
     //    }
     //}
 }

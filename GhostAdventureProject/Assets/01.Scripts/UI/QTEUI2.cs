@@ -64,7 +64,7 @@ public class QTEUI2 : MonoBehaviour
         isRunning = true;
 
         // (카메라/참조 캐싱은 기존대로)
-        camera = GameManager.Instance.Player.GetComponent<PlayerCamera>().currentCam;
+        camera = GameManager.Instance.Player.PlayerCamera.currentCam;
         currentSize = camera.m_Lens.OrthographicSize;
         noise = camera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 

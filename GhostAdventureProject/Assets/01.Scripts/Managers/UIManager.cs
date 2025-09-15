@@ -30,7 +30,8 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private NoticePopup saveNoticePopup;           // 저장팝업 (오른쪽 하단)
     [SerializeField] private GameObject[] puzzleStatusPanels;       // * 퍼즐상태 (오른쪽 상단)
     [SerializeField] private GameObject qteEffectCanvas;            // QTE 이펙트 캔버스
-
+    
+    
     // 외부 접근용
     public SoulGauge SoulGaugeUI => soulGauge;
     public Prompt PromptUI => prompt;

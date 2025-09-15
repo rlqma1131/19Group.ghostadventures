@@ -26,10 +26,7 @@ public class Ch1_Pan : BasePossessable
         transform.localRotation = startLocalRotation;
     }
 
-    protected override void Update()
-    {
-        base.Update();
-
+    public override void TriggerEvent() {
         if (!isPossessed || !hasActivated || isFalling)
         {
             q_Key.SetActive(false);

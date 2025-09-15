@@ -111,7 +111,7 @@ public class Ch3_LockerSelector : MonoBehaviour
     private void EnsurePossessionTrigger()
     {
         if (_possessionTrigger != null) return;
-        var player = GameManager.Instance != null ? GameManager.Instance.Player : null;
+        var player = GameManager.Instance != null ? GameManager.Instance.PlayerObj : null;
         if (player == null) return;
         _possessionTrigger = player.GetComponent<Collider2D>();
     }
@@ -196,7 +196,7 @@ public class Ch3_LockerSelector : MonoBehaviour
     {
         if (_playerLight == null)
         {
-            var player = GameManager.Instance != null ? GameManager.Instance.Player : null;
+            var player = GameManager.Instance != null ? GameManager.Instance.PlayerObj : null;
             if (player != null)
                 _playerLight = player.GetComponentInChildren<Light2D>(true);
         }

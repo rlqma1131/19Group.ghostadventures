@@ -8,7 +8,7 @@ public class YameScan_fake : BaseInteractable
     [SerializeField] private GameObject scanPanel; //스캔 패널
     [SerializeField] private Image scanCircleUI; //스캔 원 UI
     
-    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject playerObj;
     // [SerializeField] private GameObject e_key;
     [SerializeField] private YameScan_correct correctDoll; // 정답 인형
 
@@ -22,19 +22,11 @@ public class YameScan_fake : BaseInteractable
 
     private Camera mainCamera;
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         mainCamera = Camera.main;
-        if (player == null)
-        {
-            var pc = FindObjectOfType<PlayerController>();
-            if (pc != null) player = pc.gameObject;
-            if (player == null)
-            {
-                var pTag = GameObject.FindGameObjectWithTag("Player");
-                if (pTag != null) player = pTag;
-            }
-        }
+        playerObj = player.gameObject;
 
         // UI 자동 연결
         if (scanPanel == null || scanCircleUI == null)
@@ -71,10 +63,10 @@ public class YameScan_fake : BaseInteractable
 
     void LateUpdate()
     {
-        if (scanCircleUI != null && scanCircleUI.gameObject.activeInHierarchy && player != null && mainCamera != null)
+        if (scanCircleUI != null && scanCircleUI.gameObject.activeInHierarchy && playerObj != null && mainCamera != null)
         {
             scanCircleUI.transform.position =
-                mainCamera.WorldToScreenPoint(player.transform.position) + new Vector3(-40, 50, 0);
+                mainCamera.WorldToScreenPoint(playerObj.transform.position) + new Vector3(-40, 50, 0);
         }
     }
 
@@ -153,24 +145,20 @@ public class YameScan_fake : BaseInteractable
         if (scanPanel != null) scanPanel.SetActive(false);
     }
 
-    protected override void OnTriggerEnter2D(Collider2D col)
-    {
+    protected override void OnTriggerEnter2D(Collider2D col) {
         base.OnTriggerEnter2D(col);
-        if (col.CompareTag("Player") && correctDoll != null && !correctDoll.clear_UnderGround)
-        {
+        if (col.CompareTag("Player") && correctDoll != null && !correctDoll.clear_UnderGround) {
             isNear = true;
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);  
+            player.InteractSystem.AddInteractable(gameObject);  
         }
     }
 
-    protected override void OnTriggerExit2D(Collider2D col)
-    {
+    protected override void OnTriggerExit2D(Collider2D col) {
         base.OnTriggerExit2D(col);
-        if (col.CompareTag("Player"))
-        {
+        if (col.CompareTag("Player")) {
             isNear = false;
             if (isScanning) CancelScan("범위 이탈");
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            player.InteractSystem.RemoveInteractable(gameObject);
         }
     }
 }

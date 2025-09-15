@@ -22,6 +22,8 @@ public class Ch2_LaserController : BasePossessable
 
     protected override void Start()
     {
+        highlightObj?.SetActive(false);
+        player = GameManager.Instance.Player;
         isPossessed = false;
         hasActivated = false;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();

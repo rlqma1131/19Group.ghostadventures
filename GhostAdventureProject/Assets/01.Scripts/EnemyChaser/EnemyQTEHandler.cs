@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 
 public class EnemyQTEHandler : MonoBehaviour
@@ -10,7 +11,8 @@ public class EnemyQTEHandler : MonoBehaviour
     private Animator animator;
     private EnemyAI enemy;
     private Rigidbody2D rb;
-    private Transform player;
+    private Transform playerTransform;
+    Player player;
     private Vector3 startPosition;
     
     public float qteFreezeDuration = 3f;
@@ -24,14 +26,15 @@ public class EnemyQTEHandler : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         enemy = GetComponent<EnemyAI>();
         startPosition = transform.position;
-        
     }
 
     private void Start()
     {
         qteUI = UIManager.Instance.QTE_UI_2;
         qteEffect = QTEEffectManager.Instance;
-        player = GameManager.Instance.Player.transform;
+
+        player = qteEffect.player;
+        playerTransform = player.transform;
     }
 
     public void StartQTE()
@@ -58,15 +61,15 @@ public class EnemyQTEHandler : MonoBehaviour
         enemy.ChangeState(enemy.QTEState);
         animator.SetTrigger("QTEIn");
 
-        PossessionSystem.Instance.CanMove = false;
+        player.PossessionSystem.CanMove = false;
         // var playerCtrl = GameManager.Instance.Player.GetComponent<PlayerController>();
         // if (playerCtrl != null) playerCtrl.enabled = false;
         
         rb.velocity = Vector2.zero;
 
-        if (qteEffect != null&& player != null)
+        if (qteEffect != null&& playerTransform != null)
         {
-            qteEffect.playerTarget = player;
+            qteEffect.playerTarget = playerTransform;
             qteEffect.enemyTarget = transform;
             qteEffect.StartQTEEffects();
         }
@@ -85,7 +88,7 @@ public class EnemyQTEHandler : MonoBehaviour
         if (success)
         {
             // if (playerCtrl != null) playerCtrl.enabled = true;
-            PossessionSystem.Instance.CanMove = true;
+            player.PossessionSystem.CanMove = true;
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), true);
             animator.updateMode = AnimatorUpdateMode.UnscaledTime;
             animator.SetTrigger("QTESuccess");

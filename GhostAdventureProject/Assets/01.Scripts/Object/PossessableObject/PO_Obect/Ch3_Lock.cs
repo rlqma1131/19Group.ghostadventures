@@ -233,7 +233,7 @@ public class Ch3_Lock : BasePossessable
         lockZoom.SetActive(true);
         lockPos.anchoredPosition = new Vector2(0, -Screen.height);
         lockPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 
     private void HideLockZoom()
@@ -248,7 +248,7 @@ public class Ch3_Lock : BasePossessable
             {
                 lockZoom.SetActive(false);
                 if (isPlayerInside)
-                    PlayerInteractSystem.Instance.AddInteractable(gameObject);
+                    player.InteractSystem.AddInteractable(gameObject);
             });
     }
 
@@ -257,7 +257,7 @@ public class Ch3_Lock : BasePossessable
         if (!other.CompareTag("Player")) return;
         isPlayerInside = true;
         if (!isZoomActive)
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
     }
 
     protected override void OnTriggerExit2D(Collider2D other)
@@ -265,7 +265,7 @@ public class Ch3_Lock : BasePossessable
         if (!other.CompareTag("Player")) return;
         isPlayerInside = false;
         if (isZoomActive) HideLockZoom();
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 
     public override void OnPossessionEnterComplete() 

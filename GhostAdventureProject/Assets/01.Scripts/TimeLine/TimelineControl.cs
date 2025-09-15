@@ -3,6 +3,8 @@ using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
+using _01.Scripts.Player;
+using static _01.Scripts.Utilities.Timer;
 
 public class TimelineControl : MonoBehaviour
 {
@@ -20,111 +22,97 @@ public class TimelineControl : MonoBehaviour
     private LoadSceneMode currentLoadMode = LoadSceneMode.Single;
 
     private MemoryScan memoryScan;
+    CountdownTimer timer;
+    Player player;
 
-    private void Update()
-    {
-
-        if (Input.GetKey(KeyCode.Space))
-        {
-            isHolding = true;
-            // 타이머 시간 증가 (UnscaledDeltaTime 사용으로 Time.timeScale 영향 없음)
-            skipTimer += Time.unscaledDeltaTime;
-
-            // 이미지의 fillAmount를 1에서 0으로 변경
-            if (skip != null)
-            {
-                skip.fillAmount = 1.0f - (skipTimer / SKIP_DURATION); 
-            }
-
-            // 타이머가 3초를 넘으면 씬 닫기
-            if (skipTimer >= SKIP_DURATION)
-            {
-                if (currentLoadMode == LoadSceneMode.Additive)
-                {
-                    CloseScene();
-                    //GoScene(nextSceneName);
-                }
-            }
-            ShowImage2Only();
-        }
-
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            // 타이머와 이미지 fillAmount 초기화
-            skipTimer = 0f;
-            isHolding = false;
-            if (skip != null)
-            {
-                skip.fillAmount = 1f;
-            }
-            StopCoroutine(flashingCoroutine);
-            flashingCoroutine = StartCoroutine(FlashImages());
-        }
-    }
-    void Awake()
-    {
-        if (director != null)
-        {
-        director.timeUpdateMode = DirectorUpdateMode.UnscaledGameTime;
-       
+    void Awake() {
+        if (director != null) {
+            director.timeUpdateMode = DirectorUpdateMode.UnscaledGameTime;
         }
         // timeScale 0에서도 재생되도록 설정
-        if (skip != null)
-        {
+        if (skip != null) {
             skip.fillAmount = 1f;
         }
         SceneManager.sceneLoaded += OnSceneLoaded;
-
     }
 
-    private void Start()
-    {
+    private void Start() {
+        player = GameManager.Instance.Player;
+        memoryScan = player.MemoryScan;
+        
+        timer = new CountdownTimer(SKIP_DURATION);
+        timer.OnTimerStart += () => {
+            isHolding = true;
+            ShowImage2Only();
+        };
+        timer.OnTimerStop += () => {
+            // Basic initialization
+            isHolding = false;
+            if (skip) skip.fillAmount = 1f;
+            
+            // Event Condition => Did the user hold the button long enough?
+            if (timer.IsFinished) {
+                if (currentLoadMode != LoadSceneMode.Additive) return;
+                CloseScene();
+                // GoScene(nextSceneName);
+            }
+            else {
+                flashingCoroutine = StartCoroutine(FlashImages());
+            }
+        };
+        
         flashingCoroutine = StartCoroutine(FlashImages());
-        if(GameManager.Instance.Player != null)
-        {
-
-            memoryScan = GameManager.Instance.Player.GetComponent<MemoryScan>();
+    }
+    
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            timer.Start();
         }
+        if (Input.GetKey(KeyCode.Space)) {
+            // Time passes when the key is held
+            timer.Tick(Time.unscaledDeltaTime);
 
-
+            // 이미지의 fillAmount를 1에서 0으로 변경
+            if (skip) {
+                skip.fillAmount = timer.Progress; 
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.Space)) {
+            timer.Stop();
+        }
     }
 
-    public void PauseTimeline()
-    {
+    public void PauseTimeline() {
         Debug.Log("타임라인 일시정지");
         director.Pause();
-        
     }
 
-    public void ResumeTimeline()
-    {
-
+    public void ResumeTimeline() {
         Debug.Log("타임라인 재생");
         director.Resume();
     }
-    public void CloseScene()
-    {
+    
+    public void CloseScene() {
         Debug.Log("씬 닫기");
+        
         string currentSceneName = gameObject.scene.name; //연출되고있는 씬이름 저장
         Time.timeScale = 1;
         UIManager.Instance.PlayModeUI_OpenAll(); // 플레이모드 UI 열기
         EnemyAI.ResumeAllEnemies();
-        PossessionSystem.Instance.CanMove = true; // 플레이어 이동 가능하게 설정
+        player.PossessionSystem.CanMove = true; // 플레이어 이동 가능하게 설정
         SceneManager.UnloadSceneAsync(currentSceneName); //연출씬 닫고 원래 씬 이동
 
         // 이전 BGM 복원
         SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
         SoundManager.Instance.RestoreLastBGM(1f);
 
-        if(prompt != null)
-        {
+        if(prompt != null) {
             UIManager.Instance.PromptUI.ShowPrompt(prompt, 3f);
         }
-        if(memoryScan.currentMemoryFragment != null)
-        {
-        memoryScan.currentMemoryFragment.AfterScan();
-        UIManager.Instance.NoticePopupUI.FadeInAndOut($"※ 기억조각 저장 됨 - [{memoryScan.currentMemoryFragment.data.memoryTitle}]");
+        
+        if (memoryScan.CurrentMemoryFragment) {
+            memoryScan.CurrentMemoryFragment.AfterScan();
+            UIManager.Instance.NoticePopupUI.FadeInAndOut($"※ 기억조각 저장 됨 - [{memoryScan.CurrentMemoryFragment.data.memoryTitle}]");
         }
     }
 
@@ -144,20 +132,20 @@ public class TimelineControl : MonoBehaviour
 
     private void ShowImage2Only()
     {
-        if (flashingCoroutine != null)
+        if (flashingCoroutine != null) {
             StopCoroutine(flashingCoroutine);
+            flashingCoroutine = null;
+        }
 
         space1.enabled = false;
         space2.enabled = true;
     }
 
-    private void OnDestroy()
-    {
+    private void OnDestroy() {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
         currentLoadMode = mode; // 로드 모드 저장
     }
 }
