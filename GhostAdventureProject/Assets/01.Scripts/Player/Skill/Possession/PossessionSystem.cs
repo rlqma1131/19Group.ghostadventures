@@ -1,11 +1,9 @@
 ﻿using System.Collections;
+using _01.Scripts.Player;
 using UnityEngine;
 
 public class PossessionSystem : MonoBehaviour
 {
-    // 싱글톤
-    public static PossessionSystem Instance { get; private set; }
-
     [Header("SFX")] 
     [SerializeField] AudioClip possessIn;
     [SerializeField] AudioClip possessOut;
@@ -13,22 +11,14 @@ public class PossessionSystem : MonoBehaviour
     [SerializeField] BasePossessable currentTarget; // 디버깅용
 
     BasePossessable obsessingTarget;
-    PlayerController player;
+    PlayerController controller;
+    
     public BasePossessable CurrentTarget => currentTarget;
 
     public bool CanMove { get; set; } = true;
 
-    void Awake() {
-        if (Instance == null) {
-            Instance = this;
-        }
-        else {
-            Destroy(gameObject);
-        }
-    }
-
-    void Start() {
-        player = GameManager.Instance.PlayerController;
+    public void Initialize(Player player) {
+        controller = player.Controller;
     }
 
     void OnTriggerEnter2D(Collider2D other) {
@@ -104,22 +94,22 @@ public class PossessionSystem : MonoBehaviour
         //return;
 
         currentTarget = target;
-        if (player != null)
-            player.currentTarget = currentTarget;
+        if (controller != null)
+            controller.currentTarget = currentTarget;
     }
 
     public void ClearInteractionTarget(BasePossessable target) {
         if (currentTarget == target) {
             currentTarget = null;
-            if (player != null)
-                player.currentTarget = null;
+            if (controller != null)
+                controller.currentTarget = null;
         }
     }
 
     public void PlayPossessionInAnimation() // 빙의 시작 애니메이션
     {
         CanMove = false;
-        player.Animator.SetTrigger("PossessIn");
+        controller.Animator.SetTrigger("PossessIn");
         SoundManager.Instance.PlaySFX(possessIn);
 
         EnemyAI.PauseAllEnemies();
@@ -136,7 +126,7 @@ public class PossessionSystem : MonoBehaviour
 
     IEnumerator DelayedPossessionOutPlay() {
         yield return null; // 한 프레임 딜레이
-        player.Animator.Play("Player_PossessionOut");
+        controller.Animator.Play("Player_PossessionOut");
     }
     
     #region Animation Events

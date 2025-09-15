@@ -113,14 +113,20 @@ public class GameManager : Singleton<GameManager>
             return;
         }
 
-        EnsureManagerExists<ChapterEndingManager>(chapterEndingManager);
-        EnsureManagerExists<UIManager>(uiManager);
-        EnsureManagerExists<PossessionStateManager>(possessionStateManager);
-        EnsureManagerExists<SoundManager>(soundManager);
-        EnsureManagerExists<CutsceneManager>(cutSceneManager);
-        EnsureManagerExists<QTEEffectManager>(qteEffectManager);
-        EnsureManagerExists<TutorialManager>(tutorialManager);
-        EnsureManagerExists<EventManager>(eventManager);
+        var chapterEndingManagerComp = EnsureManagerExists<ChapterEndingManager>(chapterEndingManager);
+        var uiManagerComp = EnsureManagerExists<UIManager>(uiManager);
+        var possessionStateManagerComp = EnsureManagerExists<PossessionStateManager>(possessionStateManager);
+        var soundManagerComp = EnsureManagerExists<SoundManager>(soundManager);
+        var cutsceneManagerComp = EnsureManagerExists<CutsceneManager>(cutSceneManager);
+        var qteEffectManagerComp = EnsureManagerExists<QTEEffectManager>(qteEffectManager);
+        var tutorialManagerComp = EnsureManagerExists<TutorialManager>(tutorialManager);
+        var eventManagerComp = EnsureManagerExists<EventManager>(eventManager);
+
+        if (player) {
+            tutorialManagerComp.Initialize_Player(player);
+            possessionStateManagerComp.Initialize_Player(player);
+            qteEffectManagerComp.Initialize_Player(player);
+        }
 
         // 퍼즐 진척도 UI ( 씬에 맞게 로드 )
         UIManager.Instance.AutoSelectPuzzleStatusByScene();
@@ -185,13 +191,13 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    private void EnsureManagerExists<T>(GameObject prefab) where T : MonoBehaviour
+    private T EnsureManagerExists<T>(GameObject prefab) where T : MonoBehaviour
     {
-        if (Singleton<T>.Instance == null)
-        {
-            Instantiate(prefab);
-            Debug.Log($"[{typeof(T).Name}] 자동 생성됨");
-        }
+        if (Singleton<T>.Instance != null) return Singleton<T>.Instance;
+        
+        GameObject obj = Instantiate(prefab);
+        Debug.Log($"[{typeof(T).Name}] 자동 생성됨");
+        return obj.GetComponent<T>();
     }
     
     public static ClueStage GetStageForCurrentChapter()

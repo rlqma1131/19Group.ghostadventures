@@ -13,7 +13,7 @@ public class Ch03_EndMemory : MemoryFragment
         {
             CutsceneManager.Instance.StartCoroutine(CutsceneManager.Instance.PlayCutscene());
             activeCutscene = true;
-            PossessionSystem.Instance.CanMove = false;
+            player.PossessionSystem.CanMove = false;
             UIManager.Instance.PlayModeUI_CloseAll();
             EnemyAI.PauseAllEnemies();
             StartCoroutine(LoadNextSceneAfterDelay(3f));

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -7,9 +8,9 @@ using UnityEngine.Rendering.Universal;
 public class EnemyVolumeTrigger : MonoBehaviour
 {
     [Header("Targeting")]
-    [SerializeField] private Transform player;
+    [SerializeField] private Player player;
     [SerializeField] private float detectionRadius = 15f;
-
+    
     [Header("State")]
     public bool PlayerInTrigger = false;
     public bool PlayerFind = false;
@@ -23,8 +24,8 @@ public class EnemyVolumeTrigger : MonoBehaviour
         _id = GetInstanceID();
 
         // 플레이어 캐시 1회
-        var playerObj = GameManager.Instance != null ? GameManager.Instance.PlayerObj : null;
-        if (playerObj != null) { player = playerObj.transform; PlayerFind = true; }
+        player = GameManager.Instance ? GameManager.Instance.Player : GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        if (player) PlayerFind = true; 
 
         // 매니저 없으면 자동 생성
         if (EnemyVolumeOverlay.Instance == null)
@@ -37,31 +38,32 @@ public class EnemyVolumeTrigger : MonoBehaviour
     private void Update()
     {
         // player 참조 보강
-        if (!PlayerFind)
-        {
-            var playerObj = GameManager.Instance != null ? GameManager.Instance.PlayerObj : null;
-            if (playerObj != null) { player = playerObj.transform; PlayerFind = true; }
+        if (!PlayerFind) {
+            player = GameManager.Instance ? GameManager.Instance.Player : GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+            if (player) PlayerFind = true;
+            return;
         }
-        if (player == null || EnemyVolumeOverlay.Instance == null) return;
+        
+        if (!EnemyVolumeOverlay.Instance) return;
 
         // 빙의 중이면 빙의 대상, 아니면 player
         Transform target = null;
-        if (PossessionStateManager.Instance != null
+        if (PossessionStateManager.Instance
             && PossessionStateManager.Instance.IsPossessing()
-            && PossessionSystem.Instance != null
-            && PossessionSystem.Instance.CurrentTarget != null)
+            && player.PossessionSystem.CurrentTarget)
         {
-            target = PossessionSystem.Instance.CurrentTarget.transform;
+            target = player.PossessionSystem.CurrentTarget.transform;
         }
         else
         {
-            target = player;
+            target = player.transform;
         }
-        if (target == null) return;
+        
+        if (!target) return;
 
-        bool isDead = (UIManager.Instance != null
-                       && UIManager.Instance.QTE_UI_2 != null
-                       && UIManager.Instance.QTE_UI_2.isdead);
+        bool isDead = UIManager.Instance
+                      && UIManager.Instance.QTE_UI_2
+                      && UIManager.Instance.QTE_UI_2.isdead;
 
         float distance = Vector3.Distance(transform.position, target.position);
         bool inRange = !Ondead && !isDead && distance <= detectionRadius;
@@ -69,16 +71,16 @@ public class EnemyVolumeTrigger : MonoBehaviour
         // 엣지 사운드 처리만 유지
         if (inRange && !PlayerInTrigger)
         {
-            if (SoundManager.Instance != null)
+            if (SoundManager.Instance)
             {
                 SoundManager.Instance.FadeOutAndStopBGM(1f);
-                if (SoundManager.Instance.EnemySource != null)
+                if (SoundManager.Instance.EnemySource)
                     SoundManager.Instance.FadeInLoopingSFX(SoundManager.Instance.EnemySource.clip, 1f, 0.5f);
             }
         }
         else if (!inRange && PlayerInTrigger)
         {
-            if (SoundManager.Instance != null)
+            if (SoundManager.Instance)
             {
                 SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
                 SoundManager.Instance.RestoreLastBGM(1f);
@@ -93,7 +95,7 @@ public class EnemyVolumeTrigger : MonoBehaviour
             float norm = Mathf.Clamp01(1f - (distance / detectionRadius));
             targetT = Mathf.Pow(norm, 0.5f);
 
-            if (SoundManager.Instance != null && SoundManager.Instance.EnemySource != null)
+            if (SoundManager.Instance && SoundManager.Instance.EnemySource)
                 SoundManager.Instance.EnemySource.volume = Mathf.Lerp(0.01f, 0.3f, targetT);
         }
 

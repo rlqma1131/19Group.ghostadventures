@@ -20,7 +20,7 @@ public class MoveBasePossessable : BasePossessable
 
     protected override void Update()
     {
-        if (!isPossessed || !PossessionSystem.Instance.CanMove)
+        if (!isPossessed || !player.PossessionSystem.CanMove)
             return;
         
         Move();

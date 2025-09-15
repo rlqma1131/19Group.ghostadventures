@@ -120,7 +120,7 @@ public class Ch1_Shower : BasePossessable
             player.InteractSystem.RemoveInteractable(gameObject);
             //isPlayerNear = false;
 
-            if (PossessionSystem.Instance.CanMove)
+            if (player.PossessionSystem.CanMove)
             {
                 SoundManager.Instance.FadeOutAndStopLoopingSFX();
                 isWaterSoundPlaying = false;

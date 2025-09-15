@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (PossessionSystem.Instance == null ||
+        if (player.PossessionSystem == null ||
             PossessionQTESystem.Instance == null ||
             !player.PossessionSystem.CanMove ||
             PossessionQTESystem.Instance.isRunning)
@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E)) {
             if (CurrentTargetIsPossessable()) {
-                PossessionSystem.Instance.TryPossess();
+                player.PossessionSystem.TryPossess();
             }
             else {
                 Debug.Log("빙의불가능 상태");

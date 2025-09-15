@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +12,7 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
     [SerializeField] private Transform leftPageSlot;
     [SerializeField] private Transform rightPageSlot;
     [SerializeField] private Sprite defaultPageSprite;               // 기본 페이지 이미지
-[SerializeField] private Image pageTurnImage;                        // 페이지 넘김 효과 표시할 이미지       
+    [SerializeField] private Image pageTurnImage;                        // 페이지 넘김 효과 표시할 이미지       
     [SerializeField] private Sprite[] NextpageTurnSprites;           // 다음페이지 스프라이트
     [SerializeField] private Sprite[] PrevpageTurnSprites;           // 이전페이지 스프라이트
     [SerializeField] private float frameInterval = 0.05f;            // 프레임 간 간격
@@ -29,17 +31,23 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
 
     private int currentPageIndex = 0; // 0: 첫 페이지, 1: 다음 페이지...
 
+    Player player;
+    
     private void OnEnable()
     {
         MemoryManager.Instance.OnMemoryCollected += OnMemoryCollected;
         RedrawStorage();
     }
 
+    void Start() {
+        player = GameManager.Instance.Player;
+    }
+
     private void OnDisable()
     {
         MemoryManager.Instance.OnMemoryCollected -= OnMemoryCollected;
         EnemyAI.ResumeAllEnemies();
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
     }
     
     void Update()
@@ -47,7 +55,7 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
         if(IsOpen())
         {
             EnemyAI.PauseAllEnemies();
-            PossessionSystem.Instance.CanMove = false;
+            player.PossessionSystem.CanMove = false;
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _01.Scripts.Player;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -9,8 +10,10 @@ public class KeyBoard_Enter : MonoBehaviour
     public string correctAnswer;    // 정답
     public bool correct = false;
 
-    void Start()
-    {
+    Player player;
+    
+    void Start() {
+        player = GameManager.Instance.Player;
         GetComponent<Button>().onClick.AddListener(OnEnterClick);
     }
     
@@ -28,13 +31,13 @@ public class KeyBoard_Enter : MonoBehaviour
         {
             correct = true;
             textSlot.Close(); // 키보드 닫기
-            PossessionSystem.Instance.CanMove = true;
+            player.PossessionSystem.CanMove = true;
             Debug.Log("정답!");
         }
         else
         {
             correct = false;
-            PossessionSystem.Instance.CanMove = true;
+            player.PossessionSystem.CanMove = true;
             UIManager.Instance.PromptUI.ShowPrompt("순서가...기억을 되짚어 보자");
         }
         textSlot.ClearAll();

@@ -41,6 +41,7 @@ namespace _01.Scripts.Player
             controller.Initialize(this);
             memoryScan.Initialize(this);
             interactSystem.Initialize(this);
+            possessionSystem.Initialize(this);
             
             if (!GameManager.Instance.PlayerObj)
                 Debug.LogError("Fatal Error! : GameManager에 Player GameObject 등록이 안되어 있습니다!");

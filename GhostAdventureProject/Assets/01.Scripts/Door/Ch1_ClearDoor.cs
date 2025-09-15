@@ -36,7 +36,7 @@ public class Ch1_ClearDoor : BaseInteractable
             // 이름 맞추고, 기억조각도 모았을 때
             else if (TeddyBear.Completed_TeddyBear)
             {
-                PossessionSystem.Instance.CanMove = false;
+                player.PossessionSystem.CanMove = false;
                 playable.Play();
                 EnemyAI.PauseAllEnemies();
                 UIManager.Instance.PlayModeUI_CloseAll();
@@ -69,7 +69,7 @@ public class Ch1_ClearDoor : BaseInteractable
     void OnTimelineFinished(PlayableDirector obj)
     {
         EnemyAI.ResumeAllEnemies();
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
         SceneManager.LoadScene("Ch01_To_Ch02");
         UIManager.Instance.PlayModeUI_CloseAll();
     }

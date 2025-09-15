@@ -100,7 +100,7 @@ public class Ch3_MusicBox : BaseInteractable
         currentIndex = 0;
         text.text = (linkedEnemy.failCount + " / 5").ToString();
         isRunning = true;
-        PossessionSystem.Instance.CanMove = false;
+        player.PossessionSystem.CanMove = false;
         QTEUI_MusicBox.SetActive(true);
         GenerateRandomSequence(arrowCount);
     }
@@ -160,7 +160,7 @@ public class Ch3_MusicBox : BaseInteractable
         arrowImages.Clear(); // 리스트도 초기화
         QTEUI_MusicBox.SetActive(false);
         isRunning = false;
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
     }
 
     // 랜덤으로 화살표 생성

@@ -1,4 +1,5 @@
 ﻿using System;
+using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Rendering;
@@ -19,6 +20,8 @@ public class PlayerLifeManager : MonoBehaviour
     public static event Action OnLifeLost; // 생명을 잃었을 때 (스턴 처리용)
     private Animator playerAnimator;
     private EnemyVolumeTrigger volume; // EnemyVolumeTrigger 컴포넌트
+    Player player;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -33,8 +36,8 @@ public class PlayerLifeManager : MonoBehaviour
         playerAnimator = GetComponentInChildren<Animator>();
     }
 
-    private void Start()
-    {
+    public void Initialize(Player player) {
+        this.player = player;
         currentPlayerLives = maxPlayerLives; // 생명 초기화
         volume = GetComponentInChildren<EnemyVolumeTrigger>();
         OnLifeChanged?.Invoke(currentPlayerLives); // UI 업데이트용
@@ -48,7 +51,7 @@ public class PlayerLifeManager : MonoBehaviour
     {
         SubtractionLife();
         OnLifeChanged?.Invoke(currentPlayerLives);
-        // PossessionSystem.Instance.CanMove = false;
+        // player.PossessionSystem.CanMove = false;
 
         // TODO: 피격 애니메이션 재생
        // playerAnimator?.SetTrigger("StruggleIn");  // <- Animator에 "StruggleIn" 트리거 설정 필요
@@ -71,7 +74,6 @@ public class PlayerLifeManager : MonoBehaviour
         
         UIManager.Instance.Inventory_PlayerUI.RemoveClueBeforeStage();
         UIManager.Instance.PlayModeUI_CloseAll();
-        GameObject player = GameManager.Instance.PlayerObj;
         PlayableDirector director = player.GetComponentInChildren<PlayableDirector>();
         ParticleSystem[] particleSystems = player.GetComponentsInChildren<ParticleSystem>();
         if (volume != null)
@@ -88,7 +90,7 @@ public class PlayerLifeManager : MonoBehaviour
         if (director != null)
         {
             director.stopped += ResetIsdead; 
-            PossessionSystem.Instance.CanMove = false; // 플레이어 이동 비활성화
+            player.PossessionSystem.CanMove = false; // 플레이어 이동 비활성화
             //파티클 중지
             foreach (var ps in particleSystems)
             {
@@ -163,7 +165,7 @@ public class PlayerLifeManager : MonoBehaviour
     public void ResetIsdead(PlayableDirector director)
     {
         UIManager.Instance.QTE_UI_2.isdead = false; // QTE UI 상태 초기화
-        PossessionSystem.Instance.CanMove = true; // 플레이어 이동 활성화
+        player.PossessionSystem.CanMove = true; // 플레이어 이동 활성화
 
         if (EnemyVolumeOverlay.Instance != null)
             EnemyVolumeOverlay.Instance.Suspend(false);

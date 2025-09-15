@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +31,12 @@ public class QTEUI3 : MonoBehaviour
 
     [SerializeField] AudioClip successSound;            // 성공 사운드
     [SerializeField] AudioClip failSound;               // 실패 사운드
+
+    Player player;
+
+    void Start() {
+        player = GameManager.Instance.Player;
+    }
 
     void Update()
     {
@@ -118,7 +125,7 @@ public class QTEUI3 : MonoBehaviour
 
     public void ShowQTEUI3()
     {
-        BasePossessable possessed = PossessionSystem.Instance.CurrentTarget;
+        BasePossessable possessed = player.PossessionSystem.CurrentTarget;
         PersonConditionUI conditionUI = possessed.GetComponent<PersonConditionUI>();
         conditionUI.SetCondition(conditionUI.currentCondition);
 

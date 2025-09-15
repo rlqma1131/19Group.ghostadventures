@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 
 public class PossessionStateManager : Singleton<PossessionStateManager>
@@ -10,28 +11,32 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
 
     [SerializeField] private Vector3 spawnOffset = new Vector3(0f, 1f, 0f);
 
+    Player player;
     private Transform PlayerTransform
-        => GameManager.Instance.PlayerController.transform;
+        => player.transform;
     private GameObject Player
-        => GameManager.Instance.PlayerObj;
+        => player.gameObject;
     private BasePossessable possessedTarget;
 
     public bool IsPossessing() => currentState == State.Possessing;
 
-    
+    public void Initialize_Player(Player player) {
+        this.player = player;
+    }
+
     public void StartPossessionTransition() // 빙의 전환 실행 ( 빙의 애니메이션도 함께 )
     {
         SoulEnergySystem.Instance?.ResetRestoreBoost();
         SoulEnergySystem.Instance?.DisableHealingEffect();
 
-        possessedTarget = PossessionSystem.Instance.CurrentTarget;
-        PossessionSystem.Instance.PlayPossessionInAnimation();
+        possessedTarget = player.PossessionSystem.CurrentTarget;
+        player.PossessionSystem.PlayPossessionInAnimation();
     }
 
     public void PossessionInAnimationComplete() // 빙의 애니메이션 종료 후 빙의 전환 완료 처리
     {
         Player.SetActive(false);
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
         
         // 추가적인 연출이나 효과
         // 빙의오브젝트 강조효과, 사운드 등
@@ -46,14 +51,14 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
     {
         PlayerTransform.position = possessedTarget.transform.position + spawnOffset;
         Player.SetActive(true);
-        PossessionSystem.Instance.PlayPossessionOutSequence();
+        player.PossessionSystem.PlayPossessionOutSequence();
         UIManager.Instance.unpossessKey.SetActive(false);
         UIManager.Instance.Inventory_PossessableObjectUI.HideInventory(); // 빙의 인벤토리 사라짐
     }
     
     public void PossessionOutAnimationComplete() // 빙의 해제 애니메이션 종료 후 상태 복귀
     {
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
         currentState = State.Ghost;
     }
 }

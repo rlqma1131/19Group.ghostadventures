@@ -113,7 +113,7 @@ public class Ch2_DrawingClue : MonoBehaviour
 
     void PlayFinalLightSequence() {
         // 1) 플레이어 잠금 + VCam Follow 끊기
-        PossessionSystem.Instance.CanMove = false;
+        player.PossessionSystem.CanMove = false;
         EnemyAI.PauseAllEnemies();
         Transform oldFollow = vcam.Follow;
         vcam.Follow = null;
@@ -144,7 +144,7 @@ public class Ch2_DrawingClue : MonoBehaviour
             .AppendCallback(() =>
             {
                 vcam.Follow = oldFollow;
-                PossessionSystem.Instance.CanMove = true;
+                player.PossessionSystem.CanMove = true;
                 EnemyAI.ResumeAllEnemies();
             });
     }

@@ -59,7 +59,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
                 {
                     player.InteractSystem.eKey.SetActive(false);
                     // [컷씬] 꼬마유령 이벤트
-                    PossessionSystem.Instance.CanMove = false;
+                    player.PossessionSystem.CanMove = false;
                     GameManager.Instance.PlayerController.Animator.SetBool("Move", false);
 
                     UIManager.Instance.PlayModeUI_CloseAll();
@@ -77,7 +77,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
 
                     openKeyboard = true;
                     keyboard.OpenKeyBoard();
-                    PossessionSystem.Instance.CanMove = false;
+                    player.PossessionSystem.CanMove = false;
                 }
             }
         }
@@ -92,7 +92,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
             UIManager.Instance.PlayModeUI_CloseAll();
             SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드아웃
             cutsceneDirector_correct.Play();
-            PossessionSystem.Instance.CanMove = false;
+            player.PossessionSystem.CanMove = false;
             // 기억조각 스캔 가능하도록 활성화
             bear.ActivateTeddyBear();
             EnemyAI.PauseAllEnemies();
@@ -133,7 +133,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
 
         SoulEnergySystem.Instance.EnableHealingEffect();
         EnemyAI.ResumeAllEnemies();
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
         isCutscenePlaying2 = true;
         energyRestoreZone.IsActive = true; // 에너지 회복존 비활성화
         UIManager.Instance.PlayModeUI_OpenAll();

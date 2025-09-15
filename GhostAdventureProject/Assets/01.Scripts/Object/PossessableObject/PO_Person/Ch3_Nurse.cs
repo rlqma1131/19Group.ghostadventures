@@ -52,7 +52,7 @@ public class Ch3_Nurse : MoveBasePossessable
         if (isPossessed)
         {   
             UIManager.Instance.tabkeyUI.SetActive(true);
-            if (!PossessionSystem.Instance.CanMove)
+            if (!player.PossessionSystem.CanMove)
                 return;
              
             Move();

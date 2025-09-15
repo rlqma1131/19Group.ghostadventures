@@ -1,15 +1,18 @@
-﻿using UnityEngine;
+﻿using _01.Scripts.Player;
+using UnityEngine;
 using UnityEngine.Playables;
 public class Cutscene_NPC : MonoBehaviour
 {
     [SerializeField] private PlayableDirector director;
     [SerializeField] private GameObject GarageDoor;
+    
     public RoomInfo roomInfo;
-
     public bool isCutscenePlaying = false;
 
-    void Start()
-    {
+    Player player;
+    
+    void Start() {
+        player = GameManager.Instance.Player;
         if (director != null)
             director.stopped += OnTimelineStopped;
     }
@@ -24,7 +27,7 @@ public class Cutscene_NPC : MonoBehaviour
             EnemyAI.PauseAllEnemies();
             GarageDoor.SetActive(false);
             isCutscenePlaying = true;
-            PossessionSystem.Instance.CanMove = false;
+            player.PossessionSystem.CanMove = false;
             UIManager.Instance.PlayModeUI_CloseAll();
         }
     }
@@ -39,7 +42,7 @@ public class Cutscene_NPC : MonoBehaviour
 
     private void OnTimelineStopped(PlayableDirector director)
     {
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
         UIManager.Instance.PlayModeUI_OpenAll();
         EnemyAI.ResumeAllEnemies();
         UIManager.Instance.PromptUI.ShowPrompt("차고의 문이 조금 열렸어.", 2f);
