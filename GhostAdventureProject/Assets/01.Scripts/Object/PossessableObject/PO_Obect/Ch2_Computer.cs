@@ -142,6 +142,7 @@ public class Ch2_Computer : BasePossessable
             }
             StartCoroutine(ShowCorrectImage());
             UIManager.Instance.PromptUI.ShowPrompt("어디 문이 열린지..?", 2f);
+            hasActivated = false;
         }
         else
         {

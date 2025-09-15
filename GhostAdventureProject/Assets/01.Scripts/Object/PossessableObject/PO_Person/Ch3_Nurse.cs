@@ -22,8 +22,6 @@ public class Ch3_Nurse : MoveBasePossessable
     [SerializeField] private Animator highlightAnimator;
 
     private PersonConditionUI condition;
-    private PersonConditionHandler conditionHandler;
-
     private NurseState state = NurseState.Work;
 
     private int currentWorkIndex = 0;
@@ -43,7 +41,7 @@ public class Ch3_Nurse : MoveBasePossessable
     protected override void Start()
     {   
         base.Start();
-        conditionHandler = new VitalConditionHandler();
+        condition = GetComponent<PersonConditionUI>();
     }
 
     protected override void Update()
@@ -84,9 +82,6 @@ public class Ch3_Nurse : MoveBasePossessable
                 HandleRest();
                 break;
         }
-
-        // 컨디션 UI & QTE 업데이트
-        SetCondition(condition.currentCondition);
     }
 
     void LateUpdate()
@@ -197,26 +192,6 @@ public class Ch3_Nurse : MoveBasePossessable
             hasWorked = false; 
             isWaiting = false;
         }
-    }
-
-    public void SetCondition(PersonCondition condition)
-    {
-        this.condition.currentCondition = condition;
-        switch (condition)
-        {
-            case PersonCondition.Vital:
-                conditionHandler = new VitalConditionHandler();
-                break;
-            case PersonCondition.Normal:
-                conditionHandler = new NormalConditionHandler();
-                break;
-            case PersonCondition.Tired:
-                conditionHandler = new TiredConditionHandler();
-                break;
-        }
-
-        QTESettings qteSettings = conditionHandler.GetQTESettings();
-        UIManager.Instance.QTE_UI_3.ApplySettings(qteSettings);
     }
 
     protected override void OnTriggerEnter2D(Collider2D other)
