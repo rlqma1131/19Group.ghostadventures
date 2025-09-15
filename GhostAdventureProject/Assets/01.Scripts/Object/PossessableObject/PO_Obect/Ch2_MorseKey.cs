@@ -81,7 +81,7 @@ public class Ch2_MorseKey : BasePossessable
 
         memory = handprint.GetComponent<Ch2_MemoryPositive_01_HandPrint>();
         handprint.SetActive(false);
-
+        
         currentMorseChar = "";
         decodedLetters.Clear();
         UpdateUI();

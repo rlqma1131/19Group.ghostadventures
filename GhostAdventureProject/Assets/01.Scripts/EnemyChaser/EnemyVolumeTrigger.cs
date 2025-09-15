@@ -71,16 +71,26 @@ public class EnemyVolumeTrigger : MonoBehaviour
         {
             if (SoundManager.Instance != null)
             {
-                SoundManager.Instance.FadeOutAndStopBGM(1f);
+                if (SoundManager.Instance.CurrentBGM != null)
+                {
+                    SoundManager.Instance.SaveCurrentBGMState();
+                }
+
                 if (SoundManager.Instance.EnemySource != null)
-                    SoundManager.Instance.FadeInLoopingSFX(SoundManager.Instance.EnemySource.clip, 1f, 0.5f);
+                {
+                    SoundManager.Instance.ChangeBGM(
+                        SoundManager.Instance.EnemySource.clip,
+                        1f,
+                        0.3f
+                    );
+                }
             }
         }
         else if (!inRange && PlayerInTrigger)
         {
             if (SoundManager.Instance != null)
             {
-                SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
+                // 원래 BGM 복귀
                 SoundManager.Instance.RestoreLastBGM(1f);
             }
         }
@@ -100,7 +110,6 @@ public class EnemyVolumeTrigger : MonoBehaviour
         // 부드럽게 따라감
         t = Mathf.Lerp(t, targetT, Time.deltaTime * 2f);
 
-        // ✅ 여기서 오버레이 매니저에 “내 강도”만 보고
         EnemyVolumeOverlay.Instance.Report(_id, t);
     }
 

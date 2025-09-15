@@ -205,6 +205,16 @@ public class SoundManager : Singleton<SoundManager>
             bgmSource.Stop();
     }
 
+    // 현재 재생중인 BGM 상태 저장
+    public void SaveCurrentBGMState()
+    {
+        if (bgmSource != null && bgmSource.clip != null)
+        {
+            lastBGMClip = bgmSource.clip;
+            lastBGMVolume = bgmSource.volume;
+        }
+    }
+
     // 재생되던 BGM으로 복귀
     public void RestoreLastBGM(float fadeDuration = 1f)
     {
