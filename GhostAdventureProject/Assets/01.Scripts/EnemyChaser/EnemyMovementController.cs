@@ -80,7 +80,7 @@ public class EnemyMovementController : MonoBehaviour
     {
         if (enemy.isTeleporting) return;
 
-        Vector2 delta = moveDir * patrolSpeed * Time.fixedDeltaTime;
+        Vector2 delta = moveDir * (patrolSpeed * Time.fixedDeltaTime);
         Vector2 pos   = rb.position;
         Vector2 newPos = pos;
 

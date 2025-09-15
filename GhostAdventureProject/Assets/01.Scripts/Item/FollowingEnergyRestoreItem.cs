@@ -10,13 +10,7 @@ public class FollowingEnergyRestoreItem : BaseInteractable
     [SerializeField] private int bonusRestoreAmount = 5;
     [SerializeField] private float restoreInterval = 1f;
 
-    Player player;
     private bool isFollowing = false;
-
-    override protected void Start() {
-        base.Start();
-        player = GameManager.Instance.Player;
-    }
 
     void Update()
     {

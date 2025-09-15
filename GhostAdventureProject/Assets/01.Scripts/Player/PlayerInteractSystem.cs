@@ -99,15 +99,13 @@ public class PlayerInteractSystem : MonoBehaviour
     // 플레이어 근처에 있는 오브젝트들
     public void AddInteractable(GameObject obj) {
         if (!obj) return;
-
         nearbyInteractables.Add(obj);
     }
 
     // 플레이어 근처를 벗어난 오브젝트들
     public void RemoveInteractable(GameObject obj) {
-        if (nearbyInteractables.Contains(obj)) {
-            nearbyInteractables.Remove(obj);
-        }
+        if (!nearbyInteractables.Contains(obj)) return;
+        nearbyInteractables.Remove(obj);
     }
 
     public GameObject GetEKey() => eKey;

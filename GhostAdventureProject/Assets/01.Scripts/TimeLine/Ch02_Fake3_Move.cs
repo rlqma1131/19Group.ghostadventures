@@ -14,6 +14,6 @@ public class Ch02_Fake3_Move : MonoBehaviour
 
         // X축과 Z축 방향 이동
         Vector3 move = new Vector3(h, 0, v).normalized;
-        transform.Translate(move * moveSpeed * Time.deltaTime, Space.World);
+        transform.Translate(move * (moveSpeed * Time.deltaTime), Space.World);
     }
 }
