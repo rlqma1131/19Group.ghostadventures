@@ -125,7 +125,7 @@ public class QTEUI3 : MonoBehaviour
 
     public void ShowQTEUI3()
     {
-        BasePossessable possessed = player.PossessionSystem.CurrentTarget;
+        BasePossessable possessed = player.PossessionSystem.PossessedTarget;
         PersonConditionUI conditionUI = possessed.GetComponent<PersonConditionUI>();
         conditionUI.SetCondition(conditionUI.currentCondition);
 

@@ -33,8 +33,8 @@ public class FollowingEnergyRestoreItem : BaseInteractable
         
         isFollowing = true;
 
-        player.SoulEnergySystem.SetRestoreBoost(restoreInterval, player.SoulEnergySystem.baseRestoreAmount + bonusRestoreAmount);
-        player.SoulEnergySystem.EnableHealingEffect();
+        player.SoulEnergy.SetRestoreBoost(restoreInterval, player.SoulEnergy.baseRestoreAmount + bonusRestoreAmount);
+        player.SoulEnergy.EnableHealingEffect();
 
         player.InteractSystem.RemoveInteractable(gameObject);
         if (Highlight != null) Highlight.SetActive(false);
@@ -44,8 +44,8 @@ public class FollowingEnergyRestoreItem : BaseInteractable
     public void DestroyItem() {
         if (isFollowing)
         {
-            player.SoulEnergySystem.ResetRestoreBoost();
-            player.SoulEnergySystem.DisableHealingEffect();
+            player.SoulEnergy.ResetRestoreBoost();
+            player.SoulEnergy.DisableHealingEffect();
         }
 
         Destroy(gameObject);

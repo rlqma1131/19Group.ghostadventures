@@ -71,7 +71,7 @@ public class KeyBoard : MonoBehaviour, IUIClosable
     // 키보드UI 닫기
     public void Close()
     {
-        player.SoulEnergySystem.EnableHealingEffect();
+        player.SoulEnergy.EnableHealingEffect();
         EnemyAI.ResumeAllEnemies();
 
         keyBoardPanel.SetActive(false);

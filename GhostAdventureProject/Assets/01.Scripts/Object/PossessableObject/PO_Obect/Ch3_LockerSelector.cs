@@ -125,7 +125,7 @@ public class Ch3_LockerSelector : MonoBehaviour
     private IEnumerator GameOverAfterPrompt(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
-        player.LifeManager.HandleGameOver();
+        player.Condition.HandleGameOver();
     }
     
     private IEnumerator ResetLockersAfterPenalty()

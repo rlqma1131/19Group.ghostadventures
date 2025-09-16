@@ -85,6 +85,7 @@ public class Ch2_CCTV : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     { 
+        base.OnPossessionEnterComplete();
         aKey.SetActive(true);
         dKey.SetActive(true);
     }
@@ -115,7 +116,7 @@ public class Ch2_CCTV : BasePossessable
         }
     }
 
-    public override void CantPossess()
+    public override void OnPossessionEnterFailed()
     {
         UIManager.Instance.PromptUI.ShowPrompt("전력이 끊겨있는 것 같아", 2f);
     }

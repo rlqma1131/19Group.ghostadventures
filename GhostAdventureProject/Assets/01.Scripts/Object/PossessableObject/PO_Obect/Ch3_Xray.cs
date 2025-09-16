@@ -104,6 +104,8 @@ public class Ch3_Xray : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
+        base.OnPossessionEnterComplete();
+        
         aKey.SetActive(true);
         dKey.SetActive(true);
         spaceKey.SetActive(true);

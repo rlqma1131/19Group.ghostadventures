@@ -40,7 +40,7 @@ public class Ch2_ClearDoor : BaseInteractable
 
     protected override void OnTriggerExit2D(Collider2D collision) {
         if (collision.CompareTag("Player")) {
-            SetHighlight(false);
+            ShowHighlight(false);
             player.InteractSystem.RemoveInteractable(gameObject);
             playerNearby = false;
         }

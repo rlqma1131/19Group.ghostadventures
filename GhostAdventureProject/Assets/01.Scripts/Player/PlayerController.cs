@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Animator animator;
     [SerializeField] SpriteRenderer mainSprite;
     [SerializeField] float moveSpeed = 5f;
-    [SerializeField] public BasePossessable currentTarget;
 
     Player player;
     Vector3 move;
@@ -25,8 +24,7 @@ public class PlayerController : MonoBehaviour
         mainSprite = player.SpriteRenderer;
     }
 
-    void Update()
-    {
+    void Update() {
         if (player.PossessionSystem == null ||
             PossessionQTESystem.Instance == null ||
             !player.PossessionSystem.CanMove ||
@@ -38,17 +36,7 @@ public class PlayerController : MonoBehaviour
     }
 
     void HandlePossession() {
-        if (!currentTarget) return;
-
-        if (Input.GetKeyDown(KeyCode.E)) {
-            if (CurrentTargetIsPossessable()) {
-                player.PossessionSystem.TryPossess();
-            }
-            else {
-                Debug.Log("빙의불가능 상태");
-                currentTarget.CantPossess();
-            }
-        }
+        if (Input.GetKeyDown(KeyCode.E)) player.PossessionSystem.TryPossess();
     }
 
     void OnDestroy() {
@@ -76,13 +64,5 @@ public class PlayerController : MonoBehaviour
         // Move character
         move = new Vector3(h, v, 0); 
         transform.position += move * (moveSpeed * Time.deltaTime);
-    }
-
-    bool CurrentTargetIsPossessable() {
-        // 가까운 대상이 빙의 가능 상태인지 확인
-        return currentTarget != null
-            && player.InteractSystem.CurrentClosest == currentTarget.gameObject
-            && !currentTarget.IsPossessedState
-            && currentTarget.HasActivated;
     }
 }

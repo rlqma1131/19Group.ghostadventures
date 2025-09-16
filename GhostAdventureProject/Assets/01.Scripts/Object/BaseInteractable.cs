@@ -32,10 +32,11 @@ public class BaseInteractable : MonoBehaviour, IInteractable
     /// </summary>
     protected virtual void Start() {
         player = GameManager.Instance.Player;
+        
         highlightObj?.SetActive(false);
     }
 
-    public void SetHighlight(bool pop) => highlightObj?.SetActive(pop);
+    public void ShowHighlight(bool pop) => highlightObj?.SetActive(pop);
 
     public virtual void TriggerEvent() { }
 
@@ -48,7 +49,7 @@ public class BaseInteractable : MonoBehaviour, IInteractable
 
     protected virtual void OnTriggerExit2D(Collider2D other) {
         if (other.CompareTag("Player")) {
-            SetHighlight(false);
+            ShowHighlight(false);
             player.InteractSystem.RemoveInteractable(gameObject);
         }
     }

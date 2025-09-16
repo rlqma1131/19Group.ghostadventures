@@ -67,7 +67,7 @@ public class Ch1_Cat : MoveBasePossessable
 
     public override void OnQTESuccess()
     {
-        player.SoulEnergySystem.RestoreAll();
+        player.SoulEnergy.RestoreAll();
 
         PossessionStateManager.Instance.StartPossessionTransition();
     }

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using UnityEngine;
 using static _01.Scripts.Utilities.Timer;
 
-public class SoulEnergySystem : MonoBehaviour
+public class PlayerSoulEnergy : MonoBehaviour
 {
     [Header("Soul Energy Settings")]
     [SerializeField] int maxEnergy;

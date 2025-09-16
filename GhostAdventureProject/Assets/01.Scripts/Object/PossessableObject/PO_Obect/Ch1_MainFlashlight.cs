@@ -189,6 +189,7 @@ public class Ch1_MainFlashlight : BasePossessable
     // 빙의 하고 바로 줌
     public override void OnPossessionEnterComplete()
     {
+        base.OnPossessionEnterComplete();
         EnemyAI.PauseAllEnemies();
         isControlMode = true;
         UIManager.Instance.PlayModeUI_CloseAll();

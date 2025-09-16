@@ -35,6 +35,7 @@ public class MoveBasePossessable : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
+        base.OnPossessionEnterComplete();
         zoomCamera.Priority = 20;
     }
 

@@ -17,18 +17,18 @@ public class EnergyRestoreZone : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player") && IsActive) {
-            player.SoulEnergySystem.SetRestoreBoost(reduceInterval, player.SoulEnergySystem.baseRestoreAmount + bonusRestoreAmount);
-            player.SoulEnergySystem.EnableHealingEffect();
+            player.SoulEnergy.SetRestoreBoost(reduceInterval, player.SoulEnergy.baseRestoreAmount + bonusRestoreAmount);
+            player.SoulEnergy.EnableHealingEffect();
             TutorialManager.Instance.Show(TutorialStep.EnergyRestoreZone);
         }
     }
 
     void OnTriggerExit2D(Collider2D other) {
         if (other.CompareTag("Player")) {
-            if (player.SoulEnergySystem != null && player.SoulEnergySystem.gameObject.activeInHierarchy)
+            if (player.SoulEnergy != null && player.SoulEnergy.gameObject.activeInHierarchy)
             {
-                player.SoulEnergySystem.ResetRestoreBoost();
-                player.SoulEnergySystem.DisableHealingEffect();
+                player.SoulEnergy.ResetRestoreBoost();
+                player.SoulEnergy.DisableHealingEffect();
             }
         }
     }

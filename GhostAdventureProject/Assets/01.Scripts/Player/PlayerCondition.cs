@@ -4,7 +4,7 @@ using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class PlayerLifeManager : MonoBehaviour
+public class PlayerCondition : MonoBehaviour
 {
     [Header("Player Life Settings")]
     [SerializeField] int maxPlayerLives = 5; //  이것만 바꿔주면 , 판당 목숨도 알아서 조절되고 QTE 시스템도 알아서 작동할것입니다. 

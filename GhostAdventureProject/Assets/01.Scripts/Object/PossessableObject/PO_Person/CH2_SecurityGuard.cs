@@ -301,7 +301,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
     public override void OnQTESuccess()
     {
-        player.SoulEnergySystem.RestoreAll();
+        player.SoulEnergy.RestoreAll();
 
         PossessionStateManager.Instance.StartPossessionTransition();
     }
@@ -376,9 +376,10 @@ public class CH2_SecurityGuard : MoveBasePossessable
     }
     public override void OnPossessionEnterComplete() 
     {   
+        base.OnPossessionEnterComplete();
+        
         anim.SetBool("Rest", false);
         anim.SetBool("Move", false); 
-        base.OnPossessionEnterComplete();
         radio.triggerSound_Person.DOFade(0f, 5f)
         .OnComplete(() => radio.triggerSound_Person.Stop());
         Highlight.SetActive(false);

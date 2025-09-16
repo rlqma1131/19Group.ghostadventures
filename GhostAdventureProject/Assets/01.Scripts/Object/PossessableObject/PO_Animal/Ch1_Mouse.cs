@@ -41,8 +41,7 @@ public class Ch1_Mouse : MoveBasePossessable
         }
 
         base.Update();
-        if(isPossessed)
-            InteractTutorial();
+        if(isPossessed) InteractTutorial();
 
         if(canEnter)
             q_Key.SetActive(true);
@@ -109,6 +108,7 @@ public class Ch1_Mouse : MoveBasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        base.OnPossessionEnterComplete();
         zoomCamera.Priority = 20;
         SoundManager.Instance.PlaySFX(mouse);
     }

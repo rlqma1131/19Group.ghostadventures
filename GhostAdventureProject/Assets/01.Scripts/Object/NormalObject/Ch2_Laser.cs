@@ -22,7 +22,7 @@ public class Ch2_Laser : MonoBehaviour
         if (collider.CompareTag("Player"))
         {
             timelineDirector.Play();
-            player.SoulEnergySystem.Consume(1);
+            player.SoulEnergy.Consume(1);
             player.PossessionSystem.CanMove = false;
             GameManager.Instance.PlayerController.Animator.SetBool("Move", false);
             GameManager.Instance.PlayerController.Animator.Play("Hit");

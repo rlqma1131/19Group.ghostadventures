@@ -163,9 +163,9 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         Time.timeScale = 1f;
         isPaused = false;
         if (player) player.PossessionSystem.CanMove = true; // 임시완
-        if (player.LifeManager != null) // 플레이어 생명 불러오기 
+        if (player.Condition != null) // 플레이어 생명 불러오기 
         {
-            player.LifeManager.ResetLives();
+            player.Condition.ResetLives();
         }
         SceneManager.LoadScene("StartScene");
     }

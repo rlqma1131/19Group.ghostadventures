@@ -70,9 +70,9 @@ public class PlayerInteractSystem : MonoBehaviour
         // 이전 오브젝트 처리
         if (currentClosest) {
             // 팝업 끄기
-            if (currentClosest.TryGetComponent(out BaseInteractable prevInteractable)) {
+            if (currentClosest.TryGetComponent(out IInteractable prevInteractable)) {
                 eKey.SetActive(false);
-                prevInteractable.SetHighlight(false);
+                prevInteractable.ShowHighlight(false);
             }
         }
 
@@ -84,15 +84,15 @@ public class PlayerInteractSystem : MonoBehaviour
         if (currentClosest.TryGetComponent(out MemoryFragment memory)) {
             if (!memory.IsScannable) {
                 eKey.SetActive(false);
-                memory.SetHighlight(false);
+                memory.ShowHighlight(false);
                 return;
             }
         }
 
         // 팝업 켜기
-        if (currentClosest.TryGetComponent(out BaseInteractable nextInteractable)) {
+        if (currentClosest.TryGetComponent(out IInteractable nextInteractable)) {
             eKey.SetActive(true);
-            nextInteractable.SetHighlight(true);
+            nextInteractable.ShowHighlight(true);
         }
     }
 

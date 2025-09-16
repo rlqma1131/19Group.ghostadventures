@@ -178,6 +178,8 @@ public class Ch2_Radio : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        base.OnPossessionEnterComplete();
+        
         UIManager.Instance.PlayModeUI_CloseAll();
         zoomRadio.SetActive(true);
         zoomCamera.Priority = 20; // 빙의 시 카메라 우선순위 높이기

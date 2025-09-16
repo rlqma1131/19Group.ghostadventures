@@ -51,9 +51,9 @@ public class EnemyVolumeTrigger : MonoBehaviour
         if (PossessionStateManager.Instance
             && PossessionStateManager.Instance.IsPossessing()
             && player
-            && player.PossessionSystem.CurrentTarget)
+            && player.PossessionSystem.PossessedTarget)
         {
-            target = player.PossessionSystem.CurrentTarget.transform;
+            target = player.PossessionSystem.PossessedTarget.transform;
         }
         else if (player)
         {

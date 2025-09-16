@@ -188,6 +188,7 @@ public class Ch2_CCTVMonitor : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
+        base.OnPossessionEnterComplete();
         EnemyAI.PauseAllEnemies();
         zoomCamera.Priority = 20;
 

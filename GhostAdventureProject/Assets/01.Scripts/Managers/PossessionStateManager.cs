@@ -26,10 +26,10 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
 
     public void StartPossessionTransition() // 빙의 전환 실행 ( 빙의 애니메이션도 함께 )
     {
-        player.SoulEnergySystem?.ResetRestoreBoost();
-        player.SoulEnergySystem?.DisableHealingEffect();
+        player.SoulEnergy?.ResetRestoreBoost();
+        player.SoulEnergy?.DisableHealingEffect();
 
-        possessedTarget = player.PossessionSystem.CurrentTarget;
+        possessedTarget = player.PossessionSystem.PossessedTarget;
         player.PossessionSystem.PlayPossessionInAnimation();
     }
 

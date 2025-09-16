@@ -231,6 +231,8 @@ public class Ch3_Nurse : MoveBasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        base.OnPossessionEnterComplete();
+        
         zoomCamera.Priority = 20;
         anim.SetBool("Move", false);
         if (isFirstPossessionIn)

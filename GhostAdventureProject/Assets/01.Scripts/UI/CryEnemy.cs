@@ -208,7 +208,7 @@ public class CryEnemy : MonoBehaviour
     public void AfterAttack()
     {   
         // Sudden Death Attack
-        player.LifeManager.SuddenDeath();
+        player.Condition.SuddenDeath();
     }
 
     public void OnMusicBoxSuccess()

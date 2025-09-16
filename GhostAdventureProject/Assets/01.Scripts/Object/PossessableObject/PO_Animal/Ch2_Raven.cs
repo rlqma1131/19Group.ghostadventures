@@ -105,7 +105,7 @@ public class Ch2_Raven : MoveBasePossessable
 
     public override void OnQTESuccess()
     {
-        player.SoulEnergySystem.RestoreAll();
+        player.SoulEnergy.RestoreAll();
 
         PossessionStateManager.Instance.StartPossessionTransition();
     }

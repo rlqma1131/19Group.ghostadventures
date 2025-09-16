@@ -270,6 +270,8 @@ public class Ch3_Lock : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        base.OnPossessionEnterComplete();
+        
         ShowLockZoom();
         if (!xrayMonitor.IsSecondFind || !documentIndex.Any(doc => doc.IsChecked))
         {

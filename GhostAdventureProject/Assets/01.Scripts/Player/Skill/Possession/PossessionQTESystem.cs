@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using _01.Scripts.Player;
 using UnityEngine;
 
 public class PossessionQTESystem : MonoBehaviour
@@ -7,33 +6,23 @@ public class PossessionQTESystem : MonoBehaviour
     // 싱글톤
     public static PossessionQTESystem Instance { get; private set; }
 
-    [SerializeField] private QTEUI QTEUI;
-    [SerializeField] private QTEUI3 QTEUI3;
-    public bool isRunning { get; private set; } = false;
+    [SerializeField] QTEUI QTEUI;
+    [SerializeField] QTEUI3 QTEUI3;
 
-    void Awake() 
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            // Destroy(gameObject);
-            return;
-        }
+    public bool isRunning { get; private set; }
+
+    void Awake() {
+        if (Instance == null) { Instance = this; }
     }
 
-    private void Start() {
-        if(QTEUI != null)
+    void Start() {
+        if (QTEUI != null)
             QTEUI.gameObject.SetActive(false);
-        if(QTEUI3 != null)
+        if (QTEUI3 != null)
             QTEUI3.gameObject.SetActive(false);
     }
 
-
-    public void StartQTE()
-    {
+    public void StartQTE() {
         Time.timeScale = 0.3f;
         // UIManager연동되면 스캔 때 까만 배경 활성화
         isRunning = true;
@@ -42,8 +31,7 @@ public class PossessionQTESystem : MonoBehaviour
         EnemyAI.PauseAllEnemies();
     }
 
-    public void StartQTE3()
-    {
+    public void StartQTE3() {
         Time.timeScale = 0.3f;
         // UIManager연동되면 스캔 때 까만 배경 활성화
         isRunning = true;
@@ -52,24 +40,21 @@ public class PossessionQTESystem : MonoBehaviour
         EnemyAI.PauseAllEnemies();
     }
 
-    public void HandleQTEResult(bool success)
-    {
+    public void HandleQTEResult(bool success) {
         isRunning = false;
         // UIManager연동되면 스캔 때 까만 배경 비활성화
         GameManager.Instance.Player.PossessionSystem.CanMove = true;
-        
+
         ResetTimeScale();
-        
-        if (success)
-        {
+
+        if (success) {
             Debug.Log("QTE succeeded");
             // ResetTimeScale();
             EnemyAI.ResumeAllEnemies();
-            GameManager.Instance.PlayerController.currentTarget?.OnQTESuccess();
+            GameManager.Instance.Player.PossessionSystem.PossessedTarget?.OnQTESuccess();
             UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("빙의 성공!", 2f);
         }
-        else
-        {
+        else {
             Debug.Log("QTE failed");
             EnemyAI.ResumeAllEnemies();
             StartCoroutine(DelayedFailure());
@@ -77,31 +62,11 @@ public class PossessionQTESystem : MonoBehaviour
         }
     }
 
-    private void ResetTimeScale()
-    {
-        Time.timeScale = 1f;
-    }
+    void ResetTimeScale() => Time.timeScale = 1f;
 
-    private IEnumerator DelayedFailure()
-    {
+    IEnumerator DelayedFailure() {
         yield return new WaitForSeconds(0.05f);
         // ResetTimeScale();
-        GameManager.Instance.PlayerController.currentTarget?.OnQTEFailure();
+        GameManager.Instance.Player.PossessionSystem.PossessedTarget?.OnQTEFailure();
     }
-
-    // BasePossessable
-    //public void OnQTESuccess()
-    //{
-    //    Debug.Log("QTE 성공 - 빙의 완료");
-
-    //    player.PossessionSystem.CurrentTarget.isPossessed = true;
-    //    PossessionStateManager.Instance.StartPossessionTransition();
-    //}
-
-    //public void OnQTEFailure()
-    //{
-    //    Debug.Log("QTE 실패 - 빙의 취소");
-    //    player.PossessionSystem.CurrentTarget.isPossessed = false;
-    //    player.SoulEnergySystem.Consume(1);
-    //}
 }

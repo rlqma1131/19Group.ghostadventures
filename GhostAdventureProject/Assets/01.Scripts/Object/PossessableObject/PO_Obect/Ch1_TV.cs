@@ -184,6 +184,7 @@ public class Ch1_TV : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        base.OnPossessionEnterComplete();
         EnemyAI.PauseAllEnemies();
 
         UIManager.Instance.PlayModeUI_CloseAll();

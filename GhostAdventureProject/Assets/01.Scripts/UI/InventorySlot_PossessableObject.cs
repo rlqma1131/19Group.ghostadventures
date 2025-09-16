@@ -3,8 +3,7 @@ using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
 
-    [System.Serializable]
-
+[System.Serializable]
 public class InventorySlot_PossessableObject : MonoBehaviour
 {
     public ItemData item;
@@ -12,7 +11,7 @@ public class InventorySlot_PossessableObject : MonoBehaviour
     public int quantity;
     public TMP_Text keyText_PO;
 
-        public void SetKeyVisible(bool on)
+    public void SetKeyVisible(bool on)
     {
         if (keyText_PO) keyText_PO.gameObject.SetActive(on);
     }
@@ -58,7 +57,5 @@ public class InventorySlot_PossessableObject : MonoBehaviour
             iconImage.enabled = false;
         }
     }
-
-
 }
 

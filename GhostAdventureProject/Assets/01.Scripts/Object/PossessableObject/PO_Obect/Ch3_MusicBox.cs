@@ -241,7 +241,7 @@ public class Ch3_MusicBox : BaseInteractable
     {
         if (other.CompareTag("Player"))
         {
-            SetHighlight(false);
+            ShowHighlight(false);
             player.InteractSystem.RemoveInteractable(gameObject);
             playAble = false;
         }

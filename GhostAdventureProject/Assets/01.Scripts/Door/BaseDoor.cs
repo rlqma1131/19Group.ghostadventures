@@ -36,7 +36,7 @@ public abstract class BaseDoor : BaseInteractable
         if (player.InteractSystem.CurrentClosest != gameObject) return;
 
         if (EnemyAI.IsAnyQTERunning) {
-            SetHighlight(false);
+            ShowHighlight(false);
             return;
         }
 
@@ -44,7 +44,7 @@ public abstract class BaseDoor : BaseInteractable
             TryInteract();
         }
 
-        SetHighlight(playerNearby);
+        ShowHighlight(playerNearby);
     }
 
     protected abstract void TryInteract();

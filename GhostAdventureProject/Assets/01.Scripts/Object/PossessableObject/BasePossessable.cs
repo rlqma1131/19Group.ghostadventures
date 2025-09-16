@@ -1,78 +1,192 @@
-﻿using UnityEngine;
+﻿using _01.Scripts.Extensions;
+using _01.Scripts.Player;
+using UnityEngine;
 
-public abstract class BasePossessable : BaseInteractable
+public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessable
 {
+    [Header("Base Interactable References")]
+    [SerializeField] protected GameObject highlightObj;
+
     [Header("Base Possessable Reference")]
     [SerializeField] protected Animator anim;
     [SerializeField] protected AudioClip possessionSFX;
     
     [Header("Current State of Possessable Object")]
     [SerializeField] protected bool hasActivated; // 빙의가 가능한 상태인지 여부
-    [SerializeField] public bool isPossessed;
+    [SerializeField] protected bool isPossessed;
     
+    // Fields
+    protected Player player;
+    
+    // Properties
+    public GameObject Highlight => highlightObj;
     public bool HasActivated => hasActivated;
-    public bool IsPossessedState => isPossessed;
+    public bool IsPossessed => isPossessed;
 
-    new protected virtual void Start() {
-        highlightObj?.SetActive(false);
+    /// <summary>
+    /// Get Highlight Object Component(The class which inherits BaseInteractable)
+    /// If overriding is needed, please always use base.Awake();
+    /// </summary>
+    protected virtual void Awake() {
+        Transform component = 
+            gameObject.GetComponentInChildren_SearchByName<Transform>("Highlight", true);
+        highlightObj = component != null ? component.gameObject : null;
+    }
+    
+    /// <summary>
+    /// Initialize Important Parameters(Player, Highlight active state, Booleans)
+    /// </summary>
+    protected virtual void Start() {
         player = GameManager.Instance.Player;
         isPossessed = false;
         hasActivated = true;
+        
+        highlightObj?.SetActive(false);
     }
 
+    /// <summary>
+    /// Do operations in every frame
+    /// Using base.Update() is optional
+    /// </summary>
     protected virtual void Update() {
         if (Input.GetKeyDown(KeyCode.E) && isPossessed) Unpossess();
         TriggerEvent();
     }
     
-    // 상호작용 메시지 표시 대상 설정
-    protected override void OnTriggerEnter2D(Collider2D other) {
-        if (!hasActivated) return;
+    /// <summary>
+    /// Show or Hide Highlight of object
+    /// </summary>
+    /// <param name="pop"></param>
+    public void ShowHighlight(bool pop) => highlightObj?.SetActive(pop);
 
-        base.OnTriggerEnter2D(other);
+    /// <summary>
+    /// Events will activate in every frame
+    /// </summary>
+    public virtual void TriggerEvent() { }
+
+    /// <summary>
+    /// Called when the user tries to possess the object
+    /// </summary>
+    /// <returns></returns>
+    public bool TryPossess() {
+        switch (tag) {
+            case "Scanner":
+            case "Cat": break;
+            case "Person":
+                // 사람 구현되면 피로도에 따라 소모량 조정
+                if (!player.SoulEnergy.HasEnoughEnergy(1)) {
+                    UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다");
+                    return false;
+                }
+
+                PersonCondition condition = GetComponent<PersonConditionUI>().currentCondition;
+                switch (condition) {
+                    case PersonCondition.Vital: player.SoulEnergy.Consume(-1); break;
+                    case PersonCondition.Normal: player.SoulEnergy.Consume(0); break;
+                    case PersonCondition.Tired: player.SoulEnergy.Consume(1); break;
+                    default: player.SoulEnergy.Consume(0); break;
+                }
+                break;
+            default:
+                if (!player.SoulEnergy.HasEnoughEnergy(1)) {
+                    UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다");
+                    return false;
+                }
+
+                player.SoulEnergy.Consume(1);
+                break;
+        }
+
+        UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode(CompareTag("HideArea") ? "은신 시도 중..." : "빙의 시도 중...", 2f);
+        player.PossessionSystem.PossessedTarget = this;
+        RequestQTEEvent();
+        return true;
     }
-    
-    public virtual void Unpossess()
-    {
+
+    /// <summary>
+    /// Called when user tries to be unpossessed from the object
+    /// </summary>
+    public virtual void Unpossess() {
         UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("빙의 해제", 2f);
         isPossessed = false;
         PossessionStateManager.Instance.StartUnpossessTransition();
+        player.PossessionSystem.PossessedTarget = null;
+    }
+    
+    public virtual void OnPossessionEnterComplete() => isPossessed = true;
+
+    public virtual void OnPossessionEnterFailed() { }
+
+    #region QTE Event Handling Methods
+    /// <summary>
+    /// Request QTE Event when the user starts to possess the object
+    /// </summary>
+    void RequestQTEEvent() {
+        switch (tag) {
+            // 사람, 유인 오브젝트, 은신처만 QTE 요청
+            case "SoundTrigger":
+            case "HideArea":
+                PossessionQTESystem.Instance.StartQTE();
+                break;
+            case "Person":
+                PossessionQTESystem.Instance.StartQTE3();
+                break;
+            default:
+                PossessionStateManager.Instance.StartPossessionTransition();
+                break;
+        }
+    }
+    
+    /// <summary>
+    /// Called when the user successfully cleared QTE Event
+    /// </summary>
+    public virtual void OnQTESuccess() => PossessionStateManager.Instance.StartPossessionTransition();
+
+    /// <summary>
+    /// Called when the user failed to clear QTE Event
+    /// </summary>
+    public void OnQTEFailure() => isPossessed = false;
+    #endregion
+
+    /// <summary>
+    /// Register Object in nearby object cache located in player class
+    /// </summary>
+    /// <param name="other"></param>
+    protected virtual void OnTriggerEnter2D(Collider2D other) {
+        if (!hasActivated) return;
+
+        if (other.CompareTag("Player")) {
+            player.InteractSystem.AddInteractable(gameObject);
+        }
+    }
+    
+    /// <summary>
+    /// Unregister object in nearby object cache located in player class
+    /// </summary>
+    /// <param name="other"></param>
+    protected virtual void OnTriggerExit2D(Collider2D other) {
+        if (other.CompareTag("Player")) {
+            ShowHighlight(false);
+            player.InteractSystem.RemoveInteractable(gameObject);
+        }
     }
 
-    public virtual void OnQTESuccess()
-    {
-        // 빙의 효과음
-        //SoundManager.Instance.PlaySFX(possessionSFX);
-
-        PossessionStateManager.Instance.StartPossessionTransition();
+    #region Object State Refresh Methods
+    // 상태 기록
+    protected void MarkActivatedChanged() {
+        if (TryGetComponent(out UniqueId uid))
+            SaveManager.SetPossessableState(uid.Id, hasActivated);
     }
-
-    public void OnQTEFailure()
-    {
-        isPossessed = false;
-    }
-
-    // 빙의 애니메이션이 끝나면 호출되는 메서드
-    // 필요에 따라 빙의애니메이션 끝나면 구현되는 기능들을 넣어주세요.
-    public virtual void OnPossessionEnterComplete() { }
-
-    public virtual void CantPossess() { }
-
+    
     // 로드 시 상태 셋업
-    public void ApplyHasActivatedFromSave(bool value)
-    {
+    public void ApplyHasActivatedFromSave(bool value) {
         if (hasActivated == value) return;
+        
         hasActivated = value;
         OnRestoredHasActivated(value);
     }
 
     // 추후 VFX/콜라이더/애니 갱신 등
     protected virtual void OnRestoredHasActivated(bool value) { }
-
-    // 상태 기록
-    protected void MarkActivatedChanged()
-    {
-        if (TryGetComponent(out UniqueId uid))
-            SaveManager.SetPossessableState(uid.Id, hasActivated);
-    }
+    #endregion
 }

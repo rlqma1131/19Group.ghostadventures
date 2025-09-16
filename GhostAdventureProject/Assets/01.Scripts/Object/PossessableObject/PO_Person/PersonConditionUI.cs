@@ -27,7 +27,7 @@ public class PersonConditionUI : MonoBehaviour
     
     void Update()
     {
-        if (!targetPerson.HasActivated || targetPerson.isPossessed)
+        if (!targetPerson.HasActivated || targetPerson.IsPossessed)
         {
             if (UI != null) UI.SetActive(false);
             return;
