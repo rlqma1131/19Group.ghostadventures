@@ -195,10 +195,8 @@ public class Ch1_MainFlashlight : BasePossessable
         zoomCamera.Priority = 20;
         
         // 퍼즐이 성공했거나 실패하지 않았으면 기존 흐름 유지
-        if (puzzleCompleted) return;
-
-        // 실패 이후 재빙의 가능하게 만들기
-        if (countdownTimer.IsRunning) return;
+        // 현재 퍼즐 풀이를 진행 중인 경우 타이머 시작 X
+        if (puzzleCompleted || countdownTimer.IsRunning) return;
         
         UIManager.Instance.NoticePopupUI.FadeInAndOut("※ 제한 시간: 45초");
         
