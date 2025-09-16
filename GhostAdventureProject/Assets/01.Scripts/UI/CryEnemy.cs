@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 
 //Ch3 울보
@@ -32,7 +33,8 @@ public class CryEnemy : MonoBehaviour
     [SerializeField] private float chaseRange;                  // 추격 범위
     [SerializeField] private float attackRange;                 // 공격 범위
 
-    private GameObject player;
+    private GameObject playerObj;
+    Player player;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private SoundManager soundManager;
@@ -52,7 +54,7 @@ public class CryEnemy : MonoBehaviour
 
     void Start()
     {   
-        player = GameObject.FindGameObjectWithTag("Player");
+        playerObj = GameObject.FindGameObjectWithTag("Player");
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
         anim = GetComponentInChildren<Animator>();
@@ -64,7 +66,7 @@ public class CryEnemy : MonoBehaviour
 
     void Update()
     {
-        playerInRoomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
+        playerInRoomName = playerObj.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
         if (cryEnemyInRoomName == playerInRoomName && !clear && !isCrying)
         {
             StartCrying();
@@ -173,17 +175,17 @@ public class CryEnemy : MonoBehaviour
         if (playerInRoomName == cryEnemyInRoomName)
         {
             anim.SetBool("Chase", true);
-            Vector2 direction = (player.transform.position - transform.position).normalized;
+            Vector2 direction = (playerObj.transform.position - transform.position).normalized;
             lastDirection = direction;
             // 이동
             rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
             
-            if(transform.position.x - player.transform.position.x >0)
+            if(transform.position.x - playerObj.transform.position.x >0)
                 sr.flipX = true;
             else
                 sr.flipX = false;
 
-            if (Mathf.Abs(transform.position.x - player.transform.position.x) < 0.1f)
+            if (Mathf.Abs(transform.position.x - playerObj.transform.position.x) < 0.1f)
             {
                 currentState = CryEnemyState.Attack;
             }
@@ -194,7 +196,7 @@ public class CryEnemy : MonoBehaviour
     {
         anim.SetBool("Attack", true);
 
-        if (Mathf.Abs(transform.position.x - player.transform.position.x) >= 0.2f)
+        if (Mathf.Abs(transform.position.x - playerObj.transform.position.x) >= 0.2f)
         {
             anim.SetBool("Attack", false);
             currentState = CryEnemyState.Chase;
@@ -205,15 +207,14 @@ public class CryEnemy : MonoBehaviour
     // Attack 애니메이션 종료시 작동
     public void AfterAttack()
     {   
-        PlayerLifeManager.Instance.currentPlayerLives = 1;  // 공격당하면 무조건 죽음
-        PlayerLifeManager.Instance.LosePlayerLife();
+        // Sudden Death Attack
+        player.LifeManager.SuddenDeath();
     }
 
     public void OnMusicBoxSuccess()
     {
         successCount++;
-        if(successCount >=3)
-        {
+        if(successCount >=3) {
             StopCryingAndSmile();
         }
     }

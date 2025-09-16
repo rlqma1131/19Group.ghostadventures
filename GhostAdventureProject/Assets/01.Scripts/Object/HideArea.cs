@@ -40,7 +40,7 @@ public class HideArea : BasePossessable
     {
         while (isHiding)
         {
-            SoulEnergySystem.Instance.Consume(energyCost);
+            player.SoulEnergySystem.Consume(energyCost);
             yield return new WaitForSeconds(energyConsumeCycle);
         }
     }

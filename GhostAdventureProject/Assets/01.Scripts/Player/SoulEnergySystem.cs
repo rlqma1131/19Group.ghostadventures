@@ -1,72 +1,74 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.ComponentModel;
 using UnityEngine;
+using static _01.Scripts.Utilities.Timer;
 
 public class SoulEnergySystem : MonoBehaviour
 {
-    // 싱글톤
-    public static SoulEnergySystem Instance { get; private set; }
-
-    public int maxEnergy;
-    public int currentEnergy;
+    [Header("Soul Energy Settings")]
+    [SerializeField] int maxEnergy;
+    [SerializeField, ReadOnly(true)] int currentEnergy;
+    [SerializeField] float baseRestoreInterval; // n초마다 자연 회복
+    [SerializeField] public int baseRestoreAmount;
     
-    public float baseRestoreInterval; // n초마다 자연 회복
-    public int baseRestoreAmount;
+    [HideInInspector] [SerializeField] float currentRestoreInterval;
+    [HideInInspector] [SerializeField] int currentRestoreAmount;
 
-    [SerializeField] private GameObject healingEffectParticle;
-    
-    [HideInInspector] public float currentRestoreInterval;
-    [HideInInspector] public int currentRestoreAmount;
-    
-    private Coroutine passiveRestoreCoroutine;
+    [Header("Healing Effect Particle Prefab")]
+    [SerializeField] GameObject healingEffectParticle;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(this);
-            return;
-        }
+    // Fields
+    CountdownTimer restoreTimer;
+    
+    // Properties
+    public int CurrentEnergy => currentEnergy;
+
+    void OnEnable() {
+        currentRestoreInterval = baseRestoreInterval;
+        currentRestoreAmount = baseRestoreAmount;
     }
-
-    private void Start() {
+    
+    void Start() {
         currentEnergy = maxEnergy;
+        restoreTimer = new CountdownTimer(currentRestoreInterval);
+        restoreTimer.OnTimerStop += () => {
+            if (restoreTimer.IsFinished) Restore(currentRestoreAmount);
+            restoreTimer.Start();
+        };
+        
+        restoreTimer.Start();
     }
+
+    void Update() => restoreTimer.Tick(Time.deltaTime);
 
     public bool HasEnoughEnergy(int amount) => currentEnergy >= amount;
 
-    public void Consume(int amount) // 에너지 소모
-    {
+    // 에너지 소비
+    public void Consume(int amount) {
+        if (currentEnergy <= 0) return;
+        
         currentEnergy = Mathf.Max(currentEnergy - amount, 0);
         UIManager.Instance.SoulGaugeUI.SetSoulGauge(currentEnergy);
     }
-
-    public void Restore(int amount) // 에너지 회복
-    {
+    
+    // 에너지 회복
+    public void Restore(int amount) {
+        if (currentEnergy >= maxEnergy) return;
+        
         currentEnergy = Mathf.Min(currentEnergy + amount, maxEnergy);
         UIManager.Instance.SoulGaugeUI.SetSoulGauge(currentEnergy);
     }
-
-    public void RestoreAll() // 전체 회복
-    {
+    
+    // 전체 회복
+    public void RestoreAll() {
         currentEnergy = maxEnergy;
         UIManager.Instance.SoulGaugeUI.SetSoulGauge(currentEnergy);
     }
-
-    private void OnEnable()
-    {
-        currentRestoreInterval = baseRestoreInterval;
-        currentRestoreAmount = baseRestoreAmount;
-        passiveRestoreCoroutine = StartCoroutine(PassiveRestoreRoutine());
-    }
-
+    
     private IEnumerator PassiveRestoreRoutine()
     {
-        while (true)
-        {
+        while (true) {
             yield return new WaitForSeconds(currentRestoreInterval);
             
             if (this == null || !gameObject.activeInHierarchy)
@@ -76,38 +78,27 @@ public class SoulEnergySystem : MonoBehaviour
         }
     }
 
-    public void SetRestoreBoost(float newInterval, int newAmount)
-    {
-        if (newAmount <= currentRestoreAmount)
-            return;
+    public void SetRestoreBoost(float newInterval, int newAmount) {
+        if (newAmount <= currentRestoreAmount) return;
         
         currentRestoreInterval = newInterval;
         currentRestoreAmount = newAmount;
         
-        if(passiveRestoreCoroutine != null)
-            StopCoroutine(passiveRestoreCoroutine);
-        passiveRestoreCoroutine = StartCoroutine(PassiveRestoreRoutine());
+        restoreTimer.Stop();
+        restoreTimer.Reset(currentRestoreInterval);
+        restoreTimer.Start();
     }
 
-    public void ResetRestoreBoost()
-    {
+    public void ResetRestoreBoost() {
         currentRestoreInterval = baseRestoreInterval;
         currentRestoreAmount = baseRestoreAmount;
         
-        if(passiveRestoreCoroutine != null)
-            StopCoroutine(passiveRestoreCoroutine);
-        passiveRestoreCoroutine = StartCoroutine(PassiveRestoreRoutine());
+        restoreTimer.Stop();
+        restoreTimer.Reset(currentRestoreInterval);
+        restoreTimer.Start();
     }
 
-    public void EnableHealingEffect()
-    {
-        if(healingEffectParticle != null)
-            healingEffectParticle.gameObject.SetActive(true);
-    }
+    public void EnableHealingEffect() => healingEffectParticle?.gameObject.SetActive(true);
 
-    public void DisableHealingEffect()
-    {
-        if(healingEffectParticle != null)
-            healingEffectParticle.gameObject.SetActive(false);
-    }
+    public void DisableHealingEffect() => healingEffectParticle?.gameObject.SetActive(false);
 }

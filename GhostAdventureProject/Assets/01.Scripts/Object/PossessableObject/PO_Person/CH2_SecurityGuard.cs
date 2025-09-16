@@ -301,7 +301,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
     public override void OnQTESuccess()
     {
-        SoulEnergySystem.Instance.RestoreAll();
+        player.SoulEnergySystem.RestoreAll();
 
         PossessionStateManager.Instance.StartPossessionTransition();
     }

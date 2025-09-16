@@ -12,12 +12,14 @@ public class PossessionSystem : MonoBehaviour
 
     BasePossessable obsessingTarget;
     PlayerController controller;
+    Player player;
     
     public BasePossessable CurrentTarget => currentTarget;
 
     public bool CanMove { get; set; } = true;
 
     public void Initialize(Player player) {
+        this.player = player;
         controller = player.Controller;
     }
 
@@ -42,27 +44,27 @@ public class PossessionSystem : MonoBehaviour
             case "Cat": break;
             case "Person":
                 // 사람 구현되면 피로도에 따라 소모량 조정
-                if (!SoulEnergySystem.Instance.HasEnoughEnergy(1)) {
+                if (!player.SoulEnergySystem.HasEnoughEnergy(1)) {
                     UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다");
                     return false;
                 }
 
                 PersonCondition condition = obsessingTarget.GetComponent<PersonConditionUI>().currentCondition;
                 switch (condition) {
-                    case PersonCondition.Vital: SoulEnergySystem.Instance.Consume(-1); break;
-                    case PersonCondition.Normal: SoulEnergySystem.Instance.Consume(0); break;
-                    case PersonCondition.Tired: SoulEnergySystem.Instance.Consume(1); break;
-                    default: SoulEnergySystem.Instance.Consume(0); break;
+                    case PersonCondition.Vital: player.SoulEnergySystem.Consume(-1); break;
+                    case PersonCondition.Normal: player.SoulEnergySystem.Consume(0); break;
+                    case PersonCondition.Tired: player.SoulEnergySystem.Consume(1); break;
+                    default: player.SoulEnergySystem.Consume(0); break;
                 }
 
                 break;
             default:
-                if (!SoulEnergySystem.Instance.HasEnoughEnergy(1)) {
+                if (!player.SoulEnergySystem.HasEnoughEnergy(1)) {
                     UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다");
                     return false;
                 }
 
-                SoulEnergySystem.Instance.Consume(1);
+                player.SoulEnergySystem.Consume(1);
                 break;
         }
 

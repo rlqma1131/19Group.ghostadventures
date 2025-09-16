@@ -73,7 +73,7 @@ public class YameScan_fake : BaseInteractable
     private void TryStartScan()
     {
         // 영혼 에너지가 있는지 확인
-        if (SoulEnergySystem.Instance != null && SoulEnergySystem.Instance.currentEnergy <= 0)
+        if (player.SoulEnergySystem != null && player.SoulEnergySystem.CurrentEnergy <= 0)
         {
             UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
             // 여기에 부족 알림 UI나 사운드를 재생하는 로직
@@ -98,7 +98,7 @@ public class YameScan_fake : BaseInteractable
         }
 
         Time.timeScale = 0.3f;
-        SoulEnergySystem.Instance?.Consume(1); // 없으면 무시
+        player.SoulEnergySystem?.Consume(1); // 없으면 무시
     }
 
     private void UpdateScan()

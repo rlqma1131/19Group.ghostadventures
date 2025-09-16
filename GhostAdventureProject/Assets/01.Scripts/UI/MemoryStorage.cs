@@ -39,8 +39,8 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
         RedrawStorage();
     }
 
-    void Start() {
-        player = GameManager.Instance.Player;
+    public void Initialize(Player player) {
+        this.player = player;
     }
 
     private void OnDisable()

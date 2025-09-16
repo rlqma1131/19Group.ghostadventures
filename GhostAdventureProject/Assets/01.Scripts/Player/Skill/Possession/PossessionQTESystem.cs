@@ -102,6 +102,6 @@ public class PossessionQTESystem : MonoBehaviour
     //{
     //    Debug.Log("QTE 실패 - 빙의 취소");
     //    player.PossessionSystem.CurrentTarget.isPossessed = false;
-    //    SoulEnergySystem.Instance.Consume(1);
+    //    player.SoulEnergySystem.Consume(1);
     //}
 }

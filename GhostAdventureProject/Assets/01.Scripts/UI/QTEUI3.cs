@@ -34,8 +34,8 @@ public class QTEUI3 : MonoBehaviour
 
     Player player;
 
-    void Start() {
-        player = GameManager.Instance.Player;
+    public void Initialize(Player player) {
+        this.player = player;
     }
 
     void Update()

@@ -31,7 +31,7 @@ public abstract class BasePossessable : BaseInteractable
 
         base.OnTriggerEnter2D(other);
     }
-
+    
     public virtual void Unpossess()
     {
         UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("빙의 해제", 2f);

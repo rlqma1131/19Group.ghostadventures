@@ -40,10 +40,10 @@ public class EnemyQTEHandler : MonoBehaviour
     public void StartQTE()
     {
         // 목숨이 1개 남았을 때 잡히면 즉시 게임오버
-        if (PlayerLifeManager.Instance.GetCurrentLives() <= 1)
+        if (player.LifeManager.GetCurrentLives() <= 1)
         {
             animator.SetTrigger("QTEFail");
-            PlayerLifeManager.Instance.HandleGameOver();
+            player.LifeManager.LosePlayerLife();
             return;
         }
         
@@ -92,7 +92,7 @@ public class EnemyQTEHandler : MonoBehaviour
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), true);
             animator.updateMode = AnimatorUpdateMode.UnscaledTime;
             animator.SetTrigger("QTESuccess");
-            PlayerLifeManager.Instance.LosePlayerLife();
+            player.LifeManager.LosePlayerLife();
             EnemyAI.IsAnyQTERunning = false;
             
             const float safetyMax = 5f; // 이벤트 누락 대비 상한
@@ -132,7 +132,7 @@ public class EnemyQTEHandler : MonoBehaviour
         {
             animator.SetTrigger("QTEFail");
             qteEffect?.EndQTEEffects(true);
-            PlayerLifeManager.Instance.HandleGameOver();
+            player.LifeManager.HandleGameOver();
             isQTERunning = false;
             EnemyAI.IsAnyQTERunning = false;
             yield break;

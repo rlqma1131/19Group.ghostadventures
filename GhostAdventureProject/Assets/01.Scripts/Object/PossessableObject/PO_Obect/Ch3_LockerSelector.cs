@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System.Linq;
+using _01.Scripts.Player;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -47,13 +49,17 @@ public class Ch3_LockerSelector : MonoBehaviour
     [SerializeField] private float gameOverDelay = 4f;
     private bool gameOverQueued = false;
     private Collider2D _possessionTrigger;
+
+    Player player;
     
     private void Awake()
     {
         currentAttempt = 1;
         RemainingOpens = Mathf.Max(1, opensPerAttempt);
     }
-    
+
+    void Start() => player = GameManager.Instance.Player;
+
     public void OnCorrectBodySelected()
     {
         b1fDoor.SetActive(true);
@@ -119,7 +125,7 @@ public class Ch3_LockerSelector : MonoBehaviour
     private IEnumerator GameOverAfterPrompt(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
-        PlayerLifeManager.Instance.HandleGameOver();
+        player.LifeManager.HandleGameOver();
     }
     
     private IEnumerator ResetLockersAfterPenalty()
