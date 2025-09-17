@@ -195,7 +195,7 @@ public class MemoryFragment : BaseInteractable
         drop.GetComponent<PixelExploder>()?.Explode(); // 픽셀 폭발 효과 적용
 
         Destroy(drop);
-        StartCoroutine(CutsceneManager.Instance.PlayCutscene()); // 페이드인 줌인
+        StartCoroutine(Global_CutsceneManager.Instance.PlayCutscene()); // 페이드인 줌인
 
         yield return new WaitForSeconds(5f); // 흡수 될때까지 기다림
 

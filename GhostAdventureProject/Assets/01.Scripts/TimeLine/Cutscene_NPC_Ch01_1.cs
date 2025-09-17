@@ -2,11 +2,13 @@
 using UnityEngine;
 using UnityEngine.Playables;
 public class Cutscene_NPC : MonoBehaviour
+
+//챕터1 아이방   시작시 NPC이벤트 재생을 위한 스크립트
 {
     [SerializeField] private PlayableDirector director;
     [SerializeField] private GameObject GarageDoor;
     
-    public RoomInfo roomInfo;
+    public Global_RoomInfo roomInfo; // 차고 방문 횟수
     public bool isCutscenePlaying = false;
 
     Player player;
@@ -34,6 +36,7 @@ public class Cutscene_NPC : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        //차고 1번이라도 방문했고, 콜라이더 충돌시 재생
         if (other.CompareTag("Player") && !isCutscenePlaying && roomInfo.roomCount >= 1)
         {
             Play_NPCscene();

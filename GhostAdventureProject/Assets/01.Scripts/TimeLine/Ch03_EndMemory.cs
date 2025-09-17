@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Ch03_EndMemory : MemoryFragment
+
+//최종 퍼즐방 진입시 컷신 자동 재생+ 진행 저장
 {
     bool activeCutscene = false;
 
@@ -11,7 +13,7 @@ public class Ch03_EndMemory : MemoryFragment
     {
         if (collision.CompareTag("Player") && !activeCutscene)
         {
-            CutsceneManager.Instance.StartCoroutine(CutsceneManager.Instance.PlayCutscene());
+            Global_CutsceneManager.Instance.StartCoroutine(Global_CutsceneManager.Instance.PlayCutscene());
             activeCutscene = true;
             player.PossessionSystem.CanMove = false;
             UIManager.Instance.PlayModeUI_CloseAll();
@@ -19,7 +21,7 @@ public class Ch03_EndMemory : MemoryFragment
             StartCoroutine(LoadNextSceneAfterDelay(3f));
         }
     }
-
+    // 일정 시간(delay) 기다린 후 다음 씬 로드 + 진행 저장
     private IEnumerator LoadNextSceneAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);

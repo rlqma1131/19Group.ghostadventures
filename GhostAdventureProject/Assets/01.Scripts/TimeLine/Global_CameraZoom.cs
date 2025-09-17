@@ -2,15 +2,15 @@
 using Cinemachine;
 using DG.Tweening;
 
-public class CameraZoom : MonoBehaviour
+public class Global_CameraZoom : MonoBehaviour
 {
     public CinemachineVirtualCamera virtualCam;
-    public Transform target;
-    public float zoomInSize = 2f;
+    public Transform target; // 줌인할 타겟 (플레이어)
+    public float zoomInSize = 2f; // 줌인할 때의 Orthographic Size
     public float zoomDuration = 1.5f;
 
     private float originalSize;
-    private Vector3 originalCamPosition;  // 🔸 초기 카메라 위치 저장용
+    private Vector3 originalCamPosition;  // 초기 카메라 위치 저장용
     private Tween zoomTween;
     private bool isZoomedIn = false;
 

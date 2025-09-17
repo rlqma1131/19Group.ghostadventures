@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 
-public class PlayerController_Ball : MonoBehaviour
+
+public class Ch03_To_Ch04_PlayerController_Ball : MonoBehaviour
 {
+    //챕3에서 챕4갈때 플레이어가 영혼의 형태로 변했을때 컨트롤러
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private ParticleSystem moveParticle;
     [SerializeField] private GameObject player;
@@ -52,6 +54,7 @@ public class PlayerController_Ball : MonoBehaviour
         rb.MovePosition(newPos);
     }
 
+    //특정 구간에서 이속 증가
     public void changeSpedd()
     {
         transform.position = player.transform.position;

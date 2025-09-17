@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//3챕에서 4챕 갈때 배경 디졸브 효과 주기 위한 스크립트
 public class Ch03_04BG_In : MonoBehaviour
 {
-
+    
     [SerializeField]private DissolveController dissolveController;
 
 

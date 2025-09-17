@@ -5,6 +5,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+//챕터 3 시작시 재생되는 컷신에서 진행 저장
 public class Ch03_Memory01_Savedata : MemoryFragment
 {
     void Start()

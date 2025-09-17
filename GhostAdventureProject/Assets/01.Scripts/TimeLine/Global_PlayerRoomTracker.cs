@@ -2,7 +2,8 @@
 using TMPro;
 using UnityEngine;
 
-public class PlayerRoomTracker : MonoBehaviour
+// 플레이어가 방에 들어갈 때마다 방문 횟수를 기록하고 방이름을 UI에 표시하는 스크립트
+public class Global_PlayerRoomTracker : MonoBehaviour
 {
     [SerializeField] private UITweenAnimator uITweenAnimator; // UI 애니메이션 컴포넌트
     [SerializeField] private TextMeshProUGUI text; // 프롬프트 컴포넌트
@@ -12,7 +13,7 @@ public class PlayerRoomTracker : MonoBehaviour
     private void Start()
     {
         // 저장된 방문 수 로드
-        var rooms = FindObjectsOfType<RoomInfo>();
+        var rooms = FindObjectsOfType<Global_RoomInfo>();
         foreach (var room in rooms)
         {
             if (SaveManager.TryGetRoomVisitCount(room.roomName, out int count))
@@ -29,7 +30,7 @@ public class PlayerRoomTracker : MonoBehaviour
     {
         if (!other.CompareTag("Room")) return;
 
-        var room = other.GetComponent<RoomInfo>();
+        var room = other.GetComponent<Global_RoomInfo>();
         if (room == null) return;
 
         room.roomCount++;

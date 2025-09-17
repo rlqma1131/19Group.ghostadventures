@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomInfo : MonoBehaviour
+//방 정보 저장 스크립트
+public class Global_RoomInfo : MonoBehaviour
 {
     public int roomCount = 0;
     public string roomName = "RoomName";

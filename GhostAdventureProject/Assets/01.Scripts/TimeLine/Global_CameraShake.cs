@@ -2,7 +2,9 @@
 using Cinemachine; // Cinemachine 네임스페이스 추가
 using System.Collections;
 
-public class CameraShake : MonoBehaviour
+
+//카메라 쉐이크가 필요할때 호출
+public class Global_CameraShake : MonoBehaviour
 {
     public CinemachineVirtualCamera virtualCamera; // 인스펙터에서 가상 카메라 연결
     private CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin;
@@ -22,8 +24,10 @@ public class CameraShake : MonoBehaviour
 
 
 
+    // duration 시간만큼 카메라 shake
     public void DoShake( float duration)
     {
+        //null체크
         if (cinemachineBasicMultiChannelPerlin != null)
         {
             cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = defaultShakeIntensity;

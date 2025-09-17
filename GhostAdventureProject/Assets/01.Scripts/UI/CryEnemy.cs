@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -64,7 +64,7 @@ public class CryEnemy : MonoBehaviour
 
     void Update()
     {
-        playerInRoomName = player.GetComponentInChildren<PlayerRoomTracker>().roomName_RoomTracker;
+        playerInRoomName = player.GetComponentInChildren<Global_PlayerRoomTracker>().roomName_RoomTracker;
         if (cryEnemyInRoomName == playerInRoomName && !clear && !isCrying)
         {
             StartCrying();

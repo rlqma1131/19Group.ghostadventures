@@ -2,7 +2,8 @@
 using DG.Tweening;
 using System.Collections;
 
-public class TVShutdownEffect : MonoBehaviour
+//챕2 cctv 기억에서 티비 켜지는 효과를 위한 트윈
+public class Ch02_TVShutdownEffect : MonoBehaviour
 {
     [Header("오브젝트 설정")]
     [SerializeField] private SpriteRenderer tvScreen;

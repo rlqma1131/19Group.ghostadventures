@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-
-public class PlayerController_ghost : MonoBehaviour
+//챕3에서 챕4로 이동할때 플레이어 움직임 제어 스크립트
+public class Ch03_To_Ch04_PlayerController_ghost : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
 

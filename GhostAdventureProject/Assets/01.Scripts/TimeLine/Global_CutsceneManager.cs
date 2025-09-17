@@ -3,11 +3,13 @@ using UnityEngine.Playables;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class CutsceneManager : Singleton<CutsceneManager>
+public class Global_CutsceneManager : Singleton<Global_CutsceneManager>
 {
 
-    public PlayableDirector director;
-    public GameObject fadePanel;
+
+    // 기억조각 스캔시 화면 점점 어두워지는 효과
+    public PlayableDirector director; // 컷신(타임라인)을 재생하는 PlayableDirector
+    public GameObject fadePanel; // 페이드 인/아웃을 위한 패널
 
 
     void OnEnable()
@@ -20,6 +22,7 @@ public class CutsceneManager : Singleton<CutsceneManager>
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
 
+    //페이드인 재생
     public IEnumerator PlayCutscene()
     {
 

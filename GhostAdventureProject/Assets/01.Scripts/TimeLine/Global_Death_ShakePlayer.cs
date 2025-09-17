@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using DG.Tweening;
-
-public class ShakePlayer : MonoBehaviour
+﻿using DG.Tweening;
+using UnityEngine;
+//플레이어가 죽을때 재생되는 타임라인에서 플레이어 덜덜더럳럴  흔들리는 스크립트
+public class Global_Death_ShakePlayer : MonoBehaviour
 {
 
     // 흔들림 강도 (위치 기준)
@@ -25,13 +25,13 @@ public class ShakePlayer : MonoBehaviour
 
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.X))
-        {
-            PopAndVanish();
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.X))
+    //    {
+    //        PopAndVanish();
+    //    }
+    //}
     public void Shake()
     {
 

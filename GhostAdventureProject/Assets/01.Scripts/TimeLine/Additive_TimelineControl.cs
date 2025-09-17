@@ -6,7 +6,16 @@ using System.Collections;
 using _01.Scripts.Player;
 using static _01.Scripts.Utilities.Timer;
 
-public class TimelineControl : MonoBehaviour
+//타임라인은 UnscaledGameTime으로 → 게임 멈춰도 정상 재생
+
+//스페이스바 3초 유지 → 컷신 씬 Unload 후 원래 씬 복귀
+
+//UI, 적 AI, 플레이어 컨트롤 정상화
+
+// 메모리 조각 스캔 완료 처리 + 팝업 표시
+
+//Additive 모드 컷씬에서 타임라인 제어
+public class Additive_TimelineControl : MonoBehaviour
 {
     public PlayableDirector director;
     [SerializeField] Image skip;
@@ -28,6 +37,7 @@ public class TimelineControl : MonoBehaviour
     void Awake() {
         if (director != null) {
             director.timeUpdateMode = DirectorUpdateMode.UnscaledGameTime;
+            // Time.timeScale = 0 이어도 타임라인 재생되도록 설정
         }
         // timeScale 0에서도 재생되도록 설정
         if (skip != null) {
@@ -39,7 +49,7 @@ public class TimelineControl : MonoBehaviour
     private void Start() {
         player = GameManager.Instance.Player;
         memoryScan = player.MemoryScan;
-        
+        // 스킵용 카운트다운 타이머
         timer = new CountdownTimer(SKIP_DURATION);
         timer.OnTimerStart += () => {
             isHolding = true;
@@ -91,7 +101,8 @@ public class TimelineControl : MonoBehaviour
         Debug.Log("타임라인 재생");
         director.Resume();
     }
-    
+
+    //Additive 씬 닫기 + 원래 씬 복귀
     public void CloseScene() {
         Debug.Log("씬 닫기");
         
@@ -105,11 +116,11 @@ public class TimelineControl : MonoBehaviour
         // 이전 BGM 복원
         SoundManager.Instance.FadeOutAndStopLoopingSFX(1f);
         SoundManager.Instance.RestoreLastBGM(1f);
-
-        if(prompt != null) {
+        // 안내 문구 표시
+        if (prompt != null) {
             UIManager.Instance.PromptUI.ShowPrompt(prompt, 3f);
         }
-        
+        // 메모리 조각 스캔 완료 처리
         if (memoryScan.CurrentMemoryFragment) {
             memoryScan.CurrentMemoryFragment.AfterScan();
             UIManager.Instance.NoticePopupUI.FadeInAndOut($"※ 기억조각 저장 됨 - [{memoryScan.CurrentMemoryFragment.data.memoryTitle}]");

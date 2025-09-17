@@ -4,21 +4,26 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MoveScene : MonoBehaviour
+// Additive 모드가 아닌 일반 컷신 씬에서
+//  - 타임라인 종료 시 다음 씬 이동
+//  - 스페이스바로 스킵 기능
+public class Scene_To_Scene_MoveScene : MonoBehaviour
 {
     [SerializeField] Image skip; // 스킵 진행 상태를 표시할 이미지
-    [SerializeField] string nextSceneName;
+    [SerializeField] string nextSceneName; //이동할 씬 이름
 
-    float skipTimer; // S 키를 누른 시간을 측정하는 타이머
+    float skipTimer; 
     const float SKIP_DURATION = 3.0f; // 스킵에 필요한 시간 (3초)
     bool isSkipActive; // 스킵 활성화 여부
 
+    // 스킵이미지 깜빡임
     [SerializeField] Image space1;
     [SerializeField] Image space2;
 
-    LoadSceneMode currentLoadMode = LoadSceneMode.Single;
+
+    LoadSceneMode currentLoadMode = LoadSceneMode.Single; // 현재 씬의 로드 모드 (Additive 방지용)
     bool isHolding;
-    Coroutine flashingCoroutine;
+    Coroutine flashingCoroutine; // 깜빡임 코루틴 저장
     Player player;
 
     void Awake() {
@@ -29,6 +34,7 @@ public class MoveScene : MonoBehaviour
 
     void Start() {
         player = GameManager.Instance.Player;
+       
         flashingCoroutine = StartCoroutine(FlashImages());
     }
 
@@ -44,7 +50,7 @@ public class MoveScene : MonoBehaviour
             if (skipTimer >= SKIP_DURATION) {
                 isSkipActive = true;
             }
-
+            // 누르는 동안 space2 이미지만 보여줌
             ShowImage2Only();
         }
 
@@ -61,6 +67,7 @@ public class MoveScene : MonoBehaviour
             flashingCoroutine = StartCoroutine(FlashImages());
         }
 
+        // 스킵 활성화 시 씬 이동
         if (isSkipActive) {
             if (currentLoadMode != LoadSceneMode.Additive) {
                 GoScene(nextSceneName);
@@ -74,9 +81,7 @@ public class MoveScene : MonoBehaviour
     public void GoScene(string Scenename) {
         // 타임라인이 종료되면 씬 이동
         GameManager.LoadThroughLoading(Scenename);
-        //if (!GameManager.Instance.Player.activeSelf)
-        //{
-        //    //GameManager.Instance.Player.gameObject.SetActive(true); // 플레이어 활성화
+
 
         Debug.Log("씬 이동: " + Scenename);
 
@@ -87,9 +92,11 @@ public class MoveScene : MonoBehaviour
     }
 
     void OnDestroy() {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded -= OnSceneLoaded; //이벤트 해제
     }
 
+
+    // 씬이 로드될 때 호출되는 함수 → 현재 씬이 Additive인지 체크
     void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
         currentLoadMode = mode; // 로드 모드 저장
     }
