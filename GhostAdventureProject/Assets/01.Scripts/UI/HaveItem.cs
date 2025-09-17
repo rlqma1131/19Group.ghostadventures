@@ -2,10 +2,11 @@
 using System.Linq;
 using UnityEngine;
 
+// 빙의 오브젝트가 갖고 있는 아이템을 빙의인벤토리에 표시해주는 스크립트입니다.
+// 빙의 오브젝트에 컴포넌트로 추가하고 initialItems에 ItemData(SO)를 넣으세요.
+
 public class HaveItem : MonoBehaviour
 {
-    // public static HaveItem Instance { get; private set; }
-
     [Header("ItemData Scriptable Object를 넣어주세요")]
     public List<ItemData> initialItems = new List<ItemData>();
 
@@ -14,21 +15,7 @@ public class HaveItem : MonoBehaviour
 
     private void Start()
     {
-        // if (Instance == null)
-        // {
-        //     Instance = this;
-        // }
-        //else
-        //{
-        //    Destroy(gameObject);
-        //    return;
-        //}
-
         ConvertToSlots();
-    }
-
-    void Update()
-    {
     }
 
     private void ConvertToSlots()
@@ -49,8 +36,15 @@ public class HaveItem : MonoBehaviour
         }
     }
 
+    // 빙의인벤토리가 비었는지 확인
     public bool IsInventoryEmpty()
     {
         return inventorySlots.All(slot => slot.item == null ||  slot.quantity <= 0);
+    }
+
+    // 빙의인벤토리에 targetItemName 을 가진 item을 갖고 있는지 확인
+    public bool IsHasItem(string targetItemName)
+    {
+        return inventorySlots.Any(slot => slot.item.Item_Name == targetItemName);
     }
 }

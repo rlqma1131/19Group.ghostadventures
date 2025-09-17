@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Ch2_MosPerson : BasePossessable
+public class Ch2_MorsePerson : BasePossessable
 {
-    private PersonConditionUI conditionUI;              // 컨디션 UI
-    private HaveItem haveitem;                          // 가지고있는 아이템
-    private bool UseAllItem = false;                    // 모든 아이템 사용했는지 확인
+    private PersonConditionUI conditionUI;      // 컨디션 UI
+    private HaveItem haveitem;                  // 가지고있는 아이템
+    private bool UseAllItem = false;            // 모든 아이템 사용했는지 확인
 
     protected override void Start()
     {

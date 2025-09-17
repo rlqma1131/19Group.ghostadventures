@@ -1,51 +1,17 @@
 ﻿using UnityEngine;
 using TMPro;
 using DG.Tweening;
-//using Microsoft.Unity.VisualStudio.Editor;
 
+// 알림팝업 스크립트입니다.
+// 화면 좌측 상단(영혼에너지 아래)에 플레이에 도움을 주는 내용을 표시할 때 사용합니다.
 public class NoticePopup : MonoBehaviour
 {
-    //public RectTransform uiElement;
-    // public CanvasGroup canvasGroup; // CanvasGroup 컴포넌트 
-
     public TextMeshProUGUI text;
     [SerializeField] CanvasGroup canvasGroup;
     public float duration = 1f;
-    
-    //public float startX = -788f;
-    //public float endX = 0f;
-
 
     public float waitTime = 2.0f; // UI가 화면에 머무는 시간 (1초)
 
-    //public void SlideInAndOut()
-    //{
-    //    //초기 위치 설정
-
-    //    Vector2 startPos = new Vector2(startX, uiElement.anchoredPosition.y);
-    //    uiElement.anchoredPosition = startPos;
-
-
-    //    Sequence sequence = DOTween.Sequence();
-
-    //    //슬라이드 인 애니메이션
-    //    sequence.Append(
-    //        uiElement.DOAnchorPosX(endX, duration)
-    //                 .SetEase(Ease.OutQuad)
-    //    );
-
-    //    //  대기 시간
-    //    sequence.AppendInterval(waitTime);
-
-    //    // 슬라이드 아웃 애니메이션
-    //    sequence.Append(
-    //        uiElement.DOAnchorPosX(startX, duration)
-    //                 .SetEase(Ease.InQuad) 
-    //    );
-
-
-    //    sequence.Play();
-    //}
     void Start()
     {
         gameObject.SetActive(false);

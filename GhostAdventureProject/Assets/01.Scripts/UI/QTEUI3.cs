@@ -4,6 +4,8 @@ using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 사람 QTE
+
 public class QTEUI3 : MonoBehaviour
 {
     [Header("UI Elements")]

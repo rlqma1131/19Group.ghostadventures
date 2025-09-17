@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 
+// 위장NPC의 대사/선택지내용을 관리하는 스크립트입니다.
+
 public class SecretNPC : MonoBehaviour
 {
     public SecretNPC_Dialogue dialogueUI;

@@ -8,8 +8,8 @@ using UnityEngine.SceneManagement;
 public class Ch1_GarageEventManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private KeyBoard keyboard;
-    [SerializeField] private KeyBoard_Enter answer;
+    [SerializeField] private Ch1_KeyBoard keyboard;
+    [SerializeField] private Ch1_KeyBoard_Enter answer;
     [SerializeField] private PlayableDirector cutsceneDirector;
     [SerializeField] private PlayableDirector cutsceneDirector_correct;
     [SerializeField] EnergyRestoreZone energyRestoreZone;
@@ -25,7 +25,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
     private bool openKeyboard = false;
     Player player;
     
-    public KeyBoard_Enter Answer => answer;
+    public Ch1_KeyBoard_Enter Answer => answer;
 
     void Start()
     {

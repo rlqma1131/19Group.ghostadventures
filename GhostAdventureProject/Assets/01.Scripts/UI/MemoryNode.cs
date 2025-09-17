@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-//using UnityEditor.SearchService;
 using UnityEngine.SceneManagement;
+
+// 기억저장소에 표시되는 기억(프리팹-MemoryNode) 스크립트입니다.
+// 획득한 기억의 이미지와 텍스트를 표시합니다. 클릭했을 때 다시 컷씬을 재생합니다.
 
 public enum MemoryState
 {

@@ -2,6 +2,8 @@
 // using System.Collections.Generic;
 // using UnityEngine;
 
+// 키설정 스크립트입니다.(현재 미사용)
+
 // public class KeyBindingManager : MonoBehaviour, IUIClosable
 // {
 //     public static KeyBindingManager Instance;

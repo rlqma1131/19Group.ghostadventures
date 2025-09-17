@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 기억 획득 & 저장을 담당하는 스크립트입니다.
+
 public class MemoryManager : MonoBehaviour
 {
     public static MemoryManager Instance { get; private set; }
