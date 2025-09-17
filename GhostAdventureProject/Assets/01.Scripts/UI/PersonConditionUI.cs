@@ -1,5 +1,8 @@
 using UnityEngine;
 
+// 빙의오브젝트-사람 컨디션UI를 표시하는 스크립트입니다.
+// 빙의오브젝트-사람에 컴포넌트로 추가해서 사용하세요.
+// currentCondition을 변경하면 그에 맞게 UI도 변경됩니다.
 public enum PersonCondition
 {
     Vital,   // 활력

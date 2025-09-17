@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TeleportButton : MonoBehaviour
+public class Ch3_TeleportButton : MonoBehaviour
 {
     [SerializeField] Transform lobby_1F;
     [SerializeField] Transform medicineRoom_1F;

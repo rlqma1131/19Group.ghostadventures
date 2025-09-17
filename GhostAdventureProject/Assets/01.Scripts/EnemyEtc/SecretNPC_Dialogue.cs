@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
+// 위장NPC의 선택지를 관리하는 스크립트입니다.
 
 public class SecretNPC_Dialogue : MonoBehaviour
 {

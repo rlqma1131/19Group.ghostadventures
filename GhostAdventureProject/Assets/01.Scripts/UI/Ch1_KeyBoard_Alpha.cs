@@ -3,10 +3,10 @@ using TMPro;
 using UnityEngine.UI;
 
 
-public class KeyBoard_Alpha : MonoBehaviour
+public class Ch1_KeyBoard_Alpha : MonoBehaviour
 {
     public string keyValue; // 버튼이 나타내는 문자
-    public KeyBoard textSlot;
+    public Ch1_KeyBoard textSlot;
 
     void Start()
     {   

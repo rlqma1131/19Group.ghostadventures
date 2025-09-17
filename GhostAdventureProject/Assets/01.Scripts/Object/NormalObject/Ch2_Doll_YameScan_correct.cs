@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class YameScan_correct : BaseInteractable
+public class Ch2_Doll_YameScan_correct : BaseInteractable
 {
     [Header("Scan Settings")] 
     [SerializeField] float scan_duration = 2f; // 스캔 시간

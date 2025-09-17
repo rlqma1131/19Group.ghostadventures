@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-//using Microsoft.Unity.VisualStudio.Editor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Think : MonoBehaviour
+// 울보의 말풍선UI를 관리하는 스크립트입니다.
+public class CryEnemy_Think : MonoBehaviour
 {
     [SerializeField] private Transform targetWorldObject; // 말풍선 띄울 대상
     [SerializeField] private Camera worldCamera;
