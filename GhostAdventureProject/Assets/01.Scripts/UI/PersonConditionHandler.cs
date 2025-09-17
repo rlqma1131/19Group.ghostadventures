@@ -1,4 +1,6 @@
-using UnityEngine;
+
+// 빙의오브젝트-사람의 컨디션에 따라 QTE3 난이도를 변경합니다.
+// 난이도는 활력일 때 가장 높고 피곤일 때 가장 낮습니다.
 
 [System.Serializable]
 public class QTESettings

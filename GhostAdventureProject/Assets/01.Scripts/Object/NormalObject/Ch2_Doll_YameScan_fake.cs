@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class YameScan_fake : BaseInteractable
+public class Ch2_Doll_YameScan_fake : BaseInteractable
 {
     [Header("Scan Settings")]
     [SerializeField] private float scan_duration = 2f; //스캔 시간
@@ -10,7 +10,7 @@ public class YameScan_fake : BaseInteractable
     
     [SerializeField] private GameObject player;
     // [SerializeField] private GameObject e_key;
-    [SerializeField] private YameScan_correct correctDoll; // 정답 인형
+    [SerializeField] private Ch2_Doll_YameScan_correct correctDoll; // 정답 인형
 
     // 내부 상태 변수
     private float scanTime;

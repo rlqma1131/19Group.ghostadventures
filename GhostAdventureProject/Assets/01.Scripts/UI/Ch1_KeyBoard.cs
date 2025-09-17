@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class KeyBoard : MonoBehaviour, IUIClosable
+public class Ch1_KeyBoard : MonoBehaviour
 {
     [SerializeField] EnergyRestoreZone energyRestoreZone;
     public TMP_Text[] letterSlots = new TMP_Text[4];

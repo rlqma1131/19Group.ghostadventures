@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 사람 QTE
+
 public class QTEUI3 : MonoBehaviour
 {
     [Header("UI Elements")]

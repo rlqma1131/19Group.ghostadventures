@@ -5,8 +5,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public interface IUIClosable // Esc키로 닫을 수 있는 UI
+
+
+public interface IUIClosable
 {
+    // Esc키로 닫을 수 있는 UI는 IUIClosable를 상속받습니다.UIManager - closableUI List에도 추가해줘야 정상작동 됩니다.
     void Close();
     bool IsOpen();
 }

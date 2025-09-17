@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ch2TeleportButton : MonoBehaviour
+public class Ch2_TeleportButton : MonoBehaviour
 {
     GameObject player;
     [SerializeField] Transform UnderGround;

@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
 public class Ch1_GarageEventManager : MonoBehaviour
 {
     private Ch1_MemoryPositive_01_TeddyBear bear;
-    [SerializeField] private KeyBoard keyboard;
-    [SerializeField] private KeyBoard_Enter answer;
+    [SerializeField] private Ch1_KeyBoard keyboard;
+    [SerializeField] private Ch1_KeyBoard_Enter answer;
     [SerializeField] private PlayableDirector cutsceneDirector;
     [SerializeField] private PlayableDirector cutsceneDirector_correct;
     private bool isCutscenePlaying = false;
@@ -20,7 +20,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
     [SerializeField] SpriteRenderer door;
     //NPC컷신보고 상호작용 가능하게하기 위해 추가
     [SerializeField]Cutscene_NPC cutscene_NPC;
-    public KeyBoard_Enter Answer => answer;
+    public Ch1_KeyBoard_Enter Answer => answer;
 
     void Start()
     {

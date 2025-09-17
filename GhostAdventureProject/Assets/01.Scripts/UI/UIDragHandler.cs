@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
+// 드래그해서 오브젝트를 움직일 수 있게 만드는 스크립트입니다.
+// UIManager프리팹 - Inventory - DragArea 에 붙여져 있습니다.
+
 public class UIDragHandle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public RectTransform targetToMove; // 움직일 대상 (InventoryPanel 전체)

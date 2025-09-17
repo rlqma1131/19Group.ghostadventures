@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class ChapterTabs : MonoBehaviour
+
+// 기억저장소 챕터버튼 스크립트입니다.
+// 버튼을 클릭하면 해당 챕터의 기억들만 표시됩니다.
+public class MemoryStorage_ChapterButton : MonoBehaviour
 {
-    [SerializeField] private MemoryStorage storage;
+    [SerializeField] private MemoryStorage memorystorage;
     [SerializeField] private List<Button> chapterButtons; // Ch1, Ch2, Ch3 순서대로
     [SerializeField] private Color selectedColor = new Color(0.2f,0.7f,1f,1f);
     [SerializeField] private Color normalColor   = Color.white;
@@ -26,7 +29,7 @@ public class ChapterTabs : MonoBehaviour
         currentIndex = index;
 
         var chapter = (MemoryData.Chapter)index; // 버튼 순서를 enum 순서와 맞춘다
-        storage.SetChapter(chapter);
+        memorystorage.SetChapter(chapter);
         RefreshVisuals();
     }
 

@@ -9,8 +9,8 @@ public class Ch2_Bat_Trigger : MonoBehaviour
     Collider2D col;
     [SerializeField] AudioClip TriggerSound_clip;
     [SerializeField] AudioClip ClearSound_clip;
-    [SerializeField] YameScan_correct correctDoll; // 정답인형
-    private bool Clear_Bat; // 박쥐들 다 없어졌는지
+    [SerializeField] Ch2_Doll_YameScan_correct correctDoll; // 정답인형
+    private bool Clear_Bat; // 박쥐들 다 없어졌는지 확인
 
     [Header("Move")]
     [SerializeField] float flySpeed = 2f;          // 속도(유지)

@@ -4,6 +4,9 @@ using TMPro;
 using System.Collections;
 using Cinemachine;
 using DG.Tweening;
+
+// 적(Enemy) QTE
+
 public class QTEUI2 : MonoBehaviour
 {
     [Header("UI References")]

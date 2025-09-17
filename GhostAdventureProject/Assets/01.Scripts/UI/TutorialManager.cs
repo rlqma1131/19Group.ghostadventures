@@ -7,7 +7,8 @@ using UnityEngine.UI;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 
-// 튜토리얼은 1회만 작동됩니다. 
+// 게임플레이동안 단 1회만 작동되는 프롬프트/알림팝업을 관리하는 스크립트입니다.
+
 public enum TutorialStep
 {
     LivingRoomIntro_Start, // CH1 씬 시작시 대화

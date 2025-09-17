@@ -1,27 +1,15 @@
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Ch2_DoorLock : BaseInteractable
 {   
-    [SerializeField] private ItemData needItem; // 문을 여는데 필요한 아이템
+    [SerializeField] private ItemData needItem;         // 문을 여는데 필요한 아이템
     [SerializeField] private GameObject q_Key;
     [SerializeField] private CH2_SecurityGuard guard;
     [SerializeField] private GameObject closeDoorSprite;
-    private bool doorOpenAble; // 문을 열 수 있는 영역에 있는지 확인
-    private bool doorOpen; // 문을 열었는지 확인
-    Inventory_PossessableObject inventory; // 빙의 인벤토리(needItem을 갖고 있는지 확인용)
-
-    void Start()
-    {
-        doorOpenAble = false;
-        doorOpen = false;
-    }
-
-    void OnEnable()
-    {
-        doorOpen = false;
-        guard.isdoorLockOpen = doorOpen;
-    }
-
+    private Inventory_PossessableObject inventory;      // 빙의 인벤토리(needItem을 갖고 있는지 확인용)
+    private bool doorOpenAble = false;                  // 문을 열 수 있는 영역에 있는지 확인
+    public bool doorOpen {get; private set;} = false;   // 문을 열었는지 확인
 
     void Update()
     {   

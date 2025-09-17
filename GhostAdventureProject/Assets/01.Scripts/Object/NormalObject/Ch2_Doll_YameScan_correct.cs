@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class YameScan_correct : BaseInteractable
+public class Ch2_Doll_YameScan_correct : BaseInteractable
 {
 
     [Header("Scan Settings")]

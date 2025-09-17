@@ -2,10 +2,10 @@
 using UnityEngine.UI;
 using TMPro;
 
-public class KeyBoard_Enter : MonoBehaviour
+public class Ch1_KeyBoard_Enter : MonoBehaviour
 {
     public TextMeshProUGUI outputText;  // 유저가 입력한 문자
-    public KeyBoard textSlot;
+    public Ch1_KeyBoard textSlot;
     public string correctAnswer;    // 정답
     public bool correct = false;
 
