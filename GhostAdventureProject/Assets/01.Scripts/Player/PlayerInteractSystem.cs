@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _01.Scripts.Object.BaseClasses.Interfaces;
 using _01.Scripts.Player;
 using UnityEngine;
 using static _01.Scripts.Utilities.Timer;

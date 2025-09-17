@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _01.Scripts.Object.BaseClasses;
+using UnityEngine;
 
 public class Ch1_Closet : BaseUnlockObject
 {

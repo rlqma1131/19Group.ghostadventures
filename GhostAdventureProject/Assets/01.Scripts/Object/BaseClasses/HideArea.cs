@@ -1,31 +1,27 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class HideArea : BasePossessable
 {
-    [SerializeField] private AudioClip hideAreaEnterSFX;
-    [SerializeField] private float energyConsumeCycle = 2f;
-    [SerializeField] private int energyCost = 1;
+    [SerializeField] AudioClip hideAreaEnterSFX;
+    [SerializeField] float energyConsumeCycle = 2f;
+    [SerializeField] int energyCost = 1;
 
-    private Coroutine consumeCoroutine;
-    protected bool isHiding = false;
+    Coroutine consumeCoroutine;
+    protected bool isHiding;
 
-    protected override void Update()
-    {
+    override protected void Update() {
         if (!isPossessed) return;
 
         if (Input.GetKeyDown(KeyCode.E)) {
             isHiding = false;
             Unpossess();
         }
-        
+
         TriggerEvent();
     }
 
-    public override void OnQTESuccess()
-    {
+    public override void OnQTESuccess() {
         Debug.Log("QTE 성공 - 빙의 완료");
 
         // 은신 효과음 (바스락)
@@ -36,19 +32,16 @@ public class HideArea : BasePossessable
         PossessionStateManager.Instance.StartPossessionTransition();
         consumeCoroutine = StartCoroutine(ConsumeEnergyRoutine());
     }
-    private IEnumerator ConsumeEnergyRoutine()
-    {
-        while (isHiding)
-        {
+
+    IEnumerator ConsumeEnergyRoutine() {
+        while (isHiding) {
             player.SoulEnergy.Consume(energyCost);
             yield return new WaitForSeconds(energyConsumeCycle);
         }
     }
 
-    public override void Unpossess()
-    {
-        if (consumeCoroutine != null)
-        {
+    public override void Unpossess() {
+        if (consumeCoroutine != null) {
             StopCoroutine(consumeCoroutine);
             consumeCoroutine = null;
         }
@@ -57,12 +50,11 @@ public class HideArea : BasePossessable
         base.Unpossess();
     }
 
-    public void OnMouseEnter() 
-    {
+    public void OnMouseEnter() {
         UIManager.Instance.SetCursor(UIManager.CursorType.HideArea);
     }
-    public void OnMouseExit()
-    {
+
+    public void OnMouseExit() {
         UIManager.Instance.SetCursor(UIManager.CursorType.Default);
     }
 }

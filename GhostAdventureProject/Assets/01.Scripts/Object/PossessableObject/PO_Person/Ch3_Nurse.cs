@@ -1,5 +1,4 @@
-﻿using Cinemachine;
-using UnityEngine;
+﻿using UnityEngine;
 
 enum NurseState
 {
@@ -9,54 +8,50 @@ enum NurseState
 
 public class Ch3_Nurse : MoveBasePossessable
 {
-    [Header("위치")]
-    [SerializeField] private Transform[] workPositions; // 일 하는 두 지점
-    [SerializeField] private Transform restPosition;    // 쉴 위치
+    [Header("위치")] 
+    [SerializeField] Transform[] workPositions; // 일 하는 두 지점
+    [SerializeField] Transform restPosition; // 쉴 위치
 
-    [Header("시간")]
-    [SerializeField] private float waitDuration = 3f;   // 각 지점 대기 시간
-    [SerializeField] private float stateChangeInterval = 15f; // 상태 변경 주기
+    [Header("시간")] 
+    [SerializeField] float waitDuration = 3f; // 각 지점 대기 시간
+    [SerializeField] float stateChangeInterval = 15f; // 상태 변경 주기
 
-    [Header("하이라이트 셋업")]
-    [SerializeField] private SpriteRenderer highlightSprite;
-    [SerializeField] private Animator highlightAnimator;
+    [Header("하이라이트 셋업")] 
+    [SerializeField] SpriteRenderer highlightSprite;
+    [SerializeField] Animator highlightAnimator;
 
-    private PersonConditionUI condition;
-    private NurseState state = NurseState.Work;
+    PersonConditionUI condition;
+    NurseState state = NurseState.Work;
 
-    private int currentWorkIndex = 0;
-    private float waitTimer = 0f;
-    private float stateTimer = 0f;
+    int currentWorkIndex;
+    float waitTimer;
+    float stateTimer;
 
-    private bool isWaiting = false;
-    private bool hasWorked = false;
-    private bool isAnimatingWork = false;
-    private bool isFirstPossessionIn = true;
+    bool isWaiting;
+    bool hasWorked;
+    bool isAnimatingWork;
+    bool isFirstPossessionIn = true;
 
-    protected override void Awake() {
+    override protected void Awake() {
         base.Awake();
         condition = GetComponent<PersonConditionUI>();
     }
 
-    protected override void Start()
-    {   
+    override protected void Start() {
         base.Start();
         condition = GetComponent<PersonConditionUI>();
     }
 
-    protected override void Update()
-    {
+    override protected void Update() {
         // 빙의 상태
-        if (isPossessed)
-        {   
+        if (isPossessed) {
             UIManager.Instance.tabkeyUI.SetActive(true);
             if (!player.PossessionSystem.CanMove)
                 return;
-             
+
             Move();
 
-            if (Input.GetKeyDown(KeyCode.E))
-            {
+            if (Input.GetKeyDown(KeyCode.E)) {
                 zoomCamera.Priority = 5;
                 Unpossess();
             }
@@ -66,15 +61,13 @@ public class Ch3_Nurse : MoveBasePossessable
 
         // 빙의 상태가 아닐 때
         stateTimer += Time.deltaTime;
-        if (stateTimer >= stateChangeInterval)
-        {
+        if (stateTimer >= stateChangeInterval) {
             ToggleState();
             stateTimer = 0f;
         }
 
         // 일정 주기마다 상태 변경
-        switch (state)
-        {
+        switch (state) {
             case NurseState.Work:
                 HandleWork();
                 break;
@@ -84,18 +77,12 @@ public class Ch3_Nurse : MoveBasePossessable
         }
     }
 
-    void LateUpdate()
-    {
-        highlightSpriteRenderer.flipX = spriteRenderer.flipX;
-    }
+    void LateUpdate() => highlightSpriteRenderer.flipX = spriteRenderer.flipX;
 
-    private void HandleWork()
-    {
-        if (isWaiting)
-        {
+    void HandleWork() {
+        if (isWaiting) {
             waitTimer += Time.deltaTime;
-            if (waitTimer >= waitDuration)
-            {
+            if (waitTimer >= waitDuration) {
                 // 다음 일하는 지점으로 이동
                 condition.currentCondition = PersonCondition.Normal;
 
@@ -104,22 +91,21 @@ public class Ch3_Nurse : MoveBasePossessable
                 isAnimatingWork = false;
                 currentWorkIndex = (currentWorkIndex + 1) % workPositions.Length;
             }
-            else
-            {
+            else {
                 // 일하기
                 condition.currentCondition = PersonCondition.Tired;
 
                 SetMoveAnimation(false);
-                if (!hasWorked)
-                {
+                if (!hasWorked) {
                     anim.SetTrigger("Work");
 
-                    if (highlightAnimator != null)
+                    if (highlightAnimator)
                         highlightAnimator.SetTrigger("Work");
 
                     isAnimatingWork = true;
                     hasWorked = true;
                 }
+
                 return;
             }
         }
@@ -130,17 +116,14 @@ public class Ch3_Nurse : MoveBasePossessable
         MoveTo(target.position);
     }
 
-    private void HandleRest()
-    {
-        if (Vector2.Distance(transform.position, restPosition.position) > 0.1f)
-        {
+    void HandleRest() {
+        if (Vector2.Distance(transform.position, restPosition.position) > 0.1f) {
             // 쉬러 이동
             condition.currentCondition = PersonCondition.Normal;
 
             MoveTo(restPosition.position);
         }
-        else
-        {
+        else {
             // 쉬는 중
             condition.currentCondition = PersonCondition.Vital;
 
@@ -148,59 +131,52 @@ public class Ch3_Nurse : MoveBasePossessable
         }
     }
 
-    private void MoveTo(Vector3 target)
-    {
+    void MoveTo(Vector3 target) {
         Vector3 direction = (target - transform.position).normalized;
         transform.position += direction * (moveSpeed * Time.deltaTime);
 
         SetMoveAnimation(true);
-        if (spriteRenderer != null)
-            spriteRenderer.flipX = direction.x < 0;
+        if (spriteRenderer) spriteRenderer.flipX = direction.x < 0;
         highlightSprite.flipX = direction.x < 0;
 
-        if (Vector2.Distance(transform.position, target) < 0.1f)
-        {
+        if (Vector2.Distance(transform.position, target) < 0.1f) {
             isWaiting = true;
             waitTimer = 0f;
         }
     }
 
-    private void SetMoveAnimation(bool isMoving)
-    {
-        if (anim != null)
-            anim.SetBool("Move", isMoving);
+    void SetMoveAnimation(bool isMoving) {
+        if (anim)
+            anim.SetBool(MoveHash, isMoving);
 
-        if (highlightAnimator != null && highlightAnimator.runtimeAnimatorController != null && highlightAnimator.isActiveAndEnabled)
-            highlightAnimator.SetBool("Move", isMoving);
+        if (highlightAnimator && highlightAnimator.runtimeAnimatorController &&
+            highlightAnimator.isActiveAndEnabled)
+            highlightAnimator.SetBool(MoveHash, isMoving);
     }
 
-    private void ToggleState()
-    {
-        if (state == NurseState.Work)
-        {
+    // TODO: boolean 값 설정이 왜 이렇게 되어있는지 모르겠음
+    void ToggleState() {
+        if (state == NurseState.Work) {
             state = NurseState.Rest;
             isAnimatingWork = false;
             hasWorked = false;
             isWaiting = false;
         }
-        else
-        {
+        else {
             state = NurseState.Work;
             currentWorkIndex = 0;
             isWaiting = false;
             isAnimatingWork = false;
-            hasWorked = false; 
+            hasWorked = false;
             isWaiting = false;
         }
     }
 
-    protected override void OnTriggerEnter2D(Collider2D other)
-    {
+    override protected void OnTriggerEnter2D(Collider2D other) {
         if (!hasActivated)
             return;
 
-        if (other.CompareTag("Player"))
-        {
+        if (other.CompareTag("Player")) {
             SyncHighlightAnimator();
             player.InteractSystem.AddInteractable(gameObject);
         }
@@ -208,8 +184,7 @@ public class Ch3_Nurse : MoveBasePossessable
         SyncHighlightAnimator();
     }
 
-    public void SyncHighlightAnimator()
-    {
+    public void SyncHighlightAnimator() {
         if (highlightAnimator == null || anim == null) return;
 
         AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
@@ -221,29 +196,25 @@ public class Ch3_Nurse : MoveBasePossessable
         highlightAnimator.Play(currentStateHash, 0, stateInfo.normalizedTime);
     }
 
-    public void InactiveNurse()
-    {
+    public void InactiveNurse() {
         hasActivated = false;
         MarkActivatedChanged();
 
         zoomCamera.Priority = 5;
     }
 
-    public override void OnPossessionEnterComplete() 
-    {
+    public override void OnPossessionEnterComplete() {
         base.OnPossessionEnterComplete();
-        
+
         zoomCamera.Priority = 20;
         anim.SetBool("Move", false);
-        if (isFirstPossessionIn)
-        {
+        if (isFirstPossessionIn) {
             isFirstPossessionIn = false;
             UIManager.Instance.PromptUI.ShowPrompt("이 카드키로 콘솔을 조작할 수 있겠어");
         }
     }
 
-    public override void Unpossess()
-    {
+    public override void Unpossess() {
         base.Unpossess();
         UIManager.Instance.tabkeyUI.SetActive(false);
     }

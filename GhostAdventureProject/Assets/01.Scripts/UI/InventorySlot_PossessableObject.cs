@@ -1,10 +1,10 @@
 using TMPro;
 using UnityEditor.Rendering;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-[System.Serializable]
-public class InventorySlot_PossessableObject : MonoBehaviour
+[Serializable] public class InventorySlot_PossessableObject : MonoBehaviour
 {
     public ItemData item;
     public Image iconImage;

@@ -1,4 +1,5 @@
 ﻿using _01.Scripts.Extensions;
+using _01.Scripts.Object.BaseClasses.Interfaces;
 using _01.Scripts.Player;
 using UnityEngine;
 
