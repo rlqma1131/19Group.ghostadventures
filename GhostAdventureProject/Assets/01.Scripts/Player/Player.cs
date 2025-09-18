@@ -39,10 +39,10 @@ namespace _01.Scripts.Player
 
         void Start() {
             controller.Initialize(this);
-            memoryScan.Initialize(this);
-            interactSystem.Initialize(this);
-            possessionSystem.Initialize(this);
             condition.Initialize(this);
+            memoryScan.Initialize(this);
+            possessionSystem.Initialize(this);
+            interactSystem.Initialize();
             
             if (!GameManager.Instance.PlayerObj)
                 Debug.LogError("Fatal Error! : GameManager에 Player GameObject 등록이 안되어 있습니다!");

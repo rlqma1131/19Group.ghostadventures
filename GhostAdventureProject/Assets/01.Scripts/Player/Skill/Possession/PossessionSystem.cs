@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class PossessionSystem : MonoBehaviour
 {
+    readonly static int PossessIn = Animator.StringToHash("PossessIn");
+
     [Header("SFX")] 
     [SerializeField] AudioClip possessIn;
     [SerializeField] AudioClip possessOut;
     [SerializeField] GameObject scanPanel;
     [SerializeField] BasePossessable currentTarget; // 디버깅용
 
-    PlayerController controller;
     Player player;
     
     public BasePossessable PossessedTarget { get; set; }
@@ -19,7 +20,6 @@ public class PossessionSystem : MonoBehaviour
 
     public void Initialize(Player player) {
         this.player = player;
-        controller = player.Controller;
     }
     
     public void TryPossess() {
@@ -42,7 +42,7 @@ public class PossessionSystem : MonoBehaviour
     public void PlayPossessionInAnimation() // 빙의 시작 애니메이션
     {
         CanMove = false;
-        controller.Animator.SetTrigger("PossessIn");
+        player.Animator.SetTrigger(PossessIn);
         SoundManager.Instance.PlaySFX(possessIn);
 
         EnemyAI.PauseAllEnemies();
@@ -59,7 +59,7 @@ public class PossessionSystem : MonoBehaviour
 
     IEnumerator DelayedPossessionOutPlay() {
         yield return null; // 한 프레임 딜레이
-        controller.Animator.Play("Player_PossessionOut");
+        player.Animator.Play("Player_PossessionOut");
     }
     
     // Animation Events => Do not change the name of methods

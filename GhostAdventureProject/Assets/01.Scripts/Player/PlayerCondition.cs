@@ -55,6 +55,9 @@ public class PlayerCondition : MonoBehaviour
         
         if (EnemyVolumeOverlay.Instance) EnemyVolumeOverlay.Instance.Suspend(true);
 
+        player.SoulEnergy.ResetRestoreBoost();
+        player.SoulEnergy.DisableHealingEffect();
+        
         if (director) {
             player.PossessionSystem.CanMove = false; // 플레이어 이동 비활성화
             

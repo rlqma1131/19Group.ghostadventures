@@ -31,12 +31,12 @@ public class PlayerSoulEnergy : MonoBehaviour
     
     void Start() {
         currentEnergy = maxEnergy;
+        
         restoreTimer = new CountdownTimer(currentRestoreInterval);
         restoreTimer.OnTimerStop += () => {
             if (restoreTimer.IsFinished) Restore(currentRestoreAmount);
             restoreTimer.Start();
         };
-        
         restoreTimer.Start();
     }
 
@@ -64,18 +64,6 @@ public class PlayerSoulEnergy : MonoBehaviour
     public void RestoreAll() {
         currentEnergy = maxEnergy;
         UIManager.Instance.SoulGaugeUI.SetSoulGauge(currentEnergy);
-    }
-    
-    private IEnumerator PassiveRestoreRoutine()
-    {
-        while (true) {
-            yield return new WaitForSeconds(currentRestoreInterval);
-            
-            if (this == null || !gameObject.activeInHierarchy)
-                yield break;
-            
-            Restore(currentRestoreAmount);
-        }
     }
 
     public void SetRestoreBoost(float newInterval, int newAmount) {

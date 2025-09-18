@@ -7,28 +7,28 @@ public class PlayerController : MonoBehaviour
     readonly static int Move = Animator.StringToHash("Move");
 
     [Header("References")] 
-    [SerializeField] Animator animator;
-    [SerializeField] SpriteRenderer mainSprite;
     [SerializeField] float moveSpeed = 5f;
 
+    // Components
     Player player;
+    Animator animator;
+    SpriteRenderer mainSprite;
+    
+    // Parameter Caches
     Vector3 move;
-    float h;
-    float v;
     
     public Animator Animator => animator;
 
-    public void Initialize(Player player) {
-        this.player = player;
-        animator = player.Animator;
-        mainSprite = player.SpriteRenderer;
+    public void Initialize(Player value) {
+        player = value;
+        animator = value.Animator;
+        mainSprite = value.SpriteRenderer;
     }
 
     void Update() {
-        if (player.PossessionSystem == null ||
-            PossessionQTESystem.Instance == null ||
-            !player.PossessionSystem.CanMove ||
-            PossessionQTESystem.Instance.isRunning)
+        if (!PossessionQTESystem.Instance ||
+            PossessionQTESystem.Instance.isRunning ||
+            !player.PossessionSystem.CanMove)
             return;
 
         HandleMovement();
@@ -41,18 +41,15 @@ public class PlayerController : MonoBehaviour
 
     void OnDestroy() {
         // GameManager에 Player 파괴 알림
-        if (GameManager.Instance != null) {
-            GameManager.Instance.OnPlayerDestroyed();
-        }
+        GameManager.Instance?.OnPlayerDestroyed();
     }
 
     void HandleMovement() {
         // Get Input values
-        h = Input.GetAxis("Horizontal");
-        v = Input.GetAxis("Vertical");
+        move = GetInputValue();
         
         // Rotate Sprite which is defined by horizontal input
-        mainSprite.flipX = h switch {
+        mainSprite.flipX = move.x switch {
             > 0.01f => false,
             < -0.01f => true,
             _ => mainSprite.flipX
@@ -61,8 +58,9 @@ public class PlayerController : MonoBehaviour
         // Play Move Animation
         animator.SetBool(Move, move.magnitude > 0.01f);
         
-        // Move character
-        move = new Vector3(h, v, 0); 
+        // Move character 
         transform.position += move * (moveSpeed * Time.deltaTime);
     }
+
+    Vector2 GetInputValue() => new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 }

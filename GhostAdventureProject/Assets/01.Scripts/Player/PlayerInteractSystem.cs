@@ -24,15 +24,12 @@ public class PlayerInteractSystem : MonoBehaviour
 
     CountdownTimer checkTimer;
     Collider2D[] results;
-    Player player;
     
     public GameObject CurrentClosest => currentClosest;// 디버깅용
 
     HashSet<GameObject> nearbyInteractables = new();
 
-    public void Initialize(Player player) {
-        this.player = player;
-        
+    public void Initialize() {
         results = new Collider2D[checkCountThreshold];
         
         checkTimer = new CountdownTimer(checkInterval);
