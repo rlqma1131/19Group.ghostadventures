@@ -1,110 +1,98 @@
-﻿using DG.Tweening;
-using System.Collections;
+﻿using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 public class Ch1_Cat : MoveBasePossessable
 {
-    [SerializeField] private LockedDoor door;
-    [SerializeField] private GameObject q_Key;
-    [SerializeField] private Animator highlightAnim;
-    [SerializeField] private AudioClip catMeow;
+    // Animation String hash
+    readonly static int IdleHash = Animator.StringToHash("Idle");
+    readonly static int SleepHash = Animator.StringToHash("Sleep");
+    readonly static int OpenHash = Animator.StringToHash("Open");
+    
+    [SerializeField] LockedDoor door;
+    [SerializeField] GameObject q_Key;
+    [SerializeField] Animator highlightAnim;
+    [SerializeField] AudioClip catMeow;
 
-    private bool isNearDoor = false;
-    private bool isActing = false;
+    bool isNearDoor;
+    bool isActing;
 
-    protected override void Start()
-    {
+    override protected void Start() {
         base.Start();
         hasActivated = false;
     }
 
-    protected override void Update()
-    {
-        if (!hasActivated)
-        {
+    override protected void Update() {
+        if (!hasActivated) {
             q_Key.SetActive(false);
             return;
         }
-        if (isNearDoor)
-        {
-            Vector2 catPos = this.transform.position;
-            catPos.y += 0.5f;
-            q_Key.transform.position = catPos;
-            q_Key.SetActive(true);
-        }
-        else if (!isNearDoor)
-        {
-            q_Key.SetActive(false);
+
+        switch (isNearDoor) {
+            case true:
+            {
+                Vector2 catPos = transform.position;
+                catPos.y += 0.5f;
+                q_Key.transform.position = catPos;
+                q_Key.SetActive(true);
+                break;
+            }
+            case false: q_Key.SetActive(false); break;
         }
 
-        if (!isPossessed || !PossessionSystem.Instance.CanMove)
-            return;
+        if (!isPossessed || !player.PossessionSystem.CanMove) return;
 
-        if (isActing)
-            return;
+        if (isActing) return;
 
         Move();
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
+        if (Input.GetKeyDown(KeyCode.E)) {
             zoomCamera.Priority = 5;
             Unpossess();
-            anim.SetBool("Move", false);
+            anim.SetBool(MoveHash, false);
         }
 
-        if (Input.GetKeyDown(KeyCode.Q) && isNearDoor)
-        {
+        if (Input.GetKeyDown(KeyCode.Q) && isNearDoor) {
             q_Key.SetActive(false);
             // 문 열기
             StartCoroutine(CatAct());
         }
     }
 
-    void LateUpdate()
-    {
-        highlightSpriteRenderer.flipX = spriteRenderer.flipX;
-    }
+    void LateUpdate() => highlightSpriteRenderer.flipX = spriteRenderer.flipX;
 
-    public override void OnQTESuccess()
-    {
-        SoulEnergySystem.Instance.RestoreAll();
+    public override void OnQTESuccess() {
+        player.SoulEnergy.RestoreAll();
 
         PossessionStateManager.Instance.StartPossessionTransition();
     }
 
     // 문 근처에 있는지 확인
-    protected override void OnTriggerEnter2D(Collider2D collision)
-    {
+    override protected void OnTriggerEnter2D(Collider2D collision) {
         base.OnTriggerEnter2D(collision);
 
-        if (collision.GetComponent<LockedDoor>() == door)
-        {
+        if (collision.GetComponent<LockedDoor>() == door) {
             isNearDoor = true;
         }
 
-        if(collision.CompareTag("Player") && !SaveManager.IsPuzzleSolved("후라이팬"))
-        {
+        if (collision.CompareTag("Player") && !SaveManager.IsPuzzleSolved("후라이팬")) {
             UIManager.Instance.PromptUI.ShowPrompt("잠들어 있어..깨워볼까?");
         }
     }
 
-    protected override void OnTriggerExit2D(Collider2D collision)
-    {
+    override protected void OnTriggerExit2D(Collider2D collision) {
         base.OnTriggerExit2D(collision);
 
-        if (collision.GetComponent<LockedDoor>() == door)
-        {
+        if (collision.GetComponent<LockedDoor>() == door) {
             isNearDoor = false;
         }
     }
 
-    public void Blink()
-    {
+    public void Blink() {
         anim.SetTrigger("Blink");
     }
 
-    public void ActivateCat()
-    {
+    public void ActivateCat() {
         SoundManager.Instance.PlaySFX(catMeow);
         // 1. 점프 애니메이션
         float jumpHeight = 1.5f;
@@ -127,15 +115,14 @@ public class Ch1_Cat : MoveBasePossessable
         {
             hasActivated = true;
             MarkActivatedChanged();
-            anim.SetBool("Idle", true);
+            anim.SetBool(IdleHash, true);
         });
     }
 
-    IEnumerator CatAct()
-    {
+    IEnumerator CatAct() {
         isActing = true;
 
-        anim.SetTrigger("Open");
+        anim.SetTrigger(OpenHash);
         door.SolvePuzzle();
 
         yield return new WaitForSecondsRealtime(2f); // 2초 기다림
@@ -146,9 +133,9 @@ public class Ch1_Cat : MoveBasePossessable
 
         yield return new WaitForSecondsRealtime(0.5f);
 
-        anim.SetBool("Move", false);
-        anim.SetBool("Idle", false);
-        anim.SetTrigger("Sleep");
+        anim.SetBool(MoveHash, false);
+        anim.SetBool(IdleHash, false);
+        anim.SetTrigger(SleepHash);
         MarkActivatedChanged();
     }
 }

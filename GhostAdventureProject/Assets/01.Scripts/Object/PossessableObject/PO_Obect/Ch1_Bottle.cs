@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Ch1_Bottle : BasePossessable
 {
+    [Header("References")]
     [SerializeField] private AudioClip isFall;
 
     [Header("위치 설정")]
@@ -13,32 +14,29 @@ public class Ch1_Bottle : BasePossessable
     [SerializeField] private float dropYPos = -1.5f;
     [SerializeField] private GameObject q_Key;
     [SerializeField] private SoundEventConfig soundConfig;
-    
+
+    override protected void Awake() {
+        base.Awake();
+        anim = GetComponentInChildren<Animator>();
+    }
+
     protected override void Start()
     {
         base.Start();
         // 시작 시 위치와 회전 적용
         transform.localPosition = startLocalPosition;
         transform.localRotation = startLocalRotation;
-
-        anim = GetComponentInChildren<Animator>();
+        q_Key.SetActive(false);
     }
 
-    protected override void Update()
-    {
-        base.Update();
-
-        if (!isPossessed)
-        {
-            q_Key.SetActive(false);
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
+    public override void TriggerEvent() {
+        if (!isPossessed) { q_Key.SetActive(false); return; }
+        
+        q_Key.SetActive(true);
+        if (Input.GetKeyDown(KeyCode.Q)) {
             q_Key.SetActive(false);
             TriggerBottleEvent();
         }
-        q_Key.SetActive(true);
     }
 
     private void TriggerBottleEvent()

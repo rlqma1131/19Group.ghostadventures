@@ -29,6 +29,8 @@ public class Ch2_CCTVMonitor : BasePossessable
 
     protected override void Start()
     {
+        highlightObj?.SetActive(false);
+        player = GameManager.Instance.Player;
         isPossessed = false;
         hasActivated = false;
         zoomCamera.Priority = 5;
@@ -186,6 +188,7 @@ public class Ch2_CCTVMonitor : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
+        base.OnPossessionEnterComplete();
         EnemyAI.PauseAllEnemies();
         zoomCamera.Priority = 20;
 

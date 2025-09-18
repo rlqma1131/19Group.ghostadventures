@@ -23,29 +23,25 @@ public class Ch2_ClearDoor : BaseInteractable
             {
                 // CH3로 이동
                 SceneManager.LoadScene("Ch02_To_Ch03");
-                Destroy(GameManager.Instance.Player.gameObject);
+                Destroy(GameManager.Instance.PlayerObj.gameObject);
                 UIManager.Instance.Inventory_PlayerUI.RemoveClueBeforeStage();
                 UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
             }
         }
     }
 
-    protected override void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
+    protected override void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.CompareTag("Player")) {
             //SetHighlight(true);
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
             playerNearby = true;
         }
     }
 
-    protected override void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            SetHighlight(false);
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+    protected override void OnTriggerExit2D(Collider2D collision) {
+        if (collision.CompareTag("Player")) {
+            ShowHighlight(false);
+            player.InteractSystem.RemoveInteractable(gameObject);
             playerNearby = false;
         }
     }

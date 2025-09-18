@@ -1,77 +1,66 @@
-﻿using DG.Tweening;
-using System;
-using System.Collections;
+﻿using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 public class Ch1_Mouse : MoveBasePossessable
 {
-    [SerializeField] private AudioClip mouse;
+    [Header("Mouse References")]
+    [SerializeField] AudioClip mouse;
+    [SerializeField] GameObject q_Key;
 
     [Header("팬 이벤트")]
-    [SerializeField] private Transform point1Transform;
-    [SerializeField] private Transform point2Transform;
+    [SerializeField] Transform point1Transform;
+    [SerializeField] Transform point2Transform;
 
-    [Header("다용도실 쥐구멍")]
-    [SerializeField] private Transform point3Transform;
+    [Header("다용도실 쥐구멍")] 
+    [SerializeField] Transform point3Transform;
+    
+    public bool canEnter;
 
-    [SerializeField] private GameObject q_Key;
-
-    public bool canEnter = false;
-    protected override void Start()
-    {
+    override protected void Start() {
         base.Start();
-
         spriteRenderer.flipX = true;
         hasActivated = false;
 
-        var relay = anim.GetComponent<Ch1_Mouse_Event>();
+        Ch1_Mouse_Event relay = anim.GetComponent<Ch1_Mouse_Event>();
         if (relay != null)
             relay.mouse = this;
 
-        Vector2 mousePos = this.transform.position;
+        Vector2 mousePos = transform.position;
         mousePos.y += 0.5f;
         q_Key.transform.position = mousePos;
     }
 
-    protected override void Update()
-    {
-        if(!hasActivated)
-        {
+    override protected void Update() {
+        if (!hasActivated) {
             q_Key.SetActive(false);
             return;
         }
 
         base.Update();
-        if(isPossessed)
-            InteractTutorial();
+        if (isPossessed) InteractTutorial();
 
-        if(canEnter)
+        if (canEnter)
             q_Key.SetActive(true);
 
-        else if(!canEnter)
+        else if (!canEnter)
             q_Key.SetActive(false);
 
-        if (Input.GetKeyDown(KeyCode.Q) && canEnter)
-        {
+        if (Input.GetKeyDown(KeyCode.Q) && canEnter) {
             q_Key.SetActive(false);
             StartCoroutine(MouseAct());
         }
-        
     }
 
-    void LateUpdate()
-    {
+    void LateUpdate() {
         highlightSpriteRenderer.flipX = spriteRenderer.flipX;
     }
 
-    private void InteractTutorial()
-    {
+    void InteractTutorial() {
         TutorialManager.Instance.Show(TutorialStep.Mouse_Possesse);
     }
-
-
-    public void ActivateMouse()
-    {
+    
+    public void ActivateMouse() {
         spriteRenderer.flipX = false;
         anim.SetTrigger("Escape");
 
@@ -80,8 +69,7 @@ public class Ch1_Mouse : MoveBasePossessable
     }
 
     //[이벤트함수] Escape 애니메이션의 마지막 프레임에 이벤트로 연결
-    public void OnEscapeEnd()
-    {
+    public void OnEscapeEnd() {
         transform.DOKill(); // 두트윈 종료
 
         // 2. 아이방으로 순간이동
@@ -91,8 +79,7 @@ public class Ch1_Mouse : MoveBasePossessable
         MarkActivatedChanged();
     }
 
-    private IEnumerator MouseAct()
-    {
+    IEnumerator MouseAct() {
         // 쥐구멍 이동 (다용도실로)
         transform.position = point3Transform.position;
 
@@ -109,10 +96,9 @@ public class Ch1_Mouse : MoveBasePossessable
         spriteRenderer.DOFade(0f, 0.5f);
     }
 
-    public override void OnPossessionEnterComplete() 
-    {
+    public override void OnPossessionEnterComplete() {
+        base.OnPossessionEnterComplete();
         zoomCamera.Priority = 20;
         SoundManager.Instance.PlaySFX(mouse);
     }
 }
-

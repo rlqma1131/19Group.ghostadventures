@@ -2,8 +2,14 @@
 using DG.Tweening;
 using System.Collections.Generic;
 
+/// <summary>
+/// 연출시 ( 기억조각 깨질때 등) 픽셀 단위로 오브젝트가 터지거나 흩어지는 효과를 구현하는 스크립트.
+/// </summary>
 public class PixelExploder : MonoBehaviour
 {
+
+
+    
     [Header("Pixel Explosion Settings")]
     public Shader pixelParticleShader; // 셰이더를 직접 할당받을 변수
     //픽셀 사이즈

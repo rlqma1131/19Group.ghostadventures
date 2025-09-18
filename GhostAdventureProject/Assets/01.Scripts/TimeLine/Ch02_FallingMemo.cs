@@ -3,19 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//챕터2 시작시 NPC이벤트에서 메모지 떨어지는 효과를 위한 스크립트
 public class Ch02_FallingMemo : MonoBehaviour
 {
+
+   
     [SerializeField] private float fallDistance = 1f; // 얼마나 아래로 떨어질지
     [SerializeField] private float fallDuration = 2.5f; // 떨어지는 시간
     [SerializeField] private float swayAmount = 1f; // 좌우 흔들리는 정도
     [SerializeField] private float swayDuration = 1f; // 흔들리는 속도
 
-    private void Start()
-    {
-
-
-
-    }
 
     public void MemoDrop()
     {

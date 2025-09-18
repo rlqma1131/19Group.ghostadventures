@@ -44,6 +44,8 @@ public class Ch2_Switchboard : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
+        base.OnPossessionEnterComplete();
+        
         EnemyAI.PauseAllEnemies();
         zoomCamera.Priority = 20;
 

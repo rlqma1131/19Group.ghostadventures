@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 using DG.Tweening;
 
@@ -10,7 +11,7 @@ public class Ch3_MirrorPuzzleManager : MonoBehaviour
 
     private int roomsCleared = 0;
     public int totalRooms = 3;
-    private GameObject player;
+    Player player;
 
     [SerializeField] private GameObject hintPrefab;
     [SerializeField] private Ch3_MemoryPositive_Mirror memory;
@@ -61,7 +62,7 @@ public class Ch3_MirrorPuzzleManager : MonoBehaviour
 
     private void ShowHintNearPlayer()
     {
-        if (player == null) return;
+        if (!player) return;
 
         Vector3 targetPos = player.transform.position + player.transform.right * 1.5f + Vector3.up * 0.5f;
         Vector3 spawnPos = targetPos + Vector3.up * 2f;
@@ -79,10 +80,10 @@ public class Ch3_MirrorPuzzleManager : MonoBehaviour
             
             seq.OnComplete(() =>
             {
-                PossessionSystem.Instance.CanMove = true; 
+                player.PossessionSystem.CanMove = true; 
             });
         }
         
-        PossessionSystem.Instance.CanMove = false; // DOTween 도중에는 멈춤
+        player.PossessionSystem.CanMove = false; // DOTween 도중에는 멈춤
     }
 }

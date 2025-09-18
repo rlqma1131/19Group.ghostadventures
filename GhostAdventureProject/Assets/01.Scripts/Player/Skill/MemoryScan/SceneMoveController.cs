@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class SceneMoveController : MonoBehaviour
 {
- 
-
-
     void Scenemove()
     {
 

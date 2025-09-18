@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -27,7 +28,11 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     [SerializeField] private Button rebindJumpButton;
 
     private bool isPaused = false;
-    
+    Player player;
+
+    public void Initialize(Player player) {
+        this.player = player;
+    }
     
     void Awake()
     {
@@ -43,12 +48,11 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         escMenuUI.SetActive(false);
         Debug.Log("esc메뉴 awake끄기");
     }
-    
 
     void Start()
     {
         const float DEFAULT_SLIDER = 0.5f;
-
+        
         if (masterVolumeSlider != null)
         {
             masterVolumeSlider.onValueChanged.RemoveAllListeners();
@@ -140,7 +144,6 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         Time.timeScale = 1f;
         isPaused = false;  
         Debug.Log("esc메뉴클로즈");
-
     }
 
     // ESC메뉴가 열려있는지 확인
@@ -159,10 +162,10 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         escMenuUI.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
-        PossessionSystem.Instance.CanMove = true; // 임시완
-        if (PlayerLifeManager.Instance != null) // 플레이어 생명 불러오기 
+        if (player) player.PossessionSystem.CanMove = true; // 임시완
+        if (player.Condition != null) // 플레이어 생명 불러오기 
         {
-            PlayerLifeManager.Instance.ResetLives();
+            player.Condition.ResetLives();
         }
         SceneManager.LoadScene("StartScene");
     }

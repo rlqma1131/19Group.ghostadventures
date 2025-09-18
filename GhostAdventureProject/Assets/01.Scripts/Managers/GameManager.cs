@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,15 +30,15 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject saveStateApplier;
     [SerializeField] private GameObject eventManager;
 
-    public GameObject playerPrefab;
-
+    [Header("Player References")]
+    [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject currentPlayer;
-    private PlayerController playerController;
+    [SerializeField] private Player player;
 
-    public GameObject Player => currentPlayer;
-    public PlayerController PlayerController => playerController;
-
-
+    public GameObject PlayerObj => currentPlayer;
+    public Player Player => player;
+    public PlayerController PlayerController => player.Controller;
+    
     // 게임 이어하기
     private bool loadFromSave = false;
     private SaveData pendingSaveData;
@@ -107,18 +108,25 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("[GameManager] StartScene 로드됨 - Player 제거");
             Destroy(currentPlayer);
             currentPlayer = null;
-            playerController = null;
+            player = null;
             return;
         }
 
-        EnsureManagerExists<ChapterEndingManager>(chapterEndingManager);
-        EnsureManagerExists<UIManager>(uiManager);
-        EnsureManagerExists<PossessionStateManager>(possessionStateManager);
-        EnsureManagerExists<SoundManager>(soundManager);
-        EnsureManagerExists<CutsceneManager>(cutSceneManager);
-        EnsureManagerExists<QTEEffectManager>(qteEffectManager);
-        EnsureManagerExists<TutorialManager>(tutorialManager);
-        EnsureManagerExists<EventManager>(eventManager);
+        var chapterEndingManagerComp = EnsureManagerExists<ChapterEndingManager>(chapterEndingManager);
+        var uiManagerComp = EnsureManagerExists<UIManager>(uiManager);
+        var possessionStateManagerComp = EnsureManagerExists<PossessionStateManager>(possessionStateManager);
+        var soundManagerComp = EnsureManagerExists<SoundManager>(soundManager);
+        var cutsceneManagerComp = EnsureManagerExists<Global_CutsceneManager>(cutSceneManager);
+        var qteEffectManagerComp = EnsureManagerExists<QTEEffectManager>(qteEffectManager);
+        var tutorialManagerComp = EnsureManagerExists<TutorialManager>(tutorialManager);
+        var eventManagerComp = EnsureManagerExists<EventManager>(eventManager);
+
+        if (player) {
+            tutorialManagerComp.Initialize_Player(player);
+            possessionStateManagerComp.Initialize_Player(player);
+            qteEffectManagerComp.Initialize_Player(player);
+            uiManagerComp.Initialize_Player(player);
+        }
 
         // 퍼즐 진척도 UI ( 씬에 맞게 로드 )
         UIManager.Instance.AutoSelectPuzzleStatusByScene();
@@ -162,9 +170,9 @@ public class GameManager : Singleton<GameManager>
         }
 
         GameObject go = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
-        DontDestroyOnLoad(go);
         currentPlayer = go;
-        playerController = go.GetComponent<PlayerController>();
+        player = go.GetComponent<Player>();
+        DontDestroyOnLoad(go);
 
         Debug.Log("[GameManager] Player 스폰 완료");
 
@@ -178,18 +186,18 @@ public class GameManager : Singleton<GameManager>
         if (currentPlayer != null)
         {
             currentPlayer = null;
-            playerController = null;
+            player = null;
             Debug.Log("[GameManager] Player 파괴됨");
         }
     }
 
-    private void EnsureManagerExists<T>(GameObject prefab) where T : MonoBehaviour
+    private T EnsureManagerExists<T>(GameObject prefab) where T : MonoBehaviour
     {
-        if (Singleton<T>.Instance == null)
-        {
-            Instantiate(prefab);
-            Debug.Log($"[{typeof(T).Name}] 자동 생성됨");
-        }
+        if (Singleton<T>.Instance != null) return Singleton<T>.Instance;
+        
+        GameObject obj = Instantiate(prefab);
+        Debug.Log($"[{typeof(T).Name}] 자동 생성됨");
+        return obj.GetComponent<T>();
     }
     
     public static ClueStage GetStageForCurrentChapter()

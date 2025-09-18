@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using _01.Scripts.Player;
 using UnityEngine;
 
 public class Ch2_LaserTriggerManager : MonoBehaviour
@@ -7,6 +9,12 @@ public class Ch2_LaserTriggerManager : MonoBehaviour
     [SerializeField] private Ch2_LaserController[] laserControllers;
 
     //private bool isTriggered = false; // 처음 한번만 이벤트 발생
+
+    Player player;
+    
+    void Start() {
+        player = GameManager.Instance.Player;
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -34,8 +42,8 @@ public class Ch2_LaserTriggerManager : MonoBehaviour
     private IEnumerator LaserEvent()
     {
         // 플레이어 조작 불가
-        PossessionSystem.Instance.CanMove = false;
-        GameManager.Instance.PlayerController.animator.SetBool("Move", false);
+        player.PossessionSystem.CanMove = false;
+        GameManager.Instance.PlayerController.Animator.SetBool("Move", false);
 
         // 카메라 이동 연출 (6초)
         yield return new WaitForSeconds(6f);
@@ -54,7 +62,7 @@ public class Ch2_LaserTriggerManager : MonoBehaviour
         
         // 플레이어 조작 가능
         UIManager.Instance.PlayModeUI_OpenAll();
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
 
         gameObject.SetActive(false);
     }

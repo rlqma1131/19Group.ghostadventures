@@ -38,9 +38,9 @@ public class Ch3_MusicBox : BaseInteractable
     [SerializeField] private AudioClip successQTE_Sound;
 
 
-
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         playAble = false;
         isRunning = false;
         timer = timeLimit;
@@ -100,7 +100,7 @@ public class Ch3_MusicBox : BaseInteractable
         currentIndex = 0;
         text.text = (linkedEnemy.failCount + " / 5").ToString();
         isRunning = true;
-        PossessionSystem.Instance.CanMove = false;
+        player.PossessionSystem.CanMove = false;
         QTEUI_MusicBox.SetActive(true);
         GenerateRandomSequence(arrowCount);
     }
@@ -160,7 +160,7 @@ public class Ch3_MusicBox : BaseInteractable
         arrowImages.Clear(); // 리스트도 초기화
         QTEUI_MusicBox.SetActive(false);
         isRunning = false;
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
     }
 
     // 랜덤으로 화살표 생성
@@ -226,7 +226,7 @@ public class Ch3_MusicBox : BaseInteractable
         if (collision.CompareTag("Player") && linkedEnemy.failCount < 5 && !isQTESuccess)
         {
             //SetHighlight(true);
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
             playAble = true;
         }
     }
@@ -234,15 +234,15 @@ public class Ch3_MusicBox : BaseInteractable
     {
         if(collision.CompareTag("Player") && linkedEnemy.failCount < 5 && isQTESuccess)
         {
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            player.InteractSystem.RemoveInteractable(gameObject);
         }
     }
     protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            SetHighlight(false);
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            ShowHighlight(false);
+            player.InteractSystem.RemoveInteractable(gameObject);
             playAble = false;
         }
     }

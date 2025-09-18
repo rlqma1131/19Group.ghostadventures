@@ -474,10 +474,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3057721228153118778}
   - component: {fileID: 7535857832905629503}
-  - component: {fileID: 7762429250242191419}
   - component: {fileID: 5023764423342151964}
-  - component: {fileID: 3287357793814230545}
   - component: {fileID: 775553350543087360}
+  - component: {fileID: 7762429250242191419}
+  - component: {fileID: 3287357793814230545}
   m_Layer: 0
   m_Name: Ch2_Raven
   m_TagString: Animal
@@ -517,16 +517,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21d30a5be5ab642098bdc81aef94e080, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 4749966867187731962}
+  highlightObj: {fileID: 0}
   anim: {fileID: 0}
-  hasActivated: 0
   possessionSFX: {fileID: 0}
+  hasActivated: 0
   isPossessed: 0
   zoomCamera: {fileID: 3517789406948542676}
   moveSpeed: 3
+  spriteRenderer: {fileID: 0}
+  highlightSpriteRenderer: {fileID: 0}
+  allowVerticalMovement: 1
   highlightAnim: {fileID: 0}
   SandCastle: {fileID: 0}
   startSpot: {fileID: 0}
+--- !u!114 &5023764423342151964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8441691396360961903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b499ce4da8f514603a730f5a9c32953c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialItems:
+  - {fileID: 11400000, guid: b618a084d23b84c889da88d31822cdf7, type: 2}
+  inventorySlots: []
+--- !u!114 &775553350543087360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8441691396360961903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch2_Raven
 --- !u!58 &7762429250242191419
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -562,21 +593,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &5023764423342151964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8441691396360961903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b499ce4da8f514603a730f5a9c32953c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialItems:
-  - {fileID: 11400000, guid: b618a084d23b84c889da88d31822cdf7, type: 2}
-  inventorySlots: []
 --- !u!50 &3287357793814230545
 Rigidbody2D:
   serializedVersion: 4
@@ -604,19 +620,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &775553350543087360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8441691396360961903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: Ch2_Raven
 --- !u!1001 &5733249349742287911
 PrefabInstance:
   m_ObjectHideFlags: 0

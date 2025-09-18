@@ -24,6 +24,8 @@ public class Ch1_TV : BasePossessable
 
     protected override void Start()
     {
+        highlightObj?.SetActive(false);
+        player = GameManager.Instance.Player;
         show.SetActive(false);
         birthdayHat = memoryObject.GetComponent<Ch1_MemoryFake_01_BirthdayHat>();
         memoryObject.SetActive(false);
@@ -182,6 +184,7 @@ public class Ch1_TV : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        base.OnPossessionEnterComplete();
         EnemyAI.PauseAllEnemies();
 
         UIManager.Instance.PlayModeUI_CloseAll();

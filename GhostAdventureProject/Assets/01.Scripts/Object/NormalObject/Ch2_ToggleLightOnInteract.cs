@@ -24,7 +24,7 @@ public class Ch2_ToggleLightOnInteract : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (GameManager.Instance != null && other.gameObject == GameManager.Instance.Player)
+        if (GameManager.Instance != null && other.gameObject == GameManager.Instance.PlayerObj)
         {
             e_Key.SetActive(true);
             isPlayerInRange = true;
@@ -33,7 +33,7 @@ public class Ch2_ToggleLightOnInteract : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (GameManager.Instance != null && other.gameObject == GameManager.Instance.Player)
+        if (GameManager.Instance != null && other.gameObject == GameManager.Instance.PlayerObj)
         {
             e_Key.SetActive(false);
             isPlayerInRange = false;

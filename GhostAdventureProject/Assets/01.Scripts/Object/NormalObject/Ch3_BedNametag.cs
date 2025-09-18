@@ -11,8 +11,10 @@ public class Ch3_BedNametag : BaseInteractable
     private bool isPlayerInside = false;
     private bool isZoomActive = false;
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
+        
         // UI 초기화
         nametagZoom.SetActive(false);
         nametagPos.anchoredPosition = new Vector2(0, -Screen.height);
@@ -50,7 +52,7 @@ public class Ch3_BedNametag : BaseInteractable
         nametagPos.anchoredPosition = new Vector2(0, -Screen.height);
         nametagPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 
     private void HideNametagZoom()
@@ -67,7 +69,7 @@ public class Ch3_BedNametag : BaseInteractable
                 nametagZoom.SetActive(false);
 
                 if(isPlayerInside)
-                    PlayerInteractSystem.Instance.AddInteractable(gameObject);
+                    player.InteractSystem.AddInteractable(gameObject);
             });
     }
 
@@ -78,7 +80,7 @@ public class Ch3_BedNametag : BaseInteractable
         isPlayerInside = true;
 
         if (!isZoomActive)
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
     }
 
     protected override void OnTriggerExit2D(Collider2D other)
@@ -90,6 +92,6 @@ public class Ch3_BedNametag : BaseInteractable
         if (isZoomActive)
             HideNametagZoom(); // 플레이어가 나가면 자동 닫기
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 }

@@ -6,8 +6,9 @@ public class Ch2_MemoryNegative_01_CarToy : MemoryFragment
 {
     private Animator anim;
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         anim = GetComponentInChildren<Animator>();
     }
 

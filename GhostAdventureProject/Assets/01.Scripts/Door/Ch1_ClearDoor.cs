@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-//using UnityEditor.Timeline;
 using UnityEngine.Playables;
-//using UnityEditor.Rendering.LookDev;
 
 public class Ch1_ClearDoor : BaseInteractable
 {
@@ -10,20 +8,18 @@ public class Ch1_ClearDoor : BaseInteractable
     [SerializeField] private Ch1_GarageEventManager garageEvent;
     [SerializeField] private PlayableDirector playable;
     Inventory_Player inventory_Player;
-    private bool canOpenDoor = false;
+    bool canOpenDoor = false;
     //public bool testing = true; // 테스트용 변수
 
-
-
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         inventory_Player = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         playable.stopped += OnTimelineFinished;
     }
-    private void Update()
-    {
-        if(!canOpenDoor)
-            return; 
+
+    void Update() {
+        if (!canOpenDoor) return; 
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -40,24 +36,22 @@ public class Ch1_ClearDoor : BaseInteractable
             // 이름 맞추고, 기억조각도 모았을 때
             else if (TeddyBear.Completed_TeddyBear)
             {
-                PossessionSystem.Instance.CanMove = false;
+                player.PossessionSystem.CanMove = false;
                 playable.Play();
                 EnemyAI.PauseAllEnemies();
                 UIManager.Instance.PlayModeUI_CloseAll();
                 inventory_Player.RemoveClueBeforeStage();
-                Destroy(GameManager.Instance.Player.gameObject); // 플레이어 비활성화
+                Destroy(GameManager.Instance.PlayerObj.gameObject); // 플레이어 비활성화
             }
         }
     }
 
     
     
-    protected override void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.CompareTag("Player"))
-        {
+    protected override void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.CompareTag("Player")) {
             canOpenDoor = true;
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
         }
         if (collision.CompareTag("Player")&& TeddyBear.Completed_TeddyBear && canOpenDoor && garageEvent.Answer.correct)
         {
@@ -65,26 +59,19 @@ public class Ch1_ClearDoor : BaseInteractable
         }
     }
 
-    protected override void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
+    protected override void OnTriggerExit2D(Collider2D collision) {
+        if (collision.CompareTag("Player")) {
             canOpenDoor = false;
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            player.InteractSystem.RemoveInteractable(gameObject);
         }
     }
-
-
-
+    
     void OnTimelineFinished(PlayableDirector obj)
     {
         EnemyAI.ResumeAllEnemies();
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
         SceneManager.LoadScene("Ch01_To_Ch02");
         UIManager.Instance.PlayModeUI_CloseAll();
     }
-
-
-
 }
 

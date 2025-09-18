@@ -21,6 +21,8 @@ public class Ch1_Clock : BasePossessable
 
     protected override void Start()
     {
+        highlightObj?.SetActive(false);
+        player = GameManager.Instance.Player;
         isPossessed = false;
         hasActivated = false;
 
@@ -47,7 +49,7 @@ public class Ch1_Clock : BasePossessable
         if (!SaveManager.IsPuzzleSolved("시계")) hasActivated = true;
         if (!isPossessed) return;
         
-        UI.SetActive(true); 
+        UI.SetActive(true);
         // UIManager.Instance.Show_A_Key(hourHand.transform.position);
         // UIManager.Instance.Show_D_Key(minuteHand.transform.position);
 
@@ -148,6 +150,7 @@ public class Ch1_Clock : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
+        base.OnPossessionEnterComplete();
         isControlMode = true;
         ShowClockUI();
     }

@@ -19,6 +19,8 @@ public class Ch2_CCTV : BasePossessable
 
     protected override void Start()
     {
+        highlightObj?.SetActive(false);
+        player = GameManager.Instance.Player;
         isPossessed = false;
         hasActivated = false;
 
@@ -83,6 +85,7 @@ public class Ch2_CCTV : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     { 
+        base.OnPossessionEnterComplete();
         aKey.SetActive(true);
         dKey.SetActive(true);
     }
@@ -94,7 +97,7 @@ public class Ch2_CCTV : BasePossessable
 
         if (other.CompareTag("Player"))
         {
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
 
             Invoke(nameof(PlayHighlightAnim), 0.01f); // 0.01초 후 실행
         }
@@ -113,7 +116,7 @@ public class Ch2_CCTV : BasePossessable
         }
     }
 
-    public override void CantPossess()
+    public override void OnPossessionEnterFailed()
     {
         UIManager.Instance.PromptUI.ShowPrompt("전력이 끊겨있는 것 같아", 2f);
     }

@@ -6,12 +6,12 @@ using UnityEngine.Rendering;
 
 public class Ch03_ControlVolume : MonoBehaviour
 {
-    public Volume volume;
-    private ColorAdjustments colorAdjustments;
+    public Volume volume;  // 연결할 글로벌 볼륨
+    private ColorAdjustments colorAdjustments; // 화면 색상 보정
     private ChromaticAberration chromaticAberration;
     private DepthOfField depthOfField;
 
-
+    // 목표 색상 (빨간색으로)
     public Color targetColor = new Color(1f, 0f, 0f, 1f);
     public float duration = 3f;
 
@@ -43,6 +43,8 @@ public class Ch03_ControlVolume : MonoBehaviour
             Debug.LogWarning("Depth of Field not found.");
         }
     }
+
+    //화면을 빨갛게 바꾸는 함수
     public void controlVolume()
     {
         StartCoroutine(FadeToRed());
@@ -55,6 +57,7 @@ public class Ch03_ControlVolume : MonoBehaviour
         StartCoroutine(FadeToScreen());
     }
 
+    // 화면 색상을 점점 targetColor(빨간색)으로 바꿔줌
     IEnumerator FadeToRed()
     {
         Color startColor = colorAdjustments.colorFilter.value;
@@ -72,6 +75,7 @@ public class Ch03_ControlVolume : MonoBehaviour
         colorAdjustments.colorFilter.value = targetColor;
     }
 
+    // 화면 왜곡, 심도효과를 점점 줄이는 코루틴
     IEnumerator FadeToScreen()
     {
         float time = 0f;

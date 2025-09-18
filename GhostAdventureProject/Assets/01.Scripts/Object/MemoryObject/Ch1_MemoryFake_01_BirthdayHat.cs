@@ -4,8 +4,9 @@ public class Ch1_MemoryFake_01_BirthdayHat : MemoryFragment
 {
     private Animator anim;
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         isScannable = false;
         anim = GetComponentInChildren<Animator>();
     }

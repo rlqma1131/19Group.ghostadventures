@@ -31,6 +31,8 @@ public class Ch2_Kiosk : BasePossessable
 
     protected override void Start()
     {
+        highlightObj?.SetActive(false);
+        player = GameManager.Instance.Player;
         hasActivated = false;
         kioskPanel.anchoredPosition = hiddenPos;
         kioskPanel.gameObject.SetActive(false);
@@ -70,7 +72,7 @@ public class Ch2_Kiosk : BasePossessable
         //q_Key.SetActive(true);
     }
 
-    public override void CantPossess()
+    public override void OnPossessionEnterFailed()
     {
         UIManager.Instance.PromptUI.ShowPrompt("전력이 없어..",2f);
     }

@@ -70,8 +70,9 @@ public class Ch2_MorseKey : BasePossessable
     private float pressStartTime;
     private const float dashThreshold = 0.25f;
 
-    private void Awake()
+    override protected void Awake()
     {
+        base.Awake();
         if (panelCanvasGroup != null)
         {
             panelCanvasGroup.alpha = 0f;          // 완전 투명
@@ -458,6 +459,7 @@ public class Ch2_MorseKey : BasePossessable
     }
     public override void OnPossessionEnterComplete() 
     { 
+        base.OnPossessionEnterComplete();
         EnemyAI.PauseAllEnemies();
         UIManager.Instance.PlayModeUI_CloseAll();
         StartCoroutine(FadeInPanel(1.0f)); // 판넬 페이드 인
