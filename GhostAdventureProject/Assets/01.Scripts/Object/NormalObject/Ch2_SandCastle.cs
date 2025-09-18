@@ -30,7 +30,7 @@ public class Ch2_SandCastle : BaseInteractable
 
     void Update()
     {
-        if(crumbleAble && !crumbled && raven.isPossessed)
+        if(crumbleAble && !crumbled && raven.IsPossessed)
         {
             if(Input.GetKeyDown(KeyCode.Q))
             {
@@ -53,7 +53,7 @@ public class Ch2_SandCastle : BaseInteractable
         {
             raven = collision.GetComponent<Ch2_Raven>();
         }
-        if(collision.CompareTag("Animal") && raven.isPossessed && !crumbled)
+        if(collision.CompareTag("Animal") && raven.IsPossessed && !crumbled)
         {
             UIManager.Instance.PromptUI.ShowPrompt("무너뜨릴까?");
             crumbleAble = true;

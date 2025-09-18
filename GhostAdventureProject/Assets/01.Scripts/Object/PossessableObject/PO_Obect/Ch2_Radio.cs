@@ -37,7 +37,7 @@ public class Ch2_Radio : BasePossessable
         if (isSaved)
             return;
 
-        if (!guard.HasActivated)
+        if (!guard.HasActivated())
         {
             hasActivated = false;
             MarkActivatedChanged();
@@ -123,6 +123,8 @@ public class Ch2_Radio : BasePossessable
     // 빙의 완료시 컨트롤모드(라디오(줌)) 진입
     public override void OnPossessionEnterComplete() 
     {
+        base.OnPossessionEnterComplete();
+        
         UIManager.Instance.PlayModeUI_CloseAll();
         zoomRadio.SetActive(true);
         zoomCamera.Priority = 20; // 빙의 시 카메라 우선순위 높이기

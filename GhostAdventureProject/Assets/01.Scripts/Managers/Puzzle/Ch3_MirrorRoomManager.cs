@@ -13,8 +13,7 @@ public class Ch3_MirrorRoomManager : MonoBehaviour
     private bool puzzleCleared = false;
     private GameObject player;
 
-    private void Start()
-    {
+    private void Start() {
         player = GameManager.Instance.PlayerObj;
     }
 

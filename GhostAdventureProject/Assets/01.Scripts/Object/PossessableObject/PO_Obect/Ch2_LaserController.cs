@@ -67,6 +67,7 @@ public class Ch2_LaserController : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        base.OnPossessionEnterComplete();
         qKey.SetActive(true);
     }
 }

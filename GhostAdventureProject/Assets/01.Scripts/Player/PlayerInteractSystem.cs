@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using _01.Scripts.Extensions;
+using _01.Scripts.Object.BaseClasses.Interfaces;
 using _01.Scripts.Player;
 using UnityEngine;
 using static _01.Scripts.Utilities.Timer;
@@ -23,15 +25,12 @@ public class PlayerInteractSystem : MonoBehaviour
 
     CountdownTimer checkTimer;
     Collider2D[] results;
-    Player player;
     
     public GameObject CurrentClosest => currentClosest;// 디버깅용
 
     HashSet<GameObject> nearbyInteractables = new();
 
-    public void Initialize(Player player) {
-        this.player = player;
-        
+    public void Initialize() {
         results = new Collider2D[checkCountThreshold];
         
         checkTimer = new CountdownTimer(checkInterval);
@@ -44,7 +43,7 @@ public class PlayerInteractSystem : MonoBehaviour
     }
 
     void Update() => checkTimer.Tick(Time.unscaledDeltaTime);
-
+    
     GameObject GetClosestGameObject() {
         GameObject newClosest = null;
         float distance = float.MaxValue;
@@ -54,8 +53,15 @@ public class PlayerInteractSystem : MonoBehaviour
             if (!results[i]) continue;
             
             float newDist = Vector2.Distance(transform.position, results[i].transform.position);
-            if (newClosest && !(newDist < distance + checkDistanceThreshold) && !nearbyInteractables.Contains(results[i].gameObject)) continue;
-            newClosest = results[i].gameObject;
+            if (!newClosest || newDist < distance + checkDistanceThreshold &&
+                nearbyInteractables.Contains(results[i].gameObject) &&
+                newClosest.CompareLayerPriority(results[i].gameObject) <= 0) {
+                if (!results[i].gameObject.TryGetComponent(out IPossessable possessable) || possessable.HasActivated())
+                    newClosest = results[i].gameObject;
+                else if (results[i].gameObject.TryGetComponent(out MemoryFragment fragment))
+                    if (fragment.IsScannable) newClosest = results[i].gameObject;
+            }
+            
             distance = newDist;
         }
         
@@ -64,15 +70,15 @@ public class PlayerInteractSystem : MonoBehaviour
 
     void UpdateClosest() {
         GameObject newClosest = GetClosestGameObject();
-        
+
         if (currentClosest == newClosest) return;
         
         // 이전 오브젝트 처리
         if (currentClosest) {
             // 팝업 끄기
-            if (currentClosest.TryGetComponent(out BaseInteractable prevInteractable)) {
+            if (currentClosest.TryGetComponent(out IInteractable prevInteractable)) {
                 eKey.SetActive(false);
-                prevInteractable.SetHighlight(false);
+                prevInteractable.ShowHighlight(false);
             }
         }
 
@@ -84,15 +90,24 @@ public class PlayerInteractSystem : MonoBehaviour
         if (currentClosest.TryGetComponent(out MemoryFragment memory)) {
             if (!memory.IsScannable) {
                 eKey.SetActive(false);
-                memory.SetHighlight(false);
+                memory.ShowHighlight(false);
                 return;
             }
         }
 
         // 팝업 켜기
-        if (currentClosest.TryGetComponent(out BaseInteractable nextInteractable)) {
+        // 상호작용 가능 물체가 아닐 시 Highlight Object 띄우지 않기
+        if (!currentClosest.TryGetComponent(out IInteractable nextInteractable)) return;
+        
+        // 만약 Possessable Object라면 현재 빙의 가능 상태면 Highlight Object 작동
+        if (currentClosest.TryGetComponent(out IPossessable nextPossessable)) {
+            if (!nextPossessable.HasActivated()) return;
             eKey.SetActive(true);
-            nextInteractable.SetHighlight(true);
+            nextInteractable.ShowHighlight(true);
+        }
+        else {
+            eKey.SetActive(true);
+            nextInteractable.ShowHighlight(true);
         }
     }
 

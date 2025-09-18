@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 
 public class EnergyRestoreZone : MonoBehaviour
@@ -8,28 +9,27 @@ public class EnergyRestoreZone : MonoBehaviour
     [SerializeField] private int bonusRestoreAmount;
     [SerializeField] private float reduceInterval;
 
-
     public bool IsActive = true;
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player") && IsActive)
-        {
-            SoulEnergySystem.Instance.SetRestoreBoost(reduceInterval, SoulEnergySystem.Instance.baseRestoreAmount + bonusRestoreAmount);
-            SoulEnergySystem.Instance.EnableHealingEffect();
+
+    Player player;
+    
+    void Start() => player = GameManager.Instance.Player;
+
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.CompareTag("Player") && IsActive) {
+            player.SoulEnergy.SetRestoreBoost(reduceInterval, player.SoulEnergy.baseRestoreAmount + bonusRestoreAmount);
+            player.SoulEnergy.EnableHealingEffect();
             TutorialManager.Instance.Show(TutorialStep.EnergyRestoreZone);
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            if (SoulEnergySystem.Instance != null && SoulEnergySystem.Instance.gameObject.activeInHierarchy)
+    void OnTriggerExit2D(Collider2D other) {
+        if (other.CompareTag("Player")) {
+            if (player.SoulEnergy != null && player.SoulEnergy.gameObject.activeInHierarchy)
             {
-                SoulEnergySystem.Instance.ResetRestoreBoost();
-                SoulEnergySystem.Instance.DisableHealingEffect();
+                player.SoulEnergy.ResetRestoreBoost();
+                player.SoulEnergy.DisableHealingEffect();
             }
         }
     }
-
 }

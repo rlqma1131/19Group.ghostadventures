@@ -21,6 +21,7 @@ public class Ch2_PasswordMemo : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     { 
+        base.OnPossessionEnterComplete();
         UIManager.Instance.PlayModeUI_CloseAll();
         zoomCamera.Priority = 20;
     }

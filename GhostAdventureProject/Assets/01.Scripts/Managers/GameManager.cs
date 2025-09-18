@@ -125,6 +125,7 @@ public class GameManager : Singleton<GameManager>
             tutorialManagerComp.Initialize_Player(player);
             possessionStateManagerComp.Initialize_Player(player);
             qteEffectManagerComp.Initialize_Player(player);
+            uiManagerComp.Initialize_Player(player);
         }
 
         // 퍼즐 진척도 UI ( 씬에 맞게 로드 )

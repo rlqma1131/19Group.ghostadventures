@@ -746,7 +746,7 @@ public static class SaveManager
                 SetActiveState(uid.Id, p.gameObject.activeSelf);
                 SetObjectPosition(uid.Id, p.transform.position);
 
-                SetPossessableState(uid.Id, p.HasActivated);
+                SetPossessableState(uid.Id, p.HasActivated());
             }
         }
 
@@ -889,7 +889,7 @@ public static class SaveManager
                 SetActiveState(uid.Id, p.gameObject.activeSelf);
                 SetObjectPosition(uid.Id, p.transform.position);
 
-                SetPossessableState(uid.Id, p.HasActivated);
+                SetPossessableState(uid.Id, p.HasActivated());
             }
         }
 

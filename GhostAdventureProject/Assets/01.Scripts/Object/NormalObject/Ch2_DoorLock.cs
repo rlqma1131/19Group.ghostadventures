@@ -52,7 +52,7 @@ public class Ch2_DoorLock : BaseInteractable
     {
         if(collision.CompareTag("Person") || collision.CompareTag("Player"))
         {
-            SetHighlight(true);
+            ShowHighlight(true);
             q_Key.SetActive(true);
             doorOpenAble = true;
         }
@@ -62,7 +62,7 @@ public class Ch2_DoorLock : BaseInteractable
     {
         if(collision.CompareTag("Person") || collision.CompareTag("Player"))
         {
-            SetHighlight(false);
+            ShowHighlight(false);
             q_Key.SetActive(false);
             doorOpenAble = false;    
             player.InteractSystem.RemoveInteractable(gameObject);

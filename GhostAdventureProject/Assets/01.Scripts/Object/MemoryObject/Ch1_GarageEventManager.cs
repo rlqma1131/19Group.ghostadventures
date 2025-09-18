@@ -65,7 +65,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
                     UIManager.Instance.PlayModeUI_CloseAll();
                     EnemyAI.PauseAllEnemies();
 
-                    SoulEnergySystem.Instance.DisableHealingEffect(); // 에너지 회복존 비활성화
+                    player.SoulEnergy.DisableHealingEffect(); // 에너지 회복존 비활성화
 
                     cutsceneDirector.Play();
                 }
@@ -73,7 +73,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
                 {
                     player.InteractSystem.eKey.SetActive(false);
 
-                    SoulEnergySystem.Instance.DisableHealingEffect(); // 에너지 회복존 비활성화
+                    player.SoulEnergy.DisableHealingEffect(); // 에너지 회복존 비활성화
 
                     openKeyboard = true;
                     keyboard.OpenKeyBoard();
@@ -131,7 +131,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         SoundManager.Instance.RestoreLastBGM(1f);
         keyboard.Close();
 
-        SoulEnergySystem.Instance.EnableHealingEffect();
+        player.SoulEnergy.EnableHealingEffect();
         EnemyAI.ResumeAllEnemies();
         player.PossessionSystem.CanMove = true;
         isCutscenePlaying2 = true;

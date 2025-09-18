@@ -110,7 +110,7 @@ public class Ch3_Locker : BasePossessable
         hasActivated = state;
     }
 
-    public override void CantPossess()
+    public override void OnPossessionEnterFailed()
     {
         if (isOpened) return;
 

@@ -150,6 +150,7 @@ public class Ch1_Clock : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
+        base.OnPossessionEnterComplete();
         isControlMode = true;
         ShowClockUI();
     }

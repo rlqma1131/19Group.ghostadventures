@@ -29,6 +29,10 @@ public class ESCMenu : MonoBehaviour, IUIClosable
 
     private bool isPaused = false;
     Player player;
+
+    public void Initialize(Player player) {
+        this.player = player;
+    }
     
     void Awake()
     {
@@ -48,7 +52,6 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     void Start()
     {
         const float DEFAULT_SLIDER = 0.5f;
-        player = GameManager.Instance.Player;
         
         if (masterVolumeSlider != null)
         {
@@ -160,9 +163,9 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         Time.timeScale = 1f;
         isPaused = false;
         if (player) player.PossessionSystem.CanMove = true; // 임시완
-        if (PlayerLifeManager.Instance != null) // 플레이어 생명 불러오기 
+        if (player.Condition != null) // 플레이어 생명 불러오기 
         {
-            PlayerLifeManager.Instance.ResetLives();
+            player.Condition.ResetLives();
         }
         SceneManager.LoadScene("StartScene");
     }

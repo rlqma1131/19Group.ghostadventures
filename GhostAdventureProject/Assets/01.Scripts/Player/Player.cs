@@ -13,18 +13,18 @@ namespace _01.Scripts.Player
         [Header("Related Components")]
         [SerializeField] PlayerController controller;
         [SerializeField] PlayerCamera playerCam;
-        [SerializeField] PlayerLifeManager lifeManager;
+        [SerializeField] PlayerCondition condition;
         [SerializeField] PlayerInteractSystem interactSystem;
-        [SerializeField] SoulEnergySystem soulEnergySystem;
+        [SerializeField] PlayerSoulEnergy soulEnergy;
         [SerializeField] PossessionSystem possessionSystem;
         [SerializeField] MemoryScan memoryScan;
 
         // Player Related Component Properties
         public PlayerController Controller => controller;
         public PlayerCamera PlayerCamera => playerCam;
-        public PlayerLifeManager LifeManager => lifeManager;
+        public PlayerCondition Condition => condition;
         public PlayerInteractSystem InteractSystem => interactSystem;
-        public SoulEnergySystem SoulEnergySystem => soulEnergySystem;
+        public PlayerSoulEnergy SoulEnergy => soulEnergy;
         public PossessionSystem PossessionSystem => possessionSystem;
         public MemoryScan MemoryScan => memoryScan;
         
@@ -39,10 +39,10 @@ namespace _01.Scripts.Player
 
         void Start() {
             controller.Initialize(this);
+            condition.Initialize(this);
             memoryScan.Initialize(this);
-            interactSystem.Initialize(this);
             possessionSystem.Initialize(this);
-            lifeManager.Initialize(this);
+            interactSystem.Initialize();
             
             if (!GameManager.Instance.PlayerObj)
                 Debug.LogError("Fatal Error! : GameManager에 Player GameObject 등록이 안되어 있습니다!");
@@ -55,8 +55,8 @@ namespace _01.Scripts.Player
 
             if (!controller) controller = GetComponent<PlayerController>();
             if (!playerCam) playerCam = GetComponent<PlayerCamera>();
-            if (!lifeManager) lifeManager = GetComponent<PlayerLifeManager>();
-            if (!soulEnergySystem) soulEnergySystem = GetComponent<SoulEnergySystem>();
+            if (!condition) condition = GetComponent<PlayerCondition>();
+            if (!soulEnergy) soulEnergy = GetComponent<PlayerSoulEnergy>();
             if (!possessionSystem) possessionSystem = GetComponent<PossessionSystem>();
             if (!interactSystem) interactSystem = GetComponent<PlayerInteractSystem>();
             if (!memoryScan) memoryScan = GetComponent<MemoryScan>();

@@ -149,6 +149,7 @@ public class Ch1_Shower : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        base.OnPossessionEnterComplete();
         q_key.SetActive(!isWater);
     }
 }

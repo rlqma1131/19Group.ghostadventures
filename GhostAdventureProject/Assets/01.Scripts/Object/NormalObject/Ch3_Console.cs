@@ -203,7 +203,7 @@ public class Ch3_Console : BaseInteractable
     {
         if (collision.CompareTag("Person") || collision.CompareTag("Player"))
         {
-            SetHighlight(true);
+            ShowHighlight(true);
             qKey.SetActive(true);
             canUse = true;
         }
@@ -213,7 +213,7 @@ public class Ch3_Console : BaseInteractable
     {
         if (collision.CompareTag("Person") || collision.CompareTag("Player"))
         {
-            SetHighlight(false);
+            ShowHighlight(false);
             qKey.SetActive(false);
             canUse = false;
             player.InteractSystem.RemoveInteractable(gameObject);

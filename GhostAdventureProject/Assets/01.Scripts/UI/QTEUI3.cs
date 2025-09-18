@@ -36,8 +36,8 @@ public class QTEUI3 : MonoBehaviour
 
     Player player;
 
-    void Start() {
-        player = GameManager.Instance.Player;
+    public void Initialize(Player player) {
+        this.player = player;
     }
 
     void Update()
@@ -127,7 +127,7 @@ public class QTEUI3 : MonoBehaviour
 
     public void ShowQTEUI3()
     {
-        BasePossessable possessed = player.PossessionSystem.CurrentTarget;
+        BasePossessable possessed = player.PossessionSystem.PossessedTarget;
         PersonConditionUI conditionUI = possessed.GetComponent<PersonConditionUI>();
         conditionUI.SetCondition(conditionUI.currentCondition);
 

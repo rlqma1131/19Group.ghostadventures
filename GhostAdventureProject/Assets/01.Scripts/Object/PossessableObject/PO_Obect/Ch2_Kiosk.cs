@@ -72,7 +72,7 @@ public class Ch2_Kiosk : BasePossessable
         //q_Key.SetActive(true);
     }
 
-    public override void CantPossess()
+    public override void OnPossessionEnterFailed()
     {
         UIManager.Instance.PromptUI.ShowPrompt("전력이 없어..",2f);
     }

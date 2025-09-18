@@ -80,8 +80,7 @@ public class Ch1_CelebrityBox : BasePossessable
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        if (!hasActivated)
-            return;
+        if (!hasActivated) return;
 
         if (other.CompareTag("Player") && !SaveManager.IsPuzzleSolved("깜짝상자"))
         {

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 
 //Ch3 울보
@@ -32,7 +33,8 @@ public class CryEnemy : MonoBehaviour
     [SerializeField] private float chaseRange;                  // 추격 범위
     [SerializeField] private float attackRange;                 // 공격 범위
 
-    private GameObject player;
+    private GameObject playerObj;
+    Player player;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private SoundManager soundManager;
@@ -52,7 +54,7 @@ public class CryEnemy : MonoBehaviour
 
     void Start()
     {   
-        player = GameObject.FindGameObjectWithTag("Player");
+        playerObj = GameObject.FindGameObjectWithTag("Player");
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
         anim = GetComponentInChildren<Animator>();
@@ -205,15 +207,14 @@ public class CryEnemy : MonoBehaviour
     // Attack 애니메이션 종료시 작동
     public void AfterAttack()
     {   
-        PlayerLifeManager.Instance.currentPlayerLives = 1;  // 공격당하면 무조건 죽음
-        PlayerLifeManager.Instance.LosePlayerLife();
+        // Sudden Death Attack
+        player.Condition.SuddenDeath();
     }
 
     public void OnMusicBoxSuccess()
     {
         successCount++;
-        if(successCount >=3)
-        {
+        if(successCount >=3) {
             StopCryingAndSmile();
         }
     }

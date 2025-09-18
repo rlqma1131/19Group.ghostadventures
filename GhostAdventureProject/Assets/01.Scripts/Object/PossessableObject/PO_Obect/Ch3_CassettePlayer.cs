@@ -378,6 +378,7 @@ public class Ch3_CassettePlayer : BasePossessable
 
     public override void OnPossessionEnterComplete() 
     {
+        base.OnPossessionEnterComplete();
         typingText.text = "";
 
         EnemyAI.PauseAllEnemies();

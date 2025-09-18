@@ -92,7 +92,7 @@ public class MemoryScan : MonoBehaviour
 
     void TryStartScan() {
         // 영혼 에너지가 있는지 확인
-        if (SoulEnergySystem.Instance.currentEnergy <= 0) {
+        if (player.SoulEnergy.CurrentEnergy <= 0) {
             UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다");
             // 여기에 부족 알림 UI나 사운드를 재생하는 로직
             return;
@@ -118,7 +118,7 @@ public class MemoryScan : MonoBehaviour
         }
 
         Time.timeScale = 0.3f; // 슬로우 모션 시작
-        SoulEnergySystem.Instance.Consume(1); // 에너지 소모
+        player.SoulEnergy.Consume(1); // 에너지 소모
         Debug.Log("스캔 시작");
 
         SoundManager.Instance.PlaySFX(scanSound);
