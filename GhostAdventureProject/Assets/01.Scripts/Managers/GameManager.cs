@@ -116,7 +116,7 @@ public class GameManager : Singleton<GameManager>
         var uiManagerComp = EnsureManagerExists<UIManager>(uiManager);
         var possessionStateManagerComp = EnsureManagerExists<PossessionStateManager>(possessionStateManager);
         var soundManagerComp = EnsureManagerExists<SoundManager>(soundManager);
-        var cutsceneManagerComp = EnsureManagerExists<CutsceneManager>(cutSceneManager);
+        var cutsceneManagerComp = EnsureManagerExists<Global_CutsceneManager>(cutSceneManager);
         var qteEffectManagerComp = EnsureManagerExists<QTEEffectManager>(qteEffectManager);
         var tutorialManagerComp = EnsureManagerExists<TutorialManager>(tutorialManager);
         var eventManagerComp = EnsureManagerExists<EventManager>(eventManager);

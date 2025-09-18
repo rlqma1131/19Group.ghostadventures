@@ -4,31 +4,35 @@ using TMPro;
 using UnityEngine.UI;
 using DG.Tweening;
 
-
+//컷신 내에서 타이핑 효과로 대사를 보여주는 스크립트
+//DialogueSet이라는 구조를 사용해 여러 개의 대화 묶음을 만들 수 있음
+//예를 들어 "주인공 대사", "NPC와의 대화" 등 상황에 맞는 대사들을 미리 작성해두고
+//필요할 때 인덱스(순번)로 불러올 수 있음
 public class TypewriterDialogue : MonoBehaviour
 {
     public static TypewriterDialogue Instance { get; private set; }
 
-    public TimelineControl timelineControl; //타임라인 컨트롤
+    public Additive_TimelineControl timelineControl; //타임라인 컨트롤
     //public GameObject dialoguePanel; //대화창 패널
     public TextMeshProUGUI dialogueText; //대화 텍스트 컴포넌트
     public float typingSpeed = 0.05f; // 타이핑 속도 
     private bool isFinished = false;
+     // 대화가 모두 끝났는지 확인.
 
     private bool isAuto = false; // 자동 대화
     public float autoNextDelay = 0.7f; // 한 대사 완료 후 다음으로 넘어가기까지의 지연 시간
-
-    [System.Serializable] // 구조체를 인스펙터에 노출시키기 위해 필요
+    // DialogueSet 구조체: 여러 개의 대사를 하나의 묶음으로 관리하기 위한 구조
+    [System.Serializable] // 구조체(대화 묶음)를 인스펙터에 노출시키기 위해 필요
     public class DialogueSet
     {
         public string setName; // 인스펙터에서  대사를 구분하기 위한 이름 
         [TextArea(3, 10)]
-        public string[] dialogues;
+        public string[] dialogues; //대화를 담을 문자열 배열
     }
 
     public DialogueSet[] allDialogueSets; // 모든 대사 묶음을 담을 배열
     private string[] dialogues;
-    private int index = 0;
+    private int index = 0; //현재 대사 인덱스
     private bool isTyping = false;
     private bool skipTyping = false;
     private bool isShakingDialogue = false; //
@@ -47,7 +51,7 @@ public class TypewriterDialogue : MonoBehaviour
 
         if (timelineControl == null)
         {
-            timelineControl = FindObjectOfType<TimelineControl>();
+            timelineControl = FindObjectOfType<Additive_TimelineControl>();
             if (timelineControl == null)
             {
                 Debug.LogError("TimelineControl을 씬에서 찾을 수 없습니다! TimelineManager 오브젝트에 TimelineControl 스크립트가 있는지 확인해주세요.");
@@ -58,13 +62,12 @@ public class TypewriterDialogue : MonoBehaviour
     void Start()
     {
         dialogueText.text = "";
-        //dialoguePanel.SetActive(false);
-        //dialogueText.gameObject.SetActive(true); // 대화 텍스트를 비활성화
+
     }
 
     void Update()
     {
-        // 자동 대화 모드일 때는 클릭 입력을 무시합니다.
+        // 자동 대화 모드일 때는 클릭 입력을 무시.
         if (isAuto) return;
 
         // 마우스 왼쪽 버튼을 클릭했을 때
@@ -106,6 +109,7 @@ public class TypewriterDialogue : MonoBehaviour
     /// <param name="dialogueSetIndex">allDialogueSets 배열에서 사용할 대사 묶음의 인덱스</param>
     public void StartDialogueByIndex(int dialogueSetIndex)
     {
+        // 이전에 실행 중이던 모든 코루틴을 중지하여 대화가 겹치지 않게 함.
         StopAllCoroutines();
 
         if (allDialogueSets == null || dialogueSetIndex < 0 || dialogueSetIndex >= allDialogueSets.Length)
@@ -113,16 +117,20 @@ public class TypewriterDialogue : MonoBehaviour
             Debug.LogError($"잘못된 대화 묶음 인덱스: {dialogueSetIndex}. 대화 시작 실패.");
             return;
         }
-
+        // 현재 대사(dialogues)를 선택된 대사 묶음으로 설정
         this.dialogues = allDialogueSets[dialogueSetIndex].dialogues; // 해당 인덱스의 대사 묶음을 현재 dialogues로 설정
-        index = 0;
+        index = 0; // 대사 인덱스를 처음(0)으로 초기화
         dialogueText.gameObject.SetActive(true);
         StartCoroutine(TypeLine());
     }
 
 
     /// <param name="dialogueSetIndex">allDialogueSets 배열에서 사용할 대사 묶음의 인덱스</param>
-    public void StartShakeDialogueByIndex(int dialogueSetIndex) // <-- int 인자로 변경
+    /// 
+
+
+    // 흔들림 효과가 있는 타이핑 대화 시작
+    public void StartShakeDialogueByIndex(int dialogueSetIndex) 
     {
         StopAllCoroutines();
 
@@ -137,23 +145,23 @@ public class TypewriterDialogue : MonoBehaviour
         dialogueText.gameObject.SetActive(true);
         StartCoroutine(TypeLineShake());
     }
-
+    // 타이핑 효과 코루틴
     IEnumerator TypeLine()
     {
         isTyping = true;
-        isShakingDialogue = false;
-        dialogueText.text = "";
+        isShakingDialogue = false; // 흔들림 모드가 아님을 명시
+        dialogueText.text = ""; // 텍스트를 초기화
 
         if (dialogues == null || dialogues.Length <= index)
         {
             Debug.LogWarning("대사 배열이 비어있거나 인덱스가 범위를 벗어났습니다. 대화 종료.");
             dialogueText.gameObject.SetActive(false);
-            isTyping = false;
+            isTyping = false; 
             skipTyping = false;
             if (timelineControl != null) timelineControl.ResumeTimeline();
             yield break;
         }
-
+        // 현재 대사(dialogues[index])를 한 글자씩 반복 처리
         foreach (char letter in dialogues[index].ToCharArray())
         {
             if (skipTyping)
@@ -168,7 +176,7 @@ public class TypewriterDialogue : MonoBehaviour
         isTyping = false;
         skipTyping = false;
     }
-
+    // 흔들림 타이핑 효과를 처리하는 코루틴.
     IEnumerator TypeLineShake()
     {
         isTyping = true;
@@ -193,7 +201,7 @@ public class TypewriterDialogue : MonoBehaviour
                 break;
             }
             dialogueText.text += letter;
-            ShakeDialogue(0.2f, 8f);
+            ShakeDialogue(0.2f, 8f);  // 한 글자가 추가될 때마다 흔들림 효과를 호출
             yield return new WaitForSecondsRealtime(typingSpeed);
         }
 
@@ -201,6 +209,7 @@ public class TypewriterDialogue : MonoBehaviour
         skipTyping = false;
     }
 
+    // 다음 대사로 넘어가는 함수. (수동 모드)
     void NextLine()
     {
         if ((dialogues == null || dialogues.Length == 0))
@@ -231,7 +240,15 @@ public class TypewriterDialogue : MonoBehaviour
     }
 
 
+    // --- 자동 대화 관련 함수들 ---
 
+    /// <summary>
+    /// 지정된 인덱스의 대사를 자동 모드로 시작.
+    /// </summary>
+    /// 
+
+
+    //자동 대화
     public void StartAutoDialogueByIndex(int dialogueSetIndex)
     {
         StopAllCoroutines();
@@ -250,6 +267,7 @@ public class TypewriterDialogue : MonoBehaviour
 
 
     }
+    //자동 대화(쉐이크)
 
     public void StartShakeAutoDialogueByIndex(int dialogueSetIndex)
     {

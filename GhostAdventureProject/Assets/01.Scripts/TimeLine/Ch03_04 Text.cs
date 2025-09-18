@@ -2,6 +2,8 @@
 using UnityEngine;
 using TMPro;
 
+
+//3챕에서 4챕 이동중 콜라이더 지나갈때 텍스트 띄우기 위한 스크립트
 public class Ch03_04Text : MonoBehaviour
 {
     bool isTextActive = false;  // 텍스트가 활성화되었는지 여부

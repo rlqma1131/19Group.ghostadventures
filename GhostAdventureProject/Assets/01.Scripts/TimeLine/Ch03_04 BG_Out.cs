@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Ch03_04BG_Out : MonoBehaviour
 {
-
+    //3챕에서 4챕 갈때 배경 디졸브 효과 주기 위한 스크립트
     [SerializeField]private DissolveController dissolveController;
 
     private void Start()

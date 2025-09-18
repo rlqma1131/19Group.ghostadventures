@@ -5,6 +5,11 @@ using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 기억저장소 스크립트입니다.
+// 기억저장소는 일기장 형태입니다.
+// 획득한 기억을 기억저장소에 표시합니다.(MemoryNode프리팹 복제)
+// 일기장처럼 페이지를 넘겨서 다음 기억을 볼 수 있습니다.(페이지당 2개씩 표시됨)
+
 public class MemoryStorage : MonoBehaviour, IUIClosable
 {
     [SerializeField] private AudioClip pageFlip;
@@ -12,7 +17,7 @@ public class MemoryStorage : MonoBehaviour, IUIClosable
     [SerializeField] private Transform leftPageSlot;
     [SerializeField] private Transform rightPageSlot;
     [SerializeField] private Sprite defaultPageSprite;               // 기본 페이지 이미지
-    [SerializeField] private Image pageTurnImage;                        // 페이지 넘김 효과 표시할 이미지       
+    [SerializeField] private Image pageTurnImage;                    // 페이지 넘김 효과 표시할 이미지       
     [SerializeField] private Sprite[] NextpageTurnSprites;           // 다음페이지 스프라이트
     [SerializeField] private Sprite[] PrevpageTurnSprites;           // 이전페이지 스프라이트
     [SerializeField] private float frameInterval = 0.05f;            // 프레임 간 간격

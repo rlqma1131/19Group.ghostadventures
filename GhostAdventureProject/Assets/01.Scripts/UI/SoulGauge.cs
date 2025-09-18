@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+// 영혼에너지UI 스크립트입니다.
+
 public class SoulGauge : MonoBehaviour
 {
     [SerializeField] Image[] soulGauge; // 영혼게이지

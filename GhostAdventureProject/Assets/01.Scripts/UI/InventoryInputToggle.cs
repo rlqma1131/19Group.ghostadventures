@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Tab키를 누르면 사용할 수 있는 인벤토리가 변경됩니다.
+// FocusIsPlayer = true  : 플레이어인벤토리
+// FocusIsPlayer = false : 빙의인벤토리  
 public class InventoryInputToggle : MonoBehaviour
 {
-    public static bool FocusIsPlayer = true;  // true:플레이어인벤토리 / false:빙의인벤토리
+    public static bool FocusIsPlayer = true;
     private Inventory_Player inventory_Player;
     private Inventory_PossessableObject inventory_PossessableObject;
 

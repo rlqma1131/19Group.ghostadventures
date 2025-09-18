@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Ch03_04TimeLineBGM : MonoBehaviour
 {
+    //3챕에서 4챕 이동중 타임라인 재생될때 BGM 재생 위한 스크립트
 
 
     AudioSource bgmAudioSource;

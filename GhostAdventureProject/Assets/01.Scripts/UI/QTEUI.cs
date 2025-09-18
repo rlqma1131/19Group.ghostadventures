@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+
+// 유인 오브젝트, 은신처 QTE
 
 public class QTEUI : MonoBehaviour
 {
