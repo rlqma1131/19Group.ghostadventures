@@ -2,6 +2,12 @@
 {
     public interface IPossessable {
         /// <summary>
+        /// 이 오브젝트가 빙의 가능한 물체인지 판별하는 함수
+        /// </summary>
+        /// <returns></returns>
+        public bool HasActivated();
+        
+        /// <summary>
         /// Called when the user tries to possess the object
         /// </summary>
         public virtual void TryPossess() { }

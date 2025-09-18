@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _01.Scripts.Extensions;
 using _01.Scripts.Object.BaseClasses.Interfaces;
 using _01.Scripts.Player;
 using UnityEngine;
@@ -42,7 +43,7 @@ public class PlayerInteractSystem : MonoBehaviour
     }
 
     void Update() => checkTimer.Tick(Time.unscaledDeltaTime);
-
+    
     GameObject GetClosestGameObject() {
         GameObject newClosest = null;
         float distance = float.MaxValue;
@@ -52,8 +53,15 @@ public class PlayerInteractSystem : MonoBehaviour
             if (!results[i]) continue;
             
             float newDist = Vector2.Distance(transform.position, results[i].transform.position);
-            if (newClosest && !(newDist < distance + checkDistanceThreshold) && !nearbyInteractables.Contains(results[i].gameObject)) continue;
-            newClosest = results[i].gameObject;
+            if (!newClosest || newDist < distance + checkDistanceThreshold &&
+                nearbyInteractables.Contains(results[i].gameObject) &&
+                newClosest.CompareLayerPriority(results[i].gameObject) <= 0) {
+                if (!results[i].gameObject.TryGetComponent(out IPossessable possessable) || possessable.HasActivated())
+                    newClosest = results[i].gameObject;
+                else if (results[i].gameObject.TryGetComponent(out MemoryFragment fragment))
+                    if (fragment.IsScannable) newClosest = results[i].gameObject;
+            }
+            
             distance = newDist;
         }
         
@@ -62,7 +70,7 @@ public class PlayerInteractSystem : MonoBehaviour
 
     void UpdateClosest() {
         GameObject newClosest = GetClosestGameObject();
-        
+
         if (currentClosest == newClosest) return;
         
         // 이전 오브젝트 처리
@@ -88,7 +96,16 @@ public class PlayerInteractSystem : MonoBehaviour
         }
 
         // 팝업 켜기
-        if (currentClosest.TryGetComponent(out IInteractable nextInteractable)) {
+        // 상호작용 가능 물체가 아닐 시 Highlight Object 띄우지 않기
+        if (!currentClosest.TryGetComponent(out IInteractable nextInteractable)) return;
+        
+        // 만약 Possessable Object라면 현재 빙의 가능 상태면 Highlight Object 작동
+        if (currentClosest.TryGetComponent(out IPossessable nextPossessable)) {
+            if (!nextPossessable.HasActivated()) return;
+            eKey.SetActive(true);
+            nextInteractable.ShowHighlight(true);
+        }
+        else {
             eKey.SetActive(true);
             nextInteractable.ShowHighlight(true);
         }

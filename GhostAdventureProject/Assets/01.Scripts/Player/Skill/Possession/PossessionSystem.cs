@@ -36,7 +36,7 @@ public class PossessionSystem : MonoBehaviour
         return currentTarget
                && player.InteractSystem.CurrentClosest == currentTarget.gameObject
                && !currentTarget.IsPossessed
-               && currentTarget.HasActivated;
+               && currentTarget.HasActivated();
     }
     
     public void PlayPossessionInAnimation() // 빙의 시작 애니메이션

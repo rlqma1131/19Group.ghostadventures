@@ -37,7 +37,7 @@ public class Ch2_Radio : BasePossessable
         if (isSaved)
             return;
 
-        if (!guard.HasActivated)
+        if (!guard.HasActivated())
         {
             hasActivated = false;
             MarkActivatedChanged();

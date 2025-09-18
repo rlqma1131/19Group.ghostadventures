@@ -1038,12 +1038,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b740841f5c942e2bc7b4d154d558da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
   scan_duration: 2
   scanPanel: {fileID: 0}
   scanCircleUI: {fileID: 0}
-  player: {fileID: 0}
-  e_key: {fileID: 1977051756}
-  currentScanObject: {fileID: 0}
+  playerObj: {fileID: 0}
+  correctDoll: {fileID: 0}
+  soundConfig: {fileID: 0}
 --- !u!1 &1693146
 GameObject:
   m_ObjectHideFlags: 0
@@ -3481,6 +3482,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db45fe963d2b4122921ecfa564bc584, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TriggerSound_clip: {fileID: 0}
+  ClearSound_clip: {fileID: 0}
+  correctDoll: {fileID: 0}
+  flySpeed: 2
+  curvePoints: 5
+  jitterAmplitude: 1
+  pathSpan: 25
+  fadeDuration: 0.25
+  soundConfig: {fileID: 0}
 --- !u!1 &73685948
 GameObject:
   m_ObjectHideFlags: 0
@@ -3843,7 +3853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 499cb42b5a18ebe44866759087d5f962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 280766653}
+  highlightObj: {fileID: 0}
 --- !u!114 &91913986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4463,7 +4473,7 @@ SpriteRenderer:
   m_Size: {x: 15.36, y: 10.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &113455257 stripped
@@ -7655,8 +7665,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.9844, y: 0.037100315, z: 0}
-    m_Extent: {x: 7.5176, y: 9.239201, z: 0}
+    m_Center: {x: 5.9849, y: 0.03760004, z: 0}
+    m_Extent: {x: 7.5172, y: 9.2397995, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -9288,6 +9298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCount: 0
   roomName: "\uB4B7\uACE8\uBAA9 \uC9C0\uD558 \uC218\uB85C"
+  isCount: 0
 --- !u!1 &307987329
 GameObject:
   m_ObjectHideFlags: 3
@@ -9593,7 +9604,7 @@ SpriteRenderer:
   m_Size: {x: 15.36, y: 10.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &328377479
@@ -10250,8 +10261,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.85945034, y: 0.43429995, z: 0}
-    m_Extent: {x: 8.96165, y: 7.5377, z: 0}
+    m_Center: {x: -0.86010027, y: 0.43344998, z: 0}
+    m_Extent: {x: 8.961, y: 7.5371504, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -11757,12 +11768,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b740841f5c942e2bc7b4d154d558da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
   scan_duration: 2
   scanPanel: {fileID: 0}
   scanCircleUI: {fileID: 0}
-  player: {fileID: 0}
-  e_key: {fileID: 1977051756}
-  currentScanObject: {fileID: 0}
+  playerObj: {fileID: 0}
+  correctDoll: {fileID: 0}
+  soundConfig: {fileID: 0}
 --- !u!1 &408308653
 GameObject:
   m_ObjectHideFlags: 0
@@ -12930,12 +12942,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e47825f7985b2044a8c6868d38b369f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 183372399}
+  highlightObj: {fileID: 0}
   anim: {fileID: 0}
-  hasActivated: 0
   possessionSFX: {fileID: 0}
+  hasActivated: 0
   isPossessed: 0
-  doorPass: 0
   hideAreaEnterSFX: {fileID: 0}
   energyConsumeCycle: 2
   energyCost: 1
@@ -14321,8 +14332,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -1.8439512, y: -0.47245002, z: 0}
-    m_Extent: {x: 33.20015, y: 6.44545, z: 0}
+    m_Center: {x: -1.8440504, y: -0.47090006, z: 0}
+    m_Extent: {x: 33.20025, y: 6.4453, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -16612,12 +16623,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e47825f7985b2044a8c6868d38b369f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 8527458}
+  highlightObj: {fileID: 0}
   anim: {fileID: 0}
-  hasActivated: 0
   possessionSFX: {fileID: 0}
+  hasActivated: 0
   isPossessed: 0
-  doorPass: 0
   hideAreaEnterSFX: {fileID: 0}
   energyConsumeCycle: 2
   energyCost: 1
@@ -17329,8 +17339,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.985, y: 0.03730011, z: 0}
-    m_Extent: {x: 7.5179, y: 9.2389, z: 0}
+    m_Center: {x: 5.98435, y: 0.03795004, z: 0}
+    m_Extent: {x: 7.51845, y: 9.23885, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -17793,9 +17803,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaddd9e1e9a81d4ea2cd09c720564c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 0}
+  highlightObj: {fileID: 0}
   targetDoor: {fileID: 1851417265}
   targetPos: {x: 0, y: 0}
+  isLocked: 0
   closedObject: {fileID: 0}
   OpenObject: {fileID: 0}
 --- !u!212 &666386050
@@ -19043,6 +19054,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCount: 0
   roomName: "\uB180\uC774\uD130 \uC9C0\uD558 \uCC3D\uACE0"
+  isCount: 0
 --- !u!4 &711022257
 Transform:
   m_ObjectHideFlags: 0
@@ -22829,12 +22841,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b740841f5c942e2bc7b4d154d558da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
   scan_duration: 2
   scanPanel: {fileID: 0}
   scanCircleUI: {fileID: 0}
-  player: {fileID: 0}
-  e_key: {fileID: 1977051756}
-  currentScanObject: {fileID: 0}
+  playerObj: {fileID: 0}
+  correctDoll: {fileID: 0}
+  soundConfig: {fileID: 0}
 --- !u!1 &886867747
 GameObject:
   m_ObjectHideFlags: 0
@@ -23317,9 +23330,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaddd9e1e9a81d4ea2cd09c720564c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 0}
+  highlightObj: {fileID: 0}
   targetDoor: {fileID: 1151961559}
   targetPos: {x: 0, y: 0}
+  isLocked: 0
   closedObject: {fileID: 0}
   OpenObject: {fileID: 0}
 --- !u!212 &895682010
@@ -25377,6 +25391,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCount: 0
   roomName: "\uAD00\uB9AC\uC2E4 \uC9C0\uD558 \uC218\uB85C"
+  isCount: 0
 --- !u!4 &997706768
 Transform:
   m_ObjectHideFlags: 0
@@ -26459,8 +26474,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 1
   m_ShadowVolumeIntensity: 0.257
   m_LocalBounds:
-    m_Center: {x: 0.31964254, y: -0.17407107, z: 0}
-    m_Extent: {x: 8.321686, y: 5.915471, z: 0}
+    m_Center: {x: 0.31974983, y: -0.17420006, z: 0}
+    m_Extent: {x: 8.32215, y: 5.9154, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -27669,6 +27684,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   director: {fileID: 53740227}
+  roomInfo: {fileID: 0}
+  kid: {fileID: 0}
 --- !u!1 &1069579235
 GameObject:
   m_ObjectHideFlags: 0
@@ -27914,6 +27931,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCount: 0
   roomName: "\uAD00\uB9AC\uC2E4 \uC9C0\uD558 \uC218\uB85C"
+  isCount: 0
 --- !u!1 &1084622592
 GameObject:
   m_ObjectHideFlags: 0
@@ -28600,6 +28618,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusRestoreAmount: 2
   reduceInterval: 1
+  IsActive: 1
 --- !u!114 &1122917922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29206,12 +29225,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b740841f5c942e2bc7b4d154d558da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
   scan_duration: 2
   scanPanel: {fileID: 0}
   scanCircleUI: {fileID: 0}
-  player: {fileID: 0}
-  e_key: {fileID: 1977051756}
-  currentScanObject: {fileID: 0}
+  playerObj: {fileID: 0}
+  correctDoll: {fileID: 0}
+  soundConfig: {fileID: 0}
 --- !u!1 &1134430074
 GameObject:
   m_ObjectHideFlags: 0
@@ -29422,7 +29442,7 @@ SpriteRenderer:
   m_Size: {x: 10.24, y: 10.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1148469057
@@ -29613,9 +29633,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaddd9e1e9a81d4ea2cd09c720564c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 0}
+  highlightObj: {fileID: 0}
   targetDoor: {fileID: 895682007}
   targetPos: {x: 0, y: 0}
+  isLocked: 0
   closedObject: {fileID: 0}
   OpenObject: {fileID: 0}
 --- !u!212 &1151961562
@@ -35571,9 +35592,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaddd9e1e9a81d4ea2cd09c720564c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 0}
+  highlightObj: {fileID: 0}
   targetDoor: {fileID: 1942920469}
   targetPos: {x: 0, y: 0}
+  isLocked: 0
   closedObject: {fileID: 0}
   OpenObject: {fileID: 0}
 --- !u!61 &1233952048
@@ -36776,6 +36798,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCount: 0
   roomName: "\uAD00\uB9AC\uC2E4 \uC785\uAD6C"
+  isCount: 0
 --- !u!1 &1304629769
 GameObject:
   m_ObjectHideFlags: 0
@@ -37010,6 +37033,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCount: 0
   roomName: "\uAD00\uB9AC\uC2E4"
+  isCount: 0
 --- !u!1 &1318104569
 GameObject:
   m_ObjectHideFlags: 0
@@ -37564,12 +37588,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b740841f5c942e2bc7b4d154d558da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
   scan_duration: 2
   scanPanel: {fileID: 0}
   scanCircleUI: {fileID: 0}
-  player: {fileID: 0}
-  e_key: {fileID: 1977051756}
-  currentScanObject: {fileID: 0}
+  playerObj: {fileID: 0}
+  correctDoll: {fileID: 0}
+  soundConfig: {fileID: 0}
 --- !u!1 &1327894019 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7943002454466128269, guid: 70eee0337f0f6024c92d6743374645e7, type: 3}
@@ -39617,7 +39642,7 @@ SpriteRenderer:
   m_Size: {x: 15.36, y: 10.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1411225030
@@ -40184,6 +40209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCount: 0
   roomName: "\uB4B7\uACE8\uBAA9 \uC9C0\uD558 \uCC3D\uACE0"
+  isCount: 0
 --- !u!1 &1473895425
 GameObject:
   m_ObjectHideFlags: 0
@@ -42694,8 +42720,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 1
   m_ShadowVolumeIntensity: 0.367
   m_LocalBounds:
-    m_Center: {x: 8.319401, y: 0.47484994, z: 0}
-    m_Extent: {x: 18.9434, y: 6.30005, z: 0}
+    m_Center: {x: 8.3192005, y: 0.47510004, z: 0}
+    m_Extent: {x: 18.9425, y: 6.3017, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -49911,12 +49937,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b740841f5c942e2bc7b4d154d558da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
   scan_duration: 2
   scanPanel: {fileID: 0}
   scanCircleUI: {fileID: 0}
-  player: {fileID: 0}
-  e_key: {fileID: 1977051756}
-  currentScanObject: {fileID: 0}
+  playerObj: {fileID: 0}
+  correctDoll: {fileID: 0}
+  soundConfig: {fileID: 0}
 --- !u!1 &1802306514
 GameObject:
   m_ObjectHideFlags: 0
@@ -50723,9 +50750,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaddd9e1e9a81d4ea2cd09c720564c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 0}
+  highlightObj: {fileID: 0}
   targetDoor: {fileID: 666386047}
   targetPos: {x: 0, y: 0}
+  isLocked: 0
   closedObject: {fileID: 0}
   OpenObject: {fileID: 0}
 --- !u!212 &1851417268
@@ -51832,12 +51860,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b740841f5c942e2bc7b4d154d558da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
   scan_duration: 2
   scanPanel: {fileID: 0}
   scanCircleUI: {fileID: 0}
-  player: {fileID: 0}
-  e_key: {fileID: 1977051756}
-  currentScanObject: {fileID: 0}
+  playerObj: {fileID: 0}
+  correctDoll: {fileID: 0}
+  soundConfig: {fileID: 0}
 --- !u!1 &1881792933
 GameObject:
   m_ObjectHideFlags: 0
@@ -52838,6 +52867,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCount: 0
   roomName: "\uB180\uC774\uD130 \uB4B7\uACE8\uBAA9"
+  isCount: 0
 --- !u!1 &1906367046
 GameObject:
   m_ObjectHideFlags: 0
@@ -52950,6 +52980,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCount: 0
   roomName: "\uB180\uC774\uD130"
+  isCount: 0
 --- !u!1 &1906629958
 GameObject:
   m_ObjectHideFlags: 0
@@ -53473,12 +53504,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e47825f7985b2044a8c6868d38b369f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 1662557249}
+  highlightObj: {fileID: 0}
   anim: {fileID: 0}
-  hasActivated: 0
   possessionSFX: {fileID: 0}
+  hasActivated: 0
   isPossessed: 0
-  doorPass: 0
   hideAreaEnterSFX: {fileID: 0}
   energyConsumeCycle: 2
   energyCost: 1
@@ -54092,8 +54122,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.07369995, y: -1.0985501, z: 0}
-    m_Extent: {x: 19.9734, y: 6.2009497, z: 0}
+    m_Center: {x: 0.07289982, y: -1.09935, z: 0}
+    m_Extent: {x: 19.9735, y: 6.20145, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -54310,14 +54340,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d9064f0affb4342b90cf4439a455d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 0}
+  highlightObj: {fileID: 0}
   targetDoor: {fileID: 1233952045}
   targetPos: {x: 0, y: 0}
+  isLocked: 0
   closedObject: {fileID: 221807231}
   OpenObject: {fileID: 0}
   puzzleId: 
   lockedSound: {fileID: 8300000, guid: 912654f847fdc504cb38e6cdd6b76a64, type: 3}
   unlockSound: {fileID: 8300000, guid: 1c242e13499b0164ca6a43e40b69e973, type: 3}
+  initiallyLocked: 1
   pairedDoor: {fileID: 0}
 --- !u!4 &1942920469
 Transform:
@@ -54852,11 +54884,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1977051756 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8519716893640731712, guid: 26abe93b70e413b438a4e8983771c880, type: 3}
-  m_PrefabInstance: {fileID: 1017512678}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1977655761
 GameObject:
   m_ObjectHideFlags: 0
@@ -56134,13 +56161,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ffbe82b8eb954025b16c5ff1e7a8cd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
   scan_duration: 2
   scanPanel: {fileID: 0}
   scanCircleUI: {fileID: 0}
-  player: {fileID: 0}
+  playerObj: {fileID: 0}
   door: {fileID: 317304057}
   shelf: {fileID: 562116802}
-  e_key: {fileID: 1977051756}
+  clue_P: {fileID: 0}
+  clueitems: []
+  clear_UnderGround: 0
   currentScanObject: {fileID: 0}
 --- !u!1001 &2002169637
 PrefabInstance:
@@ -57045,12 +57075,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b740841f5c942e2bc7b4d154d558da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
   scan_duration: 2
   scanPanel: {fileID: 0}
   scanCircleUI: {fileID: 0}
-  player: {fileID: 0}
-  e_key: {fileID: 1977051756}
-  currentScanObject: {fileID: 0}
+  playerObj: {fileID: 0}
+  correctDoll: {fileID: 0}
+  soundConfig: {fileID: 0}
 --- !u!1 &2006490246
 GameObject:
   m_ObjectHideFlags: 0
@@ -59450,12 +59481,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b740841f5c942e2bc7b4d154d558da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
   scan_duration: 2
   scanPanel: {fileID: 0}
   scanCircleUI: {fileID: 0}
-  player: {fileID: 0}
-  e_key: {fileID: 1977051756}
-  currentScanObject: {fileID: 0}
+  playerObj: {fileID: 0}
+  correctDoll: {fileID: 0}
+  soundConfig: {fileID: 0}
 --- !u!1 &2069164328
 GameObject:
   m_ObjectHideFlags: 0
@@ -59915,12 +59947,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1baae4d196db80478ba112e6f83c13d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 1670383069}
+  highlightObj: {fileID: 0}
   anim: {fileID: 0}
-  hasActivated: 0
   possessionSFX: {fileID: 0}
+  hasActivated: 0
   isPossessed: 0
-  doorPass: 0
   mazeGroupToDisable: {fileID: 1269996416}
   q_Key: {fileID: 1554493787}
   turnOn: {fileID: 133736432}
@@ -60188,6 +60219,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCount: 0
   roomName: "\uAD00\uB9AC\uC2E4 \uC9C0\uD558 \uCC3D\uACE0"
+  isCount: 0
 --- !u!4 &2114231266
 Transform:
   m_ObjectHideFlags: 0
@@ -60999,13 +61031,45 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1675499634}
     m_Modifications:
+    - target: {fileID: 1411360014022309200, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.357
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411360014022309200, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.424
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732427894594204762, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.655998
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732427894594204762, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.17500037
+      objectReference: {fileID: 0}
+    - target: {fileID: 2426788554130783483, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_Offset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2426788554130783483, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_Offset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3933060494627255251, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.027002016
+      objectReference: {fileID: 0}
+    - target: {fileID: 3933060494627255251, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.011999664
+      objectReference: {fileID: 0}
     - target: {fileID: 4191391032629465747, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.84
+      value: 8.14
       objectReference: {fileID: 0}
     - target: {fileID: 4191391032629465747, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.98
+      value: -0.4
       objectReference: {fileID: 0}
     - target: {fileID: 4191391032629465747, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -61043,17 +61107,77 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ch2_CCTVMonitor
       objectReference: {fileID: 0}
+    - target: {fileID: 4620377204422348106, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5423469707173068642, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5423469707173068642, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5513082852723395208, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0059979837
+      objectReference: {fileID: 0}
+    - target: {fileID: 5513082852723395208, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.011999664
+      objectReference: {fileID: 0}
     - target: {fileID: 5560287623916145296, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5948075823453395364, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5948075823453395364, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6045257027334488934, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.704002
+      objectReference: {fileID: 0}
+    - target: {fileID: 6045257027334488934, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.24399966
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208034751740748816, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208034751740748816, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301649129734858043, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_Offset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8668272112972262846, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8831026674990140512, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.353002
+      objectReference: {fileID: 0}
+    - target: {fileID: 8831026674990140512, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.39700037
+      objectReference: {fileID: 0}
     - target: {fileID: 8921858279225984644, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.0000009536743
+      value: -0.0000038146973
       objectReference: {fileID: 0}
     - target: {fileID: 8921858279225984644, guid: 95fb0fe2566000843a4308e2b128cd2a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0076789856
+      value: -0.007751465
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -66274,10 +66398,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f99cfdf1d2dd7d8489cbd2638713aeb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 5909088983248650329}
+  highlightObj: {fileID: 0}
   data: {fileID: 11400000, guid: 4209b3d0ee6786c47b9998d189ed9381, type: 2}
   isScannable: 1
   canStore: 0
+  audioSource1: {fileID: 0}
+  audioSource2: {fileID: 0}
   fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
   dropOffset: {x: 0, y: 0, z: 0}
   bounceHeight: 0.3
@@ -66285,6 +66411,8 @@ MonoBehaviour:
   rotateTime: 2
   ellipseRadiusX: 0.8
   ellipseRadiusZ: 1.5
+  _particleSystem: {fileID: 0}
+  _light: {fileID: 0}
 --- !u!1001 &3463173166445545622
 PrefabInstance:
   m_ObjectHideFlags: 0

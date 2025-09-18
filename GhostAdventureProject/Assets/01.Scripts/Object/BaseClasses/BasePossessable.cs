@@ -21,12 +21,11 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     
     // Properties
     public GameObject Highlight => highlightObj;
-    public bool HasActivated => hasActivated;
     public bool IsPossessed => isPossessed;
 
     /// <summary>
-    /// Get Highlight Object Component(The class which inherits BaseInteractable)
-    /// If overriding is needed, please always use base.Awake();
+    /// Highlight Object의 컴포넌트를 검출하여 그것의 게임오브젝트를 캐쉬
+    /// 오버라이드 필요 시 base.Awake() 사용 필수
     /// </summary>
     protected virtual void Awake() {
         Transform component = 
@@ -35,7 +34,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     }
     
     /// <summary>
-    /// Initialize Important Parameters(Player, Highlight active state, Booleans)
+    /// 파라미터 Initialize
     /// </summary>
     protected virtual void Start() {
         player = GameManager.Instance.Player;
@@ -46,8 +45,8 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     }
 
     /// <summary>
-    /// Do operations in every frame
-    /// Using base.Update() is optional
+    /// 매 프레임 마다 갱신되어야 할 행동들
+    /// base.Update는 선택(Optional)
     /// </summary>
     protected virtual void Update() {
         if (Input.GetKeyDown(KeyCode.E) && isPossessed) Unpossess();
@@ -59,6 +58,8 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// </summary>
     /// <param name="pop"></param>
     public void ShowHighlight(bool pop) => highlightObj?.SetActive(pop);
+
+    public bool HasActivated() => hasActivated;
 
     /// <summary>
     /// Events will activate in every frame
