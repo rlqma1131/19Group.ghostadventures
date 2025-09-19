@@ -7,8 +7,8 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     public bool PlayerNearby = false;
     private Collider2D col;
 
-    [SerializeField] Collider2D garageDoor;
-
+    [SerializeField] GameObject garageDoor;
+    [SerializeField] GameObject garageEventEnd;
     override protected void Start()
     {
         base.Start();
@@ -28,7 +28,8 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
     public override void AfterScan() 
     {
         EnemyAI.PauseAllEnemies();
-        //garageDoor.enabled = false;
+        garageDoor.SetActive(false);
+        garageEventEnd.SetActive(true);
 
         base.AfterScan();
     }
