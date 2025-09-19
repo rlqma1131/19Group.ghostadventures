@@ -19,10 +19,9 @@ public class Ch1_GarageEventManager : MonoBehaviour
     //NPC컷신보고 상호작용 가능하게하기 위해 추가
     [SerializeField] Cutscene_NPC cutscene_NPC;
     
-    private bool isCutscenePlaying = false;
+    [SerializeField] private bool isCutscenePlaying = false;
     private bool isCutscenePlaying2 = false;
     private bool playerNearby = false;
-    private bool openKeyboard = false;
     Player player;
     
     public Ch1_KeyBoard_Enter Answer => answer;
@@ -30,7 +29,6 @@ public class Ch1_GarageEventManager : MonoBehaviour
     void Start()
     {
         player = GameManager.Instance.Player;
-        bear = GetComponent<Ch1_MemoryPositive_01_TeddyBear>();
         cutsceneDirector.stopped += OnTimelineFinished;
         cutsceneDirector_correct.stopped += OnTimelineFinished2;
     }
@@ -69,13 +67,12 @@ public class Ch1_GarageEventManager : MonoBehaviour
 
                     cutsceneDirector.Play();
                 }
-                else if (isCutscenePlaying && !openKeyboard && !answer.correct)
+                else if (isCutscenePlaying && !keyboard.IsOpen() && !answer.correct)
                 {
                     player.InteractSystem.eKey.SetActive(false);
 
                     player.SoulEnergy.DisableHealingEffect(); // 에너지 회복존 비활성화
 
-                    openKeyboard = true;
                     keyboard.OpenKeyBoard();
                     player.PossessionSystem.CanMove = false;
                 }
@@ -138,6 +135,6 @@ public class Ch1_GarageEventManager : MonoBehaviour
         energyRestoreZone.IsActive = true; // 에너지 회복존 비활성화
         UIManager.Instance.PlayModeUI_OpenAll();
         door.color = new Color(door.color.r, door.color.g, door.color.b, 0f); // 문 투명하게
-
+        gameObject.SetActive(false); // 이벤트 비활성화
     }
 }
