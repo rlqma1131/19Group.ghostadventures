@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// TeddyBear 한테 붙는 클래스
 /// </summary>
-public class Ch1_GarageEventManager : MonoBehaviour
+public class Ch1_GarageEventManager : BaseInteractable
 {
     [Header("References")]
     [SerializeField] private Ch1_KeyBoard keyboard;
@@ -22,12 +22,12 @@ public class Ch1_GarageEventManager : MonoBehaviour
     [SerializeField] private bool isCutscenePlaying = false;
     private bool isCutscenePlaying2 = false;
     private bool playerNearby = false;
-    Player player;
     
     public Ch1_KeyBoard_Enter Answer => answer;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         player = GameManager.Instance.Player;
         cutsceneDirector.stopped += OnTimelineFinished;
         cutsceneDirector_correct.stopped += OnTimelineFinished2;
@@ -96,7 +96,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
@@ -105,7 +105,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected override void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
