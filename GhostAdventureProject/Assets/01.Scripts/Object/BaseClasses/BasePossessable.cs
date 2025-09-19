@@ -60,6 +60,13 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     public void ShowHighlight(bool pop) => highlightObj?.SetActive(pop);
 
     public bool HasActivated() => hasActivated;
+    
+    public void SetActivated(bool value) {
+        if (hasActivated == value) return;
+        
+        hasActivated = value;
+        OnRestoredHasActivated(value);
+    }
 
     /// <summary>
     /// Events will activate in every frame
@@ -177,15 +184,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     // 상태 기록
     protected void MarkActivatedChanged() {
         if (TryGetComponent(out UniqueId uid))
-            SaveManager.SetPossessableState(uid.Id, hasActivated);
-    }
-    
-    // 로드 시 상태 셋업
-    public void ApplyHasActivatedFromSave(bool value) {
-        if (hasActivated == value) return;
-        
-        hasActivated = value;
-        OnRestoredHasActivated(value);
+            SaveManager.SetPossessableObjectState(uid.Id, gameObject.activeInHierarchy, transform.position, hasActivated);
     }
 
     // 추후 VFX/콜라이더/애니 갱신 등

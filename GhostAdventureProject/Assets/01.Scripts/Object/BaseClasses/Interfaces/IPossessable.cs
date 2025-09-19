@@ -8,6 +8,12 @@
         public bool HasActivated();
         
         /// <summary>
+        /// 이 오브제그가 빙의 가능한 상태로 바꿔주는 함수
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetActivated(bool value);
+        
+        /// <summary>
         /// Called when the user tries to possess the object
         /// </summary>
         public virtual void TryPossess() { }
