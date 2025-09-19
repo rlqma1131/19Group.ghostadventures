@@ -34,7 +34,6 @@ public class CryEnemy : MonoBehaviour
     [SerializeField] private float chaseRange;                  // 추격 범위
     [SerializeField] private float attackRange;                 // 공격 범위
 
-    private GameObject playerObj;
     Player player;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
@@ -54,7 +53,7 @@ public class CryEnemy : MonoBehaviour
 
     void Start()
     {   
-        playerObj = GameObject.FindGameObjectWithTag("Player");
+        player = GameManager.Instance.Player;
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
         anim = GetComponentInChildren<Animator>();
