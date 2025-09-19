@@ -49,7 +49,6 @@ public class Ch3_Nurse : MoveBasePossessable
         // 빙의 상태
         if (isPossessed)
         {   
-            UIManager.Instance.tabkeyUI.SetActive(true);
             if (!player.PossessionSystem.CanMove)
                 return;
              
@@ -238,11 +237,5 @@ public class Ch3_Nurse : MoveBasePossessable
             isFirstPossessionIn = false;
             UIManager.Instance.PromptUI.ShowPrompt("이 카드키로 콘솔을 조작할 수 있겠어");
         }
-    }
-
-    public override void Unpossess()
-    {
-        base.Unpossess();
-        UIManager.Instance.tabkeyUI.SetActive(false);
     }
 }

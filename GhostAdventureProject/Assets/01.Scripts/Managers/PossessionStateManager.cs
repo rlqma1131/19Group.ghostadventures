@@ -44,6 +44,7 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
         currentState = State.Possessing;
         Debug.Log("target" + possessedTarget);
         UIManager.Instance.unpossessKey.SetActive(true);
+        if(possessedTarget.CompareTag("Person")) UIManager.Instance.tabkeyUI.SetActive(true);
         UIManager.Instance.Inventory_PossessableObjectUI.OpenInventory(possessedTarget); // 빙의 인벤토리 표시됨
     }
 
@@ -53,6 +54,7 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
         Player.SetActive(true);
         player.PossessionSystem.PlayPossessionOutSequence();
         UIManager.Instance.unpossessKey.SetActive(false);
+        if(possessedTarget.CompareTag("Person")) UIManager.Instance.tabkeyUI.SetActive(false);
         UIManager.Instance.Inventory_PossessableObjectUI.HideInventory(); // 빙의 인벤토리 사라짐
     }
     

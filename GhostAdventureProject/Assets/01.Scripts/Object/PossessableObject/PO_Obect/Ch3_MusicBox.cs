@@ -6,42 +6,38 @@ using UnityEngine.UI;
 
 public class Ch3_MusicBox : BaseInteractable
 {
-    [Header("UI")]
-    [SerializeField] private GameObject arrowPrefab; //생성될 프리팹
-    [SerializeField] private Transform arrowContainer; //프리팹 생성 위치
-    [SerializeField] private Sprite leftArrow, rightArrow, upArrow, downArrow; //화살표 방향(생성된 프리팹 Sprite 바꿈)
-    [SerializeField] private Image highlightImage; // 하이라이트 이미지
-    [SerializeField] private Transform highlightTransform; // 하이라이트 오브젝트가 있을 위치
-    [SerializeField] private int arrowCount = 5; // 생성될 프리팹 개수
-    [SerializeField] private float timeLimit = 5f; // 제한 시간
-    [SerializeField] private Image timeBar; // 제한시간 타임바
-    private float timer; // 타이머
-    private int currentIndex = 0;
-    [SerializeField] private TextMeshProUGUI text;
+    [Header("오르골QTE UI")]
+    [SerializeField] private GameObject arrowPrefab;        // 생성될 화살표 프리팹
+    [SerializeField] private Transform arrowContainer;      // 화살표 프리팹 생성 위치
+    [SerializeField] private Sprite leftArrow, rightArrow, upArrow, downArrow; // 화살표 방향(생성된 프리팹 Sprite를 바꿈)
+    [SerializeField] private Image highlightImage;          // 하이라이트 이미지
+    [SerializeField] private Transform highlightTransform;  // 하이라이트 오브젝트가 있을 위치
+    [SerializeField] private int arrowCount = 5;            // 생성될 프리팹 개수
+    [SerializeField] private float timeLimit = 5f;          // 제한 시간
+    [SerializeField] private Image timeBar;                 // 제한시간 타임바
+    [SerializeField] private TextMeshProUGUI text;          // 실패횟수 텍스트
+    private float timer;                                    // 타이머
+    private int currentIndex = 0;                           // 현재 입력해야 할 순서
 
-    [Header("오르골 QTE")]
-    private bool playAble; // 오르골과 상호작용할 수 있는 영역에 있는지
-    private bool isRunning; // QTE가 실행되고 있는지
-    private bool isQTESuccess = false; // QTE를 성공했는지
+    private bool isplayAble;                                // 오르골과 상호작용할 수 있는 영역에 있는지
+    private bool isRunning;                                 // QTE가 실행되고 있는지
+    private bool isPlay = false;                            // 오르골이 작동됐는지
+    private bool ignoreFirstInput;                          // 첫입력 무시(상호작용키(E)가 입력되는것 방지)
+    
     private enum Dir { Left, Right, Up, Down }
-
-    // before: private List<KeyCode> targetSequence = new List<KeyCode>();
     private List<Dir> targetSequence = new List<Dir>();
-    // private List<KeyCode> targetSequence = new List<KeyCode>(); // 방향키 순서를 정해두고 사용자 키 입력과 맞는지 확인용
-    KeyCode[] possibleKeys = { KeyCode.A, KeyCode.D, KeyCode.W, KeyCode.S }; //입력 가능한 키
-    public CryEnemy linkedEnemy; // CryEnemy에서 정보 넣어줌(인스펙터연결x)
-    [SerializeField] private GameObject QTEUI_MusicBox; // QTE UI Canvas
-    private List<Image> arrowImages = new List<Image>();
+    public CryEnemy linkedEnemy;                            // 연결된 울보 * CryEnemy에서 정보 넣어줌(인스펙터연결x)
+    [SerializeField] private GameObject QTEUI_MusicBox;     // QTE UI Canvas
+    private List<Image> arrowImages = new List<Image>();    // 화살표 이미지
 
     [Header("오르골 사운드")]
-    [SerializeField] private AudioClip successArrow_Sound;
-    [SerializeField] private AudioClip successQTE_Sound;
+    [SerializeField] private AudioClip Play_Sound;          // 작동 사운드
 
 
-    override protected void Start()
+     protected override void Start()
     {
         base.Start();
-        playAble = false;
+        isplayAble = false;
         isRunning = false;
         timer = timeLimit;
         QTEUI_MusicBox.SetActive(false);
@@ -49,12 +45,9 @@ public class Ch3_MusicBox : BaseInteractable
 
     private void Update()
     {
-        if(!playAble || isQTESuccess) return;
-
-        // if(!isRunning)
-        // {
-            if(Input.GetKeyDown(KeyCode.E)) StartQTE();
-        // }
+        if(!isplayAble || isPlay) return;
+    
+        if(Input.GetKeyDown(KeyCode.E)) StartQTE();
 
         if(!isRunning) return;
         
@@ -63,20 +56,17 @@ public class Ch3_MusicBox : BaseInteractable
 
         if (timer <= 0f)
         {
-            FailQTE();
+            FailPlayMusicBox();
             return;
         }
-
-        if(linkedEnemy.failCount >= 5)
-        {
-            StopQTE();
-            return;
-        }
-        
 
         if (Input.anyKeyDown)
         {
-            if (Input.GetKeyDown(KeyCode.E)) return;
+            if (ignoreFirstInput) // QTE 시작 직후 E키 입력 1번 무시
+            {
+                ignoreFirstInput = false;
+                return;
+            }
             if (currentIndex >= targetSequence.Count) return;
 
             var dir = targetSequence[currentIndex];
@@ -87,8 +77,8 @@ public class Ch3_MusicBox : BaseInteractable
 
             if (currentIndex >= targetSequence.Count)
             {
-                SuccessQTE();
-                isQTESuccess = true;
+                SuccessPlayMusicBox();
+                isPlay = true;
             }
         }
     }
@@ -103,6 +93,8 @@ public class Ch3_MusicBox : BaseInteractable
         player.PossessionSystem.CanMove = false;
         QTEUI_MusicBox.SetActive(true);
         GenerateRandomSequence(arrowCount);
+
+        ignoreFirstInput = true;
     }
 
     // 화살표 입력 성공
@@ -123,18 +115,18 @@ public class Ch3_MusicBox : BaseInteractable
         UpdateHighlight();
     }
 
-    // QTE 성공
-    void SuccessQTE()
+    // 오르골 작동 성공
+    void SuccessPlayMusicBox()
     {
          if (!isRunning) return;   // 중복 방지
         isRunning = false;
-        SoundManager.Instance.PlaySFX(successArrow_Sound);
+        SoundManager.Instance.PlaySFX(Play_Sound);
         StopQTE();
         linkedEnemy.OnMusicBoxSuccess();
     }
 
     // QTE 실패
-    void FailQTE()
+    void FailPlayMusicBox()
     {
         if (!isRunning) return;   // 중복 방지
         isRunning = false;
@@ -180,6 +172,7 @@ public class Ch3_MusicBox : BaseInteractable
         UpdateHighlight();
     }
 
+    // 화살표 스프라이트 변경 
     private Sprite GetSpriteForDirection(Dir d)
     {
         switch (d)
@@ -191,23 +184,12 @@ public class Ch3_MusicBox : BaseInteractable
         }
         return null;
     }
-    private KeyCode GetRandomArrowKey()
-    {
-        return possibleKeys[UnityEngine.Random.Range(0, possibleKeys.Length)];
-    }
-    // Sprite GetSpriteForKey(KeyCode key)
+    // private KeyCode GetRandomArrowKey()
     // {
-    //     switch (key)
-    //     {
-    //         case KeyCode.A: return leftArrow;
-    //         case KeyCode.D: return rightArrow;
-    //         case KeyCode.W: return upArrow;
-    //         case KeyCode.S: return downArrow;
-    //         default: return null;
-    //     }
+    //     return possibleKeys[UnityEngine.Random.Range(0, possibleKeys.Length)];
     // }
 
-    // 화살표(arrow)를 하이라이트 이미지가 따라다니도록 만듬
+    // 하이라이트 이미지가 화살표(arrow)를 따라다니도록 만듬
     void UpdateHighlight()
     {
         if (currentIndex >= targetSequence.Count)
@@ -221,32 +203,25 @@ public class Ch3_MusicBox : BaseInteractable
         }
     }
     
+    // 작동되지 않은 오르골에 닿으면 isPlayAble = true, 아니면 false
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && linkedEnemy.failCount < 5 && !isQTESuccess)
-        {
-            //SetHighlight(true);
-            player.InteractSystem.AddInteractable(gameObject);
-            playAble = true;
-        }
+        base.OnTriggerEnter2D(collision);
+        if (collision.CompareTag("Player") && linkedEnemy.failCount < 5 && !isPlay)
+            isplayAble = true;
     }
-    void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && linkedEnemy.failCount < 5 && isQTESuccess)
-        {
+        if(collision.CompareTag("Player") && linkedEnemy.failCount < 5 && isPlay)
             player.InteractSystem.RemoveInteractable(gameObject);
-        }
     }
     protected override void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
-        {
-            SetHighlight(false);
-            player.InteractSystem.RemoveInteractable(gameObject);
-            playAble = false;
-        }
+        base.OnTriggerExit2D(other);
+        if (other.CompareTag("Player")) isplayAble = false;
     }
 
+    // 키를 맞게 입력했는지 확인
     bool IsDirectionPressed(Dir d)
     {
         switch (d)

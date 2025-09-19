@@ -41,7 +41,6 @@ public class Ch2_DoorLock : BaseInteractable
     private void OpenDoorLock()
     {
         doorOpen = true;
-        guard.isdoorLockOpen = doorOpen;
         q_Key.SetActive(false);
         inventory.TryUseSelectedItem();   
         closeDoorSprite.SetActive(false);

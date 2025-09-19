@@ -22,7 +22,6 @@ public class Ch2_MorsePerson : BasePossessable
         if (!isPossessed)
             return;
 
-        UIManager.Instance.tabkeyUI.SetActive(true);
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (haveitem.IsInventoryEmpty())
@@ -52,7 +51,6 @@ public class Ch2_MorsePerson : BasePossessable
     public override void Unpossess()
     {
         base.Unpossess();
-        UIManager.Instance.tabkeyUI.SetActive(false);
     }
     
 }
