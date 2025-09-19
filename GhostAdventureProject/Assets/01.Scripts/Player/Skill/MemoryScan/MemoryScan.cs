@@ -210,6 +210,7 @@ public class MemoryScan : MonoBehaviour
             isNearMemory = true;
             currentScanObject = collision.gameObject;
             currentMemoryFragment = currentScanObject.GetComponent<MemoryFragment>();
+            Debug.Log($"기억 조각과 접촉: {currentMemoryFragment?.data.memoryID}");
         }
     }
 
@@ -224,6 +225,8 @@ public class MemoryScan : MonoBehaviour
             
             currentScanObject = null;
             currentMemoryFragment = null;
+
+            Debug.Log("기억 조각과 접촉 해제");
         }
     }
 }

@@ -31,7 +31,7 @@ public class Ch1_Shower : BasePossessable
         initialNeedleRotation = needle.transform.rotation; // 바늘 회전값 저장 & 초기화
     }
 
-    protected override void Update()
+    public override void TriggerEvent()
     {
         if (!isPossessed) return;
         
