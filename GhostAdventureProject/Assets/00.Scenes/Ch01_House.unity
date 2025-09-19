@@ -2968,6 +2968,7 @@ Transform:
   - {fileID: 2009838562}
   - {fileID: 1684804846}
   - {fileID: 949394161}
+  - {fileID: 4003633024075357229}
   - {fileID: 374847469}
   m_Father: {fileID: 1017834101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5351,6 +5352,7 @@ GameObject:
   m_Component:
   - component: {fileID: 399104631}
   - component: {fileID: 399104632}
+  - component: {fileID: 399104633}
   m_Layer: 0
   m_Name: garageDoor_Close
   m_TagString: Untagged
@@ -5425,6 +5427,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &399104633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399104630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: garageDoor_Close
 --- !u!1 &400756873
 GameObject:
   m_ObjectHideFlags: 3
@@ -8736,7 +8751,7 @@ GameObject:
   - component: {fileID: 581359108}
   - component: {fileID: 581359109}
   - component: {fileID: 581359111}
-  - component: {fileID: 581359110}
+  - component: {fileID: 581359112}
   m_Layer: 0
   m_Name: garageDoor_Open
   m_TagString: Untagged
@@ -8811,22 +8826,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &581359110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581359107}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4455f4eba9e65f04589cbad5a6fcdfb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightObj: {fileID: 0}
-  TeddyBear: {fileID: 208826272377942496}
-  garageEvent: {fileID: 208826272377942497}
-  playable: {fileID: 168493172}
 --- !u!61 &581359111
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8872,6 +8871,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.2, y: 3.2}
   m_EdgeRadius: 0
+--- !u!114 &581359112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581359107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: garageDoor_Open
 --- !u!1 &588197762
 GameObject:
   m_ObjectHideFlags: 0
@@ -9140,8 +9152,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.6404, y: 1.2278501, z: 0}
-    m_Extent: {x: 9.3547, y: 5.22585, z: 0}
+    m_Center: {x: 5.6414003, y: 1.2284501, z: 0}
+    m_Extent: {x: 9.354, y: 5.22565, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -9287,8 +9299,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.48635, y: -5.4951997, z: 0}
-    m_Extent: {x: 23.819351, y: 17.3339, z: 0}
+    m_Center: {x: 5.48695, y: -5.4952993, z: 0}
+    m_Extent: {x: 23.81945, y: 17.332699, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -13355,8 +13367,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.4870005, y: -5.4955, z: 0}
-    m_Extent: {x: 24.3112, y: 17.8228, z: 0}
+    m_Center: {x: 5.48755, y: -5.4951, z: 0}
+    m_Extent: {x: 24.31075, y: 17.8234, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -18960,8 +18972,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 9.28465, y: 2.29835, z: 0}
-    m_Extent: {x: 2.6614501, y: 2.58375, z: 0}
+    m_Center: {x: 9.2844, y: 2.2977, z: 0}
+    m_Extent: {x: 2.6627998, y: 2.5836, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -19152,8 +19164,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 6.85995, y: 2.2977, z: 0}
-    m_Extent: {x: 0.89275, y: 0.40009993, z: 0}
+    m_Center: {x: 6.85985, y: 2.2982001, z: 0}
+    m_Extent: {x: 0.89205, y: 0.39970005, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -19412,8 +19424,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 10.5898, y: -0.39795005, z: 0}
-    m_Extent: {x: 5.0537004, y: 4.30435, z: 0}
+    m_Center: {x: 10.58875, y: -0.3974501, z: 0}
+    m_Extent: {x: 5.0533504, y: 4.30385, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -28460,8 +28472,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 1.5288, y: 0.44675016, z: 0}
-    m_Extent: {x: 13.4685, y: 6.04285, z: 0}
+    m_Center: {x: 1.5276499, y: 0.44790006, z: 0}
+    m_Extent: {x: 13.46855, y: 6.0429, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -28610,8 +28622,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 1.5282502, y: 0.44675016, z: 0}
-    m_Extent: {x: 13.46825, y: 6.04355, z: 0}
+    m_Center: {x: 1.5288, y: 0.4475999, z: 0}
+    m_Extent: {x: 13.4684, y: 6.0438, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -29587,6 +29599,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1518165370}
   - component: {fileID: 1518165371}
+  - component: {fileID: 1518165373}
+  - component: {fileID: 1518165372}
   m_Layer: 0
   m_Name: outside
   m_TagString: Untagged
@@ -29661,6 +29675,67 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1518165372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518165369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4455f4eba9e65f04589cbad5a6fcdfb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
+  TeddyBear: {fileID: 208826272377942496}
+  garageEvent: {fileID: 8480284707427371941}
+  playable: {fileID: 168493172}
+--- !u!61 &1518165373
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518165369}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3.2, y: 3.2}
+    newSize: {x: 2.4, y: 2.4}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3.82, y: 4.08}
+  m_EdgeRadius: 0
 --- !u!1 &1524946927
 GameObject:
   m_ObjectHideFlags: 0
@@ -33610,8 +33685,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 12.087987, y: 0.245, z: 0}
-    m_Extent: {x: 4.2482862, y: 3.3235002, z: 0}
+    m_Center: {x: 12.088609, y: 0.2451446, z: 0}
+    m_Extent: {x: 4.248292, y: 3.3230445, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -45811,8 +45886,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.00009995699, y: -0.00014996529, z: 0}
-    m_Extent: {x: 1.3501999, y: 1.35015, z: 0}
+    m_Center: {x: 0.00019997358, y: 0.00065004826, z: 0}
+    m_Extent: {x: 1.3501999, y: 1.35025, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -46629,6 +46704,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!58 &88766358352726043
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8794873886875811081}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.3
 --- !u!1 &148706712125206097
 GameObject:
   m_ObjectHideFlags: 0
@@ -46658,6 +46768,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ch1_TeddyBear_MemoryPositive_01
       objectReference: {fileID: 0}
+    - target: {fileID: 2891215509360032032, guid: 1931688aeca58cb4aa6e65e531b5bd7b, type: 3}
+      propertyPath: highlightObj
+      value: 
+      objectReference: {fileID: 946477157}
     - target: {fileID: 3402829423375287405, guid: 1931688aeca58cb4aa6e65e531b5bd7b, type: 3}
       propertyPath: door
       value: 
@@ -46734,7 +46848,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3402829423375287405, guid: 1931688aeca58cb4aa6e65e531b5bd7b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -46748,17 +46863,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44a8fe54b1dc7ac4793e04b913286db0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &208826272377942497 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3402829423375287405, guid: 1931688aeca58cb4aa6e65e531b5bd7b, type: 3}
-  m_PrefabInstance: {fileID: 208826272377942495}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84f0eba371f4789439c6f16029e76d8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!95 &245150415088286881
@@ -49294,6 +49398,21 @@ MonoBehaviour:
   unlockSound: {fileID: 8300000, guid: 1c242e13499b0164ca6a43e40b69e973, type: 3}
   initiallyLocked: 1
   pairedDoor: {fileID: 8404483439223172311}
+--- !u!4 &4003633024075357229
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8794873886875811081}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.78, y: -2.85, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 241810278}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4227891604826044714
 Animator:
   serializedVersion: 5
@@ -50764,6 +50883,19 @@ MonoBehaviour:
   fadeSpeed: 2
   maxAlpha: 0.4
   extraTargets: []
+--- !u!114 &6258070424387037540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8794873886875811081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch1_GarageEventManager
 --- !u!1 &6487295279735661878
 GameObject:
   m_ObjectHideFlags: 0
@@ -52210,6 +52342,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8480284707427371941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8794873886875811081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84f0eba371f4789439c6f16029e76d8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyboard: {fileID: 508721874}
+  answer: {fileID: 508721875}
+  cutsceneDirector: {fileID: 1384772618}
+  cutsceneDirector_correct: {fileID: 293184518}
+  energyRestoreZone: {fileID: 909562181}
+  bear: {fileID: 208826272377942496}
+  door: {fileID: 581359107}
+  cutscene_NPC: {fileID: 1703234266}
+  isCutscenePlaying: 0
 --- !u!1 &8688639189713929137
 GameObject:
   m_ObjectHideFlags: 0
@@ -52244,6 +52397,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Gray_Door_BathRoom_Stealth
+--- !u!1 &8794873886875811081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4003633024075357229}
+  - component: {fileID: 88766358352726043}
+  - component: {fileID: 8480284707427371941}
+  - component: {fileID: 6258070424387037540}
+  m_Layer: 10
+  m_Name: Ch1_GarageEventManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!61 &8850244693892658216
 BoxCollider2D:
   m_ObjectHideFlags: 0
