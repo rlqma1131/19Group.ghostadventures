@@ -32,7 +32,6 @@ public class Ch1_ClearDoor : BaseInteractable
             {
                 player.PossessionSystem.CanMove = false;
                 playable.Play();
-                EnemyAI.PauseAllEnemies();
                 UIManager.Instance.PlayModeUI_CloseAll();
                 inventory_Player.RemoveClueBeforeStage();
                 Destroy(GameManager.Instance.PlayerObj.gameObject); // 플레이어 비활성화
@@ -62,7 +61,6 @@ public class Ch1_ClearDoor : BaseInteractable
     
     void OnTimelineFinished(PlayableDirector obj)
     {
-        EnemyAI.ResumeAllEnemies();
         player.PossessionSystem.CanMove = true;
         SceneManager.LoadScene("Ch01_To_Ch02");
         UIManager.Instance.PlayModeUI_CloseAll();
