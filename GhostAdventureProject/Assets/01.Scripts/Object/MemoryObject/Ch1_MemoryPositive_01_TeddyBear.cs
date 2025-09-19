@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
 {
-    public bool Completed_TeddyBear = false;
+    //public bool Completed_TeddyBear = false;
     public bool PlayerNearby = false;
     private Collider2D col;
 
@@ -26,8 +26,7 @@ public class Ch1_MemoryPositive_01_TeddyBear : MemoryFragment
 
     public override void AfterScan() 
     {
-        Completed_TeddyBear = true;
-        SaveManager.MarkPuzzleSolved("곰인형");
+        //Completed_TeddyBear = true;
 
         base.AfterScan();
     }

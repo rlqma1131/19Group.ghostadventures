@@ -14,7 +14,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
     [SerializeField] private PlayableDirector cutsceneDirector_correct;
     [SerializeField] EnergyRestoreZone energyRestoreZone;
     [SerializeField] private Ch1_MemoryPositive_01_TeddyBear bear;
-    [SerializeField] SpriteRenderer door;
+    [SerializeField] GameObject door;
     
     //NPC컷신보고 상호작용 가능하게하기 위해 추가
     [SerializeField] Cutscene_NPC cutscene_NPC;
@@ -134,7 +134,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         isCutscenePlaying2 = true;
         energyRestoreZone.IsActive = true; // 에너지 회복존 비활성화
         UIManager.Instance.PlayModeUI_OpenAll();
-        door.color = new Color(door.color.r, door.color.g, door.color.b, 0f); // 문 투명하게
+        door.SetActive(false); // 차고문 사라짐
         gameObject.SetActive(false); // 이벤트 비활성화
     }
 }
