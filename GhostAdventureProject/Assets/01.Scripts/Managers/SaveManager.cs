@@ -1,93 +1,101 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using _01.Scripts.Object.BaseClasses.Interfaces;
+using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
-// 챕터별 단서 기록 상태
-[System.Serializable]
-public class ChapterClueProgress
+#region Chapter Data Only
+
+/// <summary>
+/// 챕터별 기억 기록 상태
+/// </summary>
+[Serializable] public class ChapterClueProgress
 {
     public int chapter;
     public List<string> clueIds = new();
     public bool allCollected;
 }
 
-// 챕터별 기억 기록 상태
-[System.Serializable]
-public class ChapterMemoryProgress
+/// <summary>
+/// 챕터별 단서 기록 상태
+/// </summary> 
+[Serializable] public class ChapterMemoryProgress
 {
-    public int chapter;                 // 1,2,3
+    public int chapter; // 1,2,3
     public List<string> memoryIds = new();
 }
 
-// 오브젝트 SetActive 상태
-[System.Serializable]
-public class ActiveObjectState
-{
+#endregion
+
+#region Object Data Only
+
+/// <summary>
+/// 기본 Object들의 상태를 저장하기 위한 클래스
+/// </summary>
+[Serializable] public class ObjectState {
     public string id;
     public bool active;
+    public SerializableVector3 position;
+
+    public ObjectState(string id, bool active = false, Vector3 position = default) {
+        this.id = id;
+        this.active = active;
+        this.position = new SerializableVector3(position);
+    }
 }
 
-// 오브젝트 위치
-[System.Serializable]
-public class ObjectPositionState
-{
-    public string id;
-    public Vector3 position;
-}
-
-// 빙의오브젝트 hasActivated 상태
-[System.Serializable]
-public class PossessableState
-{
-    public string id;
+/// <summary>
+/// 빙의 가능한 Object들의 상태를 저장하기 위한 클래스
+/// </summary>
+[Serializable] public class PossessableObjectState : ObjectState {
     public bool hasActivated;
+
+    public PossessableObjectState(string id, bool active = false, Vector3 position = default, bool hasActivated = false) :
+        base(id, active, position) {
+        this.hasActivated = hasActivated;
+    }
 }
 
-// 기억오브젝트 isScannable 상태
-[System.Serializable]
-public class MemoryFragmentState
-{
-    public string id;
+/// <summary>
+/// 스캔 가능한 기억조각들의 상태를 저장하기 위한 클래스
+/// </summary>
+[Serializable] public class MemoryFragmentObjectState : ObjectState {
     public bool isScannable;
+    
+    public MemoryFragmentObjectState(string id, bool active = false, Vector3 position = default, bool isScannable = false) 
+        : base(id, active, position) {
+        this.isScannable = isScannable;
+    }
 }
 
-// 이벤트 재생 상태
-[System.Serializable]
-public class EventCompletedState
-{
-    public string id;
-    public bool eventCompleted;
-}
-
-// 문 열림, 잠김 상태
-[System.Serializable]
-public class DoorState
-{
-    public string id;
-    public bool isLocked; // true=잠김, false=열림
-}
-
-// 애니메이터 재생 클립 상태
-[System.Serializable]
-public class AnimatorClipLayerState
+/// <summary>
+/// Animation Clip Layer 상태 저장 클래스
+/// </summary>
+[Serializable] public class AnimatorClipLayerState
 {
     public int layer;
-    public string clipName;    // 현재 재생 중인 첫 번째 클립 이름
-    public int stateHash;      // 현재 스테이트(fullPathHash)
+    public string clipName; // 현재 재생 중인 첫 번째 클립 이름
+    public int stateHash; // 현재 스테이트(fullPathHash)
     public float normalizedTime;
 }
 
-[System.Serializable]
-public class AnimatorClipSnapshot
+/// <summary>
+/// Animation Clip 상태 저장 클래스
+/// </summary>
+[Serializable] public class AnimatorClipSnapshot
 {
-    public string id;  // UniqueId
+    public string id; // UniqueId
     public List<AnimatorClipLayerState> layers = new();
 }
 
-// 현재 상태를 담는 레이어 단위 스냅샷
-[System.Serializable]
-public class AnimatorChildLayerState
+/// <summary>
+/// 자식 레이어 단 Animation Clip Layer 상태 저장 클래스
+/// </summary>
+[Serializable] public class AnimatorChildLayerState
 {
     public int layer;
     public int fullPathHash;
@@ -96,35 +104,43 @@ public class AnimatorChildLayerState
     public string clipName; // 디버깅/확인용
 }
 
-// UniqueId(부모) 아래 특정 자식 Animator 하나에 대한 스냅샷
-[System.Serializable]
-public class AnimatorChildSnapshot
+/// <summary>
+/// 자식 레이어 단 Animation Clip들 상태 저장 클래스
+/// </summary>
+[Serializable] public class AnimatorChildSnapshot
 {
     public string childPath;
     public List<AnimatorChildLayerState> layers = new();
 }
 
-// UniqueId 단위 트리 스냅샷(= 부모 1개 + 그 하위 모든 Animator)
-[System.Serializable]
-public class AnimatorTreeSnapshot
+/// <summary>
+/// Animator Tree 상태 저장 클래스 (부모 + 자식)
+/// </summary>
+[Serializable] public class AnimatorTreeSnapshot
 {
     public string id; // UniqueId.Id
     public List<AnimatorChildSnapshot> animators = new();
 }
 
+#endregion
+
+#region Tutorial Progress Data Only
+
 // 튜토리얼 진행도 저장용
-[System.Serializable]
-public class RoomVisitEntry
+[Serializable] public class RoomVisitEntry
 {
     public string roomName;
     public int count;
 }
 
-[System.Serializable]
-public class SaveData
+#endregion
+
+#region Data Transfer Object
+
+[Serializable] public class SaveData
 {
     public string sceneName;
-    public Vector3 playerPosition;
+    public SerializableVector3 playerPosition;
     public string checkpointId;
 
     public List<string> collectedClueNames;
@@ -132,106 +148,101 @@ public class SaveData
     public List<string> scannedMemoryTitles;
     public List<string> solvedPuzzleIDs;
 
-    // 애니메이터 상태 스냅샷
-    public List<AnimatorClipSnapshot> animatorClips = new();
-    public List<AnimatorTreeSnapshot> animatorTrees = new();
-
     // 챕터별 진행도 저장
     public List<ChapterMemoryProgress> chapterMemoryProgress = new();
     public List<ChapterClueProgress> chapterClueProgress = new();
 
-    // UniqueID를 갖고 있는 오브젝트 활성화 상태 스냅샷
-    public List<ActiveObjectState> activeObjectStates;
-    public List<ObjectPositionState> objectPositions;
-    public List<DoorState> doorStates;
-    public List<PossessableState> possessableStates;
-    public List<MemoryFragmentState> memoryFragmentStates;
-    public List<EventCompletedState> eventCompletedStates;
+    // UniqueId를 갖고 있는 오브젝트 상태 저장 Dictionary
+    public Dictionary<string, ObjectState> objectStateDict;
+    public Dictionary<string, PossessableObjectState> possessableObjectStateDict;
+    public Dictionary<string, MemoryFragmentObjectState> memoryFragmentObjectStateDict;
+    public Dictionary<string, bool> doorStateDict;
+    public Dictionary<string, bool> eventCompletionDict;
+
+    public Dictionary<string, AnimatorClipSnapshot> animatorClipDict;
+    public Dictionary<string, AnimatorTreeSnapshot> animatorTreeDict;
 
     // 튜토리얼 진행도 저장용
     public List<RoomVisitEntry> roomVisitCounts = new();
     public List<TutorialStep> completedTutorialSteps = new();
 }
 
-public static class SaveManager
+#endregion
+
+#region Conversion Class of Non-Serializable Values
+
+/// <summary>
+/// Vector3를 직렬화 가능하게 만든 SerializableVector3 클래스
+/// </summary>
+[Serializable] public struct SerializableVector3 : IEquatable<SerializableVector3>
 {
+    public float x, y, z;
+
+    public SerializableVector3(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public SerializableVector3(Vector3 v) {
+        x = v.x;
+        y = v.y;
+        z = v.z;
+    }
+
+    public Vector3 ToVector3() => new Vector3(x, y, z);
+
+    #region Operator Methods
+
+    public static bool operator ==(SerializableVector3 v1, SerializableVector3 v2) {
+        return Mathf.Approximately(v1.x, v2.x) &&
+               Mathf.Approximately(v1.y, v2.y) &&
+               Mathf.Approximately(v1.z, v2.z);
+    }
+
+    public static bool operator !=(SerializableVector3 v1, SerializableVector3 v2) {
+        return !(v1 == v2);
+    }
+
+    public static bool operator ==(SerializableVector3 v1, Vector3 v2) {
+        return Mathf.Approximately(v1.x, v2.x) &&
+               Mathf.Approximately(v1.y, v2.y) &&
+               Mathf.Approximately(v1.z, v2.z);
+    }
+
+    public static bool operator !=(SerializableVector3 v1, Vector3 v2) {
+        return !(v1 == v2);
+    }
+
+    #endregion
+    
+    public bool Equals(SerializableVector3 other) => x.Equals(other.x) && y.Equals(other.y) && z.Equals(other.z);
+    public override bool Equals(object obj) => obj is SerializableVector3 other && Equals(other);
+    public override int GetHashCode() => HashCode.Combine(x, y, z);
+}
+
+#endregion
+
+public static class SaveManager {
+    #region Fields
+
     public static bool VerboseAnimatorLogging = true;
-    public static string GetRelativePath(Transform root, Transform target)
-    {
-        if (root == null || target == null) return null;
-        var stack = new System.Collections.Generic.Stack<string>();
-        var t = target;
-        while (t != null && t != root)
-        {
-            stack.Push(t.name);
-            t = t.parent;
-        }
-        if (t != root) return null; // target이 root 하위가 아님
-        var sb = new System.Text.StringBuilder();
-        while (stack.Count > 0)
-        {
-            if (sb.Length > 0) sb.Append('/');
-            sb.Append(stack.Pop());
-        }
-        return sb.ToString();
-    }
+    static string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
+    public static SaveData CurrentData { get; private set; }
 
-    public static Transform FindChildByPath(Transform root, string path)
-    {
-        if (root == null || string.IsNullOrEmpty(path)) return null;
-        // Transform.Find("A/B/C")는 비활성 자식도 찾음
-        return root.Find(path);
-    }
-
-    // 저장된 AnimatorClipSnapshot들을 보기 좋은 형태로 찍어주는 유틸
-    public static void DumpAnimatorClipSnapshots(string header = "[Dump]", int maxObjects = 20, int maxLayers = 4)
-    {
-        int count = CurrentData?.animatorClips?.Count ?? 0;
-
-        if (count == 0) return;
-
-        int printed = 0;
-        foreach (var snap in CurrentData.animatorClips)
-        {
-            if (snap == null) continue;
-            int lc = Mathf.Min(snap.layers?.Count ?? 0, maxLayers);
-            for (int i = 0; i < lc; i++)
-            {
-                var l = snap.layers[i];
-            }
-            printed++;
-        }
-    }
-    // ===== 공통 =====
-    private static string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
-    private static SaveData currentData;
-    public static SaveData CurrentData => currentData;
+    /// <summary>
+    /// 세이브 파일 로드 시 발생할 이벤트 Action
+    /// </summary>
     public static event Action<SaveData> Loaded;
 
-    private static void EnsureData()
-    {
-        if (currentData == null) currentData = new SaveData();
-        if (currentData.collectedClueNames == null) currentData.collectedClueNames = new List<string>();
-        if (currentData.collectedMemoryIDs == null) currentData.collectedMemoryIDs = new List<string>();
-        if (currentData.scannedMemoryTitles == null) currentData.scannedMemoryTitles = new List<string>();
-        if (currentData.solvedPuzzleIDs == null) currentData.solvedPuzzleIDs = new List<string>();
-        if (currentData.chapterMemoryProgress == null) currentData.chapterMemoryProgress = new List<ChapterMemoryProgress>();
-        if (currentData.chapterClueProgress == null) currentData.chapterClueProgress = new List<ChapterClueProgress>();
-        if (currentData.objectPositions == null) currentData.objectPositions = new List<ObjectPositionState>();
-        if (currentData.animatorClips == null) currentData.animatorClips = new List<AnimatorClipSnapshot>();
-        if (currentData.animatorTrees == null) currentData.animatorTrees = new List<AnimatorTreeSnapshot>();
-        if (currentData.activeObjectStates == null) currentData.activeObjectStates = new List<ActiveObjectState>();
-        if (currentData.doorStates == null) currentData.doorStates = new List<DoorState>();
-        if (currentData.possessableStates == null) currentData.possessableStates = new List<PossessableState>();
-        if (currentData.memoryFragmentStates == null) currentData.memoryFragmentStates = new List<MemoryFragmentState>();
-        if (currentData.eventCompletedStates == null) currentData.eventCompletedStates = new List<EventCompletedState>();
-    }
+    #endregion
+    
+    #region Chapter Progress Saving Methods
 
     // ===== 챕터 최종단서 수집 진행도 저장/적용 =====
-    private static ChapterClueProgress GetOrCreateChapterProgress(int chapter)
-    {
+    static ChapterClueProgress GetOrCreateChapterProgress(int chapter) {
         EnsureData();
-        var list = currentData.chapterClueProgress;
+        var list = CurrentData.chapterClueProgress;
         int idx = list.FindIndex(x => x.chapter == chapter);
         if (idx >= 0) return list[idx];
 
@@ -241,10 +252,9 @@ public static class SaveManager
     }
 
     // Collect될 때마다 호출할 메서드
-    public static void AddChapterClue(int chapter, string clueId, bool allCollected = false, bool autosave = false)
-    {
+    public static void AddChapterClue(int chapter, string clueId, bool allCollected = false, bool autosave = false) {
         if (string.IsNullOrEmpty(clueId)) return;
-        var p = GetOrCreateChapterProgress(chapter);
+        ChapterClueProgress p = GetOrCreateChapterProgress(chapter);
 
         if (!p.clueIds.Contains(clueId))
             p.clueIds.Add(clueId);
@@ -256,24 +266,21 @@ public static class SaveManager
     }
 
     // 로드시 ChapterEndingManager가 세트로 복구할 때 사용
-    public static bool TryGetChapterClueProgress(int chapter, out ChapterClueProgress progress)
-    {
-        progress = currentData?.chapterClueProgress?.Find(x => x.chapter == chapter);
+    public static bool TryGetChapterClueProgress(int chapter, out ChapterClueProgress progress) {
+        progress = CurrentData?.chapterClueProgress?.Find(x => x.chapter == chapter);
         return progress != null;
     }
 
-    public static void SetChapterProgress(int chapter, IEnumerable<string> ids, bool allCollected)
-    {
-        var p = GetOrCreateChapterProgress(chapter);
+    public static void SetChapterProgress(int chapter, IEnumerable<string> ids, bool allCollected) {
+        ChapterClueProgress p = GetOrCreateChapterProgress(chapter);
         p.clueIds = ids != null ? new List<string>(ids) : new List<string>();
         p.allCollected = allCollected;
     }
 
     // ===== 챕터 기억 수집 진행도 저장/적용 =====
-    private static ChapterMemoryProgress GetOrCreateChapterMemory(int chapter)
-    {
+    static ChapterMemoryProgress GetOrCreateChapterMemory(int chapter) {
         EnsureData();
-        var list = currentData.chapterMemoryProgress;
+        var list = CurrentData.chapterMemoryProgress;
         int idx = list.FindIndex(x => x.chapter == chapter);
         if (idx >= 0) return list[idx];
 
@@ -283,245 +290,250 @@ public static class SaveManager
     }
 
     // 기억 스냅샷 세팅
-    public static void SetChapterScannedMemories(int chapter, IEnumerable<string> ids)
-    {
-        var p = GetOrCreateChapterMemory(chapter);
+    public static void SetChapterScannedMemories(int chapter, IEnumerable<string> ids) {
+        ChapterMemoryProgress p = GetOrCreateChapterMemory(chapter);
         p.memoryIds = ids != null ? new List<string>(ids) : new List<string>();
     }
 
-    public static bool TryGetChapterScannedMemories(int chapter, out ChapterMemoryProgress progress)
-    {
-        progress = currentData?.chapterMemoryProgress?.Find(x => x.chapter == chapter);
+    public static bool TryGetChapterScannedMemories(int chapter, out ChapterMemoryProgress progress) {
+        progress = CurrentData?.chapterMemoryProgress?.Find(x => x.chapter == chapter);
         return progress != null;
     }
 
+    #endregion
+    
+    #region Animation Clips & Animator Tree State Saving Methods
+    
     // 애니메이터 읽고 쓰기
-    public static void SetAnimatorClips(string id, AnimatorClipSnapshot snap)
-    {
+    public static void SetAnimatorClips(string id, AnimatorClipSnapshot snap) {
         EnsureData();
-        int i = currentData.animatorClips.FindIndex(x => x.id == id);
-        if (i >= 0) currentData.animatorClips[i] = snap;
-        else currentData.animatorClips.Add(snap);
+        
+        // Refactored to dictionary
+        if (!CurrentData.animatorClipDict.TryAdd(id, snap)) {
+            CurrentData.animatorClipDict[id] = snap;
+        }
     }
-
-    public static bool TryGetAnimatorClips(string id, out AnimatorClipSnapshot snap)
-    {
-        snap = currentData?.animatorClips?.Find(x => x.id == id);
-        return snap != null;
+    public static bool TryGetAnimatorClips(string id, out AnimatorClipSnapshot snap) {
+        // Refactored to dictionary
+        return CurrentData.animatorClipDict.TryGetValue(id, out snap);
     }
-    public static void SetAnimatorTree(string id, AnimatorTreeSnapshot snap)
-    {
+    public static void SetAnimatorTree(string id, AnimatorTreeSnapshot snap) {
         EnsureData();
-        int i = currentData.animatorTrees.FindIndex(x => x.id == id);
-        if (i >= 0) currentData.animatorTrees[i] = snap;
-        else currentData.animatorTrees.Add(snap);
+
+        // Refactored to dictionary
+        if (!CurrentData.animatorTreeDict.TryAdd(id, snap)) {
+            CurrentData.animatorTreeDict[id] = snap;
+        }
+    }
+    public static bool TryGetAnimatorTree(string id, out AnimatorTreeSnapshot snap) {
+        // Refactored to dictionary
+        return CurrentData.animatorTreeDict.TryGetValue(id, out snap);
     }
 
-    public static bool TryGetAnimatorTree(string id, out AnimatorTreeSnapshot snap)
-    {
-        snap = currentData?.animatorTrees?.Find(x => x.id == id);
-        return snap != null;
+    #endregion
+    
+    /// <summary>
+    /// Save Data 내 Parameter들이 선언되어 있는지 확인 및 선언하는 함수
+    /// </summary>
+    static void EnsureData() {
+        // Initialize save data class or Use existing data
+        CurrentData ??= new SaveData();
+
+        // Objects, memory, door, event state dictionary
+        CurrentData.objectStateDict ??= new Dictionary<string, ObjectState>();
+        CurrentData.possessableObjectStateDict ??= new Dictionary<string, PossessableObjectState>();
+        CurrentData.memoryFragmentObjectStateDict ??= new Dictionary<string, MemoryFragmentObjectState>();
+        CurrentData.doorStateDict ??= new Dictionary<string, bool>();
+        CurrentData.eventCompletionDict ??= new Dictionary<string, bool>();
+
+        // Animator clips and trees dictionary
+        CurrentData.animatorClipDict ??= new Dictionary<string, AnimatorClipSnapshot>();
+        CurrentData.animatorTreeDict ??= new Dictionary<string, AnimatorTreeSnapshot>();
+
+        // Collected Clues, Memories, Puzzles, Progresses
+        CurrentData.collectedClueNames ??= new List<string>();
+        CurrentData.collectedMemoryIDs ??= new List<string>();
+        CurrentData.scannedMemoryTitles ??= new List<string>();
+        CurrentData.solvedPuzzleIDs ??= new List<string>();
+        CurrentData.chapterMemoryProgress ??= new List<ChapterMemoryProgress>();
+        CurrentData.chapterClueProgress ??= new List<ChapterClueProgress>();
     }
 
+    #region Setter & Getter of data
+    
     // ===== 튜토리얼 진행도 저장/적용 =====
     // 방문횟수
-    public static void SetRoomVisitCount(string roomName, int count)
-    {
+    public static void SetRoomVisitCount(string roomName, int count) {
         EnsureData();
-        if (currentData.roomVisitCounts == null) currentData.roomVisitCounts = new List<RoomVisitEntry>();
-        int i = currentData.roomVisitCounts.FindIndex(x => x.roomName == roomName);
-        if (i >= 0) currentData.roomVisitCounts[i].count = count;
-        else currentData.roomVisitCounts.Add(new RoomVisitEntry { roomName = roomName, count = count });
+        if (CurrentData.roomVisitCounts == null) CurrentData.roomVisitCounts = new List<RoomVisitEntry>();
+        int i = CurrentData.roomVisitCounts.FindIndex(x => x.roomName == roomName);
+        if (i >= 0) CurrentData.roomVisitCounts[i].count = count;
+        else CurrentData.roomVisitCounts.Add(new RoomVisitEntry { roomName = roomName, count = count });
     }
-
-    public static bool TryGetRoomVisitCount(string roomName, out int count)
-    {
-        count = 0;
-        var e = currentData?.roomVisitCounts?.Find(x => x.roomName == roomName);
-        if (e == null) return false;
+    public static bool TryGetRoomVisitCount(string roomName, out int count) {
+        RoomVisitEntry e = CurrentData?.roomVisitCounts?.Find(x => x.roomName == roomName);
+        if (e == null) { count = 0; return false;}
         count = e.count;
         return true;
     }
 
     // 이벤트 완료 목록 상태
-    public static void SetEventCompleted(string id, bool completed)
-    {
+    public static void SetEventCompleted(string id, bool completed) {
         EnsureData();
-        var list = currentData.eventCompletedStates;
-        int i = list.FindIndex(x => x.id == id);
-        if (i >= 0) list[i].eventCompleted = completed;
-        else list.Add(new EventCompletedState { id = id, eventCompleted = completed });
+        
+        // Refactored to dictionary
+        if (!CurrentData.eventCompletionDict.TryAdd(id, completed)) {
+            CurrentData.eventCompletionDict[id] = completed;
+        }
     }
-
-    public static bool TryGetCompletedEventIds(string id, out bool completed)
-    {
-        completed = false;
-        var s = currentData?.eventCompletedStates?.Find(x => x.id == id);
-        if (s == null) return false;
-        completed = s.eventCompleted;
-        return true;
+    public static bool TryGetCompletedEventIds(string id, out bool completed) {
+        // Refactored to dictionary
+        return CurrentData.eventCompletionDict.TryGetValue(id, out completed);
     }
 
     // 튜토리얼 완료 목록 상태
-    public static void SetCompletedTutorialSteps(IEnumerable<TutorialStep> steps)
-    {
+    public static void SetCompletedTutorialSteps(IEnumerable<TutorialStep> steps) {
         EnsureData();
-        currentData.completedTutorialSteps = steps != null
+        CurrentData.completedTutorialSteps = steps != null
             ? new List<TutorialStep>(steps)
             : new List<TutorialStep>();
     }
-
-    public static bool TryGetCompletedTutorialSteps(out List<TutorialStep> steps)
-    {
-        steps = currentData?.completedTutorialSteps;
-        return steps != null && steps.Count > 0;
-    }
-
-    // ===== 오브젝트 활성화 상태 저장/적용 =====
-    public static void SetActiveState(string id, bool active)
-    {
-        EnsureData();
-        var list = currentData.activeObjectStates;
-        int i = list.FindIndex(x => x.id == id);
-        if (i >= 0) list[i].active = active;
-        else list.Add(new ActiveObjectState { id = id, active = active });
-    }
-
-    public static bool TryGetActiveState(string id, out bool active)
-    {
-        active = true;
-        var s = currentData?.activeObjectStates?.Find(x => x.id == id);
-        if (s == null) return false;
-        active = s.active;
-        return true;
-    }
-
-    // ===== 오브젝트 위치 저장/적용 =====
-    public static void SetObjectPosition(string id, Vector3 pos)
-    {
-        EnsureData();
-        var list = currentData.objectPositions;
-        int i = list.FindIndex(x => x.id == id);
-        if (i >= 0) list[i].position = pos;
-        else list.Add(new ObjectPositionState { id = id, position = pos });
+    public static bool TryGetCompletedTutorialSteps(out List<TutorialStep> steps) {
+        steps = CurrentData?.completedTutorialSteps;
+        return steps is { Count: > 0 };
     }
     
-    public static bool TryGetObjectPosition(string id, out Vector3 pos)
-    {
-        pos = default;
-        var s = currentData?.objectPositions?.Find(x => x.id == id);
-        if (s == null) return false;
-        pos = s.position;
-        return true;
-    }
-
-    // ===== BasePossessable 상태 저장/적용 =====
-    public static void SetPossessableState(string id, bool hasActivated)
-    {
+    // ===== 일반 ObjectState 저장/적용 =====
+    public static void SetObjectState(string id, bool active = false, Vector3 pos = default) {
         EnsureData();
-        var list = currentData.possessableStates;
-        int i = list.FindIndex(x => x.id == id);
-        if (i >= 0) list[i].hasActivated = hasActivated;
-        else list.Add(new PossessableState { id = id, hasActivated = hasActivated });
+        
+        if (CurrentData.objectStateDict.TryAdd(id, new ObjectState(id, active, pos))) return;
+        CurrentData.objectStateDict[id].active = active;
+        CurrentData.objectStateDict[id].position = new SerializableVector3(pos);
+    }
+    public static bool TryGetObjectState(string id, out ObjectState state) {
+        return CurrentData.objectStateDict.TryGetValue(id, out state);
+    }
+    
+    // ===== 빙의 가능한 PossessableObjectState 저장/적용 =====
+    public static void SetPossessableObjectState(string id, bool active = false, Vector3 pos = default,
+        bool hasActivated = false) {
+        EnsureData();
+        
+        if (CurrentData.possessableObjectStateDict.TryAdd(id, new PossessableObjectState(id, active, pos, hasActivated))) return;
+        CurrentData.possessableObjectStateDict[id].active = active;
+        CurrentData.possessableObjectStateDict[id].position = new SerializableVector3(pos);
+        CurrentData.possessableObjectStateDict[id].hasActivated = hasActivated;
+    }
+    public static bool TryGetPossessableObjectState(string id, out PossessableObjectState state) {
+        return CurrentData.possessableObjectStateDict.TryGetValue(id, out state);
     }
 
-    public static bool TryGetPossessableState(string id, out bool hasActivated)
-    {
-        hasActivated = true;
-        var s = currentData?.possessableStates?.Find(x => x.id == id);
-        if (s == null) return false;
-        hasActivated = s.hasActivated;
-        return true;
-    }
+    // ===== 기억조각 MemoryFragmentObjectState 저장/찾기 =====
+    public static void SetMemoryFragmentObjectState(string id, bool active = false, Vector3 pos = default,
+        bool isScannable = false) {
+        EnsureData();
 
+        if (CurrentData.memoryFragmentObjectStateDict.TryAdd(id, new MemoryFragmentObjectState(id, active, pos, isScannable))) return;
+        CurrentData.memoryFragmentObjectStateDict[id].active = active;
+        CurrentData.memoryFragmentObjectStateDict[id].position = new SerializableVector3(pos);
+        CurrentData.memoryFragmentObjectStateDict[id].isScannable = isScannable;
+    }
+    public static bool TryGetMemoryFragmentObjectState(string id, out MemoryFragmentObjectState state) {
+        return CurrentData.memoryFragmentObjectStateDict.TryGetValue(id, out state);
+    }
+    
     // ===== MemoryFragment 상태 저장/적용 =====
-    public static void SetMemoryFragmentScannable(string id, bool isScannable)
-    {
+    public static void SetMemoryFragmentScannable(string id, bool isScannable) {
         EnsureData();
-        var list = currentData.memoryFragmentStates;
-        int i = list.FindIndex(x => x.id == id);
-        if (i >= 0) list[i].isScannable = isScannable;
-        else list.Add(new MemoryFragmentState { id = id, isScannable = isScannable });
-    }
 
-    public static bool TryGetMemoryFragmentScannable(string id, out bool isScannable)
-    {
-        isScannable = false;
-        var s = currentData?.memoryFragmentStates?.Find(x => x.id == id);
-        if (s == null) return false;
-        isScannable = s.isScannable;
+        // Refactored to dictionary
+        if (CurrentData.memoryFragmentObjectStateDict.TryGetValue(id, out MemoryFragmentObjectState memoryFragment)) {
+            memoryFragment.isScannable = isScannable;
+        }
+    }
+    public static bool TryGetMemoryFragmentScannable(string id, out bool isScannable) {
+        // Refactored to dictionary
+        if (!CurrentData.memoryFragmentObjectStateDict.TryGetValue(id, out MemoryFragmentObjectState state)) {
+            isScannable = false;
+            return false;
+        }
+        
+        isScannable = state.isScannable;
         return true;
     }
 
     // ===== 문 상태 저장/적용 =====
-    public static void SetDoorLocked(string id, bool isLocked)
-    {
+    public static void SetDoorLocked(string id, bool isLocked) {
         EnsureData();
-        var list = currentData.doorStates;
-        int i = list.FindIndex(x => x.id == id);
-        if (i >= 0) list[i].isLocked = isLocked;
-        else list.Add(new DoorState { id = id, isLocked = isLocked });
+        
+        // Refactored to dictionary
+        if (!CurrentData.doorStateDict.TryAdd(id, isLocked)) {
+            CurrentData.doorStateDict[id] = isLocked;
+        }
+    }
+    public static bool TryGetDoorLocked(string id, out bool isLocked) {
+        // Refactored to dictionary
+        return CurrentData.doorStateDict.TryGetValue(id, out isLocked);
     }
 
-    public static bool TryGetDoorLocked(string id, out bool isLocked)
-    {
-        isLocked = true;
-        var s = currentData?.doorStates?.Find(x => x.id == id);
-        if (s == null) return false;
-        isLocked = s.isLocked;
-        return true;
-    }
+    #endregion
 
+    /// <summary>
     /// UniqueID를 갖고 있는 오브젝트 활성화 상태 스냅샷
-    private static void SnapshotAllUniqueIdActivesAndPositions()
-    {
+    /// </summary>
+    static void SnapshotAllUniqueIdObjects() {
         // true: 비활성 포함, 모든 로드된 씬 대상
-        var uids = GameObject.FindObjectsOfType<UniqueId>(true);
+        var uids = Object.FindObjectsOfType<UniqueId>(true);
 
-        foreach (var uid in uids)
-        {
-            var go = uid.gameObject;
+        foreach (UniqueId uid in uids) {
+            GameObject go = uid.gameObject;
 
             // DontDestroyOnLoad에 있는 전역 오브젝트는 스킵 (옵션)
-            var scn = go.scene;
+            Scene scn = go.scene;
             if (!scn.IsValid() || !scn.isLoaded || scn.name == "DontDestroyOnLoad")
                 continue;
 
-            Debug.Log($"[SaveManager] 오브젝트 : {uid.Id}, 활성화 상태 : {go.activeSelf}");
+            Debug.Log($"[SaveManager] 오브젝트 : {uid.Id}, 활성화 상태 : {go.activeInHierarchy}");
 
-            // 저장
-            SetActiveState(uid.Id, go.activeSelf);
-            SetObjectPosition(uid.Id, go.transform.position);
+            // Refactored Saving Method
+            if (go.TryGetComponent(out IPossessable possessable))
+                SetPossessableObjectState(uid.Id, go.activeInHierarchy, go.transform.position, possessable.HasActivated());
+            else if (go.TryGetComponent(out MemoryFragment memoryFragment))
+                SetMemoryFragmentObjectState(uid.Id, go.activeInHierarchy, go.transform.position, memoryFragment.IsScannable);
+            else if (go.TryGetComponent(out BaseDoor door))
+                SetDoorLocked(uid.Id, door.IsLocked);
+            else if (go.TryGetComponent(out Ch2_DrawingClue clue))
+                SetPossessableObjectState(uid.Id, clue.gameObject.activeInHierarchy, clue.transform.position, clue.HasActivated);
+            else 
+                SetObjectState(uid.Id, go.activeInHierarchy, go.transform.position);
         }
     }
 
-    // ===== 애니메이터 상태 스냅샷 =====
-
-    public static void SnapshotAllAnimatorTrees()
-    {
+    /// <summary>
+    /// Animator Tree 저장 메소드
+    /// </summary>
+    public static void SnapshotAllAnimatorTrees() {
         var uids = GameObject.FindObjectsOfType<UniqueId>(true);
 
-        foreach (var uid in uids)
-        {
-            var root = uid.transform;
+        foreach (UniqueId uid in uids) {
+            Transform root = uid.transform;
             var anims = root.GetComponentsInChildren<Animator>(true);
             if (anims == null || anims.Length == 0) continue;
 
             var tree = new AnimatorTreeSnapshot { id = uid.Id };
-            var sb = new System.Text.StringBuilder();
+            var sb = new StringBuilder();
             sb.Append($"[SNAP-TREE] uid={uid.Id} go='{uid.gameObject.name}' animators={anims.Length}");
 
-            foreach (var anim in anims)
-            {
-                var childPath = GetRelativePath(root, anim.transform);
+            foreach (Animator anim in anims) {
+                string childPath = GetRelativePath(root, anim.transform);
                 if (string.IsNullOrEmpty(childPath)) continue;
 
                 var childSnap = new AnimatorChildSnapshot { childPath = childPath };
 
                 int lc = anim.layerCount;
-                for (int l = 0; l < lc; l++)
-                {
-                    var info = anim.GetCurrentAnimatorStateInfo(l);
+                for (int l = 0; l < lc; l++) {
+                    AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(l);
 
                     string clipName = "";
                     var clips = anim.GetCurrentAnimatorClipInfo(l);
@@ -540,8 +552,10 @@ public static class SaveManager
 
                 tree.animators.Add(childSnap);
                 sb.Append($"\n  - path='{childPath}' layers={childSnap.layers.Count}");
-                foreach (var ly in childSnap.layers)
-                    sb.Append($" | L{ly.layer}: full={ly.fullPathHash} short={ly.shortNameHash} norm={ly.normalizedTime:F3} clip='{ly.clipName}'");
+                foreach (AnimatorChildLayerState ly in childSnap.layers) {
+                    sb.Append(
+                        $" | L{ly.layer}: full={ly.fullPathHash} short={ly.shortNameHash} norm={ly.normalizedTime:F3} clip='{ly.clipName}'");
+                }
             }
 
             SetAnimatorTree(uid.Id, tree);
@@ -549,246 +563,230 @@ public static class SaveManager
     }
 
     // ===== 플레이어 인벤토리 상태 적용 =====
-    public static void ApplyPlayerInventoryFromSave(Inventory_Player inv)
-    {
-        if (currentData?.collectedClueNames == null) return;
+    public static void ApplyPlayerInventoryFromSave(Inventory_Player inv) {
+        if (CurrentData?.collectedClueNames == null) return;
 
         inv.RemoveClueBeforeStage(); // 전체 초기화
-        foreach (var clueName in currentData.collectedClueNames)
-        {
+        foreach (string clueName in CurrentData.collectedClueNames) {
             // 저장한 기준에 맞춰 로드 경로/키 선택
-            var clue = Resources.Load<ClueData>("ClueData/" + clueName); // (에셋 파일명 기준)
-                                                                         // var clue = /* clue_Name 기준이면 */ Resources.LoadAll<ClueData>("ClueData")
-                                                                         //               .FirstOrDefault(c => c.clue_Name == clueName);
+            ClueData clue = Resources.Load<ClueData>("ClueData/" + clueName); // (에셋 파일명 기준)
+            // var clue = /* clue_Name 기준이면 */ Resources.LoadAll<ClueData>("ClueData")
+            //               .FirstOrDefault(c => c.clue_Name == clueName);
 
             if (clue != null) inv.AddClue(clue);
         }
     }
-
     
+    public static string GetRelativePath(Transform root, Transform target) {
+        if (!root || !target) return null;
+        var stack = new Stack<string>();
+        Transform t = target;
+        while (t && t != root) {
+            stack.Push(t.name);
+            t = t.parent;
+        }
 
+        if (t != root) return null; // target이 root 하위가 아님
+        var sb = new StringBuilder();
+        while (stack.Count > 0) {
+            if (sb.Length > 0) sb.Append('/');
+            sb.Append(stack.Pop());
+        }
+
+        return sb.ToString();
+    }
+
+    public static Transform FindChildByPath(Transform root, string path) {
+        if (root == null || string.IsNullOrEmpty(path)) return null;
+        // Transform.Find("A/B/C")는 비활성 자식도 찾음
+        return root.Find(path);
+    }
+
+    // 저장된 AnimatorClipSnapshot들을 보기 좋은 형태로 찍어주는 유틸
+    public static void DumpAnimatorClipSnapshots(string header = "[Dump]", int maxObjects = 20, int maxLayers = 4) {
+        if (CurrentData == null) return;
+        
+        int count = CurrentData.animatorClipDict?.Count ?? 0;
+        if (count == 0) return;
+        
+        int printed = 0;
+        foreach (AnimatorClipSnapshot snap in CurrentData.animatorClipDict.Values) {
+            if (snap == null) continue;
+            int lc = Mathf.Min(snap.layers?.Count ?? 0, maxLayers);
+            for (int i = 0; i < lc; i++) {
+                AnimatorClipLayerState l = snap.layers[i];
+            }
+
+            printed++;
+        }
+    }
+    
     // ===== 조회(읽기) 계열 =====
     public static bool HasSaveFile() => File.Exists(SavePath);
+    public static bool IsPuzzleSolved(string puzzleID) => CurrentData?.solvedPuzzleIDs?.Contains(puzzleID) ?? false;
+    public static bool HasCollectedClue(string clueName) => CurrentData?.collectedClueNames?.Contains(clueName) ?? false;
+    public static bool HasCollectedMemoryID(string memoryID) => CurrentData?.collectedMemoryIDs?.Contains(memoryID) ?? false;
+    public static string GetLastSceneName() => CurrentData?.sceneName ?? string.Empty;
+    public static Vector3? GetLastPlayerPosition() => CurrentData?.playerPosition.ToVector3();
+    public static string GetCheckpointId() => CurrentData?.checkpointId ?? string.Empty;
 
-    public static bool IsPuzzleSolved(string puzzleID)
-        => currentData?.solvedPuzzleIDs?.Contains(puzzleID) ?? false;
-
-    public static bool HasCollectedClue(string clueName)
-        => currentData?.collectedClueNames?.Contains(clueName) ?? false;
-
-    public static bool HasCollectedMemoryID(string memoryID)
-        => currentData?.collectedMemoryIDs?.Contains(memoryID) ?? false;
-
-    public static bool HasScannedMemoryTitle(string title)
-        => currentData?.scannedMemoryTitles?.Contains(title) ?? false;
-
-    public static string GetLastSceneName()
-        => currentData?.sceneName ?? string.Empty;
-
-    public static Vector3? GetLastPlayerPosition()
-        => currentData != null ? currentData.playerPosition : (Vector3?)null;
-
-    public static string GetCheckpointId()
-        => currentData?.checkpointId ?? string.Empty;
-
-
-    public static void SaveGame(SaveData data = null)
-    {
-        if (data != null) currentData = data;
+    /// <summary>
+    /// 모든 데이터를 저장하는 메소드
+    /// </summary>
+    /// <param name="data">모든 Object 정보들이 저장된 DTO class</param>
+    public static void SaveGame(SaveData data = null) {
+        if (data != null) CurrentData = data;
         EnsureData();
 
-        try
-        {
-            string json = JsonUtility.ToJson(currentData, true);
+        try {
+            string json = JsonConvert.SerializeObject(CurrentData, Formatting.Indented);
             string tmp = SavePath + ".tmp";
             File.WriteAllText(tmp, json);
             if (File.Exists(SavePath)) File.Delete(SavePath);
             File.Move(tmp, SavePath);
 
-            int animClipCount = currentData.animatorClips?.Count ?? 0;
+            int animClipCount = CurrentData.animatorClipDict?.Count ?? 0;
 
             Debug.Log($"[SaveManager] Saved to: {SavePath}\n" +
-                      $" scene={currentData.sceneName}" +
-                      $" memIDs={currentData.collectedMemoryIDs?.Count ?? 0}" +
-                      $" clues={currentData.collectedClueNames?.Count ?? 0}" +
+                      $" scene={CurrentData.sceneName}" +
+                      $" memIDs={CurrentData.collectedMemoryIDs?.Count ?? 0}" +
+                      $" clues={CurrentData.collectedClueNames?.Count ?? 0}" +
                       $" animClips={animClipCount}" +
                       $" bytes={json.Length}");
         }
-        catch (System.Exception ex)
-        {
+        catch (Exception ex) {
             Debug.LogError($"[SaveManager] Save FAILED at {SavePath}\n{ex}");
         }
 
-        var popup = UIManager.Instance != null ? UIManager.Instance.SaveNoticePopupUI : null;
+        NoticePopup popup = UIManager.Instance != null ? UIManager.Instance.SaveNoticePopupUI : null;
         if (popup != null) popup.FadeInAndOut("게임이 저장되었습니다.");
     }
-
-
-    // ===== 변경(쓰기) 계열 =====
-    public static SaveData LoadGame()
-    {
-        if (!File.Exists(SavePath))
-        {
-            currentData = null;
+    
+    /// <summary>
+    /// 내부 저장소에 저장된 데이터들을 부르는 메소드
+    /// </summary>
+    /// <returns></returns>
+    public static SaveData LoadGame() {
+        if (!File.Exists(SavePath)) {
+            CurrentData = null;
             return null;
         }
 
-        try
-        {
+        try {
             string json = File.ReadAllText(SavePath);
-            currentData = JsonUtility.FromJson<SaveData>(json) ?? new SaveData();
+            CurrentData = JsonConvert.DeserializeObject<SaveData>(json);
             EnsureData();
 
-            int animClipCount = currentData.animatorClips?.Count ?? 0;
+            int animClipCount = CurrentData.animatorClipDict?.Count ?? 0;
 
-            Debug.Log($"[SaveManager] Loaded. scene={currentData.sceneName}" +
-                      $" memIDs={currentData.collectedMemoryIDs?.Count ?? 0}" +
-                      $" clues={currentData.collectedClueNames?.Count ?? 0}" +
-                      $" animClips={animClipCount}" +     // <-- 추가
+            Debug.Log($"[SaveManager] Loaded. scene={CurrentData.sceneName}" +
+                      $" memIDs={CurrentData.collectedMemoryIDs?.Count ?? 0}" +
+                      $" clues={CurrentData.collectedClueNames?.Count ?? 0}" +
+                      $" animClips={animClipCount}" + // <-- 추가
                       $" bytes={json.Length}");
         }
-        catch (System.Exception)
-        {
-            currentData = new SaveData();
+        catch (Exception) {
+            CurrentData = new SaveData();
             EnsureData();
         }
 
         // 로드된 내용 요약 덤프
-        DumpAnimatorClipSnapshots("[LOAD] snapshot summary", maxObjects: 10, maxLayers: 2);
+        DumpAnimatorClipSnapshots("[LOAD] snapshot summary", 10, 2);
 
-        Loaded?.Invoke(currentData);
-        return currentData;
+        Loaded?.Invoke(CurrentData);
+        return CurrentData;
     }
 
-    public static void DeleteSave()
-    {
+    /// <summary>
+    /// 저장된 데이터 파일을 삭제하는 메소드
+    /// </summary>
+    public static void DeleteSave() {
         if (File.Exists(SavePath)) File.Delete(SavePath);
-        currentData = null; // 조회 계열은 이후 false/기본값을 반환
+        CurrentData = null; // 조회 계열은 이후 false/기본값을 반환
     }
 
-    // 퍼즐 풀었을 때 기록
-    public static void MarkPuzzleSolved(string puzzleID)
-    {
+    /// <summary>
+    /// 퍼즐 풀기를 완료 시 불리는 메소드
+    /// </summary>
+    /// <param name="puzzleID"></param>
+    public static void MarkPuzzleSolved(string puzzleID) {
         EnsureData();
-        if (!currentData.solvedPuzzleIDs.Contains(puzzleID))
-        {
-            currentData.solvedPuzzleIDs.Add(puzzleID);
-            //if (autosave) SaveGame();
+        if (!CurrentData.solvedPuzzleIDs.Contains(puzzleID)) {
+            CurrentData.solvedPuzzleIDs.Add(puzzleID);
+            // Choose to save or not -> if (autosave) SaveGame();
         }
     }
 
-    // 단서 수집했을 때 기록
-    public static void AddCollectedClue(string clueName)
-    {
+    /// <summary>
+    /// 단서 수집 시 불리는 메소드
+    /// </summary>
+    /// <param name="clueName"></param>
+    public static void AddCollectedClue(string clueName) {
         EnsureData();
-        if (!currentData.collectedClueNames.Contains(clueName))
-        {
-            currentData.collectedClueNames.Add(clueName);
-            //if (autosave) SaveGame();
+        if (!CurrentData.collectedClueNames.Contains(clueName)) {
+            CurrentData.collectedClueNames.Add(clueName);
+            // Choose to save or not -> if (autosave) SaveGame();
         }
     }
 
-    // 기억 스캔했을 때 데이터이름 기록
-    public static void AddCollectedMemoryID(string memoryID)
-    {
+    /// <summary>
+    /// 기억 조각을 스캔 시 불리는 메소드
+    /// </summary>
+    /// <param name="memoryID"></param>
+    public static void AddCollectedMemoryID(string memoryID) {
         EnsureData();
-        if (!currentData.collectedMemoryIDs.Contains(memoryID))
-        {
-            currentData.collectedMemoryIDs.Add(memoryID);
-            //if (autosave) SaveGame();
+        if (!CurrentData.collectedMemoryIDs.Contains(memoryID)) {
+            CurrentData.collectedMemoryIDs.Add(memoryID);
+            // Choose to save or not -> if (autosave) SaveGame();
         }
     }
 
     // 기억 스캔했을 때 기억제목 저장
-    public static void AddScannedMemoryTitle(string title)
-    {
+    public static void AddScannedMemoryTitle(string title) {
         EnsureData();
-        if (!currentData.scannedMemoryTitles.Contains(title))
-        {
-            currentData.scannedMemoryTitles.Add(title);
+        if (!CurrentData.scannedMemoryTitles.Contains(title)) {
+            CurrentData.scannedMemoryTitles.Add(title);
             //if (autosave) SaveGame();
         }
     }
 
     // 플레이어 인벤토리 상태 저장
-    public static void SnapshotPlayerInventory(Inventory_Player inv)
-    {
+    public static void SnapshotPlayerInventory(Inventory_Player inv) {
         EnsureData();
-        currentData.collectedClueNames.Clear();
+        CurrentData.collectedClueNames.Clear();
 
         // 에셋 파일명으로 저장
-        foreach (var c in inv.collectedClues)
-            if (c != null) currentData.collectedClueNames.Add(c.name);
+        foreach (ClueData c in inv.collectedClues) {
+            if (c != null) CurrentData.collectedClueNames.Add(c.name);
+        }
     }
 
     // 현재 씬 이름과 위치 저장
-    public static void SetSceneAndPosition(string sceneName, Vector3 playerPos, string checkpointId = null, bool autosave = true)
-    {
+    public static void SetSceneAndPosition(string sceneName, Vector3 playerPos, string checkpointId = null,
+        bool autosave = true) {
         EnsureData();
-        currentData.sceneName = sceneName;
-        currentData.playerPosition = playerPos;
-        currentData.checkpointId = checkpointId;
+        
+        CurrentData.sceneName = sceneName;
+        CurrentData.playerPosition = new SerializableVector3(playerPos);
+        CurrentData.checkpointId = checkpointId;
     }
 
     // 기억 스캔 ScanedCheck 할 때 호출
     public static void SaveWhenScanAfter(string memoryID, string title,
-    string sceneName, Vector3 playerPos, string checkpointId = null, bool autosave = true)
-    {
+        string sceneName, Vector3 playerPos, string checkpointId = null, bool autosave = true) {
         AddCollectedMemoryID(memoryID);
         AddScannedMemoryTitle(title);
-        SnapshotAllUniqueIdActivesAndPositions();
-
-        // 오브젝트 SetAcitve 상태, 위치 저장
-        foreach (var p in GameObject.FindObjectsOfType<BasePossessable>(true))
-        {
-            if (p.TryGetComponent(out UniqueId uid))
-            {
-                SetActiveState(uid.Id, p.gameObject.activeSelf);
-                SetObjectPosition(uid.Id, p.transform.position);
-
-                SetPossessableState(uid.Id, p.HasActivated());
-            }
-        }
-
-        foreach (var m in GameObject.FindObjectsOfType<MemoryFragment>(true))
-        {
-            if (m.TryGetComponent(out UniqueId uid))
-            {
-                SetActiveState(uid.Id, m.gameObject.activeSelf);
-                SetObjectPosition(uid.Id, m.transform.position);
-
-                SetMemoryFragmentScannable(uid.Id, m.IsScannable);
-            }
-        }
-        
-        // === Ch2_DrawingClue 상태 저장 추가 ===
-        foreach (var clue in GameObject.FindObjectsOfType<Ch2_DrawingClue>(true))
-        {
-            if (clue.TryGetComponent(out UniqueId uid))
-            {
-                SetActiveState(uid.Id, clue.gameObject.activeSelf);
-                SetObjectPosition(uid.Id, clue.transform.position);
-                SetPossessableState(uid.Id, clue.HasActivated); // <-- hasActivated 저장
-            }
-        }
-
-        // 문 상태 저장
-        foreach (var door in GameObject.FindObjectsOfType<BaseDoor>(true))
-        {
-            if (door.TryGetComponent(out UniqueId uid))
-                SaveManager.SetDoorLocked(uid.Id, door.IsLocked);
-        }
+        SnapshotAllUniqueIdObjects();
 
         // 플레이어 인벤토리 상태 저장
-        var inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
+        Inventory_Player inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         SnapshotPlayerInventory(inv);
 
         // 빙의 대상 인벤토리 상태 저장
         //SnapshotAllPossessableInventories();
 
-        var cem = ChapterEndingManager.Instance;
-        if (cem != null)
-        {
+        ChapterEndingManager cem = ChapterEndingManager.Instance;
+        if (cem != null) {
             Debug.Log($"[SAVE] ch1 clues now={cem.CurrentCh1ClueCount}");
 
             // 최종단서 진행도 스냅샷
@@ -804,7 +802,7 @@ public static class SaveManager
         SetSceneAndPosition(sceneName, playerPos, checkpointId, autosave);
         // 애니메이터 상태 스탭샷
         SnapshotAllAnimatorTrees();
-        DumpAnimatorClipSnapshots("[SAVE] snapshot summary", maxObjects: 10, maxLayers: 2);
+        DumpAnimatorClipSnapshots("[SAVE] snapshot summary", 10, 2);
 
         if (autosave) SaveGame();
     }
@@ -875,49 +873,17 @@ public static class SaveManager
 
     // 기억조각 컷씬 자동재생 후 저장
     public static void SaveWhenCutScene(string memoryID, string title,
-    string sceneName, string checkpointId = null, bool autosave = true)
-    {
+        string sceneName, string checkpointId = null, bool autosave = true) {
         AddCollectedMemoryID(memoryID);
         AddScannedMemoryTitle(title);
-        SnapshotAllUniqueIdActivesAndPositions();
-
-        // 오브젝트 SetAcitve 상태, 위치 저장
-        foreach (var p in GameObject.FindObjectsOfType<BasePossessable>(true))
-        {
-            if (p.TryGetComponent(out UniqueId uid))
-            {
-                SetActiveState(uid.Id, p.gameObject.activeSelf);
-                SetObjectPosition(uid.Id, p.transform.position);
-
-                SetPossessableState(uid.Id, p.HasActivated());
-            }
-        }
-
-        foreach (var m in GameObject.FindObjectsOfType<MemoryFragment>(true))
-        {
-            if (m.TryGetComponent(out UniqueId uid))
-            {
-                SetActiveState(uid.Id, m.gameObject.activeSelf);
-                SetObjectPosition(uid.Id, m.transform.position);
-
-                SetMemoryFragmentScannable(uid.Id, m.IsScannable);
-            }
-        }
-
-        // 문 상태 저장
-        foreach (var door in GameObject.FindObjectsOfType<BaseDoor>(true))
-        {
-            if (door.TryGetComponent(out UniqueId uid))
-                SaveManager.SetDoorLocked(uid.Id, door.IsLocked);
-        }
+        SnapshotAllUniqueIdObjects();
 
         // 플레이어 인벤토리 상태 저장
-        var inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
+        Inventory_Player inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         SnapshotPlayerInventory(inv);
 
-        var cem = ChapterEndingManager.Instance;
-        if (cem != null)
-        {
+        ChapterEndingManager cem = ChapterEndingManager.Instance;
+        if (cem != null) {
             Debug.Log($"[SAVE] ch1 clues now={cem.CurrentCh1ClueCount}");
 
             // 최종단서 진행도 스냅샷
@@ -932,9 +898,8 @@ public static class SaveManager
 
         // 애니메이터 상태 스탭샷
         SnapshotAllAnimatorTrees();
-        DumpAnimatorClipSnapshots("[SAVE] snapshot summary", maxObjects: 10, maxLayers: 2);
+        DumpAnimatorClipSnapshots("[SAVE] snapshot summary", 10, 2);
 
         if (autosave) SaveGame();
     }
 }
-

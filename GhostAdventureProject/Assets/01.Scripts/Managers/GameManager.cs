@@ -153,7 +153,7 @@ public class GameManager : Singleton<GameManager>
         // 이어하기 했을 때
         if (loadFromSave && pendingSaveData != null)
         {
-            spawnPosition = pendingSaveData.playerPosition;
+            spawnPosition = pendingSaveData.playerPosition.ToVector3();
             Debug.Log($"[GameManager] 이어하기 위치에서 스폰: {spawnPosition}");
         }
         // 새로 시작 or 씬 로드

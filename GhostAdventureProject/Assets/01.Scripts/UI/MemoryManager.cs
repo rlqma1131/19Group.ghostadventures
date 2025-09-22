@@ -15,7 +15,6 @@ public class MemoryManager : MonoBehaviour
     // id → data, title → data (호환용)
     private readonly Dictionary<string, MemoryData> byId = new();
     private readonly Dictionary<string, MemoryData> byTitle = new();
-
     private readonly List<MemoryData> scannedMemoryList = new();
     public IReadOnlyList<MemoryData> ScannedMemories => scannedMemoryList;
 

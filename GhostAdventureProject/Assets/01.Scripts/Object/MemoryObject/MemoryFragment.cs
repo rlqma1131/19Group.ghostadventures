@@ -254,7 +254,7 @@ public class MemoryFragment : BaseInteractable
 
     protected virtual void PlusAction(){}
 
-    public void ApplyFromSave(bool scannable)
+    public void SetScannable(bool scannable)
     {
         isScannable = scannable;
     }
