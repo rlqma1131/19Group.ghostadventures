@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 using System.Linq;
+using Cinemachine;
 
 public enum GuardState 
 { 
@@ -17,6 +18,8 @@ public class CH2_SecurityGuard : MoveBasePossessable
 {   
     public Ch2_DoorLock doorLock;               // 도어락
     [SerializeField] private Ch2_Radio radio;   // 라디오
+    [SerializeField] private CinemachineConfiner2D virtualCamera; // 줌 카메라 범위지정
+    [SerializeField] private Ch2_SecurityOfficeDoor officeDoor;
 
     [Header("이동위치")]
     public Transform Radio;                 // 라디오 
@@ -38,7 +41,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
     private bool isInOffice;                // 경비원이 경비실 안에 있는지 확인
     private bool oneTimeShowClue = false;   // Missing단서 획득여부 확인
-    public bool doorPass = false;           // 문 앞에 있는지 확인 (YameDoor에서 값 넣어줌)
+    // public bool doorPass = false;           // 문 앞에 있는지 확인 (YameDoor에서 값 넣어줌)
     private BoxCollider2D[] cols;           // 콜라이더 (경비실 의자에 앉았을 때 콜라이더 없앰)
 
     override protected void Awake() {
@@ -46,6 +49,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         haveitem = GetComponent<HaveItem>();
         conditionUI = GetComponent<PersonConditionUI>();
         cols = GetComponentsInChildren<BoxCollider2D>();
+        virtualCamera = GetComponentInChildren<CinemachineConfiner2D>();
     }
 
     protected override void Start()
@@ -130,7 +134,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (doorPass)
+            if (officeDoor.isDoorPass)
             {
                 OnDoorInteract();
                 return;
@@ -261,6 +265,15 @@ public class CH2_SecurityGuard : MoveBasePossessable
             isInOffice = true;
             MarkActivatedChanged();
         }
+        if (collision.CompareTag("Room"))
+        {
+            virtualCamera.m_BoundingShape2D = collision.GetComponent<PolygonCollider2D>();
+        }
+        else if(collision.CompareTag("Door"))
+        {
+            officeDoor = collision.GetComponent<Ch2_SecurityOfficeDoor>();
+        }
+
     }
 
     protected override void OnTriggerExit2D(Collider2D collision)
@@ -276,18 +289,18 @@ public class CH2_SecurityGuard : MoveBasePossessable
     // 문 앞에서 E키 눌렀을 때 빙의해제되는게 아니고 다른 문으로 이동
     protected override void OnDoorInteract()
     {
-        if(isPossessed && doorPass && doorLock.doorOpen)
+        if(isPossessed && officeDoor.isDoorPass && doorLock.isDoorOpen)
         {
             if(!isInOffice)
             {
-                Vector3 newPos = transform.position;
-                newPos.x = OfficeDoor_Inside.position.x;
+                 Vector3 newPos = transform.position;
+                newPos.x = OfficeDoor_Inside.position.x + 0.1f; // 약간 안쪽으로 밀어넣기
                 transform.position = newPos;
             }
             else
             {
                 Vector3 newPos = transform.position;
-                newPos.x = OfficeDoor_Outside.position.x;
+                newPos.x = OfficeDoor_Outside.position.x - 0.1f; // 약간 바깥쪽으로
                 transform.position = newPos;
             }
         }
