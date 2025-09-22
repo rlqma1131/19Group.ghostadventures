@@ -7709,8 +7709,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 5.9843497, y: 0.038149834, z: 0}
-    m_Extent: {x: 7.51755, y: 9.23985, z: 0}
+    m_Center: {x: 5.98445, y: 0.038050175, z: 0}
+    m_Extent: {x: 7.51835, y: 9.23995, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -10479,6 +10479,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1292309103}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &312244296 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5610357373661826228, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
+  m_PrefabInstance: {fileID: 370214994}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &312264916
 GameObject:
   m_ObjectHideFlags: 0
@@ -10931,8 +10936,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 1
   m_ShadowVolumeIntensity: 0.257
   m_LocalBounds:
-    m_Center: {x: 0.31939983, y: -0.17421079, z: 0}
-    m_Extent: {x: 8.3224, y: 5.915331, z: 0}
+    m_Center: {x: 0.3197999, y: -0.17421079, z: 0}
+    m_Extent: {x: 8.3221, y: 5.915331, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -11858,8 +11863,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.86030006, y: 0.43420005, z: 0}
-    m_Extent: {x: 8.9618, y: 7.5367002, z: 0}
+    m_Center: {x: -0.85885, y: 0.43355012, z: 0}
+    m_Extent: {x: 8.961451, y: 7.5370502, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -12345,6 +12350,10 @@ PrefabInstance:
       propertyPath: ZoomSafeBox
       value: 
       objectReference: {fileID: 669647757}
+    - target: {fileID: 7732527426384423816, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
+      propertyPath: zoomSafeBox
+      value: 
+      objectReference: {fileID: 695255781}
     - target: {fileID: 8513183323679964191, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
       propertyPath: m_SortingLayer
       value: 4
@@ -12362,7 +12371,16 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5933137950819011655, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 480576004}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5610357373661826228, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 370214998}
+    - targetCorrespondingSourceObject: {fileID: 7635276983163458283, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1618531349}
+    - targetCorrespondingSourceObject: {fileID: 2889871843279017374, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1426040058}
   m_SourcePrefab: {fileID: 100100000, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
 --- !u!4 &370214995 stripped
 Transform:
@@ -12374,12 +12392,25 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7732527426384423816, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
   m_PrefabInstance: {fileID: 370214994}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 312244296}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b33371072e93a41a894b4bc591cf92e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &370214998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 312244296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Ch2_SafeBox
 --- !u!1 &374612131
 GameObject:
   m_ObjectHideFlags: 0
@@ -14508,8 +14539,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.07349968, y: -1.0988, z: 0}
-    m_Extent: {x: 19.973, y: 6.2002, z: 0}
+    m_Center: {x: 0.074100494, y: -1.0985999, z: 0}
+    m_Extent: {x: 19.9729, y: 6.2011, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -28882,8 +28913,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 6.2117996, y: -1.80185, z: 0}
-    m_Extent: {x: 5.0359, y: 5.69535, z: 0}
+    m_Center: {x: 6.2116003, y: -1.80215, z: 0}
+    m_Extent: {x: 5.0359, y: 5.69615, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -32630,8 +32661,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 1
   m_ShadowVolumeIntensity: 0.367
   m_LocalBounds:
-    m_Center: {x: 8.31955, y: 0.47519994, z: 0}
-    m_Extent: {x: 18.94315, y: 6.3004, z: 0}
+    m_Center: {x: 8.3193, y: 0.47504997, z: 0}
+    m_Extent: {x: 18.9424, y: 6.30135, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -46108,8 +46139,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.07295036, y: -1.0988998, z: 0}
-    m_Extent: {x: 19.97365, y: 6.2012, z: 0}
+    m_Center: {x: 0.07254982, y: -1.098, z: 0}
+    m_Extent: {x: 19.97295, y: 6.2009, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -49091,8 +49122,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -1.8429012, y: -0.47114992, z: 0}
-    m_Extent: {x: 33.1998, y: 6.44565, z: 0}
+    m_Center: {x: -1.8426495, y: -0.47169995, z: 0}
+    m_Extent: {x: 33.200447, y: 6.4458, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -52251,6 +52282,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1426040055 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2889871843279017374, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
+  m_PrefabInstance: {fileID: 370214994}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1426040058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426040055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 1c00c7433afc406bb2dbca850f840673
 --- !u!1 &1431243975 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8473885036835415567, guid: 2f23483bdde93422fa108deeaf2a96d0, type: 3}
@@ -58110,6 +58159,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 496996176}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1618531346 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7635276983163458283, guid: 7adb340bbe55848e2a7b7bd4ff47a49d, type: 3}
+  m_PrefabInstance: {fileID: 370214994}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1618531349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618531346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 31443835b2db4151ae4283ef85d5bebe
 --- !u!1 &1619954100
 GameObject:
   m_ObjectHideFlags: 0
@@ -70153,7 +70220,6 @@ GameObject:
   - component: {fileID: 1920244165}
   - component: {fileID: 1920244164}
   - component: {fileID: 1920244163}
-  - component: {fileID: 1920244162}
   m_Layer: 0
   m_Name: File2
   m_TagString: Untagged
@@ -70176,19 +70242,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1776534204}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 13.901}
---- !u!114 &1920244162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1920244160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae73d99753cd94293a7f91a1d58e69e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clueData: {fileID: 0}
 --- !u!114 &1920244163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70202,9 +70255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightObject: {fileID: 693653184}
-  zoomSafeBox: {fileID: 669647757}
   fileClue: {fileID: 11400000, guid: d17e493cb713b4479935bb3ea10785e3, type: 2}
-  ZoomCamera: {fileID: 708785630}
 --- !u!61 &1920244164
 BoxCollider2D:
   m_ObjectHideFlags: 0
