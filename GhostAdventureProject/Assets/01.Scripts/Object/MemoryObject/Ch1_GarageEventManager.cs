@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// TeddyBear 한테 붙는 클래스
 /// </summary>
-public class Ch1_GarageEventManager : MonoBehaviour
+public class Ch1_GarageEventManager : BaseInteractable
 {
     [Header("References")]
     [SerializeField] private Ch1_KeyBoard keyboard;
@@ -14,23 +14,21 @@ public class Ch1_GarageEventManager : MonoBehaviour
     [SerializeField] private PlayableDirector cutsceneDirector_correct;
     [SerializeField] EnergyRestoreZone energyRestoreZone;
     [SerializeField] private Ch1_MemoryPositive_01_TeddyBear bear;
-    [SerializeField] SpriteRenderer door;
+    [SerializeField] GameObject door;
     
     //NPC컷신보고 상호작용 가능하게하기 위해 추가
     [SerializeField] Cutscene_NPC cutscene_NPC;
     
-    private bool isCutscenePlaying = false;
+    [SerializeField] private bool isCutscenePlaying = false;
     private bool isCutscenePlaying2 = false;
     private bool playerNearby = false;
-    private bool openKeyboard = false;
-    Player player;
     
     public Ch1_KeyBoard_Enter Answer => answer;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         player = GameManager.Instance.Player;
-        bear = GetComponent<Ch1_MemoryPositive_01_TeddyBear>();
         cutsceneDirector.stopped += OnTimelineFinished;
         cutsceneDirector_correct.stopped += OnTimelineFinished2;
     }
@@ -69,13 +67,12 @@ public class Ch1_GarageEventManager : MonoBehaviour
 
                     cutsceneDirector.Play();
                 }
-                else if (isCutscenePlaying && !openKeyboard && !answer.correct)
+                else if (isCutscenePlaying && !keyboard.IsOpen() && !answer.correct)
                 {
                     player.InteractSystem.eKey.SetActive(false);
 
                     player.SoulEnergy.DisableHealingEffect(); // 에너지 회복존 비활성화
 
-                    openKeyboard = true;
                     keyboard.OpenKeyBoard();
                     player.PossessionSystem.CanMove = false;
                 }
@@ -99,7 +96,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
@@ -108,7 +105,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected override void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
@@ -137,7 +134,7 @@ public class Ch1_GarageEventManager : MonoBehaviour
         isCutscenePlaying2 = true;
         energyRestoreZone.IsActive = true; // 에너지 회복존 비활성화
         UIManager.Instance.PlayModeUI_OpenAll();
-        door.color = new Color(door.color.r, door.color.g, door.color.b, 0f); // 문 투명하게
-
+        door.SetActive(false); // 차고문 사라짐
+        gameObject.SetActive(false); // 이벤트 비활성화
     }
 }

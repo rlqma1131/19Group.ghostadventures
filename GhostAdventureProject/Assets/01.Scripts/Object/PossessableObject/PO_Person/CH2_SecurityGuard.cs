@@ -15,10 +15,8 @@ public enum GuardState
 
 public class CH2_SecurityGuard : MoveBasePossessable
 {   
-    [SerializeField] private Ch2_DoorLock doorLock; // 도어락
-    [SerializeField] private Ch2_SafeBox safeBox;   // 금고
-    [SerializeField] private Ch2_Radio radio;       // 라디오
-    [SerializeField] private GameObject q_Key;
+    public Ch2_DoorLock doorLock;               // 도어락
+    [SerializeField] private Ch2_Radio radio;   // 라디오
 
     [Header("이동위치")]
     public Transform Radio;                 // 라디오 
@@ -39,9 +37,8 @@ public class CH2_SecurityGuard : MoveBasePossessable
     private HaveItem haveitem;              
 
     private bool isInOffice;                // 경비원이 경비실 안에 있는지 확인
-    private bool oneTimeShowClue = false;   // 경비원 단서 - Clue:Missing 확대뷰어로 보여주기용(1번만) //코드 수정하기 
-    public bool isdoorLockOpen;             // 도어락이 열렸는지 확인 (도어락 스크립트에서 정보 넣어줌)
-    public bool doorPass = false;           // 문 앞에 있는지 확인
+    private bool oneTimeShowClue = false;   // Missing단서 획득여부 확인
+    public bool doorPass = false;           // 문 앞에 있는지 확인 (YameDoor에서 값 넣어줌)
     private BoxCollider2D[] cols;           // 콜라이더 (경비실 의자에 앉았을 때 콜라이더 없앰)
 
     override protected void Awake() {
@@ -57,6 +54,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         moveSpeed = 2f;
         isInOffice = true;
         state = GuardState.Work;
+        conditionUI.currentCondition = PersonCondition.Tired;
     }
     
     protected override void Update()
@@ -127,7 +125,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
             radio.triggerSound_Person.DOFade(0f, 1.5f)
             .OnComplete(() => radio.triggerSound_Person.Stop());
         }
-        UIManager.Instance.tabkeyUI.SetActive(true);
 
         Move();
 
@@ -139,6 +136,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
                 return;
             }
 
+            // 빙의인벤토리가 비워져있다면
             if (haveitem.IsInventoryEmpty())
             {
                 zoomCamera.Priority = 5;
@@ -278,7 +276,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
     // 문 앞에서 E키 눌렀을 때 빙의해제되는게 아니고 다른 문으로 이동
     protected override void OnDoorInteract()
     {
-        if(isPossessed && doorPass && isdoorLockOpen)
+        if(isPossessed && doorPass && doorLock.doorOpen)
         {
             if(!isInOffice)
             {
@@ -299,13 +297,12 @@ public class CH2_SecurityGuard : MoveBasePossessable
     public override void Unpossess()
     {
         base.Unpossess();
-        UIManager.Instance.tabkeyUI.SetActive(false);
         state = GuardState.Roading;
         anim.SetBool("Move", false);
         roadingTimer = 0f;
     }
 
-    // 빙의 성공시 작동하던 애니메이션 중지
+    // 빙의 성공시 작동하던 경비원 애니메이션 중지
     public override void OnPossessionEnterComplete() 
     {   
         base.OnPossessionEnterComplete();
@@ -313,7 +310,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         anim.SetBool("Move", false); 
     }
 
-    // 단서 획득시 대사 출력
+    // Missing 단서 획득시 대사 출력
     void ShowText()
     {
         UIManager.Instance.PromptUI.ShowPrompt("잃어버린 게 뭘까...? 사람일까, 기억일까.", 2f);

@@ -32,6 +32,9 @@ public class Ch1_KeyBoard_Enter : MonoBehaviour
             correct = true;
             textSlot.Close(); // 키보드 닫기
             player.PossessionSystem.CanMove = true;
+
+            SaveManager.MarkPuzzleSolved("곰인형");
+
             Debug.Log("정답!");
         }
         else
