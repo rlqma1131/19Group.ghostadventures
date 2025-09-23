@@ -56,13 +56,23 @@ public class PlayerInteractSystem : MonoBehaviour
             if (!newClosest || newDist < distance + checkDistanceThreshold &&
                 nearbyInteractables.Contains(results[i].gameObject) &&
                 newClosest.CompareLayerPriority(results[i].gameObject) <= 0) {
-                if (!results[i].gameObject.TryGetComponent(out IPossessable possessable) || possessable.HasActivated())
+
+                if (!results[i].gameObject.TryGetComponent(out IInteractable interactable)) continue;
+                
+                if (results[i].TryGetComponent(out IPossessable possessable)) {
+                    if (!possessable.HasActivated()) continue;
                     newClosest = results[i].gameObject;
-                else if (results[i].gameObject.TryGetComponent(out MemoryFragment fragment))
-                    if (fragment.IsScannable) newClosest = results[i].gameObject;
+                    distance = newDist;
+                } else if (results[i].TryGetComponent(out MemoryFragment fragment)) {
+                    if (!fragment.IsScannable) continue;
+                    newClosest = results[i].gameObject;
+                    distance = newDist;
+                }
+                else {
+                    newClosest = results[i].gameObject;
+                    distance = newDist;
+                }
             }
-            
-            distance = newDist;
         }
         
         return newClosest;
