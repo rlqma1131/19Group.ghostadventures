@@ -49,6 +49,7 @@ public class Ch3_CassettePlayer : BasePossessable
     protected override void Start()
     {
         base.Start();
+
         zoomCamera.Priority = 5;
 
         audioSource = SoundManager.Instance.GetComponentInChildren<AudioSource>();

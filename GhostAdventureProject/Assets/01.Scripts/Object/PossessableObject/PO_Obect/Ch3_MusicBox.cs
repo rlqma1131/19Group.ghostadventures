@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -37,6 +37,7 @@ public class Ch3_MusicBox : BaseInteractable
      protected override void Start()
     {
         base.Start();
+
         isplayAble = false;
         isRunning = false;
         timer = timeLimit;

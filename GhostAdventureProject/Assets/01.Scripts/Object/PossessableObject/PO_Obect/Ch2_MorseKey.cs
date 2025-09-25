@@ -73,6 +73,7 @@ public class Ch2_MorseKey : BasePossessable
     override protected void Awake()
     {
         base.Awake();
+
         if (panelCanvasGroup != null)
         {
             panelCanvasGroup.alpha = 0f;          // 완전 투명
@@ -88,7 +89,7 @@ public class Ch2_MorseKey : BasePossessable
         UpdateUI();
     }
 
-    protected override void Update()
+    public override void TriggerEvent()
     {
         if (!isPossessed)
             return;

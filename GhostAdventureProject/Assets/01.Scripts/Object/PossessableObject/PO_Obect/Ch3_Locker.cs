@@ -13,6 +13,7 @@ public class Ch3_Locker : BasePossessable
     protected override void Start()
     {
         base.Start();
+
         lockerSelector = FindObjectOfType<Ch3_LockerSelector>();
         openObj.SetActive(false);
         hasActivated = lockerSelector.HasAllClues();

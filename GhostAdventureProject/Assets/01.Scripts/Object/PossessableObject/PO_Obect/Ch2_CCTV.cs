@@ -19,9 +19,8 @@ public class Ch2_CCTV : BasePossessable
 
     protected override void Start()
     {
-        highlightObj?.SetActive(false);
-        player = GameManager.Instance.Player;
-        isPossessed = false;
+        base.Start();
+
         hasActivated = false;
 
         anim = GetComponentInChildren<Animator>();
@@ -112,7 +111,8 @@ public class Ch2_CCTV : BasePossessable
         }
         else
         {
-            Debug.Log($"현재 하이라이터 상태 : {highlightAnimator.gameObject.activeInHierarchy}");
+            highlightAnimator.gameObject.SetActive(true);
+            highlightAnimator.SetBool("Right", isRight);
         }
     }
 

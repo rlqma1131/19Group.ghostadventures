@@ -31,16 +31,16 @@ public class Ch2_Kiosk : BasePossessable
 
     protected override void Start()
     {
-        highlightObj?.SetActive(false);
-        player = GameManager.Instance.Player;
+        base.Start();
+
         hasActivated = false;
+        
         kioskPanel.anchoredPosition = hiddenPos;
         kioskPanel.gameObject.SetActive(false);
     }
 
     protected override void Update()
     {
-        // base.Update();
 
         if (!isPossessed || !hasActivated)
         {
