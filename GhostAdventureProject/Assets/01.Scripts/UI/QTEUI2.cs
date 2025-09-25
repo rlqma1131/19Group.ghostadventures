@@ -16,6 +16,7 @@ public class QTEUI2 : MonoBehaviour
     public TextMeshProUGUI resultText;  // 결과 텍스트
 
     [Header("QTE Settings")]
+    public AudioClip push;              // 클릭 사운드
     public AudioClip escape;            // 사운드
     public int requiredPresses = 15;    // 탈출 위해 필요한 키 입력 수
     public float timeLimit = 3f;        // 제한시간
@@ -95,11 +96,15 @@ public class QTEUI2 : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                 
-                 
+                // 효과음
+                float volume = Mathf.Lerp(0.3f, 1f, (float)currentPressCount / requiredPresses);
+
+                SoundManager.Instance.PlaySFX(push, volume);
+
                 targetSize = camera.m_Lens.OrthographicSize - currentSize * 0.05f;
                 DOTween.To(() => camera.m_Lens.OrthographicSize, x => camera.m_Lens.OrthographicSize = x, targetSize, 0.3f);
                 StartCoroutine(ShakeCamera(0.3f, 3f, 10f));
+
                 currentPressCount++;
                 gaugeBar.fillAmount = Mathf.Clamp01((float)currentPressCount / requiredPresses);
             }
