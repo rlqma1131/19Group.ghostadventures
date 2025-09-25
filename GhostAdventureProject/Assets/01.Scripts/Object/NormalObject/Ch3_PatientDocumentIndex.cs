@@ -47,7 +47,7 @@ public class Ch3_PatientDocumentIndex : MonoBehaviour
             }
         }
 
-        if (isZoomActive && Input.GetKeyDown(KeyCode.Escape))
+        if (isZoomActive && (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.E)))
         {
             HideDocumentZoom();
         }

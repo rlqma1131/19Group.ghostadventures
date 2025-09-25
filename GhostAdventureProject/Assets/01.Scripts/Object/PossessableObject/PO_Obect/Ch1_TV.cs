@@ -24,8 +24,8 @@ public class Ch1_TV : BasePossessable
 
     protected override void Start()
     {
-        highlightObj?.SetActive(false);
-        player = GameManager.Instance.Player;
+        base.Start();
+
         show.SetActive(false);
         birthdayHat = memoryObject.GetComponent<Ch1_MemoryFake_01_BirthdayHat>();
         memoryObject.SetActive(false);

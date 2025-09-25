@@ -1,133 +1,106 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Ch2_Doll_YameScan_fake : BaseInteractable
+public class Ch2_Doll_YameScan_fake : MemoryFragment
 {
-    [Header("Scan Settings")]
-    [SerializeField] private float scan_duration = 2f; //스캔 시간
-    [SerializeField] private GameObject scanPanel; //스캔 패널
-    [SerializeField] private Image scanCircleUI; //스캔 원 UI
-    
-    [SerializeField] private GameObject playerObj;
-    // [SerializeField] private GameObject e_key;
+    [SerializeField] private float scan_duration = 2f;  //스캔 시간
+    [SerializeField] private GameObject scanPanel;      //스캔 패널
+    [SerializeField] private Image scanCircleUI;        //스캔 원 UI
     [SerializeField] private Ch2_Doll_YameScan_correct correctDoll; // 정답 인형
+    [SerializeField] private SoundEventConfig soundConfig;     
 
-    // 내부 상태 변수
     private float scanTime;
     private bool isScanning;
-    private bool isNear;
-    // [SerializeField] private GameObject currentScanObject; // 현재 스캔 대상 오브젝트
+    private bool isNearMemory;
     
-    [SerializeField] private SoundEventConfig soundConfig;
-
-    private Camera mainCamera;
-
-    override protected void Start()
-    {
+    protected override void Start(){
         base.Start();
-        mainCamera = Camera.main;
-        playerObj = player.gameObject;
+        isScannable = true;
 
-        // UI 자동 연결
-        if (scanPanel == null || scanCircleUI == null)
-        {
-            if (UIManager.Instance != null && UIManager.Instance.scanUI != null)
-            {
-                scanPanel = UIManager.Instance.scanUI;
-                var circleTr = scanPanel.transform.Find("CircleUI");
-                if (circleTr != null) scanCircleUI = circleTr.GetComponent<Image>();
-            }
-        }
-
-        // 시작 시 UI 꺼두기 (있을 때만)
-        if (scanCircleUI != null) scanCircleUI.gameObject.SetActive(false);
-        if (scanPanel != null) scanPanel.SetActive(false);
+        scanPanel = UIManager.Instance.scanUI;
+        scanCircleUI = UIManager.Instance.scanUI.transform.Find("CircleUI")?.GetComponent<Image>();
+        scanCircleUI?.gameObject.SetActive(false);
     }
 
     void Update()
     {
         if (correctDoll == null) return;
 
-        // 스캔 가능한 상태가 아니거나, 스캔 중이 아닐 때 입력을 받음
-        if (isNear && !isScanning && !correctDoll.clear_UnderGround && Input.GetKeyDown(KeyCode.E))
-        {
+        if (isNearMemory && isScannable && !isScanning && Input.GetKeyDown(KeyCode.E)) {
             TryStartScan();
         }
 
-        // 스캔이 진행 중일 때 로직 처리
-        if (isScanning)
-        {
+        if (isScanning) {
             UpdateScan();
         }
+
+        // 지하수로 문이 열렸다면 스캔불가능하게 변경
+        if (correctDoll.isOpen_UnderGroundDoor && isScannable) {
+            isScannable = false;
+        }
+       
     }
 
-    void LateUpdate()
-    {
-        if (scanCircleUI != null && scanCircleUI.gameObject.activeInHierarchy && playerObj != null && mainCamera != null)
-        {
+    void LateUpdate() {
+        if (scanCircleUI != null && scanCircleUI.gameObject.activeInHierarchy) {
             scanCircleUI.transform.position =
-                mainCamera.WorldToScreenPoint(playerObj.transform.position) + new Vector3(-40, 50, 0);
+                Camera.main.WorldToScreenPoint(player.transform.position) + new Vector3(-40, 50, 0);
         }
     }
 
-    private void TryStartScan()
-    {
+    void TryStartScan(){
         // 영혼 에너지가 있는지 확인
-        if (player.SoulEnergy != null && player.SoulEnergy.CurrentEnergy <= 0)
-        {
-            UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다", 2f);
-            // 여기에 부족 알림 UI나 사운드를 재생하는 로직
+        if (player.SoulEnergy.CurrentEnergy <= 0) {
+            UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다");
             return;
         }
 
         StartScan();
     }
 
-    private void StartScan()
-    {
+    void StartScan() {
         isScanning = true;
         scanTime = 0f;
-
-        UIManager.Instance?.PromptUI2?.ShowPrompt_UnPlayMode("스캔 시도 중...", 2f);
-
-        if (scanPanel != null) scanPanel.SetActive(true);
-        if (scanCircleUI != null)
-        {
+        UIManager.Instance.PromptUI2.ShowPrompt2_UnPlayMode("스캔 시도 중...");
+        scanPanel?.SetActive(true);
+        if (scanCircleUI != null) {
             scanCircleUI.gameObject.SetActive(true);
             scanCircleUI.fillAmount = 0f;
         }
-
-        Time.timeScale = 0.3f;
-        player.SoulEnergy?.Consume(1); // 없으면 무시
+        else {
+            Debug.LogWarning("Scan Circle UI가 설정되지 않았습니다. UI를 확인해주세요.");
+            return;
+        }
+        Time.timeScale = 0.3f; // 슬로우 모션 시작
+        player.SoulEnergy.Consume(1); // 에너지 소모
     }
 
-    private void UpdateScan()
-    {
-        // 키를 계속 누르고 있는지 확인
-        if (Input.GetKey(KeyCode.E))
-        {
+    void UpdateScan(){
+        if (Input.GetKey(KeyCode.E)) {
             scanTime += Time.unscaledDeltaTime;
-            float t = Mathf.Clamp01(scanTime / scan_duration);
-            if (scanCircleUI != null) scanCircleUI.fillAmount = t;
+            float scanProgress = Mathf.Clamp01(scanTime / scan_duration);
+            scanCircleUI.fillAmount = scanProgress;
 
-            if (scanTime >= scan_duration)
+            if (scanTime >= scan_duration) {
                 CompleteScan();
+            }
         }
-        // 키를 뗐을 경우 스캔 중단
-        else
-        {
-            CancelScan("스캔이 중단");
+        else {
+            CancleScan("스캔이 중단");
         }
     }
 
-    private void CompleteScan()
+    void CompleteScan()
     {
-        isNear = false;
+        isNearMemory = false;
+        isScannable = false;
+        isScanning = false;
 
         Time.timeScale = 1f;
 
         if (scanCircleUI != null) scanCircleUI.gameObject.SetActive(false);
         if (scanPanel != null) scanPanel.SetActive(false);
+        UIManager.Instance.PromptUI2.HidePrompt_UnPlayMode();
 
         // 사운드 트리거(옵션)
         if (soundConfig != null)
@@ -135,30 +108,31 @@ public class Ch2_Doll_YameScan_fake : BaseInteractable
 
     }
 
-    private void CancelScan(string reason)
-    {
+    void CancleScan(string reason) {
         Debug.Log(reason);
         isScanning = false;
         Time.timeScale = 1f; // 시간 흐름을 원래대로 복구
 
-        if (scanCircleUI != null) scanCircleUI.gameObject.SetActive(false);
-        if (scanPanel != null) scanPanel.SetActive(false);
+        scanPanel?.SetActive(false);
+        scanCircleUI?.gameObject.SetActive(false);
+        UIManager.Instance.PromptUI2.HidePrompt_UnPlayMode();
     }
 
-    protected override void OnTriggerEnter2D(Collider2D col) {
-        base.OnTriggerEnter2D(col);
-        if (col.CompareTag("Player") && correctDoll != null && !correctDoll.clear_UnderGround) {
-            isNear = true;
+    protected override void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.CompareTag("Player") && isScannable) {
+            isNearMemory = true;
             player.InteractSystem.AddInteractable(gameObject);  
         }
     }
 
-    protected override void OnTriggerExit2D(Collider2D col) {
-        base.OnTriggerExit2D(col);
-        if (col.CompareTag("Player")) {
-            isNear = false;
-            if (isScanning) CancelScan("범위 이탈");
+    protected override void OnTriggerExit2D(Collider2D collision) {
+        if (collision.CompareTag("Player")) {
+            isNearMemory = false;
             player.InteractSystem.RemoveInteractable(gameObject);
+            // 스캔 중에 범위를 벗어났다면 스캔을 취소
+            if (isScanning) {
+                CancleScan("범위를 이탈하여 스캔이 중단되었습니다.");
+            }
         }
     }
 }

@@ -43,6 +43,7 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
         
         currentState = State.Possessing;
         Debug.Log("target" + possessedTarget);
+        UIManager.Instance.PromptUI2.HidePrompt_UnPlayMode();
         UIManager.Instance.unpossessKey.SetActive(true);
         if(possessedTarget.CompareTag("Person")) UIManager.Instance.tabkeyUI.SetActive(true);
         UIManager.Instance.Inventory_PossessableObjectUI.OpenInventory(possessedTarget); // 빙의 인벤토리 표시됨
@@ -62,5 +63,6 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
     {
         player.PossessionSystem.CanMove = true;
         currentState = State.Ghost;
+        UIManager.Instance.PromptUI2.HidePrompt_UnPlayMode();
     }
 }

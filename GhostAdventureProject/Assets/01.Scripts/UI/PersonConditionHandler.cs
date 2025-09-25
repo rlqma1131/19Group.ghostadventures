@@ -23,7 +23,7 @@ public class VitalConditionHandler : PersonConditionHandler
     public override QTESettings GetQTESettings() => new QTESettings
     {
         rotationSpeed = 270,
-        timeLimit = 4f,
+        timeLimit = 2f,
         successZoneCount = 4,
         minZoneSize = 20f,
         maxZoneSize = 30f
@@ -35,8 +35,8 @@ public class NormalConditionHandler : PersonConditionHandler
 {
     public override QTESettings GetQTESettings() => new QTESettings
     {
-        rotationSpeed = 180f,
-        timeLimit = 4f,
+        rotationSpeed = 220,
+        timeLimit = 2f,
         successZoneCount = 3,
         minZoneSize = 30f,
         maxZoneSize = 40f
@@ -49,7 +49,7 @@ public class TiredConditionHandler : PersonConditionHandler
     public override QTESettings GetQTESettings() => new QTESettings
     {
         rotationSpeed = 180f,
-        timeLimit = 4f,
+        timeLimit = 4.2f,
         successZoneCount = 2,
         minZoneSize = 30f,
         maxZoneSize = 50f

@@ -22,16 +22,16 @@ public class Ch2_LaserController : BasePossessable
 
     protected override void Start()
     {
-        highlightObj?.SetActive(false);
-        player = GameManager.Instance.Player;
-        isPossessed = false;
+        base.Start();
+
         hasActivated = false;
+        
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         laserScreenAnimator = laserScreen.GetComponent<Animator>();
     }
 
-    protected override void Update()
+    public override void TriggerEvent()
     {
         if (!isPossessed)
             return;

@@ -29,10 +29,10 @@ public class Ch2_CCTVMonitor : BasePossessable
 
     protected override void Start()
     {
-        highlightObj?.SetActive(false);
-        player = GameManager.Instance.Player;
-        isPossessed = false;
+        base.Start();
+
         hasActivated = false;
+        
         zoomCamera.Priority = 5;
 
         cctvScreenSpriteRenderer = new SpriteRenderer[cctvScreens.Length];

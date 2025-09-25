@@ -7,10 +7,8 @@ public class Ch2_RightSwing : BasePossessable
     [SerializeField] private AudioClip swingSFX;
     [SerializeField] private GameObject q_Key;
     
-    protected override void Update()
+    public override void TriggerEvent()
     {
-        base.Update();
-
         if (!isPossessed)
         {
             q_Key.SetActive(false);

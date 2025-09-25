@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Rendering.PostProcessing;
 
 public class Ch2_Bat_Trigger : MonoBehaviour
 {   
@@ -10,10 +11,10 @@ public class Ch2_Bat_Trigger : MonoBehaviour
     [SerializeField] AudioClip TriggerSound_clip;
     [SerializeField] AudioClip ClearSound_clip;
     [SerializeField] Ch2_Doll_YameScan_correct correctDoll; // 정답인형
-    private bool Clear_Bat; // 박쥐들 다 없어졌는지 확인
+    private bool Clear_Bat;                         // 박쥐들 다 없어졌는지 확인
 
     [Header("Move")]
-    [SerializeField] float flySpeed = 2f;          // 속도(유지)
+    [SerializeField] float flySpeed = 2f;           // 속도(유지)
     [SerializeField] int   curvePoints = 5;         // 경로 분할 수(많을수록 더 요철)
     [SerializeField] float jitterAmplitude = 1.0f;  // 흔들림 세기(월드 단위)
     [SerializeField] float pathSpan = 25f;          // 시작점에서 목표까지 대략 거리(카메라 밖까지 충분히)
@@ -40,7 +41,7 @@ public class Ch2_Bat_Trigger : MonoBehaviour
 
     void Update()
     {
-        if(correctDoll.clear_UnderGround && !Clear_Bat)
+        if(correctDoll.isOpen_UnderGroundDoor && !Clear_Bat)
         {
             OnTriggerEnter2D(player);
             PlaySoundAndFadOut(ClearSound_clip);
@@ -54,7 +55,7 @@ public class Ch2_Bat_Trigger : MonoBehaviour
         triggered = true;
 
         ani.SetBool("Move", true);
-        if (soundConfig != null && !correctDoll.clear_UnderGround && !Clear_Bat)
+        if (soundConfig != null && !correctDoll.isOpen_UnderGroundDoor && !Clear_Bat)
         {
             SoundTrigger.TriggerSound(other.transform.position, soundConfig.soundRange, soundConfig.chaseDuration);
             TutorialManager.Instance.Show(TutorialStep.TouchBat);
@@ -116,14 +117,14 @@ public class Ch2_Bat_Trigger : MonoBehaviour
         if (sr && fadeDuration > 0f)
             seq.Append(sr.DOFade(0f, fadeDuration));
 
-        // 완료 시 파괴
+        // 완료 시 숨김
         seq.OnComplete(() =>
         {
-            if (this) Destroy(gameObject);
+            if (this) gameObject.SetActive(false);
         });
 
-        // 안전: 파괴 시 트윈 정리
-        seq.SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+        // 안전: 숨겼을 시 트윈 정리
+        seq.SetLink(gameObject, LinkBehaviour.KillOnDisable);
     }
 
     public void PlaySoundAndFadOut(AudioClip clip, float volume = 1f)
@@ -140,51 +141,6 @@ public class Ch2_Bat_Trigger : MonoBehaviour
         // 페이드아웃 트윈
         tempSource.DOFade(0f, clip.length)
                   .SetEase(Ease.Linear)
-                  .OnComplete(() => Destroy(tempObj, 0.05f)); // 완전 끝나면 제거
+                  .OnComplete(() => tempObj.SetActive(false)); // 완전 끝나면 숨기기
     }
 }
-    
-
-// ================================================================================================
-//  
-// public class CarMover : MonoBehaviour
-// {
-//     [SerializeField] private float moveDistance = 5f;
-//     [SerializeField] private float moveDuration = 2f;
-//     [SerializeField] private SpriteRenderer spriteRenderer;
-//     [SerializeField] private float bounceHeight = 0.2f;     // 들썩 높이
-//     [SerializeField] private float bounceDuration = 0.3f;   // 들썩 속도
-
-//     private bool facingRight = true;
-
-//     void Start()
-//     {
-//         if (spriteRenderer == null)
-//             spriteRenderer = GetComponent<SpriteRenderer>();
-
-//         // 위치 저장
-//         Vector3 startPos = transform.position;
-//         Vector3 endPos = new Vector3(startPos.x + moveDistance, startPos.y, startPos.z);
-
-//         // 좌우 이동 트윈
-//         transform.DOMoveX(endPos.x, moveDuration)
-//             .SetLoops(-1, LoopType.Yoyo)
-//             .SetEase(Ease.InOutSine)
-//             .OnStepComplete(FlipX);
-
-//         // 들썩거리는 트윈 (Y축으로 위아래 반복)
-//         transform.DOMoveY(startPos.y + bounceHeight, bounceDuration)
-//             .SetLoops(-1, LoopType.Yoyo)
-//             .SetEase(Ease.InOutSine);
-
-//         flipX = true
-//         spriteRenderer.flipX = true;
-//         facingRight = false;
-//     }
-
-//     void FlipX()
-//     {
-//         facingRight = !facingRight;
-//         spriteRenderer.flipX = !facingRight;
-//     }
-// }

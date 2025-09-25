@@ -43,7 +43,7 @@ public class Ch1_Clock : BasePossessable
         initializeBtn.onClick.AddListener(OnClickInitialize);
     }
 
-    public override void TriggerEvent()
+    protected override void Update()
     {
         if (!SaveManager.IsPuzzleSolved("편지")) return;
         if (!SaveManager.IsPuzzleSolved("시계")) hasActivated = true;

@@ -47,10 +47,4 @@ public class Ch2_MorsePerson : BasePossessable
             UIManager.Instance.PromptUI.ShowPrompt("저 사람, 메모를 들고 있어. 빙의해볼까?");
         } 
     }
-
-    public override void Unpossess()
-    {
-        base.Unpossess();
-    }
-    
 }

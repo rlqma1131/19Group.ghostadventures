@@ -132,8 +132,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// </summary>
     void RequestQTEEvent() {
         switch (tag) {
-            // 사람, 유인 오브젝트, 은신처만 QTE 요청
-            case "SoundTrigger":
+            // 사람, 은신처만 QTE 요청
             case "HideArea":
                 PossessionQTESystem.Instance.StartQTE();
                 break;

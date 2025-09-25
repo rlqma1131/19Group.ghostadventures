@@ -7,6 +7,9 @@ using System;
 
 public class Prompt : MonoBehaviour
 {
+
+    // ===================== 위장NPC용 프롬프트 - 클릭시 넘어감 ============================
+    [Header("위장NPC용 프롬프트")]
     private GameObject PromptPanel; // 프롬프트 패널 이미지
     [SerializeField] private TextMeshProUGUI DialogueText; // 대사 텍스트
     public Queue<string> PromptQueue = new Queue<string>();
@@ -21,13 +24,8 @@ public class Prompt : MonoBehaviour
     {
         PromptPanel = gameObject;
         PromptContainer.gameObject.SetActive(true);
-        // PromptText = gameObject.GetComponentInChildren<TextMeshProUGUI>();
-        
-        // PromptPanel.SetActive(false);
     }
-
-
-    // ===================== 위장NPC용 프롬프트 - 클릭시 넘어감 ============================
+    
     public void ShowPrompt_Click(SecretNPC_Dialogue dialogue, string[] choices = null, 
                                 System.Action onChoiceSelected = null, params string[] lines)
     {
@@ -93,67 +91,14 @@ public class Prompt : MonoBehaviour
         }
 
     }
-    // public void ShowPrompt(List<string> lines) //, System.Action onComplete = null
-    // {
-    //     PromptQueue.Clear();
-    //     foreach (var line in lines)
-    //         PromptQueue.Enqueue(line);
-
-    //     // onDialogComplete = onComplete;
-    //     PromptPanel.SetActive(true);
-    //     isActive = true;
-    //     ShowNextLine();
-    // }
-
-    // private void ShowNextLine()
-    // {
-    //     if (PromptQueue.Count > 0)
-    //     {
-    //         string nextLine = PromptQueue.Dequeue();
-    //         PromptText.text = nextLine;
-    //     }
-    //     else
-    //     {
-    //         PromptPanel.SetActive(false);
-    //         isActive = false;
-    //         // onDialogComplete?.Invoke();
-    //     }
-    // }
-    
-
-    // private void Update()
-    // {
-    //     if(!isActive) return;
-        
-    //     if(Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.F))
-    //         ShowNextLine();
-    // }
-
-    // ===================== 알림용 - 일정시간 후 자동사라짐 ============================
 
 
-    // 메시지와 시간 둘 다 받음
-    // public void ShowPrompt(string line, float delaytime)
-    // {
-    //     PromptPanel.SetActive(true); // 패널 보이게하기
-    //     PromptText.text = line;
-        
-    //     promptTween?.Kill();
-
-    //     promptTween = DOVirtual.DelayedCall(delaytime, () =>
-    //     {
-    //         PromptPanel.SetActive(false);
-    //         isActive = false;
-    //     });
-    //     // StartCoroutine(HideAfterDelay(delaytime));
-    // }
-
-
-    [Header("Refs")]
+    // ====================== Player 대사 프롬프트 ======================
+    [Header("Player용 프롬프트")]
     [SerializeField] private RectTransform PromptContainer;   // 프롬프트가 들어갈 부모
     [SerializeField] private GameObject PromptPrefab;         // TMP_Text + CanvasGroup 포함
 
-    [Header("Anim Settings")]
+    [Header("Player용 - Anim Settings")]
     [SerializeField] private float spawnScale = 0.95f;        // 처음 크게
     [SerializeField] private float settleScale = 1.0f;        // 자리잡는 기본 크기
     [SerializeField] private float shiftUpY = 48f;            // 기존 프롬프트가 위로 밀리는 거리
@@ -177,8 +122,8 @@ public class Prompt : MonoBehaviour
         public float scale;     // 현재 스케일
         public float alpha;     // 현재 알파
         public Tween running;   // 현재 적용중인 트윈(있으면 Kill)
-         public Tween shift;   // 위로 이동/축소/옅어짐용 (ShowPrompt가 호출될 때마다 갱신)
-    public Sequence life;
+        public Tween shift;     // 위로 이동/축소/옅어짐용 (ShowPrompt가 호출될 때마다 갱신)
+        public Sequence life;
     }
 
     // 외부 API 그대로 사용
@@ -256,68 +201,7 @@ public class Prompt : MonoBehaviour
         }
     }
 
-
-    // private IEnumerator HideAfterDelay(float dlaytime)
-    // {
-    //     yield return new WaitForSecondsRealtime(dlaytime);
-    //     PromptPanel.SetActive(false);
-    //     isActive = false;
-    //     // onD
-    // }
-
-    // 기본프롬프트 2초 ==============================================================
-    // public void ShowPrompt(string line)
-    // {
-    //     PromptPanel.SetActive(true); // 패널 보이게하기
-    //     PromptText.text = line;
-
-    //     promptTween?.Kill();
-
-    //     promptTween = DOVirtual.DelayedCall(2f, () =>
-    //     {
-    //         PromptPanel.SetActive(false);
-    //         isActive = false;
-    //     });
-        
-    //     // StartCoroutine(HideAfterDelay());
-    // }
-
     
-    // private IEnumerator HideAfterDelay()
-    // {
-    //     yield return new WaitForSecondsRealtime(2f);
-    //     PromptPanel.SetActive(false);
-    //     isActive = false;
-    //     // onD
-    // }
-    // ==============================================================================
-
-    // public void ShowPrompt_2 (params string[] lines)
-    // {
-    //     PromptPanel.SetActive(true);
-    //     isActive = true;
-
-    //     promptTween?.Kill();
-
-    //     Sequence seq = DOTween.Sequence();
-
-    //     foreach (string line in lines)
-    //     {
-    //         seq.AppendCallback(() => 
-    //         {
-    //             PromptText.text = line;
-    //         });
-    //         seq.AppendInterval(1.5f);
-    //     }
-    //      seq.AppendCallback(() =>
-    //     {
-    //         PromptPanel.SetActive(false);
-    //         isActive = false;
-    //     });
-    //     promptTween = seq;
-    //     // StartCoroutine(ShowPromptSequence(lines));
-    // }
-
     public async void ShowPrompt_2 (params string[] lines)
     {
         for (int i=0; i<lines.Length; i++)
@@ -326,39 +210,6 @@ public class Prompt : MonoBehaviour
             await Task.Delay(2000);
         }
     }
-
-
-
-
-    // 여러 대사 중 랜덤 출력 ========================================================================
-    // public void ShowPrompt_Random(params string[] lines)
-    // {
-    //     if (lines == null || lines.Length == 0) return;
-
-    //     PromptPanel.SetActive(true);
-    //     isActive = true;
-
-    //     promptTween?.Kill();
-
-    //     Sequence seq = DOTween.Sequence();
-
-    //     // ✅ 랜덤으로 한 줄 선택
-    //     string chosenLine = lines[Random.Range(0, lines.Length)];
-
-    //     seq.AppendCallback(() => 
-    //     {
-    //         PromptText.text = chosenLine;
-    //     });
-    //     seq.AppendInterval(1.5f);
-
-    //     seq.AppendCallback(() =>
-    //     {
-    //         PromptPanel.SetActive(false);
-    //         isActive = false;
-    //     });
-
-    //     promptTween = seq;
-    // }
 
      public void ShowPrompt_Random(params string[] lines)
     {

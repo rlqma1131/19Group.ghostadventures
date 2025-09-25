@@ -79,6 +79,19 @@ public class Prompt_UnPlayMode : MonoBehaviour
         isActive = false;
         // onD
     }
+
+    // =================================
+
+    public void ShowPrompt2_UnPlayMode(string line)
+    {
+        PromptPanel.SetActive(true);
+        PromptText.text = line;
+    }
+    public void HidePrompt_UnPlayMode()
+    {
+        PromptPanel.SetActive(false); // 패널 숨기기
+        PromptText.text = null;
+    }
 }
 
 
