@@ -42,7 +42,7 @@ namespace _01.Scripts.Player
             condition.Initialize(this);
             memoryScan.Initialize(this);
             possessionSystem.Initialize(this);
-            interactSystem.Initialize();
+            interactSystem.Initialize(this);
             
             if (!GameManager.Instance.PlayerObj)
                 Debug.LogError("Fatal Error! : GameManager에 Player GameObject 등록이 안되어 있습니다!");

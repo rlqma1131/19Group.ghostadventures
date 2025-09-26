@@ -61,12 +61,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
 
     public bool HasActivated() => hasActivated;
     
-    public void SetActivated(bool value) {
-        if (hasActivated == value) return;
-        
-        hasActivated = value;
-        OnRestoredHasActivated(value);
-    }
+    public void SetActivated(bool value) => hasActivated = value;
 
     /// <summary>
     /// Events will activate in every frame
@@ -153,7 +148,11 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// <summary>
     /// Called when the user failed to clear QTE Event
     /// </summary>
-    public void OnQTEFailure() => isPossessed = false;
+    public void OnQTEFailure() {
+        isPossessed = false;
+        player.PossessionSystem.PossessedTarget = null;
+    }
+
     #endregion
 
     /// <summary>
@@ -185,8 +184,5 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
         if (TryGetComponent(out UniqueId uid))
             SaveManager.SetPossessableObjectState(uid.Id, gameObject.activeInHierarchy, transform.position, hasActivated);
     }
-
-    // 추후 VFX/콜라이더/애니 갱신 등
-    protected virtual void OnRestoredHasActivated(bool value) { }
     #endregion
 }

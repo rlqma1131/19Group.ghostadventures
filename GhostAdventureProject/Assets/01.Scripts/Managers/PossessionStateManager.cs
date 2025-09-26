@@ -55,7 +55,7 @@ public class PossessionStateManager : Singleton<PossessionStateManager>
         Player.SetActive(true);
         player.PossessionSystem.PlayPossessionOutSequence();
         UIManager.Instance.unpossessKey.SetActive(false);
-        if(possessedTarget.CompareTag("Person")) UIManager.Instance.tabkeyUI.SetActive(false);
+        if (possessedTarget.CompareTag("Person")) UIManager.Instance.tabkeyUI.SetActive(false);
         UIManager.Instance.Inventory_PossessableObjectUI.HideInventory(); // 빙의 인벤토리 사라짐
     }
     
