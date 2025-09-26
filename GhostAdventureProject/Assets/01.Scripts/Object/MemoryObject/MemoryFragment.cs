@@ -60,7 +60,7 @@ public class MemoryFragment : BaseInteractable
             player.InteractSystem.RemoveInteractable(gameObject);
     }
 
-    public void IsScannedCheck()
+    public virtual void IsScannedCheck()
     {
         if (!isScannable) return;
         isScannable = false;

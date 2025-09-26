@@ -2,7 +2,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Ch2_Doll_YameScan_correct : MemoryFragment
+/// <summary>
+/// Deprecated
+/// </summary>
+public class Ch2_Doll_YameScan_correct : BaseInteractable
 {
     [SerializeField] float scan_duration = 2f;  // 스캔 시간
     [SerializeField] GameObject scanPanel;      // 스캔 패널
@@ -11,13 +14,13 @@ public class Ch2_Doll_YameScan_correct : MemoryFragment
     [SerializeField] GameObject shelf;          // 문 막고 있는 책장
     [SerializeField] GameObject clue_P;         // 단서 P
     [SerializeField] List<ClueData> clueitems;  // 소모되는 단서 아이템
-
+    [SerializeField] bool isScannable;
+    
     public bool isOpen_UnderGroundDoor;         // 지하수로 문이 열렸는지 확인
     float scanTime;
     bool isScanning;
     bool isNearMemory;
-
-
+    
     protected override void Start() {
         base.Start();
         isScannable = true;
@@ -40,7 +43,6 @@ public class Ch2_Doll_YameScan_correct : MemoryFragment
         if (door.activeInHierarchy && !isOpen_UnderGroundDoor) {
             isOpen_UnderGroundDoor = true;
         }
-
     }
 
     void LateUpdate() {
