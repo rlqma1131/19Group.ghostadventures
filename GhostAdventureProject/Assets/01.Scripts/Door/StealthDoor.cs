@@ -1,85 +1,72 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using static _01.Scripts.Utilities.Timer;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class StealthDoor : MonoBehaviour
 {
-    [Header("감지 설정")]
-    [SerializeField] private float detectionRange = 3f;
-    [SerializeField] private float fadeSpeed = 2f;
-    [SerializeField] private float maxAlpha = 0.4f;
+    [Header("감지 설정")] 
+    [SerializeField] float detectionRange = 3f;
+    [SerializeField] float fadeSpeed = 2f;
+    [SerializeField] float maxAlpha = 0.4f;
+    [SerializeField] float updateInterval = 0.01f;
 
-    [Header("추가 감지 대상 (Cat 등)")]
-    [SerializeField] private List<GameObject> extraTargets;
+    [Header("추가 감지 대상 (Cat 등)")] 
+    [SerializeField] List<GameObject> extraTargets;
 
-    private SpriteRenderer spriteRenderer;
-    private float currentAlpha = 0f;
-    private float targetAlpha = 0f;
+    SpriteRenderer spriteRenderer;
+    CountdownTimer updateTimer;
+    float currentAlpha;
+    float targetAlpha;
 
-    private readonly List<Transform> allTargets = new List<Transform>();
-    private List<SpriteRenderer> allRenderers = new List<SpriteRenderer>();
-    private bool playerRegistered = false;
+    readonly List<Transform> allTargets = new();
+    readonly List<SpriteRenderer> allRenderers = new();
 
-    private void Start()
-    {
-        allRenderers.AddRange(GetComponentsInChildren<SpriteRenderer>(includeInactive: true));
-        SetAlpha(0f);
-        RegisterTargets();
+    void Awake() {
+        if (allRenderers.Count <= 0) allRenderers.AddRange(GetComponentsInChildren<SpriteRenderer>(true));
     }
 
-    private void RegisterTargets()
-    {
+    void Start() {
+        updateTimer = new CountdownTimer(updateInterval);
+        updateTimer.OnTimerStop = () => {
+            UpdateTargetAlpha();
+            updateTimer.Start();
+        };
+        
+        SetAlpha(0f);
+        RegisterTargets();
+        updateTimer.Start();
+    }
+
+    void RegisterTargets() {
         allTargets.Clear();
 
         // Player 자동 등록
-        if (GameManager.Instance?.PlayerObj != null)
-        {
-            allTargets.Add(GameManager.Instance.PlayerObj.transform);
-        }
+        allTargets.Add(GameManager.Instance.Player.transform);
 
         // 인스펙터로 받은 추가 타겟 등록
-        foreach (var go in extraTargets)
-        {
-            if (go != null)
-                allTargets.Add(go.transform);
+        foreach (GameObject go in extraTargets.Where(go => go)) {
+            allTargets.Add(go.transform);
         }
     }
 
-    private void Update()
-    {
-        if (!playerRegistered && GameManager.Instance?.PlayerObj != null)
-        {
-            allTargets.Add(GameManager.Instance.PlayerObj.transform);
-            playerRegistered = true;
-        }
-
-        Transform nearest = FindNearestTarget();
-
-        if (nearest != null)
-        {
-            float dist = Vector2.Distance(transform.position, nearest.position);
-            targetAlpha = (dist <= detectionRange) ? maxAlpha : 0f;
-        }
-        else
-        {
-            targetAlpha = 0f;
-        }
-
+    void Update() {
         UpdateAlpha();
+        
+        updateTimer.Tick(Time.deltaTime);
     }
 
-    private Transform FindNearestTarget()
-    {
+    Transform FindNearestTarget() {
         float closestDist = Mathf.Infinity;
         Transform closest = null;
 
-        foreach (var t in allTargets)
-        {
-            if (t == null || !t.gameObject.activeInHierarchy) continue;
+        foreach (Transform t in allTargets) {
+            if (!t || !t.gameObject.activeInHierarchy) continue;
 
             float dist = Vector2.Distance(transform.position, t.position);
-            if (dist < closestDist)
-            {
+            if (dist < closestDist) {
                 closest = t;
                 closestDist = dist;
             }
@@ -88,26 +75,32 @@ public class StealthDoor : MonoBehaviour
         return closest;
     }
 
-    private void UpdateAlpha()
-    {
+    void UpdateTargetAlpha() {
+        Transform nearest = FindNearestTarget();
+
+        if (nearest) {
+            float dist = Vector2.Distance(transform.position, nearest.position);
+            targetAlpha = dist <= detectionRange ? maxAlpha : 0f;
+        }
+        else targetAlpha = 0f;
+    }
+
+    void UpdateAlpha() {
         currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, fadeSpeed * Time.deltaTime);
         SetAlpha(currentAlpha);
     }
 
-    private void SetAlpha(float alpha)
-    {
-        foreach (var renderer in allRenderers)
-        {
-            if (renderer == null) continue;
+    void SetAlpha(float alpha) {
+        foreach (SpriteRenderer renderVal in allRenderers) {
+            if (!renderVal) continue;
 
-            Color color = renderer.color;
+            Color color = renderVal.color;
             color.a = alpha;
-            renderer.color = color;
+            renderVal.color = color;
         }
     }
 
-    private void OnDrawGizmosSelected()
-    {
+    void OnDrawGizmosSelected() {
         Gizmos.color = new Color(0f, 1f, 1f, 0.3f);
         Gizmos.DrawWireSphere(transform.position, detectionRange);
     }

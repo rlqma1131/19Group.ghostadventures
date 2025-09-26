@@ -17,7 +17,7 @@ public class Ch2_LaserController : BasePossessable
     private SpriteRenderer spriteRenderer;
 
     public System.Action<Ch2_LaserController> OnLaserDeactivated;
-    public bool IsLaserActive => laser.activeSelf;
+    public bool IsLaserActive => laser.activeInHierarchy;
     private bool wasLaserActive = true;
 
     protected override void Start()
@@ -25,35 +25,30 @@ public class Ch2_LaserController : BasePossessable
         base.Start();
 
         hasActivated = false;
-        
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-
         laserScreenAnimator = laserScreen.GetComponent<Animator>();
     }
 
+    override protected void Update() => TriggerEvent();
+
     public override void TriggerEvent()
     {
-        if (!isPossessed)
-            return;
+        if (!isPossessed) return;
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Unpossess();
+        if (Input.GetKeyDown(KeyCode.E)) {
             qKey.SetActive(false);
+            Unpossess();
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            bool laserActive = !laser.activeSelf;
+            bool laserActive = !laser.activeInHierarchy;
             laser.SetActive(laserActive);
             laserScreenAnimator.SetBool("Off", !laserActive);
             spriteRenderer.sprite = laserActive ? on : off;
 
             // 비활성화 이벤트 감지
-            if (wasLaserActive && !laserActive)
-            {
-                OnLaserDeactivated?.Invoke(this);
-            }
+            if (wasLaserActive && !laserActive) OnLaserDeactivated?.Invoke(this);
 
             wasLaserActive = laserActive;
         }

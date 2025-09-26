@@ -148,7 +148,11 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// <summary>
     /// Called when the user failed to clear QTE Event
     /// </summary>
-    public void OnQTEFailure() => isPossessed = false;
+    public void OnQTEFailure() {
+        isPossessed = false;
+        player.PossessionSystem.PossessedTarget = null;
+    }
+
     #endregion
 
     /// <summary>
