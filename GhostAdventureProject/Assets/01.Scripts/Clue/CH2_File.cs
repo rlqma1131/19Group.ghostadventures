@@ -5,7 +5,7 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class CH2_File : MonoBehaviour
+public class Ch2_File : MonoBehaviour
 {
     [SerializeField] private GameObject highlightObject;    // File2 Highlight 오브젝트 
     [SerializeField] private ClueData fileClue;             // 파일단서

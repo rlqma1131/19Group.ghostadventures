@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Ch2_SecurityOfficeDoor : LockedDoor
 {
-    [SerializeField] private CH2_SecurityGuard guard;
+    [SerializeField] private Ch2_SecurityGuard guard;
     [SerializeField] private GameObject e_key;
     public bool isDoorPass; // 빙의상태에서 다른 문으로 이동할 수 있는지
 
