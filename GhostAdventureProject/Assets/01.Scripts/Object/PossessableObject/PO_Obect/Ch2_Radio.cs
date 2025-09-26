@@ -18,7 +18,7 @@ public class Ch2_Radio : BasePossessable
     [SerializeField] private Animator speakerOn;        // 스피커 애니메이션 재생용
     [SerializeField] private GameObject musicalNoteOn;  // 음표 오브젝트
     [SerializeField] private Animator musicalNoteAni;   // 음표 애니메이션 재생용
-    [SerializeField] private CH2_SecurityGuard guard;
+    [SerializeField] private Ch2_SecurityGuard guard;
     public bool IsPlaying=> triggerSound_Person.isPlaying; // 트리거사운드 - 사람 재생중인지 확인
     [SerializeField] private SoundEventConfig soundConfig;
 

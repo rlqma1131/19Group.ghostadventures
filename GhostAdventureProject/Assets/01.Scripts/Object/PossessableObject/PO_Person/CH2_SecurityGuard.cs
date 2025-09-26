@@ -14,7 +14,7 @@ public enum GuardState
     Roading // 빙의 해제했을 때
 }
 
-public class CH2_SecurityGuard : MoveBasePossessable
+public class Ch2_SecurityGuard : MoveBasePossessable
 {   
     public Ch2_DoorLock doorLock;               // 도어락
     [SerializeField] private Ch2_Radio radio;   // 라디오
@@ -41,7 +41,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
 
     private bool isInOffice;                // 경비원이 경비실 안에 있는지 확인
     private bool oneTimeShowClue = false;   // Missing단서 획득여부 확인
-    // public bool doorPass = false;           // 문 앞에 있는지 확인 (YameDoor에서 값 넣어줌)
     private BoxCollider2D[] cols;           // 콜라이더 (경비실 의자에 앉았을 때 콜라이더 없앰)
 
     override protected void Awake() {
@@ -131,7 +130,7 @@ public class CH2_SecurityGuard : MoveBasePossessable
         }
 
         Move();
-
+    
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (officeDoor.isDoorPass)
@@ -263,7 +262,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
         if(collision.CompareTag("In"))
         {
             isInOffice = true;
-            MarkActivatedChanged();
         }
         if (collision.CompareTag("Room"))
         {
@@ -282,7 +280,6 @@ public class CH2_SecurityGuard : MoveBasePossessable
         if(collision.CompareTag("In"))
         {
             isInOffice = false;
-            MarkActivatedChanged();
         }
     }
 

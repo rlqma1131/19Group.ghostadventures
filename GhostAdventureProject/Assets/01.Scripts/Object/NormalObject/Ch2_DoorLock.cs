@@ -6,7 +6,7 @@ public class Ch2_DoorLock : BaseInteractable
     [SerializeField] private ItemData needItem;         // 문을 여는데 필요한 아이템
     [SerializeField] private GameObject q_Key;          // Q키
     [SerializeField] private LockedDoor officeDoor;     // 경비실 문
-    [SerializeField] private CH2_SecurityGuard guard;   // 경비원
+    [SerializeField] private Ch2_SecurityGuard guard;   // 경비원
     private Inventory_PossessableObject inventory;      // 빙의 인벤토리(needItem을 갖고 있는지 확인용)
 
     private bool isDoorOpenAble = false;                // 문을 열 수 있는 영역에 있는지 확인

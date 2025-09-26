@@ -4,7 +4,7 @@ public class Ch2_Raven : MoveBasePossessable
 {
     [Header("Raven Object References")]
     [SerializeField] Animator highlightAnim;
-    [SerializeField] GameObject SandCastle; // 모래성
+    [SerializeField] Ch2_SandCastle SandCastle; // 모래성
     [SerializeField] Transform startSpot; // 스타트지점 (빙의해제시 되돌아감)
 
     bool sandCastleBreakAble;
@@ -92,6 +92,15 @@ public class Ch2_Raven : MoveBasePossessable
 
         if (collision.gameObject == SandCastle) {
             sandCastleBreakAble = false;
+        }
+    }
+
+    public override void Unpossess()
+    {
+        base.Unpossess();
+        if(SandCastle.IsCrumbled()) {
+            hasActivated = false;
+            MarkActivatedChanged();
         }
     }
 }
