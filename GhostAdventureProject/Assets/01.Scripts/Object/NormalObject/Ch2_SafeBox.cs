@@ -23,7 +23,7 @@ public class Ch2_SafeBox : BaseInteractable
         zoomSafeBox.SetActive(false);
         q_Key.SetActive(false);
         inventory = Inventory_PossessableObject.Instance;
-        guard = FindObjectOfType<Ch2_SecurityGuard>();
+        if(guard == null) guard = FindObjectOfType<Ch2_SecurityGuard>();
     }
 
     void Update()
@@ -74,6 +74,8 @@ public class Ch2_SafeBox : BaseInteractable
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!guard.HasActivated()) return;
+
         if(collision.CompareTag("Person") || collision.CompareTag("Player"))
         {
             if(!safeBoxOpen)
@@ -88,6 +90,7 @@ public class Ch2_SafeBox : BaseInteractable
     protected override void OnTriggerExit2D(Collider2D collision)
     {
         if(collision.CompareTag("Person") || collision.CompareTag("Player"))
+        Highlight.SetActive(false);
         safeBoxOpenAble = false;    
         q_Key.SetActive(false);
     }

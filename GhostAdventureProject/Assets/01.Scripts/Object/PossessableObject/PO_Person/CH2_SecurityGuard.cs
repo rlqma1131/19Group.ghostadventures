@@ -262,7 +262,6 @@ public class Ch2_SecurityGuard : MoveBasePossessable
         if(collision.CompareTag("In"))
         {
             isInOffice = true;
-            MarkActivatedChanged();
         }
         if (collision.CompareTag("Room"))
         {
@@ -281,7 +280,6 @@ public class Ch2_SecurityGuard : MoveBasePossessable
         if(collision.CompareTag("In"))
         {
             isInOffice = false;
-            MarkActivatedChanged();
         }
     }
 
