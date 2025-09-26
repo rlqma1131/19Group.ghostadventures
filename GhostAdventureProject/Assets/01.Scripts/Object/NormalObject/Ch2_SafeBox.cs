@@ -8,6 +8,7 @@ public class Ch2_SafeBox : BaseInteractable
     [SerializeField] private GameObject closeSafeBox;   // 닫힌 금고
     [SerializeField] private GameObject openSafeBox;    // 열린 금고
     [SerializeField] private ItemData   needItem;       // 금고를 여는데 필요한 아이템
+    [SerializeField] private Ch2_SecurityGuard guard;   // 경비원
     [SerializeField] private CinemachineVirtualCamera zoomCamera;
     [SerializeField] private GameObject zoomSafeBox;
     [SerializeField] private GameObject q_Key;
@@ -22,10 +23,14 @@ public class Ch2_SafeBox : BaseInteractable
         zoomSafeBox.SetActive(false);
         q_Key.SetActive(false);
         inventory = Inventory_PossessableObject.Instance;
+        guard = FindObjectOfType<Ch2_SecurityGuard>();
     }
 
     void Update()
     {   
+        if(!guard.HasActivated()) {
+            safeBoxOpen = true;
+        }
         if (Input.GetKeyDown(KeyCode.Q))
         {   
             if(safeBoxOpenAble && !safeBoxOpen)
