@@ -25,17 +25,20 @@ public class PlayerInteractSystem : MonoBehaviour
 
     CountdownTimer checkTimer;
     Collider2D[] results;
+    Player player;
     
     public GameObject CurrentClosest => currentClosest;// 디버깅용
 
     HashSet<GameObject> nearbyInteractables = new();
 
-    public void Initialize() {
+    public void Initialize(Player value) {
+        player = value;
         results = new Collider2D[checkCountThreshold];
         
         checkTimer = new CountdownTimer(checkInterval);
         checkTimer.OnTimerStop += () => {
-            UpdateClosest();
+            if (!player.PossessionSystem.PossessedTarget) UpdateClosest();
+            else UpdateClosest(true);
             checkTimer.Start();
         };
         
@@ -78,8 +81,8 @@ public class PlayerInteractSystem : MonoBehaviour
         return newClosest;
     }
 
-    void UpdateClosest() {
-        GameObject newClosest = GetClosestGameObject();
+    void UpdateClosest(bool forceTargetAsNull = false) {
+        GameObject newClosest = !forceTargetAsNull ? GetClosestGameObject() : null;
 
         if (currentClosest == newClosest) return;
         
