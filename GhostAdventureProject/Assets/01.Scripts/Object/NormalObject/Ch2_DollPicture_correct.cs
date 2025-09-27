@@ -6,7 +6,7 @@ using UnityEngine;
 // 상호작용 불가 시점 지정하기 어려움
 public class Ch2_DollPicture_correct : BaseInteractable
 {
-    [SerializeField] Ch2_Doll_YameScan_correct doll_correct;
+    [SerializeField] Ch2_Doll doll_correct;
     private CluePickup clue;
     private bool isPickupAble; // 단서를 획득할 수 있는 영역에 있는지 확인
     private bool isPickupClue; // 단서를 획득했는지 확인

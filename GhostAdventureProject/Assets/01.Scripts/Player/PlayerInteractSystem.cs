@@ -72,6 +72,7 @@ public class PlayerInteractSystem : MonoBehaviour
                     distance = newDist;
                 }
                 else {
+                    if (interactable is Ch2_Doll { IsScannable: false }) continue;
                     newClosest = results[i].gameObject;
                     distance = newDist;
                 }

@@ -8,7 +8,7 @@ public class Ch2_Bat_Trigger : MonoBehaviour
     readonly static int Move = Animator.StringToHash("Move");
     
     [Header("Target of Triggering")] [Tooltip("정답인형 객체넣기")]
-    [SerializeField] Ch2_Doll_YameScan_correct correctDoll; // 정답인형
+    [SerializeField] Ch2_Doll correctDoll; // 정답인형
     
     [Header("References")]
     [SerializeField] Animator ani;
