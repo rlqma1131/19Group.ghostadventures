@@ -67,12 +67,12 @@ public class PlayerInteractSystem : MonoBehaviour
                     newClosest = results[i].gameObject;
                     distance = newDist;
                 } else if (results[i].TryGetComponent(out MemoryFragment fragment)) {
-                    if (!fragment.IsScannable) continue;
+                    if (!fragment.IsScannable()) continue;
                     newClosest = results[i].gameObject;
                     distance = newDist;
                 }
                 else {
-                    if (interactable is Ch2_Doll { IsScannable: false }) continue;
+                    if (!interactable.IsScannable()) continue;
                     newClosest = results[i].gameObject;
                     distance = newDist;
                 }
@@ -102,7 +102,7 @@ public class PlayerInteractSystem : MonoBehaviour
         if (!currentClosest) return;
         
         if (currentClosest.TryGetComponent(out MemoryFragment memory)) {
-            if (!memory.IsScannable) {
+            if (!memory.IsScannable()) {
                 eKey.SetActive(false);
                 memory.ShowHighlight(false);
                 return;

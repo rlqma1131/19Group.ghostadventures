@@ -7,6 +7,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
 {
     [Header("Base Interactable References")]
     [SerializeField] protected GameObject highlightObj;
+    [SerializeField] protected bool isScannable = true;
 
     [Header("Base Possessable Reference")]
     [SerializeField] protected Animator anim;
@@ -52,7 +53,9 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
         if (Input.GetKeyDown(KeyCode.E) && isPossessed) Unpossess();
         TriggerEvent();
     }
-    
+
+    public bool IsScannable() => isScannable;
+
     /// <summary>
     /// Show or Hide Highlight of object
     /// </summary>

@@ -82,7 +82,7 @@ public class Ch2_Raven : MoveBasePossessable
     override protected void OnTriggerEnter2D(Collider2D collision) {
         base.OnTriggerEnter2D(collision);
 
-        if (collision.gameObject == SandCastle) {
+        if (collision.gameObject == SandCastle.gameObject) {
             sandCastleBreakAble = true;
         }
     }
@@ -90,7 +90,7 @@ public class Ch2_Raven : MoveBasePossessable
     override protected void OnTriggerExit2D(Collider2D collision) {
         base.OnTriggerExit2D(collision);
 
-        if (collision.gameObject == SandCastle) {
+        if (collision.gameObject == SandCastle.gameObject) {
             sandCastleBreakAble = false;
         }
     }

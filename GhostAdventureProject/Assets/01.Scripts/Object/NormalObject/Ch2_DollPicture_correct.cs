@@ -18,14 +18,16 @@ public class Ch2_DollPicture_correct : BaseInteractable
 
     void Update()
     {
-        if(!isPickupClue) {
+        if (!isPickupClue) {
             if(Input.GetKeyDown(KeyCode.E) && isPickupAble) {
                 clue.PickupClue();
                 isPickupClue = true;
+                isScannable = false;
             }
             // 단서 중복 획득 방지
             if(doll_correct.isOpen_UnderGroundDoor) {
                 isPickupClue = true;
+                isScannable = false;
             }
         }
     }

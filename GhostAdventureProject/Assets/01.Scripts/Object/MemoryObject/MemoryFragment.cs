@@ -6,9 +6,6 @@ using UnityEngine.SceneManagement;
 public class MemoryFragment : BaseInteractable
 {
     public MemoryData data;
-    
-    [SerializeField] protected bool isScannable = false; // 디버깅용
-    public bool IsScannable => isScannable;
 
     [SerializeField] private bool canStore = false;
     public bool CanStore => canStore;

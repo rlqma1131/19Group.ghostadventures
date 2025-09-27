@@ -2,6 +2,7 @@
 {
     public interface IInteractable
     {
+        public bool IsScannable();
         public void ShowHighlight(bool pop);
         public void TriggerEvent();
     }

@@ -23,7 +23,6 @@ public class Ch2_Doll : BaseInteractable
     [Header("Scan Settings")] 
     [SerializeField] bool isFake;
     [SerializeField] float scan_duration = 2f; //스캔 시간
-    [SerializeField] bool isScannable;
 
     CountdownTimer scanTimer;
     Camera cam;
@@ -32,7 +31,6 @@ public class Ch2_Doll : BaseInteractable
     bool isScanKeydown;
 
     public bool isOpen_UnderGroundDoor { get; private set; }
-    public bool IsScannable => isScannable;
 
     override protected void Start() {
         base.Start();

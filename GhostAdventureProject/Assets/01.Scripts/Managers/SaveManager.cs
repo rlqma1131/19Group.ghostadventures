@@ -500,7 +500,7 @@ public static class SaveManager {
             if (go.TryGetComponent(out IPossessable possessable))
                 SetPossessableObjectState(uid.Id, go.activeInHierarchy, go.transform.position, possessable.HasActivated());
             else if (go.TryGetComponent(out MemoryFragment memoryFragment))
-                SetMemoryFragmentObjectState(uid.Id, go.activeInHierarchy, go.transform.position, memoryFragment.IsScannable);
+                SetMemoryFragmentObjectState(uid.Id, go.activeInHierarchy, go.transform.position, memoryFragment.IsScannable());
             else if (go.TryGetComponent(out BaseDoor door))
                 SetDoorLocked(uid.Id, door.IsLocked);
             else if (go.TryGetComponent(out Ch2_DrawingClue clue))
