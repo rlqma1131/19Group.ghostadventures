@@ -36,10 +36,8 @@ public class EventManager : MonoBehaviour
     }
 
     // SaveStateApplier에서 로드할 때 사용
-    public void ApplyEventCompletedFromSave(string eventId, bool completed)
-    {
-        if (completed)
-            completedEvents.Add(eventId);
+    public void ApplyEventCompletedFromSave(string eventId, bool completed) {
+        if (completed) completedEvents.Add(eventId);
     }
 }
 

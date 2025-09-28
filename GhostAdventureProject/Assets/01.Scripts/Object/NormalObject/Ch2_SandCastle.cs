@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class Ch2_SandCastle : BaseInteractable
 {
-    private CluePickup cluepickup; // 단서획득
     [SerializeField] GameObject carToy; // 장난감자동차 - Ch2_부정기억1
-    [SerializeField] private Ch2_MemoryNegative_01_CarToy car;
+    [SerializeField] GameObject dollpicture;
     [SerializeField] GameObject SandCastle_intactly; // 모래성
     [SerializeField] GameObject SandCastle_crumble; // 무너진 모래성
     [SerializeField] GameObject q_key;
@@ -23,9 +22,9 @@ public class Ch2_SandCastle : BaseInteractable
     {
         base.Start();
         carToy.SetActive(false);
+        dollpicture.SetActive(false);
         SandCastle_crumble.SetActive(false);
         q_key.SetActive(false);
-        cluepickup = GetComponent<CluePickup>();
     }
 
     void Update()
@@ -34,11 +33,9 @@ public class Ch2_SandCastle : BaseInteractable
         {
             if(Input.GetKeyDown(KeyCode.Q))
             {
-                cluepickup.PickupClue();
-                UIManager.Instance.InventoryExpandViewerUI.ShowClue(cluepickup.clueData);
                 SandCastle_crumble.SetActive(true);
                 carToy.SetActive(true);
-                car.ActivateCar();
+                dollpicture.SetActive(true);
                 SandCastle_intactly.SetActive(false);
                 q_key.SetActive(false);
                 crumbled = true;
@@ -52,6 +49,7 @@ public class Ch2_SandCastle : BaseInteractable
         if(collision.CompareTag("Animal"))
         {
             raven = collision.GetComponent<Ch2_Raven>();
+            if(!raven.HasActivated()) return;
         }
         if(collision.CompareTag("Animal") && raven.IsPossessed && !crumbled)
         {
@@ -68,13 +66,13 @@ public class Ch2_SandCastle : BaseInteractable
         {
             raven = other.GetComponent<Ch2_Raven>();
         }
-
         if(other.CompareTag("Animal") && !crumbled)
         {
-            
             crumbleAble = true;
             q_key.SetActive(false);
         }
     }
+
+    public bool IsCrumbled() => crumbled; 
 
 }

@@ -14,7 +14,7 @@ public class Ch2_LeftSwing : BasePossessable
     //private QTEUI qteUI;
     private bool isShowPrompt = false;
     
-    protected override void Update()
+    public override void TriggerEvent()
     {
         if (!isPossessed || isQTESequenceRunning)
         {

@@ -25,17 +25,20 @@ public class PlayerInteractSystem : MonoBehaviour
 
     CountdownTimer checkTimer;
     Collider2D[] results;
+    Player player;
     
     public GameObject CurrentClosest => currentClosest;// 디버깅용
 
     HashSet<GameObject> nearbyInteractables = new();
 
-    public void Initialize() {
+    public void Initialize(Player value) {
+        player = value;
         results = new Collider2D[checkCountThreshold];
         
         checkTimer = new CountdownTimer(checkInterval);
         checkTimer.OnTimerStop += () => {
-            UpdateClosest();
+            if (!player.PossessionSystem.PossessedTarget) UpdateClosest();
+            else UpdateClosest(true);
             checkTimer.Start();
         };
         
@@ -56,20 +59,31 @@ public class PlayerInteractSystem : MonoBehaviour
             if (!newClosest || newDist < distance + checkDistanceThreshold &&
                 nearbyInteractables.Contains(results[i].gameObject) &&
                 newClosest.CompareLayerPriority(results[i].gameObject) <= 0) {
-                if (!results[i].gameObject.TryGetComponent(out IPossessable possessable) || possessable.HasActivated())
+
+                if (!results[i].gameObject.TryGetComponent(out IInteractable interactable)) continue;
+                
+                if (results[i].TryGetComponent(out IPossessable possessable)) {
+                    if (!possessable.HasActivated()) continue;
                     newClosest = results[i].gameObject;
-                else if (results[i].gameObject.TryGetComponent(out MemoryFragment fragment))
-                    if (fragment.IsScannable) newClosest = results[i].gameObject;
+                    distance = newDist;
+                } else if (results[i].TryGetComponent(out MemoryFragment fragment)) {
+                    if (!fragment.IsScannable) continue;
+                    newClosest = results[i].gameObject;
+                    distance = newDist;
+                }
+                else {
+                    if (interactable is Ch2_Doll { IsScannable: false }) continue;
+                    newClosest = results[i].gameObject;
+                    distance = newDist;
+                }
             }
-            
-            distance = newDist;
         }
         
         return newClosest;
     }
 
-    void UpdateClosest() {
-        GameObject newClosest = GetClosestGameObject();
+    void UpdateClosest(bool forceTargetAsNull = false) {
+        GameObject newClosest = !forceTargetAsNull ? GetClosestGameObject() : null;
 
         if (currentClosest == newClosest) return;
         

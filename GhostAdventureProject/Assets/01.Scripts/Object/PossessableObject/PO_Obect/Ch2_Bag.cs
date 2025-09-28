@@ -15,10 +15,8 @@ public class Ch2_Bag : BasePossessable
             clue1Anim = drawingClue1.GetComponent<Animator>();
     }
 
-    protected override void Update()
+    public override void TriggerEvent()
     {
-        base.Update();
-        
         if (!isPossessed || !hasActivated)
         {
             q_Key.SetActive(false);

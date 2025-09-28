@@ -4,7 +4,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Ch2_DrawingClue : MonoBehaviour
+public class Ch2_DrawingClue : BaseInteractable
 {
     [Header("프롬프트 메시지 설정")] 
     [SerializeField] string promptMessage;
@@ -22,7 +22,6 @@ public class Ch2_DrawingClue : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam;
 
     CluePickup cluePickup;
-    Player player;
     bool isPlayerInside;
     bool isZoomActive;
     bool zoomActivatedOnce;
@@ -30,9 +29,9 @@ public class Ch2_DrawingClue : MonoBehaviour
     public bool HasActivated => hasActivated; // 저장용 getter
     public void ApplyHasActivatedFromSave(bool v) => hasActivated = v; // 복원용 setter
 
-    void Start() {
+    override protected void Start() {
+        base.Start();
         cluePickup = GetComponent<CluePickup>();
-        player = GameManager.Instance.Player;
         
         // 초기화
         drawingZoom.SetActive(false);
@@ -41,14 +40,15 @@ public class Ch2_DrawingClue : MonoBehaviour
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.E)) {
-            if (!hasActivated || !isZoomActive && !isPlayerInside)
-                return;
+            if (!hasActivated || !isZoomActive && !isPlayerInside) return;
 
-            if (isZoomActive)
-                HideDrawingZoom();
-            else
-                ShowDrawingZoom();
+            TriggerEvent();
         }
+    }
+
+    public override void TriggerEvent() {
+        if (isZoomActive) HideDrawingZoom();
+        else ShowDrawingZoom();
     }
 
     void ShowDrawingZoom() {
@@ -74,7 +74,6 @@ public class Ch2_DrawingClue : MonoBehaviour
             UIManager.Instance.PromptUI.ShowPrompt(promptMessage);
         }
     }
-
     void HideDrawingZoom() {
         isZoomActive = false;
         EnemyAI.ResumeAllEnemies();
@@ -83,23 +82,22 @@ public class Ch2_DrawingClue : MonoBehaviour
         zoomPanel.DOFade(0f, 0.5f);
 
         // UI 슬라이드 아웃
-        drawingPos.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
+        drawingPos
+            .DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
             .SetEase(Ease.InCubic)
-            .OnComplete(() =>
-            {
+            .OnComplete(() => {
                 drawingZoom.SetActive(false);
 
                 if (!zoomActivatedOnce) {
                     // cluePickup?.PickupClue();
 
-                    if (isLastClue && finalObjectToActivate != null) {
+                    if (isLastClue && finalObjectToActivate) {
                         PlayFinalLightSequence();
                     }
 
-                    if (nextClueObject != null) {
+                    if (nextClueObject) {
                         Ch2_DrawingClue nextClue = nextClueObject.GetComponent<Ch2_DrawingClue>();
-                        if (nextClue != null)
-                            nextClue.Activate();
+                        if (nextClue) nextClue.Activate();
                     }
 
                     zoomActivatedOnce = true;
@@ -110,7 +108,6 @@ public class Ch2_DrawingClue : MonoBehaviour
                     player.InteractSystem.AddInteractable(gameObject);
             });
     }
-
     void PlayFinalLightSequence() {
         // 1) 플레이어 잠금 + VCam Follow 끊기
         player.PossessionSystem.CanMove = false;
@@ -149,27 +146,19 @@ public class Ch2_DrawingClue : MonoBehaviour
             });
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
+    override protected void OnTriggerEnter2D(Collider2D other) {
         if (!hasActivated || !other.CompareTag("Player")) return;
 
         isPlayerInside = true;
-
-        if (!isZoomActive)
-            player.InteractSystem.AddInteractable(gameObject);
+        if (!isZoomActive) player.InteractSystem.AddInteractable(gameObject);
     }
-
-    void OnTriggerExit2D(Collider2D other) {
+    override protected void OnTriggerExit2D(Collider2D other) {
         if (!other.CompareTag("Player")) return;
 
         isPlayerInside = false;
-
-        if (isZoomActive)
-            HideDrawingZoom(); // 범위 밖이면 자동 닫기
-
+        if (isZoomActive) HideDrawingZoom(); // 범위 밖이면 자동 닫기
         player.InteractSystem.RemoveInteractable(gameObject);
     }
 
-    public void Activate() {
-        hasActivated = true;
-    }
+    void Activate() { hasActivated = true; }
 }

@@ -60,6 +60,8 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     public void ShowHighlight(bool pop) => highlightObj?.SetActive(pop);
 
     public bool HasActivated() => hasActivated;
+    
+    public void SetActivated(bool value) => hasActivated = value;
 
     /// <summary>
     /// Events will activate in every frame
@@ -125,8 +127,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// </summary>
     void RequestQTEEvent() {
         switch (tag) {
-            // 사람, 유인 오브젝트, 은신처만 QTE 요청
-            case "SoundTrigger":
+            // 사람, 은신처만 QTE 요청
             case "HideArea":
                 PossessionQTESystem.Instance.StartQTE();
                 break;
@@ -147,7 +148,11 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// <summary>
     /// Called when the user failed to clear QTE Event
     /// </summary>
-    public void OnQTEFailure() => isPossessed = false;
+    public void OnQTEFailure() {
+        isPossessed = false;
+        player.PossessionSystem.PossessedTarget = null;
+    }
+
     #endregion
 
     /// <summary>
@@ -177,18 +182,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     // 상태 기록
     protected void MarkActivatedChanged() {
         if (TryGetComponent(out UniqueId uid))
-            SaveManager.SetPossessableState(uid.Id, hasActivated);
+            SaveManager.SetPossessableObjectState(uid.Id, gameObject.activeInHierarchy, transform.position, hasActivated);
     }
-    
-    // 로드 시 상태 셋업
-    public void ApplyHasActivatedFromSave(bool value) {
-        if (hasActivated == value) return;
-        
-        hasActivated = value;
-        OnRestoredHasActivated(value);
-    }
-
-    // 추후 VFX/콜라이더/애니 갱신 등
-    protected virtual void OnRestoredHasActivated(bool value) { }
     #endregion
 }

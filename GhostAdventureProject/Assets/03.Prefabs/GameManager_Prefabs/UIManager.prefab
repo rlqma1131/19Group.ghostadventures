@@ -9370,6 +9370,7 @@ MonoBehaviour:
   gaugeBar: {fileID: 5277533486397618690}
   timeText: {fileID: 3496939120594408948}
   resultText: {fileID: 386295516557454702}
+  push: {fileID: 8300000, guid: 2d2dd40fb60ede14298a59e2a56ce500, type: 3}
   escape: {fileID: 8300000, guid: 124b1be9504425f438c210022e5f5c80, type: 3}
   requiredPresses: 15
   timeLimit: 3
@@ -14626,7 +14627,6 @@ MonoBehaviour:
   moveAbleCursor: {fileID: 2800000, guid: fe960b013b36148a29f01780a5134eca, type: 3}
   swipeCursor: {fileID: 2800000, guid: af33dd6204d8a4fec88d03f0cfbfbfcf, type: 3}
   hotspot: {x: 0, y: 0}
-  eventSystem: {fileID: 0}
   clickSound: {fileID: 8300000, guid: ae56cf6acd05b47cc89ec10baf3158e2, type: 3}
 --- !u!114 &7106395408219922147
 MonoBehaviour:
@@ -21790,7 +21790,6 @@ GameObject:
   - component: {fileID: 3242024962092967645}
   - component: {fileID: 7916177370242682570}
   - component: {fileID: 2852985322827594728}
-  - component: {fileID: 7931590798504111789}
   m_Layer: 5
   m_Name: MemoryStorageButton
   m_TagString: Untagged
@@ -21911,19 +21910,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &7931590798504111789
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7880527999284290784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18d7d559381d6473c8324ba13c820db8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tooltipImage: {fileID: 3602023080865446320}
 --- !u!1 &7921736815453275270
 GameObject:
   m_ObjectHideFlags: 0
@@ -22965,6 +22951,8 @@ MonoBehaviour:
   successArc: {fileID: 6135616109439265673}
   minAngle: 120
   maxAngle: 150
+  successSound: {fileID: 8300000, guid: 124b1be9504425f438c210022e5f5c80, type: 3}
+  failSound: {fileID: 8300000, guid: 13ae8ba5d356c0d43bf674fb5939ee8c, type: 3}
 --- !u!1 &8301755413798193896
 GameObject:
   m_ObjectHideFlags: 0
@@ -23757,7 +23745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9492dc1eb91884111802dbe4d04f5f07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storage: {fileID: 786519104180153376}
+  memorystorage: {fileID: 786519104180153376}
   chapterButtons:
   - {fileID: 8753669828723956139}
   - {fileID: 8788803904888995591}

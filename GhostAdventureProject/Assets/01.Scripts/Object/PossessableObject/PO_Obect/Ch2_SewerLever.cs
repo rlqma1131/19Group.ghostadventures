@@ -11,10 +11,8 @@ public class Ch2_SewerLever : BasePossessable
     [SerializeField] private Ch2_SewerLightingTrigger lightingTrigger;
     [SerializeField] private Light2D leverLight;
 
-    protected override void Update()
+    public override void TriggerEvent()
     {
-        base.Update();
-
         if (!isPossessed || !hasActivated)
         {
             q_Key.SetActive(false);
