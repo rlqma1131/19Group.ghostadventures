@@ -250,9 +250,4 @@ public class MemoryFragment : BaseInteractable
     }
 
     protected virtual void PlusAction(){}
-
-    public void SetScannable(bool scannable)
-    {
-        isScannable = scannable;
-    }
 }

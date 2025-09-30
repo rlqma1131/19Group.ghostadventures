@@ -21,8 +21,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         [SerializeField] Ease easeMode = Ease.InQuad;
         [SerializeField] float dropDuration = 1.5f;
         [SerializeField] List<string> linesToPlayWhenDropped = new() {
-            "병을 꺠트렸더니 어떤 액체가 나와",
-            "벽난로 속 나무를 적셨다."
+            "병을 꺠트렸더니 어떤 액체가 나왔다.",
         };
         [SerializeField] UnityEvent OnDropped;
         

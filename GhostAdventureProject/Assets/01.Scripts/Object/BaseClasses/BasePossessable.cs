@@ -56,6 +56,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     }
 
     public bool IsScannable() => isScannable;
+    public void SetScannable(bool value) => isScannable = value;
 
     /// <summary>
     /// Show or Hide Highlight of object
@@ -186,7 +187,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     // 상태 기록
     protected void MarkActivatedChanged() {
         if (TryGetComponent(out UniqueId uid))
-            SaveManager.SetPossessableObjectState(uid.Id, gameObject.activeInHierarchy, transform.position, hasActivated);
+            SaveManager.SetPossessableObjectState(uid.Id, gameObject.activeInHierarchy, isScannable, transform.position, hasActivated);
     }
     #endregion
 }

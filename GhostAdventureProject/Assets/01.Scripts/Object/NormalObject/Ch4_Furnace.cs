@@ -10,12 +10,22 @@ namespace _01.Scripts.Object.NormalObject
         [Header("References of Furnace")]
         [SerializeField] Animator anim;
         [SerializeField] Light2D fire;
+        [SerializeField] bool isOiled;
         [SerializeField] bool isTurnedOn;
 
         [Header("Lines of Interactions")] 
         [SerializeField] List<string> linesWhenNotTurnedOn = new() {
             "벽난로 불이 꺼져있다.", 
             "이 불을 켜야할 것 같은 기분이 든다."
+        };
+        [SerializeField] List<string> linesWhenOiledUp = new() {
+            "나무가 기름에 적셔있다.",
+            "이제 불을 붙힐 것만 찾으면 된다."
+        };
+        [SerializeField] List<string> linesWhenTurnedOn = new() {
+            "불이 켜졌다.",
+            "이 다음에 뭘하면 될까?",
+            "주변을 한번 살펴보자."
         };
         
         bool isPlayerInside;
@@ -39,11 +49,16 @@ namespace _01.Scripts.Object.NormalObject
             if (!isScannable) return;
             
             if (Input.GetKeyDown(KeyCode.E) && isPlayerInside) {
-                if (!isTurnedOn) {
-                    UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenNotTurnedOn.ToArray());
+                switch (isTurnedOn) {
+                    case true when isOiled: UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenTurnedOn.ToArray()); break;
+                    case false when isOiled: UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenOiledUp.ToArray()); break;
+                    case false: UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenNotTurnedOn.ToArray()); break;
                 }
             }
         }
+        
+        public void SetOiled(bool value) => isOiled = value;
+        public void SetTurnedOn(bool value) => isTurnedOn = value;
 
         override protected void OnTriggerEnter2D(Collider2D collision) {
             if (collision.CompareTag("Player")) {

@@ -39,6 +39,7 @@ public class BaseInteractable : MonoBehaviour, IInteractable
     }
 
     public bool IsScannable() => isScannable;
+    public void SetScannable(bool value) => isScannable = value;
 
     public void ShowHighlight(bool pop) => highlightObj?.SetActive(pop);
 

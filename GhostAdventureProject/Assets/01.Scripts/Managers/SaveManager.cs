@@ -39,11 +39,13 @@ using Object = UnityEngine.Object;
 [Serializable] public class ObjectState {
     public string id;
     public bool active;
+    public bool isScannable;
     public SerializableVector3 position;
 
-    public ObjectState(string id, bool active = false, Vector3 position = default) {
+    public ObjectState(string id, bool active = false, bool isScannable = false, Vector3 position = default) {
         this.id = id;
         this.active = active;
+        this.isScannable = isScannable;
         this.position = new SerializableVector3(position);
     }
 }
@@ -54,8 +56,8 @@ using Object = UnityEngine.Object;
 [Serializable] public class PossessableObjectState : ObjectState {
     public bool hasActivated;
 
-    public PossessableObjectState(string id, bool active = false, Vector3 position = default, bool hasActivated = false) :
-        base(id, active, position) {
+    public PossessableObjectState(string id, bool active = false, bool isScannable = false, Vector3 position = default, bool hasActivated = false) :
+        base(id, active, isScannable, position) {
         this.hasActivated = hasActivated;
     }
 }
@@ -64,12 +66,8 @@ using Object = UnityEngine.Object;
 /// 스캔 가능한 기억조각들의 상태를 저장하기 위한 클래스
 /// </summary>
 [Serializable] public class MemoryFragmentObjectState : ObjectState {
-    public bool isScannable;
-    
     public MemoryFragmentObjectState(string id, bool active = false, Vector3 position = default, bool isScannable = false) 
-        : base(id, active, position) {
-        this.isScannable = isScannable;
-    }
+        : base(id, active, isScannable, position) { }
 }
 
 /// <summary>
@@ -404,11 +402,12 @@ public static class SaveManager {
     }
     
     // ===== 일반 ObjectState 저장/적용 =====
-    public static void SetObjectState(string id, bool active = false, Vector3 pos = default) {
+    public static void SetObjectState(string id, bool active = false, bool isScannable = false, Vector3 pos = default) {
         EnsureData();
         
-        if (CurrentData.objectStateDict.TryAdd(id, new ObjectState(id, active, pos))) return;
+        if (CurrentData.objectStateDict.TryAdd(id, new ObjectState(id, active, isScannable, pos))) return;
         CurrentData.objectStateDict[id].active = active;
+        CurrentData.objectStateDict[id].isScannable = isScannable;
         CurrentData.objectStateDict[id].position = new SerializableVector3(pos);
     }
     public static bool TryGetObjectState(string id, out ObjectState state) {
@@ -416,12 +415,13 @@ public static class SaveManager {
     }
     
     // ===== 빙의 가능한 PossessableObjectState 저장/적용 =====
-    public static void SetPossessableObjectState(string id, bool active = false, Vector3 pos = default,
+    public static void SetPossessableObjectState(string id, bool active = false, bool isScannable = false, Vector3 pos = default,
         bool hasActivated = false) {
         EnsureData();
         
-        if (CurrentData.possessableObjectStateDict.TryAdd(id, new PossessableObjectState(id, active, pos, hasActivated))) return;
+        if (CurrentData.possessableObjectStateDict.TryAdd(id, new PossessableObjectState(id, active, isScannable, pos, hasActivated))) return;
         CurrentData.possessableObjectStateDict[id].active = active;
+        CurrentData.possessableObjectStateDict[id].isScannable = isScannable;
         CurrentData.possessableObjectStateDict[id].position = new SerializableVector3(pos);
         CurrentData.possessableObjectStateDict[id].hasActivated = hasActivated;
     }
@@ -497,16 +497,18 @@ public static class SaveManager {
             Debug.Log($"[SaveManager] 오브젝트 : {uid.Id}, 활성화 상태 : {go.activeInHierarchy}");
 
             // Refactored Saving Method
-            if (go.TryGetComponent(out IPossessable possessable))
-                SetPossessableObjectState(uid.Id, go.activeInHierarchy, go.transform.position, possessable.HasActivated());
+            if (go.TryGetComponent(out BasePossessable possessable))
+                SetPossessableObjectState(uid.Id, go.activeInHierarchy, possessable.IsScannable(), go.transform.position, possessable.HasActivated());
             else if (go.TryGetComponent(out MemoryFragment memoryFragment))
                 SetMemoryFragmentObjectState(uid.Id, go.activeInHierarchy, go.transform.position, memoryFragment.IsScannable());
             else if (go.TryGetComponent(out BaseDoor door))
                 SetDoorLocked(uid.Id, door.IsLocked);
             else if (go.TryGetComponent(out Ch2_DrawingClue clue))
-                SetPossessableObjectState(uid.Id, clue.gameObject.activeInHierarchy, clue.transform.position, clue.HasActivated);
+                SetPossessableObjectState(uid.Id, clue.gameObject.activeInHierarchy, clue.IsScannable(), clue.transform.position, clue.HasActivated);
+            else if (go.TryGetComponent(out IInteractable interactable))
+                SetObjectState(uid.Id, go.activeInHierarchy, interactable.IsScannable(), go.transform.position);
             else 
-                SetObjectState(uid.Id, go.activeInHierarchy, go.transform.position);
+                SetObjectState(uid.Id, go.activeInHierarchy, pos: go.transform.position);
         }
     }
 

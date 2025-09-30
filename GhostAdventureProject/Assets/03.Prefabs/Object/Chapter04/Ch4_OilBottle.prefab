@@ -133,7 +133,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1911405606680890062}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 39.32, y: 3.667, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -218,11 +218,22 @@ MonoBehaviour:
   dropDuration: 0.8
   linesToPlayWhenDropped:
   - "\uBCD1\uC744 \uAEA0\uD2B8\uB838\uB354\uB2C8 \uC5B4\uB5A4 \uC561\uCCB4\uAC00
-    \uB098\uC640"
-  - "\uBCBD\uB09C\uB85C \uC18D \uB098\uBB34\uB97C \uC801\uC168\uB2E4."
+    \uB098\uC654\uB2E4."
   OnDropped:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: _01.Scripts.Object.NormalObject.Ch4_Furnace, Assembly-CSharp
+        m_MethodName: SetOiled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   q_Key: {fileID: 6703797287878693958}
 --- !u!114 &3174863468351765059
 MonoBehaviour:

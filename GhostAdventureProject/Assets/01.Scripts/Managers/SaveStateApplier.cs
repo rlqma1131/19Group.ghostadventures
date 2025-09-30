@@ -57,6 +57,7 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 if (!SaveManager.TryGetPossessableObjectState(uid.Id, out PossessableObjectState possessableState))
                     continue;
                 possessable.gameObject.SetActive(possessableState.active);
+                possessable.SetScannable(possessableState.isScannable);
                 possessable.transform.position = possessableState.position.ToVector3();
                 possessable.SetActivated(possessableState.hasActivated);
             }
@@ -79,6 +80,7 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
             }
             else {
                 if (!SaveManager.TryGetObjectState(uid.Id, out ObjectState state)) continue;
+                if (go.TryGetComponent(out IInteractable interactable)) interactable.SetScannable(state.isScannable);
                 go.SetActive(state.active);
                 go.transform.position = state.position.ToVector3();
             }
