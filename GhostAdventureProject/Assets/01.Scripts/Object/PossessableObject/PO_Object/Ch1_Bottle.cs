@@ -62,8 +62,7 @@ public class Ch1_Bottle : BasePossessable
 
         // 4. 0.05초 후 관련 이벤트 실행
         panSequence.AppendInterval(0.05f);
-        panSequence.AppendCallback(() =>
-        {
+        panSequence.AppendCallback(() => {
             hasActivated = false;
             MarkActivatedChanged();
 

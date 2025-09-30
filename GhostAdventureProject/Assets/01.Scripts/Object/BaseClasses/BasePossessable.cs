@@ -32,6 +32,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
         Transform component = 
             gameObject.GetComponentInChildren_SearchByName<Transform>("Highlight", true);
         highlightObj = component != null ? component.gameObject : null;
+        if (!anim) anim = GetComponentInChildren<Animator>(true);
     }
     
     /// <summary>
