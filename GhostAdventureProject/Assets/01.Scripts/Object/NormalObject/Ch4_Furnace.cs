@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _01.Scripts.CustomPropertyAttribute;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -10,7 +11,9 @@ namespace _01.Scripts.Object.NormalObject
         [Header("References of Furnace")]
         [SerializeField] Animator anim;
         [SerializeField] Light2D fire;
-        [SerializeField] bool isOiled;
+        [SerializeField, ReadOnly] bool isOiled;
+        [SerializeField, ReadOnly] bool isCandleTurnedOn;
+        [SerializeField, ReadOnly] bool isCloseWithFire;
         [SerializeField] bool isTurnedOn;
 
         [Header("Lines of Interactions")] 
@@ -28,7 +31,12 @@ namespace _01.Scripts.Object.NormalObject
             "주변을 한번 살펴보자."
         };
         
+        // Fields
         bool isPlayerInside;
+
+        // Properties
+        public bool IsOiled => isOiled;
+        public bool IsCandleTurnedOn => isCandleTurnedOn;
 
         override protected void Awake() {
             base.Awake();
@@ -57,8 +65,19 @@ namespace _01.Scripts.Object.NormalObject
             }
         }
         
-        public void SetOiled(bool value) => isOiled = value;
-        public void SetTurnedOn(bool value) => isTurnedOn = value;
+        public void SetOiled(bool value) {
+            isOiled = value;
+            if (isOiled && isCloseWithFire) isTurnedOn = true;
+            fire.gameObject.SetActive(isTurnedOn);
+        }
+        
+        public void SetCloseWithFire(bool value) {
+            isCloseWithFire = value;
+            if (isOiled && isCloseWithFire) isTurnedOn = true;
+            fire.gameObject.SetActive(isTurnedOn);
+        }
+        
+        public void SetCandleTurnedOn() => isCandleTurnedOn = !isCandleTurnedOn;
 
         override protected void OnTriggerEnter2D(Collider2D collision) {
             if (collision.CompareTag("Player")) {

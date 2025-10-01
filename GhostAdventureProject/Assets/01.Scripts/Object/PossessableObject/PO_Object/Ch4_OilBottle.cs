@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace _01.Scripts.Object.PossessableObject.PO_Object
 {
-    public class Ch4_BottleOfOil : BasePossessable
+    public class Ch4_OilBottle : BasePossessable
     {
         const string OnBottleBreak = "Ch4_OilBottle_Break";
 
@@ -39,30 +39,31 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
             if (!isPossessed) { q_Key.SetActive(false); return; }
         
             q_Key.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.Q)) OnBrickDropped();
+            if (Input.GetKeyDown(KeyCode.Q)) OnBottleDropped();
         }
 
-        void OnBrickDropped() {
+        void OnBottleDropped() {
             // Turn off UI Element
             q_Key.SetActive(false);
             
             Sequence dropSequence = DOTween.Sequence();
             dropSequence.Append(brickBody.DOShakePosition(0.4f, strength: 0.1f, randomness: 45f, randomnessMode: ShakeRandomnessMode.Harmonic));
-            dropSequence.AppendCallback(() => {
+            dropSequence.JoinCallback(() => {
                 hasActivated = false;
-                Unpossess();
+                isScannable = false;
             });
+            dropSequence.AppendCallback(Unpossess);
 
             dropSequence.Append(transform.DOLocalPath(path.ToArray(), dropDuration, PathType.CatmullRom, PathMode.TopDown2D).SetEase(Ease.InQuad));
             dropSequence.Join(brickBody.DOLocalRotateQuaternion(endRotation, dropDuration).SetEase(Ease.Linear));
             dropSequence.AppendCallback(() => {
                 UIManager.Instance.PromptUI.ShowPrompt_2(linesToPlayWhenDropped.ToArray());
-                // Add Event when brick dropped
-                isScannable = false;
+                
                 brickBody.localRotation = startRotation;
                 anim.CrossFade(OnBottleBreak, 0.01f);
                 SoundManager.Instance.PlaySFX(dropSound);
                 
+                // Add Event when brick dropped
                 OnDropped?.Invoke();
                 MarkActivatedChanged();
             });
