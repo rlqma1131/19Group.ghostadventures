@@ -94,12 +94,21 @@ public class Additive_TimelineControl : MonoBehaviour
 
     public void PauseTimeline() {
         Debug.Log("타임라인 일시정지");
-        director.Pause();
+        if (director != null)
+        {
+            director.Pause();
+
+        }
     }
 
     public void ResumeTimeline() {
         Debug.Log("타임라인 재생");
-        director.Resume();
+        if(director!= null)
+        {
+
+
+            director.Resume();
+        }
     }
 
     //Additive 씬 닫기 + 원래 씬 복귀
