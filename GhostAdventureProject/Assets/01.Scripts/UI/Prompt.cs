@@ -5,95 +5,10 @@ using DG.Tweening;
 using System.Threading.Tasks;
 using System;
 
+// Player의 대사를 출력하는 스크립트입니다.
+
 public class Prompt : MonoBehaviour
 {
-
-    // ===================== 위장NPC용 프롬프트 - 클릭시 넘어감 ============================
-    [Header("위장NPC용 프롬프트")]
-    private GameObject PromptPanel; // 프롬프트 패널 이미지
-    [SerializeField] private TextMeshProUGUI DialogueText; // 대사 텍스트
-    public Queue<string> PromptQueue = new Queue<string>();
-    private bool isActive = false;
-    private string[] pendingChoices;
-    private System.Action choiceCallback;  
-    public Action attack;
-    SecretNPC_Dialogue dialogueUI;
-    public bool attackmode;
-
-    private void Start()
-    {
-        PromptPanel = gameObject;
-        PromptContainer.gameObject.SetActive(true);
-    }
-    
-    public void ShowPrompt_Click(SecretNPC_Dialogue dialogue, string[] choices = null, 
-                                System.Action onChoiceSelected = null, params string[] lines)
-    {
-        dialogueUI = dialogue;
-        PromptQueue.Clear();
-        foreach (var line in lines)
-            PromptQueue.Enqueue(line);
-
-        PromptPanel.SetActive(true);
-        enabled = true; // Update 실행 가능하게
-
-
-        pendingChoices = choices;
-        choiceCallback = onChoiceSelected;
-        ShowNextLine();
-    }
-
-    private void ShowNextLine()
-    {
-        if (PromptQueue.Count > 0)
-        {
-            isActive = true;
-            string nextLine = PromptQueue.Dequeue();
-            DialogueText.text = nextLine;
-            DialogueText.color = Color.blue;
-
-            if(!DialogueText.gameObject.activeSelf)
-                DialogueText.gameObject.SetActive(true);
-            
-            if (PromptQueue.Count == 0 && pendingChoices != null)
-            {
-                
-                dialogueUI.ShowChoices(pendingChoices, index =>
-                {
-                    HidePrompt();
-                    choiceCallback?.Invoke();
-                });
-            }
-        }
-        else
-        {   
-            HidePrompt(); 
-        }
-        
-    }
-
-    public void HidePrompt()
-    {
-        PromptQueue.Clear();
-        isActive = false;
-        PromptPanel.SetActive(false);
-        enabled = false;
-    }
-
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0) && isActive && PromptQueue.Count > 0)
-            ShowNextLine();
-        if (Input.GetMouseButtonDown(0) && isActive && PromptQueue.Count == 0 && attackmode)
-        {
-            HidePrompt();
-            attack?.Invoke();
-        }
-
-    }
-
-
-    // ====================== Player 대사 프롬프트 ======================
     [Header("Player용 프롬프트")]
     [SerializeField] private RectTransform PromptContainer;   // 프롬프트가 들어갈 부모
     [SerializeField] private GameObject PromptPrefab;         // TMP_Text + CanvasGroup 포함
@@ -201,7 +116,6 @@ public class Prompt : MonoBehaviour
         }
     }
 
-    
     public async void ShowPrompt_2 (params string[] lines)
     {
         for (int i=0; i<lines.Length; i++)
@@ -215,9 +129,7 @@ public class Prompt : MonoBehaviour
     {
         string chosenLine = lines[UnityEngine.Random.Range(0, lines.Length)];
         ShowPrompt(chosenLine);
-
     }
-
 }
 
 
