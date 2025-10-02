@@ -61,7 +61,7 @@ public class MemoryScan : MonoBehaviour
     void Update() {
         if (player.InteractSystem.CurrentClosest != currentScanObject) return;
 
-        isScannable = currentMemoryFragment && currentMemoryFragment.IsScannable;
+        isScannable = currentMemoryFragment && currentMemoryFragment.IsScannable();
         if (!isScannable) return;
 
         isScanKeydown = Input.GetKey(KeyCode.E);
@@ -94,7 +94,6 @@ public class MemoryScan : MonoBehaviour
         // 영혼 에너지가 있는지 확인
         if (player.SoulEnergy.CurrentEnergy <= 0) {
             UIManager.Instance.PromptUI.ShowPrompt("에너지가 부족합니다");
-            // 여기에 부족 알림 UI나 사운드를 재생하는 로직
             return;
         }
 
@@ -102,13 +101,12 @@ public class MemoryScan : MonoBehaviour
     }
 
     void StartScan() {
-        if (!currentMemoryFragment.IsScannable) { scanTimer.Stop(); return; }
+        if (!currentMemoryFragment.IsScannable()) { scanTimer.Stop(); return; }
+        
         isScanning = true;
-
-        // UIManager.Instance.PromptUI.ShowPrompt($"스캔 진행 중...", 3f);
-
         scanPanel?.SetActive(true);
-        if (scanCircleUI != null) {
+        
+        if (scanCircleUI) {
             scanCircleUI.gameObject.SetActive(true);
             scanCircleUI.fillAmount = 0f;
         }
@@ -126,24 +124,8 @@ public class MemoryScan : MonoBehaviour
 
     void UpdateScan() {
         // 키를 계속 누르고 있는지 확인
-        if (isScanKeydown) {
-            // scanTime += Time.unscaledDeltaTime; // Time.timeScale에 영향받지 않는 시간으로 진행
-            float scanProgress = 1f - scanTimer.Progress;
-            scanCircleUI.fillAmount = scanProgress;
-
-            // 스캔 완료 체크
-            // if (scanTime >= scan_duration) {
-            //    CompleteScan();
-            //}
-        }
-        else {
-            scanTimer.Stop();
-        }
-        // 키를 뗐을 경우 스캔 중단
-        // else {
-        //     SoundManager.Instance.StopSFX();
-        //     CancelScan("스캔이 중단");
-        // }
+        if (isScanKeydown) scanCircleUI.fillAmount = 1f - scanTimer.Progress;
+        else scanTimer.Stop();
     }
 
     void CompleteScan() {
@@ -151,31 +133,11 @@ public class MemoryScan : MonoBehaviour
         isScanning = false;
         Time.timeScale = 1f; // 시간 흐름을 원래대로 복구
 
-        // 저장하기
-        //if (currentMemoryFragment != null)
-        //{
-        //    // 저장한 기억 챕터 진행도에 반영
-        //    //var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
-        //    //ChapterEndingManager.Instance.RegisterScannedMemory(currentMemoryFragment.data.memoryID, chapter);
-
-        //    //SaveManager.SaveWhenScanAfter(
-        //    //    currentMemoryFragment.data.memoryID,
-        //    //    currentMemoryFragment.data.memoryTitle,
-        //    //    SceneManager.GetActiveScene().name,
-        //    //    playerTransform.position,
-        //    //    checkpointId: currentScanObject != null ? currentScanObject.name : null,
-        //    //    autosave: true  // 저장 팝업 띄움
-        //    //    // 수집한 최종 단서도 저장하고 있음
-        //    //);
-
-        //    //Debug.Log($"[ChapterEndingManager] 챕터{chapter}에서 {currentMemoryFragment.data.memoryID}가 기록 되었습니다");
-        //}
-
         scanPanel?.SetActive(false);
         scanCircleUI?.gameObject.SetActive(false);
 
         // 이미 스캔되었는지 확인
-        if (currentMemoryFragment != null && currentMemoryFragment.IsScannable) {
+        if (currentMemoryFragment != null && currentMemoryFragment.IsScannable()) {
             currentMemoryFragment.IsScannedCheck();
         }
         else {
@@ -185,16 +147,6 @@ public class MemoryScan : MonoBehaviour
         currentScanObject.GetComponentInChildren<SpriteRenderer>().color =
             new Color(155 / 255f, 155 / 255f, 155 / 255f); // 스캔 완료 후 색상 변경
     }
-
-    // 씬 이름으로 챕터진행도 추적
-    //private int DetectChapterFromScene(string sceneName)
-    //{
-    //    if (string.IsNullOrEmpty(sceneName)) return 0;
-    //    if (sceneName.Contains("Ch01")) return 1;
-    //    if (sceneName.Contains("Ch02")) return 2;
-    //    if (sceneName.Contains("Ch03")) return 3;
-    //    return 0;
-    //}
 
     void CancelScan(string reason) {
         Debug.Log(reason);

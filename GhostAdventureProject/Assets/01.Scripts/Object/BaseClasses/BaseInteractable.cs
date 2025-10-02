@@ -12,7 +12,8 @@ public class BaseInteractable : MonoBehaviour, IInteractable
 {
     [Header("Base Interactable References")]
     [SerializeField] protected GameObject highlightObj;
-
+    [SerializeField] protected bool isScannable = true;
+    
     protected Player player;
     
     // Properties
@@ -36,6 +37,9 @@ public class BaseInteractable : MonoBehaviour, IInteractable
         
         highlightObj?.SetActive(false);
     }
+
+    public bool IsScannable() => isScannable;
+    public void SetScannable(bool value) => isScannable = value;
 
     public void ShowHighlight(bool pop) => highlightObj?.SetActive(pop);
 

@@ -16,6 +16,7 @@ public enum ClueType
     None,
     DrawingClue,
     BookShelf,
+    MetalFlake,
 }
 
 [CreateAssetMenu(fileName = "NewClue", menuName = "Clue/ClueData")]

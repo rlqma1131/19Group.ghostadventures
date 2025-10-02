@@ -6,7 +6,7 @@ namespace _01.Scripts.Extensions
 {
     public static class GameObjectExtensions
     {
-        public static T GetComponentInChildren_SearchByName<T>(this GameObject obj, string name, bool includeInactive) where T : Component {
+        public static T GetComponentInChildren_SearchByName<T>(this GameObject obj, string name, bool includeInactive = false) where T : Component {
             var components = obj.GetComponentsInChildren<T>(includeInactive);
             var results = components.Where(comp =>
                 string.Compare(comp.gameObject.name, name, StringComparison.OrdinalIgnoreCase) == 0);

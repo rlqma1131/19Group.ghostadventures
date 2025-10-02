@@ -7,6 +7,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
 {
     [Header("Base Interactable References")]
     [SerializeField] protected GameObject highlightObj;
+    [SerializeField] protected bool isScannable = true;
 
     [Header("Base Possessable Reference")]
     [SerializeField] protected Animator anim;
@@ -31,6 +32,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
         Transform component = 
             gameObject.GetComponentInChildren_SearchByName<Transform>("Highlight", true);
         highlightObj = component != null ? component.gameObject : null;
+        if (!anim) anim = GetComponentInChildren<Animator>(true);
     }
     
     /// <summary>
@@ -52,7 +54,10 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
         if (Input.GetKeyDown(KeyCode.E) && isPossessed) Unpossess();
         TriggerEvent();
     }
-    
+
+    public bool IsScannable() => isScannable;
+    public void SetScannable(bool value) => isScannable = value;
+
     /// <summary>
     /// Show or Hide Highlight of object
     /// </summary>
@@ -182,7 +187,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     // 상태 기록
     protected void MarkActivatedChanged() {
         if (TryGetComponent(out UniqueId uid))
-            SaveManager.SetPossessableObjectState(uid.Id, gameObject.activeInHierarchy, transform.position, hasActivated);
+            SaveManager.SetPossessableObjectState(uid.Id, gameObject.activeInHierarchy, isScannable, transform.position, hasActivated);
     }
     #endregion
 }
