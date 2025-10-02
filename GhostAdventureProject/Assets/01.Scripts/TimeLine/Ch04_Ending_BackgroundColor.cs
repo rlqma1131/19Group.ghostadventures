@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.U2D;
 using TMPro;
+using UnityEngine.UI;
 public static class SpriteShapeRendererTweens
 {
     public static Tweener DOColor(this SpriteShapeRenderer target, Color endValue, float duration)
@@ -20,6 +21,7 @@ public class Ch04_Ending_BackgroundColor : MonoBehaviour
     [SerializeField] TextMeshProUGUI text;
     public Color TargetTextColor;
     private Color originalTextColor;
+    [SerializeField] Image image;
     private void Awake()
     {
         BG = GetComponent<SpriteShapeRenderer>();
@@ -41,6 +43,7 @@ public class Ch04_Ending_BackgroundColor : MonoBehaviour
             text.DOKill();
             BG.DOColor(TargetColor, 0.7f).SetEase(Ease.InOutSine); ;
             text.DOColor(TargetTextColor, 0.7f).SetEase(Ease.InOutSine); ;
+            image.DOColor(TargetTextColor, 0.7f).SetEase(Ease.InOutSine); ;
 
         }
     }
@@ -52,6 +55,7 @@ public class Ch04_Ending_BackgroundColor : MonoBehaviour
             text.DOKill();
             BG.DOColor(originalColor, 0.7f).SetEase(Ease.InOutSine); ;
             text.DOColor(originalTextColor, 0.7f).SetEase(Ease.InOutSine); ;
+            image.DOColor(originalTextColor, 0.7f).SetEase(Ease.InOutSine); ;
         }
     }
 
