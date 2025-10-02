@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Ch2_DollPicture_fake : BaseInteractable
+public class Ch2_DollPicture : BaseInteractable
 {
     [SerializeField] GameObject ZoomImage; // 확대용 UI (Canvas 내)
     [SerializeField] RectTransform drawingPos; // 시작 위치
@@ -21,6 +21,7 @@ public class Ch2_DollPicture_fake : BaseInteractable
     bool isPlayerInside;
     bool isZoomActive;
     bool zoomActivatedOnce;
+    [SerializeField] bool isFake;
 
     override protected void Start() {
         base.Start();
@@ -63,7 +64,8 @@ public class Ch2_DollPicture_fake : BaseInteractable
             cluePickup.PickupClue();
         }
 
-        UIManager.Instance.PromptUI.ShowPrompt("모래성에서 본 그림과 다른데… 하나는 가짜야.");
+        if(isFake) UIManager.Instance.PromptUI.ShowPrompt("모래성에서 본 그림과 다른데… 하나는 가짜야.");
+        else UIManager.Instance.PromptUI.ShowPrompt("여자아이 그림...?");
     }
     void HideDrawingZoom() {
         isZoomActive = false;
