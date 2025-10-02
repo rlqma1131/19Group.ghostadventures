@@ -37,6 +37,7 @@ namespace _01.Scripts.Object.NormalObject
         // Properties
         public bool IsOiled => isOiled;
         public bool IsCandleTurnedOn => isCandleTurnedOn;
+        public bool IsTurnedOn => isTurnedOn;
 
         override protected void Awake() {
             base.Awake();

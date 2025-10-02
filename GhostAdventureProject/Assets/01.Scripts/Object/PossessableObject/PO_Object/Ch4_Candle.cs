@@ -48,19 +48,14 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
             q_Key.SetActive(true);
             if (Input.GetKeyDown(KeyCode.Q)) OnCandleLit();
         }
-        
-        public override void Unpossess() {
-            q_Key.SetActive(false);
-            base.Unpossess();
-        }
 
         public void TriggerDropEvent() {
             // If fire did not lit, do not drop.
             if (!fire.gameObject.activeInHierarchy) return;
             
             Sequence dropSequence = DOTween.Sequence();
-            dropSequence.Append(transform.DOLocalPath(path.ToArray(), dropDuration, PathType.CatmullRom, PathMode.TopDown2D));
-            dropSequence.Join(candleBody.DOLocalRotateQuaternion(endRotation, dropDuration));
+            dropSequence.Append(transform.DOLocalPath(path.ToArray(), dropDuration, PathType.CatmullRom, PathMode.TopDown2D).SetEase(easeMode));
+            dropSequence.Join(candleBody.DOLocalRotateQuaternion(endRotation, dropDuration)).SetEase(Ease.Linear);
             dropSequence.JoinCallback(() => {
                 hasActivated = false;
                 isScannable = false;

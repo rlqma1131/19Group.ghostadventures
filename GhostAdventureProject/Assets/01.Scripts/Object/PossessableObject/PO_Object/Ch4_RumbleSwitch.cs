@@ -8,17 +8,19 @@ using UnityEngine.Events;
 
 namespace _01.Scripts.Object.PossessableObject.PO_Object
 {
+    /// <summary>
+    /// Triggers rumble event that make the rock fall to the ground
+    /// If the condition fulfills, it sets furnace on fire.
+    /// </summary>
     [RequireComponent(typeof(CinemachineImpulseSource))]
-    public class Ch4_Switch : BasePossessable
+    public class Ch4_RumbleSwitch : BasePossessable
     {
         [Header("References of Switch")]
         [SerializeField] CinemachineImpulseSource impulseSource;
-        [SerializeField] Ch4_Furnace furnace;
 
         [Header("Switch Transform")] 
-        [SerializeField] SpriteRenderer switchBar;
-        [SerializeField] Sprite spriteOn;
-        [SerializeField] Sprite spriteOff;
+        [SerializeField] GameObject switchOn;
+        [SerializeField] GameObject switchOff;
         
         [Header("Brick Transform")] 
         [SerializeField] Transform brickTransform;
@@ -31,6 +33,9 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         [SerializeField] AudioClip dropSound;
         [SerializeField] Ease easeMode = Ease.InQuad;
         [SerializeField] float dropDuration = 1.5f;
+        [SerializeField] List<string> linesToPlayWhenNothing = new() {
+            "아무 일도 일어나지 않네...",
+        };
         [SerializeField] List<string> linesToPlayWhenDropped = new() {
             "밑에서 엄청난 소리가 났다.", 
             "무슨 일이 벌어졌는지 보자."
@@ -39,6 +44,9 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         
         [Header("UI References")]
         [SerializeField] GameObject q_Key;
+
+        Ch4_BackgroundManager manager;
+        bool alreadyPressed;
 
         override protected void Awake() {
             base.Awake();
@@ -49,6 +57,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         override protected void Start() {
             base.Start();
 
+            manager = Ch4_BackgroundManager.TryGetInstance();
             isScannable = true;
             startPosition = brickTransform.localPosition;
             startRotation = brickTransform.localRotation;
@@ -57,34 +66,48 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         public override void TriggerEvent() {
             if (!isPossessed) { q_Key.SetActive(false); return; }
         
-            q_Key.SetActive(true);
+            if (!alreadyPressed) q_Key.SetActive(true);
             if (Input.GetKeyDown(KeyCode.Q)) OnInteractedSwitch();
         }
 
+        void SetSwitchBarState(bool state) {
+            switchOn.SetActive(state);
+            switchOff.SetActive(!state);
+        }
+
         void OnInteractedSwitch() {
+            Ch4_Furnace furnace = manager.Furnace;
             Sequence switchFlipSequence = DOTween.Sequence();
             
             // Switch to switchOn Sprite
             switchFlipSequence.AppendInterval(.2f);
             switchFlipSequence.JoinCallback(() => {
+                q_Key.SetActive(false);
+                alreadyPressed = true;
                 hasActivated = false;
                 isScannable = false;
             });
-            switchFlipSequence.AppendCallback(() => { switchBar.sprite = spriteOn; });
+            switchFlipSequence.AppendCallback(() => { SetSwitchBarState(true); });
             
             // Generate Impulse after 0.5 secs passes
             switchFlipSequence.AppendInterval(.5f);
             switchFlipSequence.AppendCallback(() => {
-                impulseSource.GenerateImpulse();
+                if (furnace.IsCandleTurnedOn && furnace.IsOiled)
+                    impulseSource.GenerateImpulse();
             });
             
             // Disable Possession
             switchFlipSequence.AppendInterval(.5f);
-            switchFlipSequence.AppendCallback(Unpossess);
+            switchFlipSequence.AppendCallback(() => {
+                if (!furnace.IsCandleTurnedOn || !furnace.IsOiled)
+                    UIManager.Instance.PromptUI.ShowPrompt_2(linesToPlayWhenNothing.ToArray());
+                Unpossess();
+                alreadyPressed = false;
+            });
 
             // Check if the furnace fulfilled right condition (Oiled & Candle is turned on)
             if (furnace.IsCandleTurnedOn && furnace.IsOiled) {
-                switchFlipSequence.Append(brickTransform.DOLocalMove(endPosition, dropDuration).SetEase(Ease.Linear));
+                switchFlipSequence.Append(brickTransform.DOLocalMove(endPosition, dropDuration).SetEase(easeMode));
                 switchFlipSequence.AppendCallback(() => {
                     UIManager.Instance.PromptUI.ShowPrompt_2(linesToPlayWhenDropped.ToArray());
                     
@@ -107,7 +130,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
                     brickTransform.localPosition = startPosition;
                     brickTransform.localRotation = startRotation;
                     
-                    switchBar.sprite = spriteOff;
+                    SetSwitchBarState(false);
                 });
             }
         }

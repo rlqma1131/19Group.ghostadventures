@@ -54,7 +54,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
             });
             dropSequence.AppendCallback(Unpossess);
 
-            dropSequence.Append(transform.DOLocalPath(path.ToArray(), dropDuration, PathType.CatmullRom, PathMode.TopDown2D).SetEase(Ease.InQuad));
+            dropSequence.Append(transform.DOLocalPath(path.ToArray(), dropDuration, PathType.CatmullRom, PathMode.TopDown2D).SetEase(easeMode));
             dropSequence.Join(brickBody.DOLocalRotateQuaternion(endRotation, dropDuration).SetEase(Ease.Linear));
             dropSequence.AppendCallback(() => {
                 UIManager.Instance.PromptUI.ShowPrompt_2(linesToPlayWhenDropped.ToArray());
