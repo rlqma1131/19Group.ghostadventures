@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using _01.Scripts.Object.NormalObject;
 using _01.Scripts.Utilities;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 namespace _01.Scripts.Object.PossessableObject.PO_Object
@@ -15,23 +16,37 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         [Header("References")] 
         [SerializeField] List<Volume> volumes;
         [SerializeField] Ch4_Furnace furnace;
+        [SerializeField] List<Ch4_BackgroundSwitch> switches;
 
         [Header("Transition Settings")]
-        [SerializeField] float transitionTime = 2f;
+        [SerializeField] float transitionTime = 4f;
         [Range(0f, 1f)] [SerializeField] float finalWeight = 1f;
-
+        
+        // Fields
+        UnityAction synchronizeLight = delegate { };
         Action transition = delegate { };
         Coroutine transitionCoroutine;
         float transitionVelocity;
         bool isDisplaying => volumes[0].weight > 0f;
         
+        // Properties
         public Ch4_Furnace Furnace => furnace;
+        public VolumeProfile CurrentProfile => volumes[0].profile;
 
         override protected void Awake() {
             base.Awake();
 
             if (volumes.Count <= 0) volumes.AddRange(GetComponentsInChildren<Volume>());
             if (!furnace) furnace = FindFirstObjectByType<Ch4_Furnace>();
+            if (switches.Count <= 0)  switches.AddRange(GetComponentsInChildren<Ch4_BackgroundSwitch>());
+        }
+
+        void Start() {
+            foreach (Ch4_BackgroundSwitch sw in switches) synchronizeLight += sw.SynchronizeState;
+        }
+
+        void OnDestroy() {
+            foreach (var sw in switches) synchronizeLight -= sw.SynchronizeState;
         }
 
         public TransitionResult TriggerBackgroundTransition(VolumeProfile profile) {
@@ -53,7 +68,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         void ChangeVolumeProfile(VolumeProfile profile, float weight) {
             if (volumes[0].profile == profile && Mathf.Approximately(volumes[0].weight, weight)) return;
             
-            if (profile != null) transition = () => SetVolumeProfile(profile);
+            if (profile) transition = () => SetVolumeProfile(profile);
             InitCoroutine(weight);
         }
         
@@ -98,6 +113,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
             for (int i = 0; i < volumes.Count; i++) volumes[i].weight = 0f;
 
             transition?.Invoke();
+            synchronizeLight?.Invoke();
             
             while (!Mathf.Approximately(currentWeight, targetWeight)) {
                 currentWeight = Mathf.SmoothDamp(currentWeight, targetWeight, ref transitionVelocity, halfTime * Time.deltaTime);
