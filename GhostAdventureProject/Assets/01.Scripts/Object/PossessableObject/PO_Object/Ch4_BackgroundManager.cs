@@ -46,7 +46,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         }
 
         void OnDestroy() {
-            foreach (var sw in switches) synchronizeLight -= sw.SynchronizeState;
+            foreach (Ch4_BackgroundSwitch sw in switches) synchronizeLight -= sw.SynchronizeState;
         }
 
         public TransitionResult TriggerBackgroundTransition(VolumeProfile profile) {

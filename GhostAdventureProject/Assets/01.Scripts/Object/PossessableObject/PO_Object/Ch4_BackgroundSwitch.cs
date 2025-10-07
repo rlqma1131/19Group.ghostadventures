@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _01.Scripts.Object.MemoryObject;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -12,6 +13,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         [Header("References")] 
         [SerializeField] VolumeProfile profile;
         [SerializeField] Light2D switchLight;
+        [SerializeField] Ch4_Picture picture;
         
         [Header("Button Settings")]
         [SerializeField] List<string> linesWhenButtonTurnedOn = new() { "불이 켜졌다.", "뭔가 달라진 게 있을려나?" };
@@ -28,6 +30,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
             base.Awake();
 
             if (!switchLight) switchLight = GetComponentInChildren<Light2D>(true);
+            if (!picture) Debug.LogError($"GameObject Picture is Missing in {gameObject.name}");
         }
 
         override protected void Start() {
@@ -43,7 +46,12 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
             if (Input.GetKeyDown(KeyCode.Q)) OnTriggerButton();
         }
 
-        public void SynchronizeState() => switchLight.gameObject.SetActive(manager.CurrentProfile == profile);
+        public void SynchronizeState() {
+            bool state = manager.CurrentProfile == profile;
+            
+            switchLight.gameObject.SetActive(state);
+            if (picture) picture.SetPictureState(state);
+        }
 
         void OnTriggerButton() {
             q_Key.SetActive(false);

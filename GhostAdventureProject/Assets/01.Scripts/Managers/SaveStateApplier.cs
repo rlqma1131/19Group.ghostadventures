@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _01.Scripts.Object.BaseClasses.Interfaces;
+using _01.Scripts.Object.MemoryObject;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -67,6 +68,10 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 memoryFragment.gameObject.SetActive(memoryState.active);
                 memoryFragment.transform.position = memoryState.position.ToVector3();
                 memoryFragment.SetScannable(memoryState.isScannable);
+                memoryFragment.SetAlreadyScanned(memoryState.alreadyScanned);
+                
+                if (memoryFragment is Ch4_Picture picture) 
+                    picture.SetPictureState(memoryState.isScannable, memoryState.alreadyScanned);
             }
             else if (go.TryGetComponent(out BaseDoor door)) {
                 if (SaveManager.TryGetDoorLocked(uid.Id, out bool locked))

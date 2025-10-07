@@ -5,13 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class MemoryFragment : BaseInteractable
 {
+    [Header("Memory Data")]
     public MemoryData data;
 
-    [SerializeField] private bool canStore = false;
-    public bool CanStore => canStore;
-
-    public AudioClip audioSource1; // 스캔 사운드 재생용
-    public AudioClip audioSource2; // 스캔 사운드 재생용
+    [Header("Memory State")]
+    [SerializeField] protected bool canStore;
+    [SerializeField] protected bool alreadyScanned;
+    
     [Header("드랍 조각 프리팹")]
     [SerializeField] private GameObject fragmentDropPrefab;
 
@@ -24,6 +24,13 @@ public class MemoryFragment : BaseInteractable
     [SerializeField] private float rotateTime = 2f;
     [SerializeField] private float ellipseRadiusX = 0.8f;
     [SerializeField] private float ellipseRadiusZ = 1.5f;
+    
+    [Header("AudioClip to play when memory scanned")]
+    public AudioClip audioSource1; // 스캔 사운드 재생용
+    public AudioClip audioSource2; // 스캔 사운드 재생용
+    
+    // Properties
+    public bool CanStore => canStore;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -57,10 +64,14 @@ public class MemoryFragment : BaseInteractable
             player.InteractSystem.RemoveInteractable(gameObject);
     }
 
+    public void SetAlreadyScanned(bool val) => alreadyScanned = val;
+    public bool IsAlreadyScanned() => alreadyScanned;
+    
     public virtual void IsScannedCheck()
     {
         if (!isScannable) return;
         isScannable = false;
+        alreadyScanned = true;
         canStore = true;
 
         Scanning();
@@ -68,7 +79,7 @@ public class MemoryFragment : BaseInteractable
         MemoryManager.Instance.TryCollect(data);
 
         if (TryGetComponent(out UniqueId uid))
-            SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
+            SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable, alreadyScanned);
 
         var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
         ChapterEndingManager.Instance.RegisterScannedMemory(data.memoryID, chapter);
