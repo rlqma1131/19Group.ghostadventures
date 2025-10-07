@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using _01.Scripts.Object.MemoryObject;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace _01.Scripts.Object.PossessableObject.PO_Object
 {
@@ -10,6 +12,8 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
     {
         [Header("References")] 
         [SerializeField] VolumeProfile profile;
+        [SerializeField] Light2D switchLight;
+        [SerializeField] Ch4_Picture picture;
         
         [Header("Button Settings")]
         [SerializeField] List<string> linesWhenButtonTurnedOn = new() { "불이 켜졌다.", "뭔가 달라진 게 있을려나?" };
@@ -21,7 +25,14 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
 
         Ch4_BackgroundManager manager;
         bool alreadyPressed;
-        
+
+        override protected void Awake() {
+            base.Awake();
+
+            if (!switchLight) switchLight = GetComponentInChildren<Light2D>(true);
+            if (!picture) Debug.LogError($"GameObject Picture is Missing in {gameObject.name}");
+        }
+
         override protected void Start() {
             base.Start();
 
@@ -33,6 +44,13 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         
             if (!alreadyPressed) q_Key.SetActive(true);
             if (Input.GetKeyDown(KeyCode.Q)) OnTriggerButton();
+        }
+
+        public void SynchronizeState() {
+            bool state = manager.CurrentProfile == profile;
+            
+            switchLight.gameObject.SetActive(state);
+            if (picture) picture.SetPictureState(state);
         }
 
         void OnTriggerButton() {
@@ -50,11 +68,9 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
             triggerSequence.AppendCallback(() => {
                 switch (manager.TriggerBackgroundTransition(profile)) {
                     case TransitionResult.TurnedOn:
-                        // TODO : Turn On Light
                         UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenButtonTurnedOn.ToArray());
                         break;
                     case TransitionResult.TurnedOff:
-                        // TODO : Turn Off Light
                         UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenButtonTurnedOff.ToArray());
                         break;
                     case TransitionResult.Failed:
@@ -64,7 +80,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
                 }
             });
 
-            triggerSequence.AppendInterval(.2f);
+            triggerSequence.AppendInterval(2f);
             triggerSequence.AppendCallback(() => {
                 hasActivated = true;
                 isScannable = true;

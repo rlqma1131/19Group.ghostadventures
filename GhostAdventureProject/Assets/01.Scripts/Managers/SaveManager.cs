@@ -65,9 +65,15 @@ using Object = UnityEngine.Object;
 /// <summary>
 /// 스캔 가능한 기억조각들의 상태를 저장하기 위한 클래스
 /// </summary>
-[Serializable] public class MemoryFragmentObjectState : ObjectState {
-    public MemoryFragmentObjectState(string id, bool active = false, Vector3 position = default, bool isScannable = false) 
-        : base(id, active, isScannable, position) { }
+[Serializable] public class MemoryFragmentObjectState : ObjectState
+{
+    public bool alreadyScanned;
+
+    public MemoryFragmentObjectState(string id, bool active = false, Vector3 position = default, bool isScannable = false,
+        bool alreadyScanned = false)
+        : base(id, active, isScannable, position) {
+        this.alreadyScanned = alreadyScanned;
+    }
 }
 
 /// <summary>
@@ -431,25 +437,27 @@ public static class SaveManager {
 
     // ===== 기억조각 MemoryFragmentObjectState 저장/찾기 =====
     public static void SetMemoryFragmentObjectState(string id, bool active = false, Vector3 pos = default,
-        bool isScannable = false) {
+        bool isScannable = false, bool alreadyScanned = false) {
         EnsureData();
 
-        if (CurrentData.memoryFragmentObjectStateDict.TryAdd(id, new MemoryFragmentObjectState(id, active, pos, isScannable))) return;
+        if (CurrentData.memoryFragmentObjectStateDict.TryAdd(id, new MemoryFragmentObjectState(id, active, pos, isScannable, alreadyScanned))) return;
         CurrentData.memoryFragmentObjectStateDict[id].active = active;
         CurrentData.memoryFragmentObjectStateDict[id].position = new SerializableVector3(pos);
         CurrentData.memoryFragmentObjectStateDict[id].isScannable = isScannable;
+        CurrentData.memoryFragmentObjectStateDict[id].alreadyScanned = alreadyScanned;
     }
     public static bool TryGetMemoryFragmentObjectState(string id, out MemoryFragmentObjectState state) {
         return CurrentData.memoryFragmentObjectStateDict.TryGetValue(id, out state);
     }
     
     // ===== MemoryFragment 상태 저장/적용 =====
-    public static void SetMemoryFragmentScannable(string id, bool isScannable) {
+    public static void SetMemoryFragmentScannable(string id, bool isScannable, bool alreadyScanned = false) {
         EnsureData();
 
         // Refactored to dictionary
         if (CurrentData.memoryFragmentObjectStateDict.TryGetValue(id, out MemoryFragmentObjectState memoryFragment)) {
             memoryFragment.isScannable = isScannable;
+            memoryFragment.alreadyScanned = alreadyScanned;
         }
     }
     public static bool TryGetMemoryFragmentScannable(string id, out bool isScannable) {
@@ -500,7 +508,7 @@ public static class SaveManager {
             if (go.TryGetComponent(out BasePossessable possessable))
                 SetPossessableObjectState(uid.Id, go.activeInHierarchy, possessable.IsScannable(), go.transform.position, possessable.HasActivated());
             else if (go.TryGetComponent(out MemoryFragment memoryFragment))
-                SetMemoryFragmentObjectState(uid.Id, go.activeInHierarchy, go.transform.position, memoryFragment.IsScannable());
+                SetMemoryFragmentObjectState(uid.Id, go.activeInHierarchy, go.transform.position, memoryFragment.IsScannable(), memoryFragment.IsAlreadyScanned());
             else if (go.TryGetComponent(out BaseDoor door))
                 SetDoorLocked(uid.Id, door.IsLocked);
             else if (go.TryGetComponent(out Ch2_DrawingClue clue))
