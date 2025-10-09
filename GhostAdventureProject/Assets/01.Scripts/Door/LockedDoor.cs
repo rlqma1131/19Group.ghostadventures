@@ -37,22 +37,15 @@ public class LockedDoor : BaseDoor
     }
 
     // 퍼즐 해결 시 호출하는 메서드
-    public void SolvePuzzle() {
+    public void UnlockDoors() {
         if (!isLocked) return;
 
-        UnlockPair();
-    }
-
-    // 페어 문 함께 열기
-    public void UnlockPair() {
         // 자신 열기
-        if (isLocked) {
-            isLocked = false;
-            PlaySound(unlockSound);
-            Debug.Log($"{gameObject.name} 문이 열렸습니다!");
-            OnDoorUnlocked();
-            MarkDoorStateChanged();
-        }
+        isLocked = false;
+        PlaySound(unlockSound);
+        Debug.Log($"{gameObject.name} 문이 열렸습니다!");
+        OnDoorUnlocked();
+        MarkDoorStateChanged();
 
         // 페어 문도 열기 (무한 루프 방지)
         if (pairedDoor != null && pairedDoor.isLocked) {
@@ -65,7 +58,7 @@ public class LockedDoor : BaseDoor
     }
 
     // 페어 문 함께 잠그기
-    public void LockPair() {
+    public void LockDoors() {
         // 자신 잠그기
         if (!isLocked) {
             isLocked = true;
@@ -83,31 +76,22 @@ public class LockedDoor : BaseDoor
         }
     }
 
-    void OnDoorUnlocked() {
-        UpdateDoorVisual(true);
-    }
+    void OnDoorUnlocked() => UpdateDoorVisual(true);
 
     void PlaySound(AudioClip clip) {
-        if (audioSource && clip) {
-            SoundManager.Instance.PlaySFX(clip);
-        }
+        if (audioSource && clip) SoundManager.Instance.PlaySFX(clip);
     }
 
     // 테스트용 메서드들
     [ContextMenu("Test - Solve Puzzle")]
-    public void TestSolvePuzzle() => SolvePuzzle();
+    public void TestSolvePuzzle() => UnlockDoors();
 
     [ContextMenu("Test - Lock Pair")]
-    public void TestLockPair() => LockPair();
+    public void TestLockPair() => LockDoors();
 
     // 퍼즐 매니저에서 사용할 수 있는 프로퍼티
     public string PuzzleId => puzzleId;
 
-    void OnMouseEnter() {
-        UIManager.Instance.SetCursor(isLocked ? UIManager.CursorType.LockDoor : UIManager.CursorType.OpenDoor);
-    }
-
-    void OnMouseExit() {
-        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
-    }
+    void OnMouseEnter() => UIManager.Instance.SetCursor(isLocked ? UIManager.CursorType.LockDoor : UIManager.CursorType.OpenDoor);
+    void OnMouseExit() => UIManager.Instance.SetCursor(UIManager.CursorType.Default);
 }

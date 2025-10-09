@@ -70,7 +70,7 @@ public class Ch1_MainFlashlight : BasePossessable
 
                 Unpossess();
 
-                Door.SolvePuzzle();
+                Door.UnlockDoors();
                 UIManager.Instance.NoticePopupUI.FadeInAndOut("퍼즐을 해결했습니다. 출구가 열렸습니다.");
                 UIManager.Instance.PromptUI.ShowPrompt("N", 3f);
             }

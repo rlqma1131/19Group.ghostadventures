@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using _01.Scripts.CustomPropertyAttribute;
+using _01.Scripts.Managers.Puzzle;
 using _01.Scripts.Object.NormalObject;
 using Cinemachine;
 using DG.Tweening;
@@ -45,7 +46,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         [Header("UI References")]
         [SerializeField] GameObject q_Key;
 
-        Ch4_BackgroundManager manager;
+        Ch4_FurnacePuzzleManager manager;
         bool alreadyPressed;
 
         override protected void Awake() {
@@ -57,11 +58,13 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         override protected void Start() {
             base.Start();
 
-            manager = Ch4_BackgroundManager.TryGetInstance();
+            manager = Ch4_FurnacePuzzleManager.TryGetInstance();
             isScannable = true;
             startPosition = brickTransform.localPosition;
             startRotation = brickTransform.localRotation;
         }
+        
+        void OnDestroy() => manager = null;
 
         public override void TriggerEvent() {
             if (!isPossessed) { q_Key.SetActive(false); return; }
@@ -76,6 +79,11 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         }
 
         void OnInteractedSwitch() {
+            if (!manager) {
+                Debug.LogError("Fatal Error: Puzzle Manager Not Found!");
+                return;
+            }
+            
             Ch4_Furnace furnace = manager.Furnace;
             Sequence switchFlipSequence = DOTween.Sequence();
             

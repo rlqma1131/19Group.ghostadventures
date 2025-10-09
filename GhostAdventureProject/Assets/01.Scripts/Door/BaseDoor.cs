@@ -96,8 +96,8 @@ public abstract class BaseDoor : BaseInteractable
 
         previousLockedState = isLocked;
 
-        if (closedObject != null) closedObject.SetActive(isLocked);
-        if (OpenObject != null) OpenObject.SetActive(!isLocked);
+        if (closedObject) closedObject.SetActive(isLocked);
+        if (OpenObject) OpenObject.SetActive(!isLocked);
     }
 
 

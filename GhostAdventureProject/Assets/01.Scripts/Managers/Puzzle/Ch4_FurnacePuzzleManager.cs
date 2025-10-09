@@ -1,22 +1,33 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Extensions;
 using _01.Scripts.Object.NormalObject;
+using _01.Scripts.Object.PossessableObject.PO_Object;
 using _01.Scripts.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 
-namespace _01.Scripts.Object.PossessableObject.PO_Object
+namespace _01.Scripts.Managers.Puzzle
 {
     public enum TransitionResult { TurnedOn, TurnedOff, Failed }
     
-    public class Ch4_BackgroundManager : TemporalSingleton<Ch4_BackgroundManager>
+    public class Ch4_FurnacePuzzleManager : TemporalSingleton<Ch4_FurnacePuzzleManager>
     {
+        #region Fields
+
+        readonly static int Opacity = Shader.PropertyToID("_Opacity");
+
         [Header("References")] 
-        [SerializeField] List<Volume> volumes;
         [SerializeField] Ch4_Furnace furnace;
+        [SerializeField] List<Volume> volumes;
         [SerializeField] List<Ch4_BackgroundSwitch> switches;
+        
+        [Header("Door to Unlock")]
+        [SerializeField] LockedDoor door;
+        [SerializeField] Renderer doorRenderer;
+        [SerializeField] int currentProgress;
 
         [Header("Transition Settings")]
         [SerializeField] float transitionTime = 4f;
@@ -26,22 +37,28 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         UnityAction synchronizeLight = delegate { };
         Action transition = delegate { };
         Coroutine transitionCoroutine;
+        MaterialPropertyBlock blockOfDoor;
         float transitionVelocity;
-        bool isDisplaying => volumes[0].weight > 0f;
         
         // Properties
+        bool isDisplaying => volumes[0].weight > 0f;
         public Ch4_Furnace Furnace => furnace;
         public VolumeProfile CurrentProfile => volumes[0].profile;
+
+        #endregion
 
         override protected void Awake() {
             base.Awake();
 
-            if (volumes.Count <= 0) volumes.AddRange(GetComponentsInChildren<Volume>());
             if (!furnace) furnace = FindFirstObjectByType<Ch4_Furnace>();
-            if (switches.Count <= 0)  switches.AddRange(GetComponentsInChildren<Ch4_BackgroundSwitch>());
+            if (volumes.Count <= 0) volumes.AddRange(GetComponentsInChildren<Volume>());
+            if (switches.Count <= 0) switches.AddRange(GetComponentsInChildren<Ch4_BackgroundSwitch>());
+            if (!door) { Debug.LogError("Fatal Error: Door is not allocated!"); return; }
+            if (!doorRenderer) door.gameObject.GetComponentInChildren_SearchByName<Renderer>("Locked");
         }
 
         void Start() {
+            blockOfDoor = new MaterialPropertyBlock();
             foreach (Ch4_BackgroundSwitch sw in switches) synchronizeLight += sw.SynchronizeState;
         }
 
@@ -59,6 +76,22 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
             
             ChangeBackground(profile);
             return TransitionResult.TurnedOn;
+        }
+
+        /// <summary>
+        /// Update Progress of furnace puzzle
+        /// </summary>
+        public void UpdateProgress() {
+            // Update Progress
+            currentProgress++;
+            
+            // Update Material Value
+            doorRenderer.GetPropertyBlock(blockOfDoor);
+            blockOfDoor.SetFloat(Opacity, 1f - (float)currentProgress / switches.Count);
+            doorRenderer.SetPropertyBlock(blockOfDoor);
+            
+            // If condition fulfilled, unlock allocated door.
+            if (currentProgress >= switches.Count) door.UnlockDoors();
         }
         
         void ChangeBackground(VolumeProfile profile) => ChangeVolumeProfile(profile, 1f);

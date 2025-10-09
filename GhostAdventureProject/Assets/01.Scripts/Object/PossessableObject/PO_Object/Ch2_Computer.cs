@@ -155,7 +155,7 @@ public class Ch2_Computer : BasePossessable
     private IEnumerator ShowCorrectImage()
     {
         yield return new WaitForSeconds(2f);
-        doorToOpen.SolvePuzzle();
+        doorToOpen.UnlockDoors();
         ClosePanel();
         Unpossess();
     }

@@ -88,7 +88,7 @@ public class Ch3_LockerSelector : MonoBehaviour
     private IEnumerator DelaySolvePuzzle()
     {
         yield return null; // 다음 프레임
-        lockedb1fDoor.SolvePuzzle();
+        lockedb1fDoor.UnlockDoors();
     }
     
     public void OnWrongBodySelected()
@@ -139,7 +139,7 @@ public class Ch3_LockerSelector : MonoBehaviour
         bool isSecondAttemptFail = (currentAttempt == 2);
         
         if (isSecondAttemptFail && penaltyDoor != null)
-            penaltyDoor.LockPair();
+            penaltyDoor.LockDoors();
         
         CacheGlobalLightIfNeeded();
         SetPlayerLightEnabled(true);
@@ -149,7 +149,7 @@ public class Ch3_LockerSelector : MonoBehaviour
         yield return new WaitForSeconds(blackoutHoldSeconds);
         
         if (isSecondAttemptFail && penaltyDoor != null)
-            penaltyDoor.SolvePuzzle();
+            penaltyDoor.UnlockDoors();
         
         foreach (var opened in openedLockers)
         {
