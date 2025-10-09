@@ -123,7 +123,7 @@ public class Ch1_Cat : MoveBasePossessable
         isActing = true;
 
         anim.SetTrigger(OpenHash);
-        door.SolvePuzzle();
+        door.UnlockDoors();
 
         yield return new WaitForSecondsRealtime(2f); // 2초 기다림
 

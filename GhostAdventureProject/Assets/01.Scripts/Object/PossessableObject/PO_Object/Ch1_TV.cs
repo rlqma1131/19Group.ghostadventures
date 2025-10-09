@@ -153,7 +153,7 @@ public class Ch1_TV : BasePossessable
         }
 
         // 3. 문 열기
-        Door.SolvePuzzle();
+        Door.UnlockDoors();
 
         // 4. 빙의 해제
         isPossessed = false;

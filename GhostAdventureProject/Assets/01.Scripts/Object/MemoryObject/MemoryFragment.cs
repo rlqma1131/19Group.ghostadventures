@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class MemoryFragment : BaseInteractable
@@ -70,6 +71,7 @@ public class MemoryFragment : BaseInteractable
     public virtual void IsScannedCheck()
     {
         if (!isScannable) return;
+        
         isScannable = false;
         alreadyScanned = true;
         canStore = true;

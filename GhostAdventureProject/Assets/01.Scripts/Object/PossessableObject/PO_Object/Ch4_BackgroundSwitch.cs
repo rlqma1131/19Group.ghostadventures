@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _01.Scripts.Managers.Puzzle;
 using _01.Scripts.Object.MemoryObject;
 using DG.Tweening;
 using UnityEngine;
@@ -23,7 +24,8 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         [Header("UI References")]
         [SerializeField] GameObject q_Key;
 
-        Ch4_BackgroundManager manager;
+        // Fields
+        Ch4_FurnacePuzzleManager manager;
         bool alreadyPressed;
 
         override protected void Awake() {
@@ -36,8 +38,10 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
         override protected void Start() {
             base.Start();
 
-            manager = Ch4_BackgroundManager.TryGetInstance();
+            manager = Ch4_FurnacePuzzleManager.TryGetInstance();
         }
+
+        void OnDestroy() => manager = null;
 
         public override void TriggerEvent() {
             if (!isPossessed) { q_Key.SetActive(false); return; }

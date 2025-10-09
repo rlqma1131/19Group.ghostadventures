@@ -93,10 +93,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6934705679907991126}
-  - component: {fileID: 5412958358219183519}
-  - component: {fileID: 1524281172236760906}
-  - component: {fileID: 5646177509723499262}
   - component: {fileID: 7672899591115268388}
+  - component: {fileID: 5412958358219183519}
+  - component: {fileID: 5646177509723499262}
+  - component: {fileID: 1524281172236760906}
   - component: {fileID: 4423024239540450941}
   m_Layer: 0
   m_Name: WoodDoor_Open
@@ -122,6 +122,27 @@ Transform:
   - {fileID: 3225702020907085948}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &7672899591115268388
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7900676842936227480}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!212 &5412958358219183519
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -174,23 +195,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1524281172236760906
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7900676842936227480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eaddd9e1e9a81d4ea2cd09c720564c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlight: {fileID: 0}
-  targetDoor: {fileID: 0}
-  targetPos: {x: 0, y: 0}
-  closedObject: {fileID: 0}
-  OpenObject: {fileID: 0}
 --- !u!61 &5646177509723499262
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -236,27 +240,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.6, y: 2.9333334}
   m_EdgeRadius: 0
---- !u!95 &7672899591115268388
-Animator:
-  serializedVersion: 5
+--- !u!114 &1524281172236760906
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7900676842936227480}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eaddd9e1e9a81d4ea2cd09c720564c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
+  isScannable: 1
+  targetDoor: {fileID: 0}
+  targetPos: {x: 0, y: 0}
+  isLocked: 0
+  closedObject: {fileID: 0}
+  OpenObject: {fileID: 0}
 --- !u!114 &4423024239540450941
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -36,7 +36,7 @@ public class Ch2_DoorLock : BaseInteractable
     // 도어락 풀리고 문 열림 -> 도어락 오브젝트 숨김
     private void OpenDoorLock() {
         isDoorOpen = true;
-        officeDoor.SolvePuzzle();
+        officeDoor.UnlockDoors();
         inventory.TryUseSelectedItem();
         gameObject.SetActive(false);
     }

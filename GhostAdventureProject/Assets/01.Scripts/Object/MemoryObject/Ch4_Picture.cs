@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _01.Scripts.Extensions;
+using _01.Scripts.Managers.Puzzle;
 using UnityEngine;
 
 namespace _01.Scripts.Object.MemoryObject
@@ -15,6 +16,8 @@ namespace _01.Scripts.Object.MemoryObject
         [SerializeField] List<string> linesWhenPlayerEntered = new() { "이 그림은 도대체 뭐지..?" };
         [SerializeField] List<string> linesWhenPlayerEnteredActive = new() { "그림 속 이미지가 변했어..." };
 
+        Ch4_FurnacePuzzleManager manager;
+        
         override protected void Awake() {
             base.Awake();
 
@@ -26,14 +29,18 @@ namespace _01.Scripts.Object.MemoryObject
 
         override protected void Start() {
             base.Start();
-
+            
+            manager = Ch4_FurnacePuzzleManager.TryGetInstance();
             isScannable = false;
             alreadyScanned = false;
         }
 
         public void SetPictureState(bool scannable, bool? already = null) {
             isScannable = scannable;
-            if (already != null) alreadyScanned = already.Value;
+            if (already != null) {
+                alreadyScanned = already.Value;
+                if (already.Value) manager.UpdateProgress();
+            }
             
             if (isScannable || !isScannable && alreadyScanned) {
                 emptyPicture.SetActive(false); filledPicture.SetActive(true);
@@ -41,6 +48,10 @@ namespace _01.Scripts.Object.MemoryObject
             else {
                 filledPicture.SetActive(false); emptyPicture.SetActive(true);
             }
+        }
+
+        public override void Scanning() {
+            if (manager) manager.UpdateProgress();
         }
 
         override protected void OnTriggerEnter2D(Collider2D other) {
