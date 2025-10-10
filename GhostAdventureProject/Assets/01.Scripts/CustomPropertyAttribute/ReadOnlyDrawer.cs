@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+﻿
 
 using UnityEditor;
 using UnityEngine;
@@ -7,6 +7,7 @@ namespace _01.Scripts.CustomPropertyAttribute
 {
     public class ReadOnlyAttribute : PropertyAttribute { }
     
+        #if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : PropertyDrawer
     {
@@ -16,6 +17,6 @@ namespace _01.Scripts.CustomPropertyAttribute
             GUI.enabled = true;
         }
     }
+        #endif  
 }
 
-#endif
