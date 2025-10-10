@@ -21,7 +21,6 @@ public class MemoryScan : MonoBehaviour
 
     CountdownTimer scanTimer;
     Camera cam;
-    Inventory_Player inventory_Player;
     Player player;
 
     // 내부 상태 변수
@@ -37,7 +36,6 @@ public class MemoryScan : MonoBehaviour
 
     public void Initialize(Player player) {
         // Reference 설정
-        inventory_Player = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         cam = Camera.main;
         this.player = player;
         

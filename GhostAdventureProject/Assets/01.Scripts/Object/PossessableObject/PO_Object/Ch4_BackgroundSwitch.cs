@@ -43,6 +43,11 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
 
         void OnDestroy() => manager = null;
 
+        override protected void Update() {
+            if (Input.GetKeyDown(KeyCode.E) && isPossessed && !alreadyPressed) Unpossess();
+            TriggerEvent();
+        }
+
         public override void TriggerEvent() {
             if (!isPossessed) { q_Key.SetActive(false); return; }
         
@@ -84,7 +89,7 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
                 }
             });
 
-            triggerSequence.AppendInterval(2f);
+            triggerSequence.AppendInterval(1f);
             triggerSequence.AppendCallback(() => {
                 hasActivated = true;
                 isScannable = true;
