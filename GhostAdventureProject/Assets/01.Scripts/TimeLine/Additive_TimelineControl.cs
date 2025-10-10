@@ -22,6 +22,8 @@ public class Additive_TimelineControl : MonoBehaviour
     [SerializeField] Image space1;
     [SerializeField] Image space2;
 
+    [SerializeField]private string TimeLine;
+
     private bool isHolding = false;
     private Coroutine flashingCoroutine;
 
@@ -134,6 +136,7 @@ public class Additive_TimelineControl : MonoBehaviour
             memoryScan.CurrentMemoryFragment.AfterScan();
             UIManager.Instance.NoticePopupUI.FadeInAndOut($"※ 기억조각 저장 됨 - [{memoryScan.CurrentMemoryFragment.data.memoryTitle}]");
         }
+
     }
 
     private IEnumerator FlashImages()
