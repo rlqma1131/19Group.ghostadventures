@@ -28,7 +28,7 @@ public class Ch04_EndingTrigger : MonoBehaviour
     {
         Choice_canvas.SetActive(true);
         ExitText.SetActive(true);
-        //ExitDoor.isLocked = false;  
+        ExitDoor.UnlockDoors();
 
     }
 

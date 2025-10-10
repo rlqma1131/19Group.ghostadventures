@@ -78,6 +78,12 @@ namespace _01.Scripts.Managers.Puzzle
             return TransitionResult.TurnedOn;
         }
 
+       public void ResetBackGroundTransition()
+        {
+
+            ResetBackground();
+        }
+
         /// <summary>
         /// Update Progress of furnace puzzle
         /// </summary>

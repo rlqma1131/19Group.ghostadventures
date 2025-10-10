@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class LockedDoor : BaseDoor
 {
@@ -13,6 +14,9 @@ public class LockedDoor : BaseDoor
 
     AudioSource audioSource;
 
+
+    [Header("Event Trigger after entered")]
+    [SerializeField] UnityEvent OnEnter;
     override protected void Start() {
         isLocked = initiallyLocked; // 기본적으로 잠김
         audioSource = GetComponent<AudioSource>();
@@ -32,6 +36,7 @@ public class LockedDoor : BaseDoor
             PlaySound(lockedSound);
         }
         else {
+            OnEnter?.Invoke();
             TeleportPlayer();
         }
     }
