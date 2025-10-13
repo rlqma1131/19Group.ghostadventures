@@ -211,6 +211,7 @@ public class MemoryFragment : BaseInteractable
 
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
         SceneManager.LoadScene(data.CutSceneName, LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
+        
         Time.timeScale = 0;
         ApplyMemoryEffect(); // 메모리 효과 적용
         PlusAction();

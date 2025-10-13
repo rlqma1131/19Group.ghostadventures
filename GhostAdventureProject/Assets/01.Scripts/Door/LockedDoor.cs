@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class LockedDoor : BaseDoor
 {
@@ -11,6 +12,9 @@ public class LockedDoor : BaseDoor
     [Header("Pair Door System")] 
     [SerializeField] LockedDoor pairedDoor; // 페어 문 (양방향 연결)
 
+    [Header("Event Trigger after entered")] 
+    [SerializeField] UnityEvent OnEnter;
+    
     AudioSource audioSource;
 
     override protected void Start() {
@@ -32,6 +36,7 @@ public class LockedDoor : BaseDoor
             PlaySound(lockedSound);
         }
         else {
+            OnEnter?.Invoke();
             TeleportPlayer();
         }
     }
