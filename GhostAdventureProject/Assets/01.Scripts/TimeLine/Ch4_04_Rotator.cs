@@ -82,7 +82,8 @@ public class Ch4_04_Rotator : MonoBehaviour
         rotateTween = target.DORotate(new Vector3(0f, 0f, angle), duration, RotateMode.LocalAxisAdd)
             .SetEase(Ease.Linear)
             .SetRelative(true)
-            .SetLoops(-1, LoopType.Incremental);
+            .SetLoops(-1, LoopType.Incremental)
+            .SetUpdate(true);
     }
 
     void OnDisable() => StopRotation();

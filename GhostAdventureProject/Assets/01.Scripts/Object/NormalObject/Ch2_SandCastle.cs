@@ -1,7 +1,6 @@
-using System.Collections.Generic;
-using _01.Scripts.CustomPropertyAttribute;
+﻿using System.Collections.Generic;
 using UnityEngine;
-
+using _01.Scripts.CustomPropertyAttribute;
 /// <summary>
 /// Player와 까마귀 둘다 상호작용을 할 수 있는 객체
 /// 플레이어가 까마귀에 빙의해 접근하여 Q를 누르면 모래성이 무너지고 인형그림 단서와 기억조각이 나타난다.

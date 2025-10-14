@@ -17,6 +17,9 @@ public class LockedDoor : BaseDoor
     
     AudioSource audioSource;
 
+
+    [Header("Event Trigger after entered")]
+    [SerializeField] UnityEvent OnEnter;
     override protected void Start() {
         audioSource = GetComponent<AudioSource>();
 

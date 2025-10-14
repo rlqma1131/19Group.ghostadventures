@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityEngine.Playables;
 
 public class MemoryFragment : BaseInteractable
 {
@@ -32,6 +33,9 @@ public class MemoryFragment : BaseInteractable
     
     // Properties
     public bool CanStore => canStore;
+    [Header("컷신 종료시 재생될 타임라인")]
+
+    [SerializeField] private PlayableDirector TimeLine;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -135,7 +139,7 @@ public class MemoryFragment : BaseInteractable
         EnemyAI.PauseAllEnemies();
         player.PossessionSystem.CanMove = false; // 플레이어 이동 비활성화
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
-         // === 1. 튕기기 애니메이션 ===
+                                                  // === 1. 튕기기 애니메이션 ===
         var bounceSeq = DOTween.Sequence()
             .Append(drop.transform.DOMoveY(startPos.y + bounceHeight, bounceDuration / 2f).SetEase(Ease.OutQuad))
             .Append(drop.transform.DOMoveY(startPos.y, bounceDuration / 2f).SetEase(Ease.InQuad))
@@ -211,11 +215,12 @@ public class MemoryFragment : BaseInteractable
 
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
         SceneManager.LoadScene(data.CutSceneName, LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
-        
+        TimeLine?.Play(); // 타임라인 재생
         Time.timeScale = 0;
         ApplyMemoryEffect(); // 메모리 효과 적용
         PlusAction();
     }
+    
 
     private Sprite GetFragmentSpriteByType(MemoryData.MemoryType type)
     {
