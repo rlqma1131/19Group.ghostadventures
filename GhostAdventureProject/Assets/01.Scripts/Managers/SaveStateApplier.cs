@@ -69,9 +69,6 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 memoryFragment.transform.position = memoryState.position.ToVector3();
                 memoryFragment.SetScannable(memoryState.isScannable);
                 memoryFragment.SetAlreadyScanned(memoryState.alreadyScanned);
-                
-                if (memoryFragment is Ch4_Picture picture) 
-                    picture.SetPictureState(memoryState.isScannable, memoryState.alreadyScanned);
             }
             else if (go.TryGetComponent(out BaseDoor door)) {
                 if (SaveManager.TryGetDoorLocked(uid.Id, out bool locked))
@@ -82,6 +79,12 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
                 clue.gameObject.SetActive(possessableState.active);
                 clue.transform.position = possessableState.position.ToVector3();
                 clue.ApplyHasActivatedFromSave(possessableState.hasActivated);
+            }
+            else if (go.TryGetComponent(out Ch4_Picture picture)) {
+                if (!SaveManager.TryGetMemoryFragmentObjectState(uid.Id, out MemoryFragmentObjectState pictureState)) continue;
+                picture.gameObject.SetActive(pictureState.active);
+                picture.transform.position = pictureState.position.ToVector3();
+                picture.SetPictureState(pictureState.isScannable, pictureState.alreadyScanned);
             }
             else {
                 if (!SaveManager.TryGetObjectState(uid.Id, out ObjectState state)) continue;

@@ -18,9 +18,10 @@ public class LockedDoor : BaseDoor
     AudioSource audioSource;
 
     override protected void Start() {
-        isLocked = initiallyLocked; // 기본적으로 잠김
         audioSource = GetComponent<AudioSource>();
 
+        isLocked = initiallyLocked; // 기본적으로 잠김
+        
         // 부모 클래스의 Start 호출
         base.Start();
 
