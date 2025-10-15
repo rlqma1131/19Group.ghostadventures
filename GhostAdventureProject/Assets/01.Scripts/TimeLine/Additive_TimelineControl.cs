@@ -28,7 +28,7 @@ public class Additive_TimelineControl : MonoBehaviour
     private Coroutine flashingCoroutine;
 
     private float skipTimer = 0f; // S 키를 누른 시간을 측정하는 타이머
-    private const float SKIP_DURATION = 3.0f; // 스킵에 필요한 시간 (3초)
+    private const float SKIP_DURATION = 2f; // 스킵에 필요한 시간 (3초)
     [SerializeField] private string prompt;
     private LoadSceneMode currentLoadMode = LoadSceneMode.Single;
 

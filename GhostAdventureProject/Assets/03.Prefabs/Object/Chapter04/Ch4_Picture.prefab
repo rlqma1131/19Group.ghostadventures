@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 947032174905079460}
   - component: {fileID: 4365941118163921727}
   - component: {fileID: 8676719626620174622}
+  - component: {fileID: 6484837840811150562}
   m_Layer: 0
   m_Name: Ch4_Picture
   m_TagString: Untagged
@@ -94,18 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlightObj: {fileID: 8598208266582274819}
   isScannable: 0
-  data: {fileID: 0}
-  canStore: 0
-  alreadyScanned: 0
-  fragmentDropPrefab: {fileID: 3038222122984259640, guid: 44262f016cdd94745a5b9f8c993c56aa, type: 3}
-  dropOffset: {x: 0, y: 0, z: 0}
-  bounceHeight: 0.3
-  bounceDuration: 0.5
-  rotateTime: 2
-  ellipseRadiusX: 0.8
-  ellipseRadiusZ: 1.5
-  audioSource1: {fileID: 0}
-  audioSource2: {fileID: 0}
+  scanToTeleport: {fileID: 0}
   emptyPicture: {fileID: 9097052097841634328}
   filledPicture: {fileID: 5833519625934185875}
   linesWhenPlayerEntered:
@@ -114,6 +104,22 @@ MonoBehaviour:
   linesWhenPlayerEnteredActive:
   - "\uBB34\uC5B8\uAC00 \uADF8\uB824\uC838 \uC788\uB2E4..."
   - "\uC81C\uBAA9: \"\uCCAB \uC791\uD488\""
+--- !u!114 &6484837840811150562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2981708093708352222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1707949857fa4b41b66bbc0f612fd471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scanPanel: {fileID: 0}
+  scanCircleUI: {fileID: 0}
+  target: {fileID: 0}
+  scanDuration: 2
 --- !u!1 &5833519625934185875
 GameObject:
   m_ObjectHideFlags: 0

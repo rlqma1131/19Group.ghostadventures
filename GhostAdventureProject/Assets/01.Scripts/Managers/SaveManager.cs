@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using _01.Scripts.Object.BaseClasses.Interfaces;
+using _01.Scripts.Object.NormalObject;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -513,6 +514,8 @@ public static class SaveManager {
                 SetDoorLocked(uid.Id, door.IsLocked);
             else if (go.TryGetComponent(out Ch2_DrawingClue clue))
                 SetPossessableObjectState(uid.Id, clue.gameObject.activeInHierarchy, clue.IsScannable(), clue.transform.position, clue.HasActivated);
+            else if (go.TryGetComponent(out Ch4_Picture picture))
+                SetMemoryFragmentObjectState(uid.Id, go.activeInHierarchy, go.transform.position, picture.IsScannable(), picture.IsAlreadyScanned());
             else if (go.TryGetComponent(out IInteractable interactable))
                 SetObjectState(uid.Id, go.activeInHierarchy, interactable.IsScannable(), go.transform.position);
             else 

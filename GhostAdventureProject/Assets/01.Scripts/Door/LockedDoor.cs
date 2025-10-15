@@ -12,15 +12,16 @@ public class LockedDoor : BaseDoor
     [Header("Pair Door System")] 
     [SerializeField] LockedDoor pairedDoor; // 페어 문 (양방향 연결)
 
-    AudioSource audioSource;
-
-
-    [Header("Event Trigger after entered")]
+    [Header("Event Trigger after entered")] 
     [SerializeField] UnityEvent OnEnter;
+    
+    AudioSource audioSource;
+    
     override protected void Start() {
-        isLocked = initiallyLocked; // 기본적으로 잠김
         audioSource = GetComponent<AudioSource>();
 
+        isLocked = initiallyLocked; // 기본적으로 잠김
+        
         // 부모 클래스의 Start 호출
         base.Start();
 
