@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     float currentSpeed;
     
     public Animator Animator => animator;
+    public bool IsSlowdownActive { get; private set; } = false;
 
     public void Initialize(Player value) {
         player = value;
@@ -61,8 +62,17 @@ public class PlayerController : MonoBehaviour
 
         // Slow down by input && Fulfilled condition
         if (isSlowdownAvailable) {
-            if (Input.GetKeyDown(KeyCode.LeftShift)) currentSpeed = slowSpeed;
-            else if(Input.GetKeyUp(KeyCode.LeftShift)) currentSpeed = moveSpeed;
+            if (Input.GetKeyDown(KeyCode.LeftShift)) {
+                currentSpeed = slowSpeed;
+                IsSlowdownActive = !IsSlowdownActive;
+                currentSpeed = IsSlowdownActive ? slowSpeed : moveSpeed;
+            }
+        }
+        else {
+            if (IsSlowdownActive) {
+                IsSlowdownActive = false;
+                currentSpeed = moveSpeed;
+            }
         }
         
         // Rotate Sprite which is defined by horizontal input

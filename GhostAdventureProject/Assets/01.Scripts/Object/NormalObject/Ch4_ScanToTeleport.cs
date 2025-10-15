@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -14,8 +15,9 @@ namespace _01.Scripts.Object.NormalObject
         [SerializeField] GameObject scanPanel; //스캔 패널
         [SerializeField] Image scanCircleUI; //스캔 원 UI
 
-        [Header("Target to Teleport")] 
+        [Header("Teleport Settings")] 
         [SerializeField] Transform target;
+        [SerializeField] List<string> linesWhenEntered = new();
 
         [Header("Scan Settings")] 
         [SerializeField] float scanDuration = 2f;
@@ -162,6 +164,7 @@ namespace _01.Scripts.Object.NormalObject
                     onExit?.Invoke();
                     isInTransition = false;
                     
+                    if (linesWhenEntered.Count > 0) UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenEntered.ToArray());
                     if (isSlowdownAvailable) {
                         bool val = GameManager.Instance.PlayerController.GetSlowdownAvailable();
                         GameManager.Instance.PlayerController.SetSlowdownAvailable(!val);
