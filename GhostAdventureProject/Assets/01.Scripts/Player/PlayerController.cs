@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")] 
     [SerializeField] float moveSpeed = 5f;
+    [SerializeField] float slowSpeed = 2f;
+    [SerializeField] bool isSlowdownAvailable = false;
 
     // Components
     Player player;
@@ -16,6 +18,7 @@ public class PlayerController : MonoBehaviour
     
     // Parameter Caches
     Vector3 move;
+    float currentSpeed;
     
     public Animator Animator => animator;
 
@@ -23,6 +26,8 @@ public class PlayerController : MonoBehaviour
         player = value;
         animator = value.Animator;
         mainSprite = value.SpriteRenderer;
+
+        currentSpeed = moveSpeed;
     }
 
     void Update() {
@@ -35,18 +40,30 @@ public class PlayerController : MonoBehaviour
         HandlePossession();
     }
 
-    void HandlePossession() {
-        if (Input.GetKeyDown(KeyCode.E)) player.PossessionSystem.TryPossess();
-    }
+    
 
     void OnDestroy() {
         // GameManager에 Player 파괴 알림
         GameManager.Instance?.OnPlayerDestroyed();
     }
+    
+    public void SetSlowdownAvailable(bool value) => isSlowdownAvailable = value;
+    
+    public bool GetSlowdownAvailable() => isSlowdownAvailable;
+    
+    void HandlePossession() {
+        if (Input.GetKeyDown(KeyCode.E)) player.PossessionSystem.TryPossess();
+    }
 
     void HandleMovement() {
         // Get Input values
         move = GetInputValue();
+
+        // Slow down by input && Fulfilled condition
+        if (isSlowdownAvailable) {
+            if (Input.GetKeyDown(KeyCode.LeftShift)) currentSpeed = slowSpeed;
+            else if(Input.GetKeyUp(KeyCode.LeftShift)) currentSpeed = moveSpeed;
+        }
         
         // Rotate Sprite which is defined by horizontal input
         mainSprite.flipX = move.x switch {
@@ -59,7 +76,7 @@ public class PlayerController : MonoBehaviour
         animator.SetBool(Move, move.magnitude > 0.01f);
         
         // Move character 
-        transform.position += move * (moveSpeed * Time.deltaTime);
+        transform.position += move * (currentSpeed * Time.deltaTime);
     }
 
     Vector2 GetInputValue() => new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));

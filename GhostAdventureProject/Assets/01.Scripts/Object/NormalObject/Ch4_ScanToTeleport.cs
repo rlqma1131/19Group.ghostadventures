@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using static _01.Scripts.Utilities.Timer;
 
@@ -6,23 +8,41 @@ namespace _01.Scripts.Object.NormalObject
 {
     public class Ch4_ScanToTeleport : MonoBehaviour
     {
+        #region Fields
+
         [Header("References")] 
-        [SerializeField] GameObject scanPanel;  //스캔 패널
-        [SerializeField] Image scanCircleUI;    //스캔 원 UI
+        [SerializeField] GameObject scanPanel; //스캔 패널
+        [SerializeField] Image scanCircleUI; //스캔 원 UI
 
         [Header("Target to Teleport")] 
         [SerializeField] Transform target;
-        
-        [Header("Scan Settings")]
+
+        [Header("Scan Settings")] 
         [SerializeField] float scanDuration = 2f;
         
+        [Header("Player Control Settings")]
+        [SerializeField] bool isSlowdownAvailable;
+
+        [Header("FadeOut/In Settings")] 
+        [SerializeField] float fadeDuration = 4f;
+        [SerializeField] UnityEvent onEnter;
+        [SerializeField] UnityEvent onProgress;
+        [SerializeField] UnityEvent onExit;
+
+        // Component Fields
         Camera cam;
         CountdownTimer scanTimer;
         Player.Player player;
+        
+        // Value Fields
         bool alreadyScanned;
         bool isScanning;
         bool isScanKeydown;
         bool isTeleportable;
+        bool isPlayerInside;
+        bool isInTransition;
+
+        #endregion
         
         void Start() {
             cam = Camera.main;
@@ -44,7 +64,8 @@ namespace _01.Scripts.Object.NormalObject
         void Update() {
             isScanKeydown = Input.GetKey(KeyCode.E);
 
-            if (isTeleportable && !alreadyScanned && !isScanning && isScanKeydown) TryStartScan();
+            if (isPlayerInside && !isInTransition && isTeleportable && 
+                !alreadyScanned && !isScanning && isScanKeydown) TryStartScan();
 
             // Tick timer & Update Scan Progress bar
             scanTimer.Tick(Time.unscaledDeltaTime);
@@ -57,8 +78,16 @@ namespace _01.Scripts.Object.NormalObject
             }
         }
         
-        public void SetTeleportable(bool teleportable) => isTeleportable = teleportable;
-        
+        public void SetTeleportable(bool teleportable) {
+            isTeleportable = teleportable;
+
+            if (!target) return;
+            if (!target.TryGetComponent(out Ch4_ScanToTeleport teleport)) return;
+            if (teleport.GetTeleportable() == isTeleportable) return;
+            
+            teleport.SetTeleportable(isTeleportable);
+        }
+
         public bool GetTeleportable() => isTeleportable;
 
         void TryStartScan() {
@@ -102,7 +131,7 @@ namespace _01.Scripts.Object.NormalObject
             scanCircleUI?.gameObject.SetActive(false);
             scanPanel?.SetActive(false);
             UIManager.Instance.PromptUI2.HidePrompt_UnPlayMode();
-
+            
             TeleportPlayer();
         }
 
@@ -118,19 +147,38 @@ namespace _01.Scripts.Object.NormalObject
 
         void TeleportPlayer() {
             if (!target) return;
-
-            GameManager.Instance.Player.transform.position = target.position;
+            
+            UIManager.Instance.FadeOutIn(fadeDuration, 
+                () => {
+                    onEnter?.Invoke();
+                    isInTransition = true;
+                    
+                    GameManager.Instance.Player.PossessionSystem.CanMove = false;
+                }, 
+                () => {
+                    GameManager.Instance.Player.transform.position = target.position;
+                },
+                () => {
+                    onExit?.Invoke();
+                    isInTransition = false;
+                    
+                    if (isSlowdownAvailable) {
+                        bool val = GameManager.Instance.PlayerController.GetSlowdownAvailable();
+                        GameManager.Instance.PlayerController.SetSlowdownAvailable(!val);
+                    }
+                    GameManager.Instance.Player.PossessionSystem.CanMove = true;
+                });
         }
         
         void OnTriggerEnter2D(Collider2D collision) {
             if (collision.CompareTag("Player")) {
-                isTeleportable = true;
+                isPlayerInside = true;
             }
         }
 
         void OnTriggerExit2D(Collider2D other) {
             if (other.CompareTag("Player")) {
-                isTeleportable = false;
+                isPlayerInside = false;
             }
         }
     }
