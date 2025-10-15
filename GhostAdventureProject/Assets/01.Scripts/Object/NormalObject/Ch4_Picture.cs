@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using _01.Scripts.Extensions;
 using _01.Scripts.Managers.Puzzle;
-using _01.Scripts.Object.NormalObject;
 using UnityEngine;
 
-namespace _01.Scripts.Object.MemoryObject
+namespace _01.Scripts.Object.NormalObject
 {
     public class Ch4_Picture : BaseInteractable
     {

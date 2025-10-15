@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _01.Scripts.Managers.Puzzle;
-using _01.Scripts.Object.MemoryObject;
+using _01.Scripts.Object.NormalObject;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Rendering;

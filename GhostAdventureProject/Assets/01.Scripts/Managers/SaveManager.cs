@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using _01.Scripts.Object.BaseClasses.Interfaces;
-using _01.Scripts.Object.MemoryObject;
+using _01.Scripts.Object.NormalObject;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;

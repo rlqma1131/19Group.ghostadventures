@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _01.Scripts.Object.BaseClasses.Interfaces;
-using _01.Scripts.Object.MemoryObject;
+using _01.Scripts.Object.NormalObject;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
