@@ -34,8 +34,8 @@ public class PlayerController : MonoBehaviour
     }
 
     void Update() {
-        if (!PossessionQTESystem.Instance ||
-            PossessionQTESystem.Instance.isRunning ||
+        if (!PossessionQTESystem.Instance || 
+            PossessionQTESystem.Instance.isRunning || 
             !player.PossessionSystem.CanMove)
             return;
 

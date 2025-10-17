@@ -77,7 +77,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// Called when the user tries to possess the object
     /// </summary>
     /// <returns></returns>
-    public bool TryPossess() {
+    public virtual bool TryPossess() {
         switch (tag) {
             case "Scanner":
             case "Cat": break;
@@ -130,7 +130,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// <summary>
     /// Request QTE Event when the user starts to possess the object
     /// </summary>
-    void RequestQTEEvent() {
+    protected void RequestQTEEvent() {
         switch (tag) {
             // 사람, 은신처만 QTE 요청
             case "HideArea":

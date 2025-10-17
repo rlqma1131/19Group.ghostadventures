@@ -11,6 +11,10 @@ namespace _01.Scripts.Object.NormalObject
 {
     public class Ch4_Spirit : BasePossessable
     {
+        readonly static int IsDead = Animator.StringToHash("IsDead");
+
+        #region Fields
+        
         [Header("References")] 
         [SerializeField] List<Transform> teleportPoints;
         [SerializeField] SpriteRenderer spriteRenderer;
@@ -20,14 +24,14 @@ namespace _01.Scripts.Object.NormalObject
         [Header("Target to teleport")] 
         [SerializeField] Ch4_Picture target;
         [SerializeField] float teleportDuration = 2f;
-        
-        [Header("Exorcism Settings")]
+
+        [Header("Exorcism Settings")] 
         [SerializeField] float exorcismDuration = 3f;
         [Range(0f, 1f)] [SerializeField] float shakeStrength = 0.5f;
         [SerializeField] AnimationCurve lightCurve;
         [SerializeField] float maxLightIntensity = 12f;
-        
-        
+
+
         [Header("Spirit Settings")] 
         [SerializeField] bool isTeleportAvailable;
         [SerializeField] float fadeDuration = 1f;
@@ -45,7 +49,10 @@ namespace _01.Scripts.Object.NormalObject
         float currentTime;
         bool isTriggered;
         bool isInTransition;
+        bool isInQTE;
 
+        #endregion
+        
         override protected void Awake() {
             base.Awake();
             
@@ -68,24 +75,50 @@ namespace _01.Scripts.Object.NormalObject
             CheckToTeleport();
         }
 
+        #region PossessionEvents
+
+        public override bool TryPossess() {
+            isInQTE = true;
+            UIManager.Instance.PromptUI2.ShowPrompt_UnPlayMode("은신 시도 중...", 2f);
+            player.PossessionSystem.PossessedTarget = this;
+            RequestQTEEvent();
+            return true;
+        }
+
         public override void OnPossessionEnterComplete() {
             base.OnPossessionEnterComplete();
-            
+
             ProceedExorcism();
+        }
+
+        #endregion
+
+        #region QTE Event Handlers
+
+        public override void OnQTESuccess() {
+            base.OnQTESuccess();
+            isInQTE = false;
         }
 
         public override void OnQTEFailure() {
             base.OnQTEFailure();
+            isInQTE = false;
             TeleportToRandomPoint(linesWhenFailed.ToArray());
         }
+
+        #endregion
+
+        #region Teleportation & Exorcism Methods
 
         void ProceedExorcism() {
             Sequence exorcismSequence = DOTween.Sequence();
             exorcismSequence
                 .Append(transform.DOShakePosition(exorcismDuration, shakeStrength, fadeOut: true))
-                .JoinCallback(() => StartCoroutine(LightCurveCoroutine()))
-                .AppendCallback(() =>
-                {
+                .JoinCallback(() => {
+                    anim.SetTrigger(IsDead);
+                    StartCoroutine(LightCurveCoroutine());
+                })
+                .AppendCallback(() => {
                     Unpossess();
                     hasActivated = false;
                     TeleportToPicture();
@@ -94,26 +127,52 @@ namespace _01.Scripts.Object.NormalObject
 
         void TeleportToPicture() {
             if (!target) return;
-            
-            UIManager.Instance.FadeOutIn(teleportDuration, 
-                () => {
-                    GameManager.Instance.Player.PossessionSystem.CanMove = false;
-                }, 
-                () => {
+
+            UIManager.Instance.FadeOutIn(teleportDuration,
+                () => { GameManager.Instance.Player.PossessionSystem.CanMove = false; },
+                () =>
+                {
                     GameManager.Instance.Player.transform.position = target.transform.position;
                     target.SetPictureState(false, true);
                     manager.UpdateProgress();
                 },
-                () => {
-                    GameManager.Instance.Player.PossessionSystem.CanMove = true;
-                });
+                () => { GameManager.Instance.Player.PossessionSystem.CanMove = true; });
         }
+
+        void TeleportToRandomPoint(string[] linesToPlay) {
+            Sequence teleportSequence = DOTween.Sequence();
+
+            teleportSequence.Append(spriteRenderer.DOFade(0f, fadeDuration));
+            teleportSequence.JoinCallback(() =>
+            {
+                UIManager.Instance.PromptUI.ShowPrompt_2(linesToPlay);
+                isScannable = false;
+                isTriggered = true;
+            });
+            teleportSequence.AppendCallback(() =>
+            {
+                Transform[] list = teleportPoints.Where(item => item.transform.position != transform.position).ToArray();
+                transform.position = list[Random.Range(0, list.Length)].position;
+            });
+
+            teleportSequence.Append(spriteRenderer.DOFade(1f, fadeDuration));
+            teleportSequence.AppendCallback(() =>
+            {
+                isScannable = true;
+                isTriggered = false;
+            });
+        }
+        
+        #endregion
+
+        #region Helper Methods
 
         IEnumerator LightCurveCoroutine() {
             float time = 0f;
             while (time < exorcismDuration) {
                 light2D.intensity = maxLightIntensity * lightCurve.Evaluate(time / exorcismDuration);
-                spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 1f - time / exorcismDuration);
+                spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b,
+                    1f - time / exorcismDuration);
                 time += Time.deltaTime;
                 yield return null;
             }
@@ -124,9 +183,10 @@ namespace _01.Scripts.Object.NormalObject
 
             if (currentTime <= 0f) {
                 currentTime = scanInterval;
-                if (!IsPlayerSlowdown() && !isTriggered) 
+                if (!IsPlayerSlowdown() && !isTriggered && !isInQTE)
                     TeleportToRandomPoint(linesWhenTeleported.ToArray());
-            } else currentTime -= Time.deltaTime;
+            }
+            else currentTime -= Time.deltaTime;
         }
 
         bool IsPlayerSlowdown() {
@@ -135,26 +195,11 @@ namespace _01.Scripts.Object.NormalObject
                 if (!colliders[i].TryGetComponent(out PlayerController pc)) continue;
                 if (pc.CurrentSpeed > pc.MinSpeed) return false;
             }
+
             return true;
         }
-
-        void TeleportToRandomPoint(string[] linesToPlay) {
-            Sequence teleportSequence = DOTween.Sequence();
-            
-            teleportSequence.Append(spriteRenderer.DOFade(0f, fadeDuration));
-            teleportSequence.JoinCallback(() =>
-            {
-                UIManager.Instance.PromptUI.ShowPrompt_2(linesToPlay);
-                isScannable = false; isTriggered = true;
-            });
-            teleportSequence.AppendCallback(() => {
-                Transform[] list = teleportPoints.Where(item => item.transform.position != transform.position).ToArray();
-                transform.position = list[Random.Range(0, list.Length)].position;
-            });
-
-            teleportSequence.Append(spriteRenderer.DOFade(1f, fadeDuration));
-            teleportSequence.AppendCallback(() => { isScannable = true; isTriggered = false; });
-        }
+        
+        #endregion
 
         void OnDrawGizmosSelected() {
             Gizmos.color = Color.green;
