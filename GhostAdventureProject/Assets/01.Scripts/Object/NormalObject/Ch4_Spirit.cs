@@ -1,10 +1,10 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using _01.Scripts.Extensions;
 using _01.Scripts.Managers.Puzzle;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
 
 namespace _01.Scripts.Object.NormalObject
@@ -15,7 +15,19 @@ namespace _01.Scripts.Object.NormalObject
         [SerializeField] List<Transform> teleportPoints;
         [SerializeField] SpriteRenderer spriteRenderer;
         [SerializeField] GameObject q_Key;
+        [SerializeField] Light2D light2D;
 
+        [Header("Target to teleport")] 
+        [SerializeField] Ch4_Picture target;
+        [SerializeField] float teleportDuration = 2f;
+        
+        [Header("Exorcism Settings")]
+        [SerializeField] float exorcismDuration = 3f;
+        [Range(0f, 1f)] [SerializeField] float shakeStrength = 0.5f;
+        [SerializeField] AnimationCurve lightCurve;
+        [SerializeField] float maxLightIntensity = 12f;
+        
+        
         [Header("Spirit Settings")] 
         [SerializeField] bool isTeleportAvailable;
         [SerializeField] float fadeDuration = 1f;
@@ -32,6 +44,13 @@ namespace _01.Scripts.Object.NormalObject
         Collider2D[] colliders = new Collider2D[1];
         float currentTime;
         bool isTriggered;
+        bool isInTransition;
+
+        override protected void Awake() {
+            base.Awake();
+            
+            if (!light2D) light2D = GetComponent<Light2D>();
+        }
 
         override protected void Start() {
             base.Start();
@@ -44,16 +63,59 @@ namespace _01.Scripts.Object.NormalObject
 
         public override void TriggerEvent() {
             if (!hasActivated) return;
+
+            if (isPossessed) return;
+            CheckToTeleport();
+        }
+
+        public override void OnPossessionEnterComplete() {
+            base.OnPossessionEnterComplete();
             
-            if (!isPossessed) {
-                CheckToTeleport();
-                q_Key.SetActive(false); 
-                return;
-            }
-        
-            q_Key.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.Q)) {
-                // TODO : Trigger Exorcism Event (Show afterimage, update progress of furnace puzzle and unpossess)
+            ProceedExorcism();
+        }
+
+        public override void OnQTEFailure() {
+            base.OnQTEFailure();
+            TeleportToRandomPoint(linesWhenFailed.ToArray());
+        }
+
+        void ProceedExorcism() {
+            Sequence exorcismSequence = DOTween.Sequence();
+            exorcismSequence
+                .Append(transform.DOShakePosition(exorcismDuration, shakeStrength, fadeOut: true))
+                .JoinCallback(() => StartCoroutine(LightCurveCoroutine()))
+                .AppendCallback(() =>
+                {
+                    Unpossess();
+                    hasActivated = false;
+                    TeleportToPicture();
+                });
+        }
+
+        void TeleportToPicture() {
+            if (!target) return;
+            
+            UIManager.Instance.FadeOutIn(teleportDuration, 
+                () => {
+                    GameManager.Instance.Player.PossessionSystem.CanMove = false;
+                }, 
+                () => {
+                    GameManager.Instance.Player.transform.position = target.transform.position;
+                    target.SetPictureState(false, true);
+                    manager.UpdateProgress();
+                },
+                () => {
+                    GameManager.Instance.Player.PossessionSystem.CanMove = true;
+                });
+        }
+
+        IEnumerator LightCurveCoroutine() {
+            float time = 0f;
+            while (time < exorcismDuration) {
+                light2D.intensity = maxLightIntensity * lightCurve.Evaluate(time / exorcismDuration);
+                spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 1f - time / exorcismDuration);
+                time += Time.deltaTime;
+                yield return null;
             }
         }
 
@@ -71,7 +133,7 @@ namespace _01.Scripts.Object.NormalObject
             int size = Physics2D.OverlapCircleNonAlloc(transform.position, scanRadius, colliders, layerMask);
             for (int i = 0; i < size; i++) {
                 if (!colliders[i].TryGetComponent(out PlayerController pc)) continue;
-                if (!pc.IsSlowdownActive) return false;
+                if (pc.CurrentSpeed > pc.MinSpeed) return false;
             }
             return true;
         }

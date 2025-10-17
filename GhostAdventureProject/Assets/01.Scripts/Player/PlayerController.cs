@@ -21,7 +21,9 @@ public class PlayerController : MonoBehaviour
     float currentSpeed;
     
     public Animator Animator => animator;
-    public bool IsSlowdownActive { get; private set; } = false;
+    public bool IsSlowdownActive { get; private set; }
+    public float CurrentSpeed => (move * currentSpeed).magnitude;
+    public float MinSpeed => slowSpeed;
 
     public void Initialize(Player value) {
         player = value;
@@ -40,9 +42,7 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandlePossession();
     }
-
     
-
     void OnDestroy() {
         // GameManager에 Player 파괴 알림
         GameManager.Instance?.OnPlayerDestroyed();
