@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _01.Scripts.Extensions;
 using _01.Scripts.Managers.Puzzle;
 using DG.Tweening;
 using UnityEngine;
@@ -16,24 +17,24 @@ namespace _01.Scripts.Object.NormalObject
         #region Fields
         
         [Header("References")] 
-        [SerializeField] List<Transform> teleportPoints;
-        [SerializeField] SpriteRenderer spriteRenderer;
+        [SerializeField] SpriteRenderer bodyRenderer;
+        [SerializeField] SpriteRenderer highlightRenderer;
         [SerializeField] GameObject q_Key;
         [SerializeField] Light2D light2D;
 
-        [Header("Target to teleport")] 
-        [SerializeField] Ch4_Picture target;
-        [SerializeField] float teleportDuration = 2f;
-
         [Header("Exorcism Settings")] 
+        [SerializeField] Ch4_Picture target;
         [SerializeField] float exorcismDuration = 3f;
         [Range(0f, 1f)] [SerializeField] float shakeStrength = 0.5f;
         [SerializeField] AnimationCurve lightCurve;
         [SerializeField] float maxLightIntensity = 12f;
-
-
-        [Header("Spirit Settings")] 
+        
+        [Header("Teleport Settings")]
         [SerializeField] bool isTeleportAvailable;
+        [SerializeField] float teleportDuration = 2f;
+        [SerializeField] List<Transform> teleportPoints;
+        
+        [Header("Spirit Event Settings")] 
         [SerializeField] float fadeDuration = 1f;
         [SerializeField] List<string> linesWhenTeleported = new() { "도망갔어..." };
         [SerializeField] List<string> linesWhenSuccess = new() { "됐다!" };
@@ -55,7 +56,11 @@ namespace _01.Scripts.Object.NormalObject
         
         override protected void Awake() {
             base.Awake();
-            
+
+            if (!bodyRenderer)
+                bodyRenderer = gameObject.GetComponentInChildren_SearchByName<SpriteRenderer>("Body");
+            if (!highlightRenderer)
+                highlightRenderer = gameObject.GetComponentInChildren_SearchByName<SpriteRenderer>("Highlight");
             if (!light2D) light2D = GetComponent<Light2D>();
         }
 
@@ -115,14 +120,16 @@ namespace _01.Scripts.Object.NormalObject
             exorcismSequence
                 .Append(transform.DOShakePosition(exorcismDuration, shakeStrength, fadeOut: true))
                 .JoinCallback(() => {
+                    UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenSuccess.ToArray());
+                    hasActivated = false;
                     anim.SetTrigger(IsDead);
                     StartCoroutine(LightCurveCoroutine());
                 })
                 .AppendCallback(() => {
                     Unpossess();
-                    hasActivated = false;
                     TeleportToPicture();
-                });
+                })
+                .PrependInterval(1f);
         }
 
         void TeleportToPicture() {
@@ -142,7 +149,7 @@ namespace _01.Scripts.Object.NormalObject
         void TeleportToRandomPoint(string[] linesToPlay) {
             Sequence teleportSequence = DOTween.Sequence();
 
-            teleportSequence.Append(spriteRenderer.DOFade(0f, fadeDuration));
+            teleportSequence.Append(bodyRenderer.DOFade(0f, fadeDuration));
             teleportSequence.JoinCallback(() =>
             {
                 UIManager.Instance.PromptUI.ShowPrompt_2(linesToPlay);
@@ -152,10 +159,13 @@ namespace _01.Scripts.Object.NormalObject
             teleportSequence.AppendCallback(() =>
             {
                 Transform[] list = teleportPoints.Where(item => item.transform.position != transform.position).ToArray();
-                transform.position = list[Random.Range(0, list.Length)].position;
+                Transform selected = list[Random.Range(0, list.Length)];
+                
+                bodyRenderer.flipX = !selected.gameObject.name.EndsWith("Reversed");
+                transform.position = selected.position;
             });
 
-            teleportSequence.Append(spriteRenderer.DOFade(1f, fadeDuration));
+            teleportSequence.Append(bodyRenderer.DOFade(1f, fadeDuration));
             teleportSequence.AppendCallback(() =>
             {
                 isScannable = true;
@@ -171,7 +181,7 @@ namespace _01.Scripts.Object.NormalObject
             float time = 0f;
             while (time < exorcismDuration) {
                 light2D.intensity = maxLightIntensity * lightCurve.Evaluate(time / exorcismDuration);
-                spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b,
+                bodyRenderer.color = new Color(bodyRenderer.color.r, bodyRenderer.color.g, bodyRenderer.color.b,
                     1f - time / exorcismDuration);
                 time += Time.deltaTime;
                 yield return null;
