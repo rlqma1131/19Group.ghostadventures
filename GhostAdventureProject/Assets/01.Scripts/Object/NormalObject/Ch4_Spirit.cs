@@ -12,9 +12,9 @@ namespace _01.Scripts.Object.NormalObject
 {
     public class Ch4_Spirit : BasePossessable
     {
-        readonly static int IsDead = Animator.StringToHash("IsDead");
-
         #region Fields
+    
+        readonly static int IsDead = Animator.StringToHash("IsDead");
         
         [Header("References")] 
         [SerializeField] SpriteRenderer bodyRenderer;
@@ -46,7 +46,7 @@ namespace _01.Scripts.Object.NormalObject
         [SerializeField] float scanInterval = 0.1f;
 
         Ch4_FurnacePuzzleManager manager;
-        Collider2D[] colliders = new Collider2D[1];
+        Collider2D[] results = new Collider2D[1];
         float currentTime;
         bool isTriggered;
         bool isInTransition;
@@ -128,8 +128,7 @@ namespace _01.Scripts.Object.NormalObject
                 .AppendCallback(() => {
                     Unpossess();
                     TeleportToPicture();
-                })
-                .PrependInterval(1f);
+                });
         }
 
         void TeleportToPicture() {
@@ -200,9 +199,14 @@ namespace _01.Scripts.Object.NormalObject
         }
 
         bool IsPlayerSlowdown() {
-            int size = Physics2D.OverlapCircleNonAlloc(transform.position, scanRadius, colliders, layerMask);
+            ContactFilter2D filter = new ContactFilter2D { 
+                useTriggers = true,
+                useDepth = false, 
+                useLayerMask = true, layerMask = layerMask
+            };
+            int size = Physics2D.OverlapCircle(transform.position, scanRadius, filter, results);
             for (int i = 0; i < size; i++) {
-                if (!colliders[i].TryGetComponent(out PlayerController pc)) continue;
+                if (!results[i].TryGetComponent(out PlayerController pc)) continue;
                 if (pc.CurrentSpeed > pc.MinSpeed) return false;
             }
 
