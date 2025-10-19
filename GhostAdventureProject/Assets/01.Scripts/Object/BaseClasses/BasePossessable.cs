@@ -66,7 +66,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
 
     public bool HasActivated() => hasActivated;
     
-    public void SetActivated(bool value) => hasActivated = value;
+    public virtual void SetActivated(bool value) => hasActivated = value;
 
     /// <summary>
     /// Events will activate in every frame

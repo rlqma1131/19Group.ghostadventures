@@ -73,6 +73,11 @@ namespace _01.Scripts.Object.NormalObject
 
         override protected void Update() => TriggerEvent();
 
+        public override void SetActivated(bool value) {
+            if (!value) manager.UpdateProgress();
+            base.SetActivated(value);
+        }
+
         public override void TriggerEvent() {
             if (!hasActivated) return;
 
@@ -122,6 +127,7 @@ namespace _01.Scripts.Object.NormalObject
                 .JoinCallback(() => {
                     UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenSuccess.ToArray());
                     hasActivated = false;
+                    MarkActivatedChanged();
                     anim.SetTrigger(IsDead);
                     StartCoroutine(LightCurveCoroutine());
                 })

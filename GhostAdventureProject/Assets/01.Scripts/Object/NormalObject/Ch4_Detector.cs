@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 using static _01.Scripts.Utilities.Timer;
@@ -26,7 +27,6 @@ namespace _01.Scripts.Object.NormalObject
         [Range(0f, 360f)] [SerializeField] float angleOffset = 180f;
 
         [Header("Teleport Settings")] 
-        [SerializeField] Transform targetToReset;
         [SerializeField] Transform targetToTeleport;
         [SerializeField] float resetDelay = 1f;
         [SerializeField] float resetDuration = 2f;
@@ -67,12 +67,17 @@ namespace _01.Scripts.Object.NormalObject
                 angleOffset + (movingAngle / 2 - Mathf.PingPong(time * angleSpeed, movingAngle)));
 
             // Update Body Sprite based on sensor angle
-            float angle = Vector2.SignedAngle(Quaternion.Euler(0f, 0f, angleOffset) * Vector2.up, transform.up);
-            for (int i = 0; i < 5; i++) {
-                if (angle >= -movingAngle / 2f + movingAngle / 5f * i &&
-                    angle < -movingAngle / 2f + movingAngle / 5f * (i + 1)) {
+            float angle = Vector2.SignedAngle(Quaternion.Euler(0f, 0f, 180f) * Vector2.up, transform.up);
+            for (int i = 0; i < 6; i++) {
+                if (angle >= -90f + 30f * i && angle < -90f + 30f * (i + 1)) {
                     bodyRenderer.sprite = listOfSprites[i];
-                    break;
+                }
+                else {
+                    bodyRenderer.sprite = angle switch {
+                        < -90f => listOfSprites.First(),
+                        > 90f => listOfSprites.Last(),
+                        _ => bodyRenderer.sprite
+                    };
                 }
             }
         }
@@ -94,7 +99,7 @@ namespace _01.Scripts.Object.NormalObject
                 .AppendCallback(() => {
                     UIManager.Instance.FadeOutIn(resetDuration,
                         () => { GameManager.Instance.Player.PossessionSystem.CanMove = false; },
-                        () => { GameManager.Instance.Player.transform.position = targetToReset.transform.position; },
+                        () => { GameManager.Instance.Player.transform.position = targetToTeleport.transform.position; },
                         () => {
                             isInTransition = false;
                             GameManager.Instance.Player.PossessionSystem.CanMove = true;
@@ -102,6 +107,10 @@ namespace _01.Scripts.Object.NormalObject
                 });
         }
         
+        /// <summary>
+        /// Check if the player is in detection area
+        /// </summary>
+        /// <returns></returns>
         bool IsPlayerDetected() {
             ContactFilter2D circleFilter = new ContactFilter2D {
                 useTriggers = true,
