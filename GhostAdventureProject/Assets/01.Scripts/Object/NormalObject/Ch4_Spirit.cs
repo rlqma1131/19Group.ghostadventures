@@ -5,6 +5,7 @@ using _01.Scripts.Extensions;
 using _01.Scripts.Managers.Puzzle;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
 
@@ -28,6 +29,7 @@ namespace _01.Scripts.Object.NormalObject
         [Range(0f, 1f)] [SerializeField] float shakeStrength = 0.5f;
         [SerializeField] AnimationCurve lightCurve;
         [SerializeField] float maxLightIntensity = 12f;
+        [SerializeField] UnityEvent onExorcism;
         
         [Header("Teleport Settings")]
         [SerializeField] bool isTeleportAvailable;
@@ -125,6 +127,7 @@ namespace _01.Scripts.Object.NormalObject
             exorcismSequence
                 .Append(transform.DOShakePosition(exorcismDuration, shakeStrength, fadeOut: true))
                 .JoinCallback(() => {
+                    onExorcism?.Invoke();
                     UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenSuccess.ToArray());
                     hasActivated = false;
                     MarkActivatedChanged();
@@ -146,7 +149,6 @@ namespace _01.Scripts.Object.NormalObject
                 {
                     GameManager.Instance.Player.transform.position = target.transform.position;
                     target.SetPictureState(false, true);
-                    manager.UpdateProgress();
                 },
                 () => { GameManager.Instance.Player.PossessionSystem.CanMove = true; });
         }
