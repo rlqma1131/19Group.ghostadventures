@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8526014870872934319}
   - component: {fileID: 5339061907774619273}
   - component: {fileID: 5817068636575157308}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: TimelineManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,6 +50,7 @@ MonoBehaviour:
   skip: {fileID: 0}
   space1: {fileID: 0}
   space2: {fileID: 0}
+  TimeLine: 
   prompt: 
 --- !u!114 &5339061907774619273
 MonoBehaviour:
@@ -117,7 +118,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5687984426917110792}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: E Key
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,7 +152,7 @@ GameObject:
   - component: {fileID: 1182266331056123612}
   - component: {fileID: 3689160185862445196}
   - component: {fileID: 5757241005897151711}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,7 +256,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2805026872502317820}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: HealingEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,7 +292,7 @@ GameObject:
   - component: {fileID: 1045070831956704021}
   - component: {fileID: 5136473264165261447}
   - component: {fileID: 4352557211065211186}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,7 +387,7 @@ GameObject:
   - component: {fileID: 4791076440399114726}
   - component: {fileID: 1309631250050576867}
   - component: {fileID: 9072771886418492556}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: TimeLine (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -654,7 +655,7 @@ GameObject:
   - component: {fileID: 829060029947907351}
   - component: {fileID: 7609363957946531102}
   - component: {fileID: 2367833893253374168}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: death
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -761,7 +762,7 @@ GameObject:
   - component: {fileID: 5261841221976960897}
   - component: {fileID: 6277797681244075238}
   - component: {fileID: 4410448427615363834}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -876,7 +877,7 @@ GameObject:
   - component: {fileID: 2698323478799734570}
   - component: {fileID: 6844112524438489996}
   - component: {fileID: 8811250634007420065}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: MainSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -982,7 +983,7 @@ GameObject:
   - component: {fileID: 7974032887546970258}
   - component: {fileID: 4592093054402777782}
   - component: {fileID: 3935706568834574228}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: Heal Particle Y
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5813,7 +5814,7 @@ GameObject:
   - component: {fileID: 8756321220606923956}
   - component: {fileID: 5258230991151023144}
   - component: {fileID: 8811118410229781066}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5914,7 +5915,7 @@ GameObject:
   - component: {fileID: 2857787248320874490}
   - component: {fileID: 8039362253297764171}
   - component: {fileID: 6919177328311624115}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: Heal Particle B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10745,7 +10746,7 @@ GameObject:
   - component: {fileID: 6591496070481697446}
   - component: {fileID: 5426988434588408983}
   - component: {fileID: 4986271610217663862}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11122,6 +11123,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  slowSpeed: 2
+  isSlowdownAvailable: 0
 --- !u!114 &6991356920413539432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11252,7 +11255,7 @@ MonoBehaviour:
   - {x: 0.32, y: -0.28, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 42996
+  m_InstanceId: 75874
   m_LocalBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0.32, y: 0.28, z: 0}
@@ -11317,7 +11320,7 @@ GameObject:
   - component: {fileID: 2001150359161674888}
   - component: {fileID: 8905891657642286078}
   - component: {fileID: 4795610501271266514}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: MapSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11401,7 +11404,7 @@ GameObject:
   - component: {fileID: 7275380586224256772}
   - component: {fileID: 346238495472742808}
   - component: {fileID: 2080177451587498342}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: Light 2D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11508,7 +11511,7 @@ GameObject:
   - component: {fileID: 2439168304299056250}
   - component: {fileID: 615877646883069507}
   - component: {fileID: 248143891045058901}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: player_ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11744,7 +11747,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3313469854862659843}
   - component: {fileID: 319000950455512286}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}

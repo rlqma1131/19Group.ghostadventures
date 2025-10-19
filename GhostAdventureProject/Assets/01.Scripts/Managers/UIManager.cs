@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using _01.Scripts.Player;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -34,7 +36,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private NoticePopup saveNoticePopup;           // 저장팝업 (오른쪽 하단)
     [SerializeField] private GameObject[] puzzleStatusPanels;       // * 퍼즐상태 (오른쪽 상단)
     [SerializeField] private GameObject qteEffectCanvas;            // QTE 이펙트 캔버스
-    
+    [SerializeField] Image fullScreenFadeImage;
     
     // 외부 접근용
     public SoulGauge SoulGaugeUI => soulGauge;
@@ -218,6 +220,31 @@ public class UIManager : Singleton<UIManager>
     {
         playModeUI.SetActive(false);
         Debug.Log("플레이모드UI 끄기");
+    }
+    
+    // FadeOut/In Function
+    public void FadeOutIn(float fadeDuration = 2f, Action onStart = null, Action onProcess = null, Action onEnd = null) {
+        onStart?.Invoke();
+        FadeOut(fadeDuration / 2f, () => {
+            onProcess?.Invoke();
+            FadeIn(fadeDuration / 2f, onEnd);
+        });
+    }
+
+    void FadeOut(float fadeDuration = 1f, Action onComplete = null) {
+        fullScreenFadeImage.gameObject.SetActive(true);
+        fullScreenFadeImage.DOFade(1f, fadeDuration).OnComplete(() =>
+        {
+            onComplete?.Invoke();
+        });
+    }
+
+    void FadeIn(float fadeDuration = 1f, Action onComplete = null) {
+        fullScreenFadeImage.DOFade(0f, fadeDuration).OnComplete(() =>
+        {
+            fullScreenFadeImage.gameObject.SetActive(false);
+            onComplete?.Invoke();
+        });
     }
 
     // 스타트엔딩UI 모두 켜기

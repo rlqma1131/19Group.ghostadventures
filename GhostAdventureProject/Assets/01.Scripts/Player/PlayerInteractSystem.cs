@@ -62,8 +62,8 @@ public class PlayerInteractSystem : MonoBehaviour
 
                 if (!results[i].gameObject.TryGetComponent(out IInteractable interactable)) continue;
                 
-                if (results[i].TryGetComponent(out IPossessable possessable)) {
-                    if (!possessable.HasActivated()) continue;
+                if (results[i].TryGetComponent(out BasePossessable possessable)) {
+                    if (!possessable.HasActivated() || !possessable.IsScannable()) continue;
                     newClosest = results[i].gameObject;
                     distance = newDist;
                 } else if (results[i].TryGetComponent(out MemoryFragment fragment)) {

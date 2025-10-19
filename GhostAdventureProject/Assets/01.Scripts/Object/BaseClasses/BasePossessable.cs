@@ -66,7 +66,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
 
     public bool HasActivated() => hasActivated;
     
-    public void SetActivated(bool value) => hasActivated = value;
+    public virtual void SetActivated(bool value) => hasActivated = value;
 
     /// <summary>
     /// Events will activate in every frame
@@ -77,7 +77,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// Called when the user tries to possess the object
     /// </summary>
     /// <returns></returns>
-    public bool TryPossess() {
+    public virtual bool TryPossess() {
         switch (tag) {
             case "Scanner":
             case "Cat": break;
@@ -130,7 +130,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// <summary>
     /// Request QTE Event when the user starts to possess the object
     /// </summary>
-    void RequestQTEEvent() {
+    protected void RequestQTEEvent() {
         switch (tag) {
             // 사람, 은신처만 QTE 요청
             case "HideArea":
@@ -153,7 +153,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// <summary>
     /// Called when the user failed to clear QTE Event
     /// </summary>
-    public void OnQTEFailure() {
+    public virtual void OnQTEFailure() {
         isPossessed = false;
         player.PossessionSystem.PossessedTarget = null;
     }
