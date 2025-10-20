@@ -150,7 +150,13 @@ namespace _01.Scripts.Object.NormalObject
                     GameManager.Instance.Player.transform.position = target.transform.position;
                     target.SetPictureState(false, true);
                 },
-                () => { GameManager.Instance.Player.PossessionSystem.CanMove = true; });
+                () =>
+                {
+                    if (GameManager.Instance.PlayerController.GetSlowdownAvailable()) {
+                        GameManager.Instance.PlayerController.SetSlowdownAvailable(false);
+                    }
+                    GameManager.Instance.Player.PossessionSystem.CanMove = true;
+                });
         }
 
         void TeleportToRandomPoint(string[] linesToPlay) {

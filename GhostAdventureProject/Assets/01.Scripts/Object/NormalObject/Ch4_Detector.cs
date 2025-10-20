@@ -41,6 +41,12 @@ namespace _01.Scripts.Object.NormalObject
 
         #endregion
         
+#if UNITY_EDITOR
+        void OnValidate() {
+            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, angleOffset);   
+        }
+#endif
+        
         void Start() {
             scanTimer = new CountdownTimer(scanInterval) {
                 OnTimerStart = () => { if (IsPlayerDetected()) TeleportPlayer(); },
