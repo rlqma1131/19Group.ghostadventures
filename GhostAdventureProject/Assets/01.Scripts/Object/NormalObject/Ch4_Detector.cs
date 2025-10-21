@@ -17,7 +17,8 @@ namespace _01.Scripts.Object.NormalObject
 
         [Header("Scan Settings")] 
         [SerializeField] float scanRadius = 3f;
-        [SerializeField] LayerMask layerMask;
+        [SerializeField] LayerMask circleLayerMask;
+        [SerializeField] LayerMask raycastLayerMask;
         [SerializeField] float scanInterval = 0.1f;
 
         [Header("Angle Settings")] 
@@ -35,9 +36,11 @@ namespace _01.Scripts.Object.NormalObject
         [Header("Dialogues")] 
         [SerializeField] List<string> linesWhenDetected = new() { "앗... 걸렸다!" };
 
-        Collider2D[] results = new Collider2D[1];
+        Collider2D[] overlaps = new Collider2D[5];
+        RaycastHit2D[] hits = new RaycastHit2D[5];
         CountdownTimer scanTimer;
         bool isInTransition;
+        bool isDetected;
 
         #endregion
         
@@ -121,18 +124,28 @@ namespace _01.Scripts.Object.NormalObject
             ContactFilter2D circleFilter = new ContactFilter2D {
                 useTriggers = true,
                 useLayerMask = true,
-                layerMask = layerMask,
+                layerMask = circleLayerMask,
             };
             
-            int size = Physics2D.OverlapCircle(transform.position, scanRadius, circleFilter, results);
-            if (size <= 0) return false;
-            
-            Vector2 direction = results[0].transform.position - transform.position;
+            int size = Physics2D.OverlapCircle(transform.position, scanRadius, circleFilter, overlaps);
+            if (size <= 0) return false; 
+
+            Vector2 direction = overlaps[0].transform.position - transform.position;
             float angle = Vector2.Angle(transform.up, direction);
             if (angle > scanAngle / 2f) return false;
             
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, direction.normalized, scanRadius, layerMask);
-            return hit;
+            ContactFilter2D rayFilter = new ContactFilter2D { useTriggers = true, useLayerMask = true, layerMask = raycastLayerMask, };
+            int raySize = Physics2D.Raycast(transform.position, direction.normalized, rayFilter, hits, scanRadius);
+            if (raySize <= 0) return false;
+            
+            float closest = float.MaxValue;
+            int index = 0;
+            for (int i = 0; i < raySize; i++) {
+                float distance = Vector2.Distance(transform.position, hits[i].point);
+                if (distance >= closest) continue;
+                closest = distance; index = i;
+            }
+            return hits[index] && hits[index].collider.gameObject.CompareTag("Player");
         }
 
         void OnDrawGizmosSelected() {
