@@ -101,23 +101,13 @@ namespace _01.Scripts.Managers.Puzzle
         void ResetBackground() => ChangeVolumeProfile(null, 0f);
 
         void ChangeVolumeProfile(VolumeProfile profile, float weight) {
-            if (volumes[0].profile == profile && Mathf.Approximately(volumes[0].weight, weight)) return;
-            
-            if (profile) transition = () => SetVolumeProfile(profile);
-            InitCoroutine(weight);
-        }
-        
-        /// <summary>
-        /// Start Transition Coroutine of Background
-        /// </summary>
-        /// <param name="weight"></param>
-        void InitCoroutine(float weight) {
-            if (transitionCoroutine != null) {
-                StopCoroutine(transitionCoroutine);
-                transitionCoroutine = null;
+            if (volumes[0].profile == profile && Mathf.Approximately(volumes[0].weight, weight)) {
+                Debug.Log("Background Change Request Ignored!");
+                return;
             }
-
-            transitionCoroutine = StartCoroutine(TransitionCoroutine(Mathf.Clamp01(weight) * finalWeight));
+            
+            transition = () => SetVolumeProfile(profile);
+            ProfileTransition(weight);
         }
 
         /// <summary>
@@ -128,36 +118,17 @@ namespace _01.Scripts.Managers.Puzzle
             if (volumes[0].profile == profile) return;
             foreach (Volume volume in volumes) volume.profile = profile;
         }
-        
+
         /// <summary>
         /// Transition Coroutine of Background PostProcessing
         /// </summary>
         /// <param name="targetWeight"></param>
         /// <returns></returns>
-        IEnumerator TransitionCoroutine(float targetWeight) {
-            if (volumes.Count <= 0) yield break;
-            
-            float halfTime = transitionTime / 2f;
-            float currentWeight = volumes[0].weight;
-
-            while (!Mathf.Approximately(currentWeight, 0)) {
-                currentWeight = Mathf.SmoothDamp(currentWeight, 0, ref transitionVelocity, halfTime * Time.deltaTime);
-                for (int i = 0; i < volumes.Count; i++) volumes[i].weight = currentWeight;
-                yield return null;
-            }
-            for (int i = 0; i < volumes.Count; i++) volumes[i].weight = 0f;
-
+        void ProfileTransition(float targetWeight) {
+            if (volumes.Count <= 0) return;
             transition?.Invoke();
-            synchronizeLight?.Invoke();
-            
-            while (!Mathf.Approximately(currentWeight, targetWeight)) {
-                currentWeight = Mathf.SmoothDamp(currentWeight, targetWeight, ref transitionVelocity, halfTime * Time.deltaTime);
-                for (int i = 0; i < volumes.Count; i++) volumes[i].weight = currentWeight;
-                yield return null;
-            }
             for (int i = 0; i < volumes.Count; i++) volumes[i].weight = targetWeight;
-            
-            transitionCoroutine = null;
+            synchronizeLight?.Invoke();
         }
     }
 }
