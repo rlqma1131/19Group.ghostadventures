@@ -8,6 +8,7 @@ using _01.Scripts.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace _01.Scripts.Managers.Puzzle
 {
@@ -27,7 +28,10 @@ namespace _01.Scripts.Managers.Puzzle
         [Header("Door to Unlock")]
         [SerializeField] LockedDoor door;
         [SerializeField] Renderer doorRenderer;
+        [SerializeField] Light2D doorLight;
         [SerializeField] int currentProgress;
+        [SerializeField] float finalIntensity = 5f;
+        [Range(1f, 10f)][SerializeField] float glowTime = 5f;
 
         [Header("Transition Settings")]
         [SerializeField] float transitionTime = 4f;
@@ -36,7 +40,7 @@ namespace _01.Scripts.Managers.Puzzle
         // Fields
         UnityAction synchronizeLight = delegate { };
         Action transition = delegate { };
-        Coroutine transitionCoroutine;
+        Coroutine glowCoroutine;
         MaterialPropertyBlock blockOfDoor;
         float transitionVelocity;
         
@@ -55,6 +59,7 @@ namespace _01.Scripts.Managers.Puzzle
             if (switches.Count <= 0) switches.AddRange(GetComponentsInChildren<Ch4_BackgroundSwitch>());
             if (!door) { Debug.LogError("Fatal Error: Door is not allocated!"); return; }
             if (!doorRenderer) door.gameObject.GetComponentInChildren_SearchByName<Renderer>("Locked");
+            if (!doorLight) door.gameObject.GetComponentInChildren_SearchByName<Light2D>("Silhouette");
         }
 
         void Start() {
@@ -94,6 +99,37 @@ namespace _01.Scripts.Managers.Puzzle
             
             // If condition fulfilled, unlock allocated door.
             if (currentProgress >= switches.Count) door.UnlockDoors();
+        }
+
+        public void GlowSilhouetteOfDoor() {
+            if (glowCoroutine != null) StopCoroutine(glowCoroutine);
+            glowCoroutine = StartCoroutine(GlowCoroutine(glowTime));
+        }
+
+        IEnumerator GlowCoroutine(float duration) {
+            const float holdTime = 1f;
+            float halfDuration = (duration - 1f) * 0.5f;
+            float startIntensity = doorLight.intensity;
+            
+            float time = 0f;
+            while (time < halfDuration) {
+                doorLight.intensity = Mathf.Lerp(startIntensity, finalIntensity, Mathf.SmoothStep(0f, 1f, time / halfDuration));
+                time += Time.deltaTime;
+                yield return null;
+            }
+            doorLight.intensity = finalIntensity;
+
+            yield return new WaitForSeconds(holdTime);
+
+            time = 0f;
+            while (time < halfDuration) {
+                doorLight.intensity = Mathf.Lerp(finalIntensity, 0f, Mathf.SmoothStep(0f, 1f, time / halfDuration));
+                time += Time.deltaTime;
+                yield return null;
+            }
+            doorLight.intensity = 0f;
+            
+            glowCoroutine = null;
         }
         
         void ChangeBackground(VolumeProfile profile) => ChangeVolumeProfile(profile, 1f);

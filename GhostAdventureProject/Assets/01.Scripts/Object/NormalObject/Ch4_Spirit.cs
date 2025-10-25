@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _01.Scripts.Extensions;
 using _01.Scripts.Managers.Puzzle;
+using Cinemachine;
 using DG.Tweening;
+using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
@@ -24,7 +27,8 @@ namespace _01.Scripts.Object.NormalObject
         [SerializeField] Light2D light2D;
 
         [Header("Exorcism Settings")] 
-        [SerializeField] Ch4_Picture target;
+        [SerializeField] Ch4_Picture teleportTarget;
+        [SerializeField] CinemachineVirtualCamera focusTargetAfterTeleport;
         [SerializeField] float exorcismDuration = 3f;
         [Range(0f, 1f)] [SerializeField] float shakeStrength = 0.5f;
         [SerializeField] AnimationCurve lightCurve;
@@ -51,7 +55,6 @@ namespace _01.Scripts.Object.NormalObject
         Collider2D[] results = new Collider2D[1];
         float currentTime;
         bool isTriggered;
-        bool isInTransition;
         bool isInQTE;
 
         #endregion
@@ -136,27 +139,50 @@ namespace _01.Scripts.Object.NormalObject
                 })
                 .AppendCallback(() => {
                     Unpossess();
-                    TeleportToPicture();
+                    TeleportToTarget();
                 });
         }
 
-        void TeleportToPicture() {
-            if (!target) return;
+        void TeleportToTarget() {
+            if (!teleportTarget) return;
 
             UIManager.Instance.FadeOutIn(teleportDuration,
                 () => { GameManager.Instance.Player.PossessionSystem.CanMove = false; },
                 () =>
                 {
-                    GameManager.Instance.Player.transform.position = target.transform.position;
-                    target.SetPictureState(false, true);
+                    GameManager.Instance.Player.transform.position = teleportTarget.transform.position;
+                    teleportTarget.SetPictureState(false, true);
                 },
-                () =>
-                {
-                    if (GameManager.Instance.PlayerController.GetSlowdownAvailable()) {
-                        GameManager.Instance.PlayerController.SetSlowdownAvailable(false);
-                    }
-                    GameManager.Instance.Player.PossessionSystem.CanMove = true;
-                });
+                FocusAndReleaseTarget);
+        }
+
+        void FocusAndReleaseTarget() {
+            if (!focusTargetAfterTeleport) {
+                ResetControlOfPlayer();
+                return;
+            }
+            
+            Sequence focusSequence = DOTween.Sequence();
+            focusSequence.JoinCallback(() => {
+                    UIManager.Instance.FadeOutIn(2f,
+                        () => { GameManager.Instance.Player.PossessionSystem.CanMove = false; },
+                        () => { focusTargetAfterTeleport.Priority = 20; },
+                        () => { manager.GlowSilhouetteOfDoor(); });
+                })
+                .AppendInterval(6f)
+                .OnComplete(() => { 
+                    UIManager.Instance.FadeOutIn(2f, 
+                        () => {},
+                        () => { focusTargetAfterTeleport.Priority = 0; },
+                        ResetControlOfPlayer); 
+                    });
+        }
+
+        void ResetControlOfPlayer() {
+            if (GameManager.Instance.PlayerController.GetSlowdownAvailable()) {
+                GameManager.Instance.PlayerController.SetSlowdownAvailable(false);
+            }
+            GameManager.Instance.Player.PossessionSystem.CanMove = true;
         }
 
         void TeleportToRandomPoint(string[] linesToPlay) {
