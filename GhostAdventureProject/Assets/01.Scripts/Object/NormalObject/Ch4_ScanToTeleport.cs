@@ -161,16 +161,18 @@ namespace _01.Scripts.Object.NormalObject
                     GameManager.Instance.Player.transform.position = target.position;
                 },
                 () => {
-                    onExit?.Invoke();
                     isInTransition = false;
-                    
-                    if (linesWhenEntered.Count > 0) UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenEntered.ToArray());
-                    if (isSlowdownAvailable) {
-                        bool val = GameManager.Instance.PlayerController.GetSlowdownAvailable();
-                        GameManager.Instance.PlayerController.SetSlowdownAvailable(!val);
-                    }
-                    GameManager.Instance.Player.PossessionSystem.CanMove = true;
+                    onExit?.Invoke();
                 });
+        }
+
+        public void Normal_Teleportation() {
+            if (linesWhenEntered.Count > 0) UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenEntered.ToArray());
+            if (isSlowdownAvailable) {
+                bool val = GameManager.Instance.PlayerController.GetSlowdownAvailable();
+                GameManager.Instance.PlayerController.SetSlowdownAvailable(!val);
+            }
+            GameManager.Instance.Player.PossessionSystem.CanMove = true;
         }
         
         void OnTriggerEnter2D(Collider2D collision) {
