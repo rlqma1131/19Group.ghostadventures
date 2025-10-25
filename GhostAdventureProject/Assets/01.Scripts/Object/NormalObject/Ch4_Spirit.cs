@@ -165,7 +165,7 @@ namespace _01.Scripts.Object.NormalObject
             Sequence focusSequence = DOTween.Sequence();
             focusSequence.JoinCallback(() => {
                     UIManager.Instance.FadeOutIn(2f,
-                        () => { },
+                        () => { GameManager.Instance.Player.PossessionSystem.CanMove = false; },
                         () => { focusTargetAfterTeleport.Priority = 20; },
                         () => { manager.GlowSilhouetteOfDoor(); });
                 })
