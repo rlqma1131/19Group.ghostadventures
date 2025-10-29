@@ -15,10 +15,7 @@ public class Ch4_PatternAsset : ScriptableObject
 
     [Header("Validation Rules")]
     public bool forbidEdgeReuse = true;          // 같은 간선(연결)을 두 번 쓰면 실패
-    public bool mustMatchExactOrder = true;      // 정확히 지정된 순서만 허용
     
     [Header("Free-draw Options")]
     public bool validateAtCommit = true;  // 이동 중엔 순서 강제 X, '제출' 때 한 번에 판정
-    public bool allowAnyStart   = true;   // 시작 노드는 어디든 OK (회전 등가 허용)
-    public bool allowReverse    = true;   // 뒤집힌 경로도 정답으로 허용(원하면 끄기)
 }
