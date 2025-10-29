@@ -66,6 +66,11 @@ public class Ch4_SpiderPuzzleController : MonoBehaviour
 
         UIManager.Instance?.PromptUI2.ShowPrompt_UnPlayMode(
             "거미로 쪽지 패턴을 따라 그려보자", 2f);
+        
+        if (spider != null)
+        {
+            spider.SetActivated(true);
+        }
     }
 
     // ===== 거미에 빙의할 때, 지금 단계용 패턴 넣어주기 =====
@@ -127,27 +132,24 @@ public class Ch4_SpiderPuzzleController : MonoBehaviour
             discoveredOrder.Add(pattern3);
             step = Step.Spider3Done;
 
-            // 거미는 이제 더 안 쓰니까 사라지게
-            if (spider) spider.gameObject.SetActive(false);
+            if (dollC) dollC.Lower();
 
-            // 마지막 인형 C 내려오기.
-            // C의 문양은 pattern3 그대로 보여줘도 되고,
-            // 필요하면 다른 전용 문양을 미리 인스펙터에서 dollC.PatternForThisDoll로 넣어둘 수 있음.
-            if (dollC)
-            {
-                // dollC.SetPattern(pattern3);
-                dollC.Lower();
-            }
-
-            // ✔ 이제 최종 단계로 진입
             BeginFinalPhase();
         }
     }
-
-    public void OnSpiderPatternFailed()
+    
+    public Ch4_PatternAsset GetNextPatternAfter(Ch4_PatternAsset solvedPattern)
     {
-        // 실패 시 그냥 재시도하게 두면 됨.
-        // (여기서는 추가 패널티 없음)
+        // 패턴1 끝났을 때: 다음은 패턴2
+        if (solvedPattern == pattern1 && step == Step.Spider1Done)
+            return pattern2;
+
+        // 패턴2 끝났을 때: 다음은 패턴3
+        if (solvedPattern == pattern2 && step == Step.Spider2Done)
+            return pattern3;
+
+        // 패턴3 끝났으면 더 없음
+        return null;
     }
 
     // ===== 최종 단계 시작 =====

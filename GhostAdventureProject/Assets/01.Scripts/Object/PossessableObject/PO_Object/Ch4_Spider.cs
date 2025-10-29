@@ -4,316 +4,419 @@ using UnityEngine;
 
 public class Ch4_Spider : BasePossessable
 {
-    [Header("Layout / Visual")]
-    [SerializeField] Ch4_SpiderWebLayout layout;  // 부모에 배치
-    [SerializeField] LineRenderer line;
-    [SerializeField] float moveSpeed = 4f;
-    [SerializeField] float snapRadius = 0.08f;
+    [Header("Movement")]
+    [SerializeField] float moveSpeed = 3f;
+    [SerializeField] float snapRadius = 0.05f;
 
-    [Header("Input")]
-    [SerializeField] KeyCode drawToggleKey = KeyCode.Q;
-    bool drawMode;
+    [Header("State / Control")]
+    [SerializeField] float autoTransitSpeed = 6f;
+    bool autoTransit = false;
 
-    [Header("State")]
+    [Header("Pattern / Puzzle")]
     [SerializeField] Ch4_PatternAsset currentPattern;
-    [SerializeField] Ch4_SpiderWebNode currentNode;
-    [SerializeField] float neighborFacingDot = 0.5f; // 방향 필터(60도 정도)
-    [SerializeField] string startNodeIdOverride;
+    [SerializeField] Ch4_SpiderPuzzleController controller;
 
-    List<string> visitedNodeIds = new();
-    HashSet<(string,string)> usedEdges = new();
+    [Header("Web Rendering")]
+    [SerializeField] LineRenderer line;
+    [SerializeField] KeyCode drawToggleKey = KeyCode.Q;
+
+    [SerializeField] Ch4_SpiderWebLayout layout;
+
+    // 현재 붙어 있는 거미줄 노드
+    [SerializeField] Ch4_SpiderWebNode currentNode;
+
+    // 이동 목표 좌표
     Vector3 targetPos;
 
-    Ch4_SpiderPuzzleController controller;
-    
-    [SerializeField] KeyCode commitKey = KeyCode.Space; // 제출(판정)
-    [SerializeField] KeyCode resetKey  = KeyCode.R;     // 그리기 리셋
-    bool successPending;
+    // 현재 패턴을 실제로 그리고 있는지
+    bool drawMode = false;
+
+    // 이번 시도에서 밟은 노드 순서
+    readonly List<string> visitedNodeIds = new List<string>();
+
+    // 이번 시도에서 사용한 간선들 (A-B / B-A 동일 처리)
+    readonly HashSet<(string,string)> usedEdges = new HashSet<(string,string)>();
+
+    // 패턴 완성 판정 후 마지막 노드에 도착했을 때 Success() 호출 예약
+    bool successPending = false;
+
+    // 입력 잠깐 봉인용. 0이면 봉인 해제.
     float _inputBlockUntil = 0f;
-    bool autoTransit = false;
-    [SerializeField] float autoTransitSpeed = 6f;
 
-    protected override void Start() {
-        base.Start();
-        controller = FindObjectOfType<Ch4_SpiderPuzzleController>(true);
-        if (!line) line = GetComponent<LineRenderer>();
-        if (line) { line.positionCount = 0; line.enabled = false; }
-        
-        targetPos = transform.position;
-    }
+    protected override void Awake()
+    {
+        base.Awake();
 
-    public void SetPattern(Ch4_PatternAsset pattern) {
-        currentPattern = pattern;
-        visitedNodeIds.Clear();
-        usedEdges.Clear();
-        successPending = false;
-
-        if (layout == null || currentPattern == null) return;
-        if (line) { line.enabled = true; line.positionCount = 0; }
-
-        // 자유 시작 모드: 가장 가까운 노드에서 시작
-        var start = layout.FindNearestNode(transform.position);
-        if (!start) {
-            Debug.LogWarning("[Spider] nearest node not found."); 
-            return;
+        // 인스펙터에서 currentNode를 세팅해둔 경우 시작 위치를 그 노드로 맞춘다
+        if (currentNode != null)
+        {
+            targetPos = currentNode.transform.position;
+            transform.position = targetPos;
+            autoTransit = false;
         }
-        currentNode = start;
-        targetPos = currentNode.transform.position;
-
-        if (line) { line.positionCount = 1; line.SetPosition(0, targetPos); }
-
-        // 시작 노드는 '방문' 처리하되, 정답 경로 강제는 하지 않음
-        visitedNodeIds.Add(currentNode.Id);
     }
 
-    Ch4_SpiderWebNode FindNodeById(string id) {
-        foreach (var n in layout.Nodes)
-            if (n && n.Id == id) return n;
-        return null;
+    protected override void Start()
+    {
+        base.Start();
+        SetActivated(false);
     }
 
-    protected override void Update() 
+    protected override void Update()
     {
         base.Update();
-        if (!isPossessed && !autoTransit) return;
 
-        // --- 자동 이동 블록(빙의 해제 상태에서도 실행) ---
-        if (autoTransit) {
+        // 플레이어가 조종 중이 아니고(autoTransit도 아니면) 아무 일도 안 함
+        if (!isPossessed && !autoTransit)
+            return;
+
+        // 자동 이동(컷신 이동) 상태
+        if (autoTransit)
+        {
             transform.position = Vector3.MoveTowards(
-                transform.position, targetPos, autoTransitSpeed * Time.deltaTime);
+                transform.position,
+                targetPos,
+                autoTransitSpeed * Time.deltaTime
+            );
 
-            if (Vector3.Distance(transform.position, targetPos) <= snapRadius) {
+            if (Vector3.Distance(transform.position, targetPos) <= snapRadius)
+            {
+                // 자동 이동 종료 후 대기
                 autoTransit = false;
-
-                // 다음 패턴 시작점에 도착 → 다시 빙의 허용
-                SetActivated(true);           // 빙의/상호작용 가능 ON (BasePossessable에 이미 있음)
-                ShowHighlight(false);         // 하이라이트는 상황에 따라 꺼두고
-                // (선택) 플레이어가 옆에 있고, 즉시 후보로 다시 올리고 싶으면:
-                // GameManager.Instance?.Player?.InteractSystem.AddInteractable(gameObject);
-
-                // 여기서 끝. 다음에 플레이어가 빙의하면 OnPossessionEnterComplete에서
-                // controller.ApplyCurrentPatternToSpider(this)로 패턴이 다시 확실히 덮어씌워짐.
+                SetActivated(true);
             }
-            return; // 자동 이동 중엔 이하 입력/드로잉 로직 스킵
+            return;
         }
 
-        // Q 토글: 빙의 중 + 디바운스 통과한 프레임에만
-        if (Time.time >= _inputBlockUntil && Input.GetKeyDown(drawToggleKey)) {
-            drawMode = !drawMode;
-            UIManager.Instance?.PromptUI2.ShowPrompt_UnPlayMode(
-                drawMode ? "거미줄 그리기 ON" : "거미줄 그리기 OFF", 1.2f);
+        // 이하부터는 플레이어 직접 조작 중 (isPossessed == true)
+
+        // Q 눌러서 그리기 시작 (취소는 불가)
+        if (Time.time >= _inputBlockUntil && Input.GetKeyDown(drawToggleKey))
+        {
+            if (!drawMode)
+            {
+                drawMode = true;
+                visitedNodeIds.Clear();
+                usedEdges.Clear();
+
+                if (currentNode != null)
+                {
+                    visitedNodeIds.Add(currentNode.Id);
+
+                    if (line)
+                    {
+                        line.enabled = true;
+                        line.positionCount = 1;
+                        line.SetPosition(0, currentNode.transform.position);
+                    }
+                }
+            }
         }
 
-        // 제출/리셋 키 (드로잉 모드에서만)
-        if (drawMode && Input.GetKeyDown(commitKey)) { TryCommit(); return; }
-        if (drawMode && Input.GetKeyDown(resetKey))  { ResetDrawing(); return; }
+        // 현재 위치 -> targetPos 로 플레이어 조종 이동
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            targetPos,
+            moveSpeed * Time.deltaTime
+        );
 
-        // 스무스 이동
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
         bool snapped = Vector3.Distance(transform.position, targetPos) <= snapRadius;
 
-        // 마지막 도착 프레임에 성공 처리
-        if (successPending && snapped) {
-            successPending = false;
-            Success();
-            return;
+        if (snapped)
+        {
+            // 방향키 입력으로 인접 노드 선택 전에,
+            // 패턴 완성 여부를 한 번 더 확인해서 바로 처리한다.
+            if (drawMode && currentPattern != null && DrawingLooksFinished())
+            {
+                // 바로 성공 처리: 대기/코루틴/지연 없음
+                Success();
+                return;
+            }
         }
 
-        if (!drawMode || currentPattern == null) {
-            // 자유 이동 모드(기존 WASD 이동이 이 클래스에 없다면, 아무 것도 안 해도 됨)
+        // 아직 목표까지 안 왔으면 이동만 하고 리턴
+        if (!snapped)
             return;
-        }
 
-        if (!snapped) return;
+        // 여기서부터는 노드 위에 완전히 붙어 있는 상태
 
-        // 방향 입력 1타에 인접 노드 선택
+        // 방향키 입력으로 인접 노드 선택
         Vector2 dir = Vector2.zero;
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) dir = Vector2.up;
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) dir = Vector2.down;
         else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) dir = Vector2.left;
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) dir = Vector2.right;
-        if (dir == Vector2.zero) return;
+
+        if (dir == Vector2.zero)
+            return;
 
         var next = ChooseNeighborByDirection(currentNode, dir);
-        if (next == null) { SoundManager.Instance?.PlaySFX(controller?.sfxBump); return; }
+        if (next == null)
+        {
+            SoundManager.Instance?.PlaySFX(controller?.sfxBump);
+            return;
+        }
 
-        // 간선 재사용 금지(즉시 실패)
-        var e = EdgeKey(currentNode.Id, next.Id);
-        if (currentPattern.forbidEdgeReuse && usedEdges.Contains(e)) { Fail("같은 간선을 두 번 사용할 수 없습니다."); return; }
+        // 그리는 중이면 간선 재사용 제약 등 검사
+        if (drawMode && currentPattern != null)
+        {
+            var e = EdgeKey(currentNode.Id, next.Id);
 
-        // 순서 강제 제거: 자유 이동
-        usedEdges.Add(e);
+            if (currentPattern.forbidEdgeReuse && usedEdges.Contains(e))
+            {
+                Fail("같은 선은 두 번 못 그린다.");
+                return;
+            }
+
+            usedEdges.Add(e);
+        }
+
+        // 실제 이동(다음 노드로)
         currentNode = next;
         targetPos = currentNode.transform.position;
-        visitedNodeIds.Add(currentNode.Id);
 
-        if (line) {
-            line.positionCount++;
-            line.SetPosition(line.positionCount - 1, targetPos);
-        }
-    }
-    
-    void TryCommit()
-    {
-        // 옵션이 없으면 기본값처럼 동작
-        bool anyStart    = currentPattern ? currentPattern.allowAnyStart   : true;
-        bool allowReverse= currentPattern ? currentPattern.allowReverse    : true;
-
-        // 경로 길이 간단 체크(원하면 별도 규칙 가능)
-        if (currentPattern && visitedNodeIds.Count != currentPattern.nodeIdSequence.Count) {
-            Fail("패턴 길이가 다릅니다.");
-            return;
-        }
-
-        if (currentPattern == null || MatchesPattern(
-                visitedNodeIds, currentPattern.nodeIdSequence, anyStart, allowReverse))
+        // 라인 업데이트 및 패턴 완성 체크
+        if (drawMode && currentPattern != null)
         {
-            // 마지막 노드로 이동 완료 후 성공 처리
-            successPending = true;
-            return;
+            visitedNodeIds.Add(currentNode.Id);
+
+            if (line)
+            {
+                line.positionCount++;
+                line.SetPosition(line.positionCount - 1, targetPos);
+            }
+
+            if (DrawingLooksFinished())
+            {
+                successPending = true;
+            }
+        }
+    }
+
+    // 현재 컨트롤러 단계에 맞는 패턴을 세팅
+    public void SetPattern(Ch4_PatternAsset pattern)
+    {
+        currentPattern = pattern;
+        if (currentPattern == null) return;
+        if (layout == null) return;
+        if (currentPattern.nodeIdSequence == null || currentPattern.nodeIdSequence.Count == 0) return;
+
+        string startId = currentPattern.nodeIdSequence[0];
+        Ch4_SpiderWebNode startNode = FindNodeById(startId);
+
+        if (startNode != null)
+        {
+            currentNode = startNode;
+            targetPos = currentNode.transform.position;
+            autoTransit = false;
+        }
+        else
+        {
+            currentNode = layout.FindNearestNode(transform.position);
+            if (currentNode != null)
+                targetPos = currentNode.transform.position;
+            else
+                targetPos = transform.position;
+
+            autoTransit = false;
         }
 
-        Fail("문양이 일치하지 않습니다.");
-    }
+        SetActivated(true);
 
-    bool MatchesPattern(List<string> path, List<string> goal, bool anyStart, bool allowReverse)
-    {
-        if (path.Count != goal.Count) return false;
-        if (EqualSeq(path, goal)) return true;
-
-        if (anyStart) {
-            for (int s = 1; s < goal.Count; s++)
-                if (EqualSeqRot(path, goal, s)) return true;
-        }
-
-        if (!allowReverse) return false;
-
-        var rev = new List<string>(goal);
-        rev.Reverse();
-        if (EqualSeq(path, rev)) return true;
-
-        if (anyStart) {
-            for (int s = 1; s < rev.Count; s++)
-                if (EqualSeqRot(path, rev, s)) return true;
-        }
-
-        return false;
-    }
-
-    bool EqualSeq(IReadOnlyList<string> a, IReadOnlyList<string> b)
-    {
-        for (int i = 0; i < a.Count; i++) if (a[i] != b[i]) return false;
-        return true;
-    }
-
-    bool EqualSeqRot(IReadOnlyList<string> a, IReadOnlyList<string> b, int shift)
-    {
-        int n = a.Count;
-        for (int i = 0; i < n; i++)
-            if (a[i] != b[(i + shift) % n]) return false;
-        return true;
-    }
-
-    void ResetDrawing()
-    {
+        drawMode = false;
+        successPending = false;
         visitedNodeIds.Clear();
         usedEdges.Clear();
-        successPending = false;
 
-        // 현재 위치에서 가장 가까운 노드로 리셋
-        var start = layout.FindNearestNode(transform.position);
-        if (start) {
-            currentNode = start;
-            targetPos = start.transform.position;
-            visitedNodeIds.Add(currentNode.Id);
-            if (line) { line.positionCount = 1; line.SetPosition(0, targetPos); }
-        } else {
-            if (line) { line.positionCount = 0; }
+        if (line)
+        {
+            line.enabled = false;
+            line.positionCount = 0;
         }
     }
 
-    Ch4_SpiderWebNode ChooseNeighborByDirection(Ch4_SpiderWebNode from, Vector2 dir) {
-        if (!from) return null;
-        var neighbors = layout.GetNeighbors(from);
-        Ch4_SpiderWebNode best = null;
-        float bestDot = neighborFacingDot;
-        dir = dir.normalized;
+    // 패턴 완성 판정
+    bool DrawingLooksFinished()
+    {
+        if (!drawMode) return false;
+        if (currentPattern == null) return false;
+        return MatchesShapeAsEdges(usedEdges, currentPattern.nodeIdSequence);
+    }
 
-        foreach (var n in neighbors) {
+    bool MatchesShapeAsEdges(HashSet<(string,string)> drawnEdges, List<string> goalSeq)
+    {
+        var goalEdges = new HashSet<(string,string)>();
+        for (int i = 0; i < goalSeq.Count - 1; i++)
+            goalEdges.Add( EdgeKey(goalSeq[i], goalSeq[i+1]) );
+
+        if (drawnEdges.Count != goalEdges.Count)
+            return false;
+
+        foreach (var e in drawnEdges)
+        {
+            if (!goalEdges.Contains(e))
+                return false;
+        }
+        return true;
+    }
+
+    (string,string) EdgeKey(string a, string b)
+    {
+        return string.CompareOrdinal(a, b) < 0 ? (a,b) : (b,a);
+    }
+
+    // 패턴 최종 성공 처리
+    void Success()
+    {
+        // 사운드/메시지
+        SoundManager.Instance?.PlaySFX(controller?.sfxPatternSuccess);
+        UIManager.Instance?.PromptUI2.ShowPrompt_UnPlayMode("성공", 1.2f);
+
+        // 컨트롤러에 보고해서 step 업데이트 / 인형 내리기 등 진행
+        Ch4_PatternAsset solvedPattern = currentPattern;
+        if (controller && currentPattern != null)
+        {
+            controller.OnSpiderPatternSolved(currentPattern);
+        }
+
+        // 다음 패턴이 있는지 확인
+        Ch4_PatternAsset nextPattern = (controller != null)
+            ? controller.GetNextPatternAfter(solvedPattern)
+            : null;
+
+        // 플레이어 조작 종료: 강제 빙의 해제
+        if (isPossessed)
+        {
+            Unpossess();
+        }
+        SetActivated(false); // 플레이어 입력 잠궈둔다 (지금은 거미 혼자 움직이는 구간)
+
+        // 라인/상태 초기화
+        drawMode = false;
+        successPending = false;
+        visitedNodeIds.Clear();
+        usedEdges.Clear();
+        if (line)
+        {
+            line.enabled = false;
+            line.positionCount = 0;
+        }
+
+        // 마지막 패턴이었다면 거미는 사라진다
+        if (nextPattern == null)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
+        // 다음 패턴 시작 노드까지 자동 이동 준비
+        if (nextPattern.nodeIdSequence != null && nextPattern.nodeIdSequence.Count > 0)
+        {
+            string startId = nextPattern.nodeIdSequence[0];
+            var startNode = FindNodeById(startId);
+            if (startNode != null)
+            {
+                currentNode = startNode;
+                targetPos = startNode.transform.position;
+                autoTransit = true;
+            }
+        }
+
+        // 다음에 플레이어가 다시 빙의했을 때 이 nextPattern을 그리게 할 거니까
+        currentPattern = nextPattern;
+    }
+
+    void Fail(string reason)
+    {
+        SoundManager.Instance?.PlaySFX(controller?.sfxPatternFail);
+        UIManager.Instance?.PromptUI2.ShowPrompt_UnPlayMode(reason, 1.2f);
+
+        drawMode = false;
+        successPending = false;
+        visitedNodeIds.Clear();
+        usedEdges.Clear();
+
+        if (line)
+        {
+            line.enabled = false;
+            line.positionCount = 0;
+        }
+    }
+
+    // 방향키로 갈 수 있는 다음 노드 선택
+    Ch4_SpiderWebNode ChooseNeighborByDirection(Ch4_SpiderWebNode from, Vector2 dir)
+    {
+        if (from == null) return null;
+
+        float bestDot = 0.5f;
+        Ch4_SpiderWebNode best = null;
+
+        var neighbors = layout.GetNeighbors(from);
+        foreach (var n in neighbors)
+        {
             if (!n) continue;
             Vector2 ndir = ((Vector2)n.transform.position - (Vector2)from.transform.position).normalized;
             float dot = Vector2.Dot(dir, ndir);
-            if (dot > bestDot) { bestDot = dot; best = n; }
+            if (dot > bestDot)
+            {
+                bestDot = dot;
+                best = n;
+            }
         }
         return best;
     }
 
-    (string,string) EdgeKey(string a, string b) => string.CompareOrdinal(a,b) <= 0 ? (a,b) : (b,a);
-
-    void Success() {
-        SoundManager.Instance?.PlaySFX(controller?.sfxPatternSuccess);
-        UIManager.Instance?.PromptUI2.ShowPrompt_UnPlayMode("패턴 성공!", 1.5f);
-        drawMode = false;
-        controller?.OnSpiderPatternSolved(currentPattern);
-        controller?.ApplyCurrentPatternToSpider(this);
-        
-        if (currentPattern != null && currentPattern.nodeIdSequence.Count > 0 && layout != null) {
-            var firstId = currentPattern.nodeIdSequence[0];
-            var startNode = FindNodeById_Local(firstId); 
-            if (startNode != null) {
-                targetPos = startNode.transform.position; // 목적지 설정
-                autoTransit = true;                       // 자동 이동 ON
-
-                // 자동 이동 동안 빙의/상호작용 금지
-                SetActivated(false);         // 후보에서 제외 (BasePossessable)
-                ShowHighlight(false);
-                // (선택) 캐시에 남은 표시 제거
-                // GameManager.Instance?.Player?.InteractSystem.RemoveInteractable(gameObject);
-
-                // 자동 이동 시작 전에 라인/드로잉 상태는 싹 정리
-                if (line) { line.enabled = false; line.positionCount = 0; }
-                visitedNodeIds.Clear();
-                usedEdges.Clear();
-            }
-        }
-        
-        Unpossess();
-    }
-
-    void Fail(string reason) {
-        SoundManager.Instance?.PlaySFX(controller?.sfxPatternFail);
-        UIManager.Instance?.PromptUI.ShowPrompt(reason);
-        drawMode = false;
-        controller?.OnSpiderPatternFailed();
-    }
-
-    public override void OnPossessionEnterComplete() {
-        base.OnPossessionEnterComplete();
-        _inputBlockUntil = Time.time + 0.15f;
-        drawMode = false;
-        controller?.ApplyCurrentPatternToSpider(this);
-    }
-
-    public override void Unpossess() {
-        base.Unpossess();
-        drawMode = false;
-        successPending = false;
-        if (line) { line.positionCount = 0; line.enabled = false; }
-        visitedNodeIds.Clear();
-        usedEdges.Clear();
-    }
-    
-    Ch4_SpiderWebNode FindNodeById_Local(string id)
+    // nodeId ("A","B",...)로 실제 노드 찾기
+    Ch4_SpiderWebNode FindNodeById(string nodeId)
     {
-        if (layout == null || string.IsNullOrEmpty(id)) return null;
+        if (layout == null || string.IsNullOrEmpty(nodeId)) return null;
 
-        // 레이아웃의 자식에서 전부 찾아서 Id 매칭
-        var all = layout.GetComponentsInChildren<Ch4_SpiderWebNode>(true);
-        for (int i = 0; i < all.Length; i++)
+        foreach (var n in layout.Nodes)
         {
-            var n = all[i];
-            if (n != null && n.Id == id) return n;
+            if (n != null && n.Id == nodeId)
+                return n;
         }
         return null;
+    }
+
+    // 플레이어가 거미에 빙의 완료했을 때
+    public override void OnPossessionEnterComplete()
+    {
+        base.OnPossessionEnterComplete();
+
+        // 현재 위치 기준으로 가장 가까운 노드를 currentNode로 잡고
+        if (currentNode == null && layout != null)
+        {
+            var nearest = layout.FindNearestNode(transform.position);
+            if (nearest != null)
+                currentNode = nearest;
+        }
+
+        // 그 노드 좌표를 targetPos로 설정만 한다 (즉시 순간이동 금지)
+        if (currentNode != null)
+            targetPos = currentNode.transform.position;
+        else
+            targetPos = transform.position;
+
+        // 이제는 플레이어가 직접 조종하는 시간
+        autoTransit = false;
+        SetActivated(true);
+
+        // 패턴 그리기 준비 상태 초기화
+        drawMode = false;
+        successPending = false;
+        visitedNodeIds.Clear();
+        usedEdges.Clear();
+        if (line)
+        {
+            line.enabled = false;
+            line.positionCount = 0;
+        }
+
+        // 현재 단계에 맞는 패턴을 다시 주입 (pattern1→pattern2→pattern3 순서)
+        if (controller != null)
+        {
+            controller.ApplyCurrentPatternToSpider(this);
+        }
     }
 }
