@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class Ch4_Book : BasePossessable
@@ -20,16 +21,33 @@ public class Ch4_Book : BasePossessable
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            transform.position = dropPoint
+            // 1) 책 떨어뜨리는 연출
+            Vector3 endPos = dropPoint
                 ? dropPoint.position
                 : transform.position + Vector3.down * 0.4f;
 
-            // 쪽지 노출(상호작용 가능해짐)
+            // 살짝 회전+튕김 연출 (DOTween 사용 가정)
+            transform.DOMove(endPos, 0.15f).SetEase(Ease.OutQuad);
+            transform.DORotate(new Vector3(0f,0f,Random.Range(-15f,15f)), 0.15f);
+
+            // 2) NOTE 등장 (이미 하던 거 유지)
             if (note) note.SetActive(true);
+
+            // 3) 플레이어 강제 빙의 해제
+            if (IsPossessed)
+            {
+                Unpossess(); // BasePossessable 쪽 함수 그대로 사용
+            }
+
+            // 4) 이 책은 더 이상 조작 불가
             hasActivated = false;
-            player.InteractSystem.RemoveInteractable(gameObject);
-            UIManager.Instance?.PromptUI2.ShowPrompt_UnPlayMode("쪽지가 나타났다", 1.3f);
             hasDropped = true;
+
+            // 5) 상호작용 목록에서 제거
+            if (player) player.InteractSystem.RemoveInteractable(gameObject);
+
+            // 6) 프롬프트 안내
+            UIManager.Instance?.PromptUI2.ShowPrompt_UnPlayMode("쪽지가 나타났다", 1.3f);
         }
     }
 }
