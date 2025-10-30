@@ -278,7 +278,8 @@ MonoBehaviour:
   highlightRenderer: {fileID: 2788215131998136600}
   q_Key: {fileID: 8298378381730911183}
   light2D: {fileID: 516196034607194154}
-  target: {fileID: 0}
+  teleportTarget: {fileID: 0}
+  focusTargetAfterTeleport: {fileID: 0}
   exorcismDuration: 3
   shakeStrength: 0.2
   lightCurve:
@@ -324,6 +325,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxLightIntensity: 12
+  onExorcism:
+    m_PersistentCalls:
+      m_Calls: []
   isTeleportAvailable: 1
   teleportDuration: 4
   teleportPoints:
@@ -444,7 +448,7 @@ SpriteRenderer:
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.9444444, y: 0.6666667}
+  m_Size: {x: 0.7222222, y: 0.6666667}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
