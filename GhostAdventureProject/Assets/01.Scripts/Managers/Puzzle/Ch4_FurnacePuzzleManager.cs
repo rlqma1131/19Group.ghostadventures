@@ -2,9 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using _01.Scripts.Extensions;
+using _01.Scripts.Object.MemoryObject;
 using _01.Scripts.Object.NormalObject;
 using _01.Scripts.Object.PossessableObject.PO_Object;
 using _01.Scripts.Utilities;
+using Cinemachine;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
@@ -36,6 +39,9 @@ namespace _01.Scripts.Managers.Puzzle
         [Header("Transition Settings")]
         [SerializeField] float transitionTime = 4f;
         [Range(0f, 1f)] [SerializeField] float finalWeight = 1f;
+
+        [Header("Focus Changed Event")]
+        [SerializeField] UnityEvent OnCameraFocusChanged;
         
         // Fields
         UnityAction synchronizeLight = delegate { };
@@ -101,9 +107,39 @@ namespace _01.Scripts.Managers.Puzzle
             if (currentProgress >= switches.Count) door.UnlockDoors();
         }
 
+        public void FocusAndReleaseTarget(CinemachineVirtualCamera focusTargetAfterTeleport) {
+            if (!focusTargetAfterTeleport) {
+                ResetControlOfPlayer();
+                return;
+            }
+            
+            Sequence focusSequence = DOTween.Sequence();
+            focusSequence.JoinCallback(() => {
+                    UIManager.Instance.FadeOutIn(2f,
+                        () => { GameManager.Instance.Player.PossessionSystem.CanMove = false; },
+                        () => { focusTargetAfterTeleport.Priority = 20; },
+                        GlowSilhouetteOfDoor);
+                })
+                .AppendInterval(6f)
+                .JoinCallback(() => { if (currentProgress >= switches.Count) OnCameraFocusChanged?.Invoke(); })
+                .OnComplete(() => { 
+                    UIManager.Instance.FadeOutIn(2f, 
+                        () => {},
+                        () => { focusTargetAfterTeleport.Priority = 0; },
+                        ResetControlOfPlayer); 
+                });
+        }
+        
         public void GlowSilhouetteOfDoor() {
             if (glowCoroutine != null) StopCoroutine(glowCoroutine);
             glowCoroutine = StartCoroutine(GlowCoroutine(glowTime));
+        }
+        
+        void ResetControlOfPlayer() {
+            if (GameManager.Instance.PlayerController.GetSlowdownAvailable()) {
+                GameManager.Instance.PlayerController.SetSlowdownAvailable(false);
+            }
+            GameManager.Instance.Player.PossessionSystem.CanMove = true;
         }
 
         IEnumerator GlowCoroutine(float duration) {

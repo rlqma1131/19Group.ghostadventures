@@ -153,36 +153,7 @@ namespace _01.Scripts.Object.NormalObject
                     GameManager.Instance.Player.transform.position = teleportTarget.transform.position;
                     teleportTarget.SetPictureState(false, true);
                 },
-                FocusAndReleaseTarget);
-        }
-
-        void FocusAndReleaseTarget() {
-            if (!focusTargetAfterTeleport) {
-                ResetControlOfPlayer();
-                return;
-            }
-            
-            Sequence focusSequence = DOTween.Sequence();
-            focusSequence.JoinCallback(() => {
-                    UIManager.Instance.FadeOutIn(2f,
-                        () => { GameManager.Instance.Player.PossessionSystem.CanMove = false; },
-                        () => { focusTargetAfterTeleport.Priority = 20; },
-                        () => { manager.GlowSilhouetteOfDoor(); });
-                })
-                .AppendInterval(6f)
-                .OnComplete(() => { 
-                    UIManager.Instance.FadeOutIn(2f, 
-                        () => {},
-                        () => { focusTargetAfterTeleport.Priority = 0; },
-                        ResetControlOfPlayer); 
-                    });
-        }
-
-        void ResetControlOfPlayer() {
-            if (GameManager.Instance.PlayerController.GetSlowdownAvailable()) {
-                GameManager.Instance.PlayerController.SetSlowdownAvailable(false);
-            }
-            GameManager.Instance.Player.PossessionSystem.CanMove = true;
+                () => { manager.FocusAndReleaseTarget(focusTargetAfterTeleport); });
         }
 
         void TeleportToRandomPoint(string[] linesToPlay) {
