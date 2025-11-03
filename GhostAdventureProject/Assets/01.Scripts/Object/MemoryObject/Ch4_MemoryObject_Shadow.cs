@@ -17,6 +17,7 @@ namespace _01.Scripts.Object.MemoryObject
         }
 
         override protected void OnTriggerEnter2D(Collider2D other) {
+            if (alreadyScanned) return;
             base.OnTriggerEnter2D(other);
             body.DOFade(0.5f, fadeDuration);
         }

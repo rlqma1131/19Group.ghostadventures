@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Object.MemoryObject;
 using DG.Tweening;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ public class Ch4_SpiderPuzzleController : MonoBehaviour
     [SerializeField] Ch4_FinalWallPuzzle finalWall;
 
     [Header("Reward Object (Reveal & Drop)")]
-    [SerializeField] GameObject rewardObject;          // 씬에 미리 배치된 보상 오브젝트 (처음엔 SetActive(false))
+    [SerializeField] Ch4_MemoryObject_CassetteTape rewardObject;          // 씬에 미리 배치된 보상 오브젝트 (처음엔 SetActive(false))
     [SerializeField] Transform rewardGroundPoint;      // 최종 착지 지점
     [SerializeField] float rewardDropHeight = 1.5f;    // 위에서 얼마나 띄워서 등장시킬지
     [SerializeField] float rewardAppearDuration = 0.4f;// 알파 페이드 인 시간
@@ -313,7 +314,7 @@ public class Ch4_SpiderPuzzleController : MonoBehaviour
         }
 
         // 1) 우선 보상 오브젝트를 켜고
-        rewardObject.SetActive(true);
+        rewardObject.SetScannable(true);
 
         // 2) 시작 위치/시각 효과 준비
         //    - 최종 착지 지점에서 약간 위로 올려둔 위치에서 시작
