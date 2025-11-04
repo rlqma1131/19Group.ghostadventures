@@ -225,8 +225,6 @@ public class Ch4_SpiderPuzzleController : MonoBehaviour
     {
         Debug.Log("[Controller] Final Puzzle Failed!");
         SoundManager.Instance?.PlaySFX(sfxFinalFail);
-        UIManager.Instance?.PromptUI2.ShowPrompt_UnPlayMode(
-            "틀렸습니다. 다시 시도하세요.", 1.5f);
 
         // 인형들 잠깐 올라갔다가 다시 내려오게 해서 리셋 연출
         if (dollA) dollA.Raise();

@@ -88,8 +88,6 @@ public class Ch4_Spider : BasePossessable
             return;
         }
 
-        // 이하부터는 플레이어 직접 조작 중 (isPossessed == true)
-
         // Q 눌러서 그리기 시작 (취소는 불가)
         if (Time.time >= _inputBlockUntil && Input.GetKeyDown(drawToggleKey))
         {
