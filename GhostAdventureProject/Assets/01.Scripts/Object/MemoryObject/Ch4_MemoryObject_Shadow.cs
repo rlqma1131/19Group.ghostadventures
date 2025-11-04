@@ -7,6 +7,7 @@ namespace _01.Scripts.Object.MemoryObject
     {
         [Header("References")] 
         [SerializeField] SpriteRenderer body;
+        [SerializeField] Ch4_MemoryObject_ShatteredGlass glass;
         
         [Header("Fade Settings")] 
         [SerializeField] float fadeDuration = 1.5f;
@@ -15,6 +16,8 @@ namespace _01.Scripts.Object.MemoryObject
             base.Start();
             isScannable = true;
         }
+
+        public override void AfterScan() => glass.UpdateProgress();
 
         override protected void OnTriggerEnter2D(Collider2D other) {
             if (alreadyScanned) return;
