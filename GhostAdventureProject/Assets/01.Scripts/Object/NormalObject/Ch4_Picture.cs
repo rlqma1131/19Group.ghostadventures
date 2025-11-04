@@ -46,8 +46,6 @@ namespace _01.Scripts.Object.NormalObject
         public void SetPictureState(bool scannable, bool? already = null) {
             if (already != null) {
                 alreadyScanned = already.Value;
-                if (already.Value) manager.UpdateProgress();
-                else isScannable = false;
             }
             isScannable = scannable;
             

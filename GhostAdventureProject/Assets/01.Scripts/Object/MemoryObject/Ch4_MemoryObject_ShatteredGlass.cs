@@ -33,7 +33,7 @@ namespace _01.Scripts.Object.MemoryObject
                 
                 block.Clear();
                 body.GetPropertyBlock(block);
-                block.SetColor(Color1, Color.clear);
+                block.SetColor(Color1, Color.white);
                 body.SetPropertyBlock(block);
             }
         }

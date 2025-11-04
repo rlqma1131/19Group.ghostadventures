@@ -43,7 +43,7 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
         isPossessed = false;
         hasActivated = true;
         
-        highlightObj?.SetActive(false);
+        if (highlightObj) highlightObj.SetActive(false);
     }
 
     /// <summary>
@@ -62,7 +62,9 @@ public abstract class BasePossessable : MonoBehaviour, IInteractable, IPossessab
     /// Show or Hide Highlight of object
     /// </summary>
     /// <param name="pop"></param>
-    public void ShowHighlight(bool pop) => highlightObj?.SetActive(pop);
+    public void ShowHighlight(bool pop) {
+        if (highlightObj) highlightObj.SetActive(pop);
+    }
 
     public bool HasActivated() => hasActivated;
     

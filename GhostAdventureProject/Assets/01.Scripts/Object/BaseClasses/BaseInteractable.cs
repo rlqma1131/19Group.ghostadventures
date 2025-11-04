@@ -2,6 +2,7 @@
 using _01.Scripts.Extensions;
 using _01.Scripts.Object.BaseClasses.Interfaces;
 using _01.Scripts.Player;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -35,17 +36,14 @@ public class BaseInteractable : MonoBehaviour, IInteractable
     protected virtual void Start() {
         player = GameManager.Instance.Player;
         
-        highlightObj?.SetActive(false);
+        if (highlightObj) highlightObj.SetActive(false);
     }
 
     public bool IsScannable() => isScannable;
     public virtual void SetScannable(bool value) => isScannable = value;
 
-    public void ShowHighlight(bool pop)
-    {
-
-        if (highlightObj)
-            highlightObj.SetActive(pop);
+    public void ShowHighlight(bool pop) {
+        if (highlightObj) highlightObj.SetActive(pop);
     }
 
     public virtual void TriggerEvent() { }

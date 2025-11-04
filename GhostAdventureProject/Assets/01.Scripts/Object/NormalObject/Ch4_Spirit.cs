@@ -7,6 +7,7 @@ using _01.Scripts.Managers.Puzzle;
 using Cinemachine;
 using DG.Tweening;
 using UnityEditor.Experimental;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
@@ -25,6 +26,7 @@ namespace _01.Scripts.Object.NormalObject
         [SerializeField] SpriteRenderer highlightRenderer;
         [SerializeField] GameObject q_Key;
         [SerializeField] Light2D light2D;
+        [SerializeField] AudioSource audioSource;
 
         [Header("Exorcism Settings")] 
         [SerializeField] Ch4_Picture teleportTarget;
@@ -42,6 +44,7 @@ namespace _01.Scripts.Object.NormalObject
         
         [Header("Spirit Event Settings")] 
         [SerializeField] float fadeDuration = 1f;
+        [SerializeField] List<string> linesWhenTeleportedFirstTime = new() { "[힌트]: Shift를 눌러 천천히 접근하세요" };
         [SerializeField] List<string> linesWhenTeleported = new() { "도망갔어..." };
         [SerializeField] List<string> linesWhenSuccess = new() { "됐다!" };
         [SerializeField] List<string> linesWhenFailed = new() { "놓쳤어.. 어디 간거지?" };
@@ -51,11 +54,23 @@ namespace _01.Scripts.Object.NormalObject
         [SerializeField] float scanRadius = 5f;
         [SerializeField] float scanInterval = 0.1f;
 
+        [Header("Audio Settings")] 
+        [SerializeField] Ease easeMode = Ease.InExpo;
+        [SerializeField] float minVolume = 0.1f;
+        [SerializeField] float maxVolume = 0.7f;
+        [SerializeField] float blendRadius = 5f;
+        [SerializeField] float audioFadeDuration = 1f;
+        
+
         Ch4_FurnacePuzzleManager manager;
         Collider2D[] results = new Collider2D[1];
         float currentTime;
+        float currentVolume;
         bool isTriggered;
         bool isInQTE;
+        bool isFirstTime = true;
+        bool isAudioAvailable;
+        bool isAudioInTransition;
 
         #endregion
         
@@ -67,6 +82,7 @@ namespace _01.Scripts.Object.NormalObject
             if (!highlightRenderer)
                 highlightRenderer = gameObject.GetComponentInChildren_SearchByName<SpriteRenderer>("Highlight");
             if (!light2D) light2D = GetComponent<Light2D>();
+            if (!audioSource) audioSource = GetComponent<AudioSource>();
         }
 
         override protected void Start() {
@@ -85,7 +101,7 @@ namespace _01.Scripts.Object.NormalObject
 
         public override void TriggerEvent() {
             if (!hasActivated) return;
-
+            if (isAudioAvailable && !isAudioInTransition) UpdateStereoPan();
             if (isPossessed) return;
             CheckToTeleport();
         }
@@ -102,7 +118,7 @@ namespace _01.Scripts.Object.NormalObject
 
         public override void OnPossessionEnterComplete() {
             base.OnPossessionEnterComplete();
-
+            FadeAudio(0f);
             ProceedExorcism();
         }
 
@@ -117,6 +133,7 @@ namespace _01.Scripts.Object.NormalObject
 
         public override void OnQTEFailure() {
             base.OnQTEFailure();
+            FadeAudio(currentVolume);
             isInQTE = false;
             TeleportToRandomPoint(linesWhenFailed.ToArray());
         }
@@ -132,12 +149,14 @@ namespace _01.Scripts.Object.NormalObject
                 .JoinCallback(() => {
                     onExorcism?.Invoke();
                     UIManager.Instance.PromptUI.ShowPrompt_2(linesWhenSuccess.ToArray());
-                    hasActivated = false;
+                    SetActivated(false);
+                    FadeAudio(0f);
                     MarkActivatedChanged();
                     anim.SetTrigger(IsDead);
                     StartCoroutine(LightCurveCoroutine());
                 })
                 .AppendCallback(() => {
+                    isAudioAvailable = false;
                     Unpossess();
                     TeleportToTarget();
                 });
@@ -185,6 +204,35 @@ namespace _01.Scripts.Object.NormalObject
         
         #endregion
 
+        #region Audio Related Methods
+
+        public void IsAudioAvailable(bool val) => isAudioAvailable = val;
+        
+        public void FadeAudio(float val) {
+            isAudioInTransition = true;
+            Sequence audioSequence = DOTween.Sequence();
+            audioSequence
+                .SetEase(easeMode)
+                .Append(audioSource.DOFade(val, audioFadeDuration))
+                .AppendCallback(() => isAudioInTransition = false);
+        }
+
+        void UpdateStereoPan() {
+            Vector2 playerPos = player.transform.position;
+            Vector2 sourcePos = transform.position;
+            
+            float dist = Vector2.Distance(playerPos, sourcePos);
+            Vector2 direction = (new Vector2(sourcePos.x, sourcePos.y) - playerPos).normalized;
+
+            float t = Mathf.Clamp01(dist / blendRadius);
+            float panAmount = Mathf.Lerp(0f, 1f, t);
+            
+            audioSource.volume = isAudioAvailable ? Mathf.Lerp(maxVolume, minVolume, t) : 0f;
+            audioSource.panStereo = Mathf.Clamp(direction.x * panAmount, -1f, 1f);
+        }
+        
+        #endregion
+        
         #region Helper Methods
 
         IEnumerator LightCurveCoroutine() {
@@ -203,8 +251,16 @@ namespace _01.Scripts.Object.NormalObject
 
             if (currentTime <= 0f) {
                 currentTime = scanInterval;
-                if (!IsPlayerSlowdown() && !isTriggered && !isInQTE)
-                    TeleportToRandomPoint(linesWhenTeleported.ToArray());
+                if (!IsPlayerSlowdown() && !isTriggered && !isInQTE) {
+                    var linesToPlay = isFirstTime switch {
+                        true => new List<string>(linesWhenTeleportedFirstTime),
+                        false => new List<string>()
+                    };
+                    isFirstTime = false;
+                    linesToPlay.AddRange(linesWhenTeleported);
+                    TeleportToRandomPoint(linesToPlay.ToArray());
+                }
+                    
             }
             else currentTime -= Time.deltaTime;
         }
