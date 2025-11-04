@@ -39,6 +39,7 @@ public class Ch04_Ending_BackgroundColor : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+
             BG.DOKill();
             text.DOKill();
             BG.DOColor(TargetColor, 0.7f).SetEase(Ease.InOutSine); ;
