@@ -8,12 +8,34 @@ public class Ch4_Book : BasePossessable
     [Header("Drop & Note")]
     [SerializeField] Transform dropPoint;            // 책이 떨어질 위치
     [SerializeField] GameObject note;          // 쪽지 프리팹(비활성 템플릿)
+    
+    [SerializeField] private GameObject q_Key;
 
     bool hasDropped;
 
     protected override void Start() {
         base.Start();
         if(note) note.SetActive(false);
+        if (q_Key) q_Key.SetActive(false);
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        
+        if (!hasActivated)
+        {
+            q_Key.SetActive(false);
+            return;
+        }
+        
+        if (!isPossessed)
+        {
+            q_Key.SetActive(false);
+            return;
+        }
+        
+        q_Key.SetActive(true);
     }
 
     public override void TriggerEvent() {
@@ -42,6 +64,7 @@ public class Ch4_Book : BasePossessable
             // 4) 이 책은 더 이상 조작 불가
             hasActivated = false;
             hasDropped = true;
+            q_Key.SetActive(false);
 
             // 5) 상호작용 목록에서 제거
             if (player) player.InteractSystem.RemoveInteractable(gameObject);
