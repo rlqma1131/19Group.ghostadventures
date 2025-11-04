@@ -14,7 +14,8 @@ public class Ch04_ChoiceUITrigger : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            choiceUI.SetActive(false);
+            if(choiceUI != null)
+                choiceUI.SetActive(false);
         }
     }
 
@@ -22,7 +23,8 @@ public class Ch04_ChoiceUITrigger : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            choiceUI.SetActive(true);
+            if (choiceUI != null)
+                choiceUI.SetActive(true);
         }
     }
 
