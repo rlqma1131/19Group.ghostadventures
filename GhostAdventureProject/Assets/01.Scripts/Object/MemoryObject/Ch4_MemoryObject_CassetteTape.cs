@@ -11,6 +11,6 @@ namespace _01.Scripts.Object.MemoryObject
             gameObject.SetActive(value);
         }
 
-        public override void AfterScan() => shatteredGlass.SetScannable(true);
+        public override void AfterScan() => shatteredGlass.UpdateProgress();
     }
 }
