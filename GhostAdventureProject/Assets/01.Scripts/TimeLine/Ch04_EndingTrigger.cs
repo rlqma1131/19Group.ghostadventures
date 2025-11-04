@@ -9,6 +9,7 @@ public class Ch04_EndingTrigger : MonoBehaviour
     [SerializeField] private GameObject Choice_canvas;
     [SerializeField] private LockedDoor ExitDoor;
     [SerializeField] private GameObject ExitText;
+    [SerializeField] private GameObject TriggerColider;
     private void Start()
     {
         if (director != null)
@@ -29,6 +30,7 @@ public class Ch04_EndingTrigger : MonoBehaviour
         Choice_canvas.SetActive(true);
         ExitText.SetActive(true);
         ExitDoor.UnlockDoors();
+        TriggerColider.SetActive(true);
 
     }
 
