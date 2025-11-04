@@ -9,6 +9,7 @@ namespace _01.Scripts.Object.MemoryObject
         [Header("References")] 
         [SerializeField] Animator animator;
         [SerializeField] SpriteRenderer body;
+        [SerializeField] Ch4_MemoryObject_ShatteredGlass glass;
 
         [Header("Animation Settings")] 
         [SerializeField] Transform target;
@@ -22,6 +23,8 @@ namespace _01.Scripts.Object.MemoryObject
             isScannable = false;
             block = new MaterialPropertyBlock();
         }
+
+        public override void AfterScan() => glass.UpdateProgress();
 
         public void PlayAnimation() {
             Sequence fadeSequence = DOTween.Sequence();
@@ -45,6 +48,7 @@ namespace _01.Scripts.Object.MemoryObject
             base.SetAlreadyScanned(val);
 
             if (!alreadyScanned) return;
+            
             gameObject.transform.position = target.position;
             block.Clear();
             body.GetPropertyBlock(block);
