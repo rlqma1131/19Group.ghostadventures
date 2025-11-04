@@ -30,7 +30,8 @@ public class Ch04_EndingTrigger : MonoBehaviour
         Choice_canvas.SetActive(true);
         ExitText.SetActive(true);
         ExitDoor.UnlockDoors();
-        TriggerColider.SetActive(true);
+        if(TriggerColider != null)
+            TriggerColider.SetActive(true);
 
     }
 
