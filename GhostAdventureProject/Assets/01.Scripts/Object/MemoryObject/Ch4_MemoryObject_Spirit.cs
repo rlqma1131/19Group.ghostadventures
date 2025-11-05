@@ -1,4 +1,6 @@
-﻿using DG.Tweening;
+﻿using _01.Scripts.Map;
+using Cinemachine;
+using DG.Tweening;
 using UnityEngine;
 
 namespace _01.Scripts.Object.MemoryObject
@@ -10,17 +12,23 @@ namespace _01.Scripts.Object.MemoryObject
         [SerializeField] Animator animator;
         [SerializeField] SpriteRenderer body;
         [SerializeField] Ch4_MemoryObject_ShatteredGlass glass;
-
+        [SerializeField] Ch4_SpiritTeleportTrigger trigger;
+        
         [Header("Animation Settings")] 
         [SerializeField] Transform target;
-        [SerializeField] float fadeDuration = 0.5f;
-        [SerializeField] float moveDuration = 1f;
+        [SerializeField] float fadeDuration = 2f;
+        [SerializeField] float moveDuration = 2f;
 
+        [Header("Teleport Settings")] 
+        [SerializeField] Transform teleportTarget;
+        
         MaterialPropertyBlock block;
+        Vector3 originalPosition;
         
         override protected void Start() {
             base.Start();
             isScannable = false;
+            originalPosition = gameObject.transform.position;
             block = new MaterialPropertyBlock();
         }
 
@@ -29,15 +37,24 @@ namespace _01.Scripts.Object.MemoryObject
         public void PlayAnimation() {
             Sequence fadeSequence = DOTween.Sequence();
             fadeSequence
+                .SetEase(Ease.OutQuad)
                 .Append(body.DOFade(1f, fadeDuration))
                 .Append(gameObject.transform.DOMove(target.position, moveDuration))
-                .AppendCallback(() => SetScannable(true));
+                .Append(gameObject.transform.DOMove(originalPosition, moveDuration))
+                .Append(body.DOFade(0f, fadeDuration))
+                .AppendCallback(() => {
+                    transform.position = teleportTarget.position;
+                    SetScannable(true);
+                });
         }
 
         public override void SetScannable(bool value) {
             base.SetScannable(value);
 
             if (!isScannable) return;
+            
+            transform.position = teleportTarget.position;
+            trigger.SetTriggered(true);
             block.Clear();
             body.GetPropertyBlock(block);
             block.SetColor(BaseColor, Color.white);
@@ -49,7 +66,7 @@ namespace _01.Scripts.Object.MemoryObject
 
             if (!alreadyScanned) return;
             
-            gameObject.transform.position = target.position;
+            gameObject.transform.position = teleportTarget.position;
             block.Clear();
             body.GetPropertyBlock(block);
             block.SetColor(BaseColor, Color.white);
