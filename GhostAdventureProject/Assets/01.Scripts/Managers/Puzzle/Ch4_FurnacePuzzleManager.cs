@@ -112,6 +112,8 @@ namespace _01.Scripts.Managers.Puzzle
             }
         }
 
+        public void TriggerSpiritAnimation() => trigger.FocusAndReleaseTarget();
+
         public void FocusAndReleaseTarget(CinemachineVirtualCamera focusTargetAfterTeleport) {
             if (!focusTargetAfterTeleport) {
                 ResetControlOfPlayer();
@@ -125,7 +127,7 @@ namespace _01.Scripts.Managers.Puzzle
                         () => { focusTargetAfterTeleport.Priority = 20; },
                         GlowSilhouetteOfDoor);
                 })
-                .AppendInterval(6f)
+                .AppendInterval(4.5f)
                 .OnComplete(() => { 
                     UIManager.Instance.FadeOutIn(2f, 
                         () => {},

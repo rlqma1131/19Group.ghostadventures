@@ -19,8 +19,8 @@ namespace _01.Scripts.Map
         public void SetTriggerable(bool triggerable) => isTriggerable = triggerable;
         public void SetTriggered(bool triggered) => isTriggered = triggered;
         
-        void FocusAndReleaseTarget(CinemachineVirtualCamera focusTargetAfterTeleport) {
-            if (!focusTargetAfterTeleport) {
+        public void FocusAndReleaseTarget() {
+            if (!focusableCamera) {
                 GameManager.Instance.Player.PossessionSystem.CanMove = true;
                 return;
             }
@@ -31,16 +31,16 @@ namespace _01.Scripts.Map
                     UIManager.Instance.FadeOutIn(
                         fadeDuration: 2f,
                         onStart: () => { GameManager.Instance.Player.PossessionSystem.CanMove = false; }, 
-                        onProcess: () => { focusTargetAfterTeleport.Priority = 20; }); 
+                        onProcess: () => { focusableCamera.Priority = 20; }); 
                 })
                 .AppendInterval(2f)
                 .AppendCallback(() => OnCameraFocusChanged?.Invoke())
-                .AppendInterval(4f)
+                .AppendInterval(10f)
                 .OnComplete(() => {
                     UIManager.Instance.FadeOutIn(
                         2f,
                         () => { },
-                        () => { focusTargetAfterTeleport.Priority = 0; },
+                        () => { focusableCamera.Priority = 0; },
                         () => { GameManager.Instance.Player.PossessionSystem.CanMove = true; });
                 });
         }
@@ -50,7 +50,7 @@ namespace _01.Scripts.Map
             if (!other.CompareTag("Player")) return;
             
             isTriggered = true;
-            FocusAndReleaseTarget(focusableCamera);
+            FocusAndReleaseTarget();
         }
     }
 }

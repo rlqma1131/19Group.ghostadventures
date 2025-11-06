@@ -5,7 +5,10 @@ using UnityEngine;
 
 namespace _01.Scripts.Object.MemoryObject
 {
-    public class Ch4_MemoryObject_Spirit : MemoryFragment {
+    public class Ch4_MemoryObject_Spirit : MemoryFragment 
+    {
+        #region Fields
+
         readonly static int BaseColor = Shader.PropertyToID("_Color");
 
         [Header("References")] 
@@ -13,23 +16,24 @@ namespace _01.Scripts.Object.MemoryObject
         [SerializeField] SpriteRenderer body;
         [SerializeField] Ch4_MemoryObject_ShatteredGlass glass;
         [SerializeField] Ch4_SpiritTeleportTrigger trigger;
-        
+
         [Header("Animation Settings")] 
         [SerializeField] Transform target;
+        [SerializeField] AudioClip surpriseSound;
         [SerializeField] float fadeDuration = 2f;
         [SerializeField] float moveDuration = 2f;
 
         [Header("Teleport Settings")] 
         [SerializeField] Transform teleportTarget;
-        
-        MaterialPropertyBlock block;
+
         Vector3 originalPosition;
+
+        #endregion
         
         override protected void Start() {
             base.Start();
             isScannable = false;
             originalPosition = gameObject.transform.position;
-            block = new MaterialPropertyBlock();
         }
 
         public override void AfterScan() => glass.UpdateProgress();
@@ -37,11 +41,18 @@ namespace _01.Scripts.Object.MemoryObject
         public void PlayAnimation() {
             Sequence fadeSequence = DOTween.Sequence();
             fadeSequence
-                .SetEase(Ease.OutQuad)
                 .Append(body.DOFade(1f, fadeDuration))
                 .Append(gameObject.transform.DOMove(target.position, moveDuration))
-                .Append(gameObject.transform.DOMove(originalPosition, moveDuration))
-                .Append(body.DOFade(0f, fadeDuration))
+                .AppendInterval(1.5f)
+                .Append(gameObject.transform.DOJump(target.position, 1f,1,0.4f))
+                .JoinCallback(() => {
+                    if (surpriseSound != null)
+                        SoundManager.Instance.PlaySFX(surpriseSound, 1f);
+                })
+                .AppendInterval(0.5f)
+                .AppendCallback(() => body.flipX = true)
+                .Append(gameObject.transform.DOMove(originalPosition, moveDuration / 2f))
+                .Append(body.DOFade(0f, fadeDuration / 2f))
                 .AppendCallback(() => {
                     transform.position = teleportTarget.position;
                     SetScannable(true);
@@ -55,10 +66,7 @@ namespace _01.Scripts.Object.MemoryObject
             
             transform.position = teleportTarget.position;
             trigger.SetTriggered(true);
-            block.Clear();
-            body.GetPropertyBlock(block);
-            block.SetColor(BaseColor, Color.white);
-            body.SetPropertyBlock(block);
+            body.color = Color.white;
         }
 
         public override void SetAlreadyScanned(bool val) {
@@ -67,10 +75,7 @@ namespace _01.Scripts.Object.MemoryObject
             if (!alreadyScanned) return;
             
             gameObject.transform.position = teleportTarget.position;
-            block.Clear();
-            body.GetPropertyBlock(block);
-            block.SetColor(BaseColor, Color.white);
-            body.SetPropertyBlock(block);
+            body.color = Color.white;
         }
     }
 }
