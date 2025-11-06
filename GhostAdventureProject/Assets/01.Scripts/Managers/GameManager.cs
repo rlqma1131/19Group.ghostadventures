@@ -103,12 +103,15 @@ public class GameManager : Singleton<GameManager>
             SaveManager.SaveGame();
         }
 
-        if (currentPlayer!=null &&(sceneName == "StartScene" || sceneName == "End_Exit" || sceneName == "End_인정" || sceneName == "End_분기"))
+        if ((sceneName == "StartScene" || sceneName == "End_Exit" || sceneName == "End_인정" || sceneName == "End_분기"))
         {
-            Debug.Log("[GameManager] StartScene 로드됨 - Player 제거");
-            Destroy(currentPlayer);
-            currentPlayer = null;
-            player = null;
+            if(currentPlayer != null)
+            {
+                Debug.Log("[GameManager] StartScene 로드됨 - Player 제거");
+                Destroy(currentPlayer);
+                currentPlayer = null;
+                player = null;
+            }
             return;
         }
 
