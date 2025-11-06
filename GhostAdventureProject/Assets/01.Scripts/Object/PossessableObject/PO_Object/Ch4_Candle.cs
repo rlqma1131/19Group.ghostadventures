@@ -49,6 +49,13 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
             if (Input.GetKeyDown(KeyCode.Q)) OnCandleLit();
         }
 
+        public override void SetActivated(bool value) {
+            base.SetActivated(value);
+
+            if (value) return;
+            OnDropped?.Invoke();
+        }
+
         public void TriggerDropEvent() {
             // If fire did not lit, do not drop.
             if (!fire.gameObject.activeInHierarchy) return;

@@ -42,6 +42,12 @@ namespace _01.Scripts.Object.PossessableObject.PO_Object
             if (Input.GetKeyDown(KeyCode.Q)) OnBottleDropped();
         }
 
+        public override void SetActivated(bool value) {
+            base.SetActivated(value);
+            
+            if (!value) OnDropped?.Invoke();
+        }
+
         void OnBottleDropped() {
             // Turn off UI Element
             q_Key.SetActive(false);
