@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _01.Scripts.Extensions;
+using _01.Scripts.Map;
 using _01.Scripts.Object.MemoryObject;
 using _01.Scripts.Object.NormalObject;
 using _01.Scripts.Object.PossessableObject.PO_Object;
@@ -25,6 +26,7 @@ namespace _01.Scripts.Managers.Puzzle
 
         [Header("References")] 
         [SerializeField] Ch4_Furnace furnace;
+        [SerializeField] Ch4_SpiritTeleportTrigger trigger;
         [SerializeField] List<Volume> volumes;
         [SerializeField] List<Ch4_BackgroundSwitch> switches;
         
@@ -104,8 +106,13 @@ namespace _01.Scripts.Managers.Puzzle
             doorRenderer.SetPropertyBlock(blockOfDoor);
             
             // If condition fulfilled, unlock allocated door.
-            if (currentProgress >= switches.Count) door.UnlockDoors();
+            if (currentProgress >= switches.Count) {
+                trigger.SetTriggerable(true);
+                door.UnlockDoors();
+            }
         }
+
+        public void TriggerSpiritAnimation() => trigger.FocusAndReleaseTarget();
 
         public void FocusAndReleaseTarget(CinemachineVirtualCamera focusTargetAfterTeleport) {
             if (!focusTargetAfterTeleport) {
@@ -120,8 +127,7 @@ namespace _01.Scripts.Managers.Puzzle
                         () => { focusTargetAfterTeleport.Priority = 20; },
                         GlowSilhouetteOfDoor);
                 })
-                .AppendInterval(6f)
-                .JoinCallback(() => { if (currentProgress >= switches.Count) OnCameraFocusChanged?.Invoke(); })
+                .AppendInterval(4.5f)
                 .OnComplete(() => { 
                     UIManager.Instance.FadeOutIn(2f, 
                         () => {},

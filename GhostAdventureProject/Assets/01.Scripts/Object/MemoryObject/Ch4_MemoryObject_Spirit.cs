@@ -1,27 +1,39 @@
-﻿using DG.Tweening;
+﻿using _01.Scripts.Map;
+using Cinemachine;
+using DG.Tweening;
 using UnityEngine;
 
 namespace _01.Scripts.Object.MemoryObject
 {
-    public class Ch4_MemoryObject_Spirit : MemoryFragment {
+    public class Ch4_MemoryObject_Spirit : MemoryFragment 
+    {
+        #region Fields
+
         readonly static int BaseColor = Shader.PropertyToID("_Color");
 
         [Header("References")] 
         [SerializeField] Animator animator;
         [SerializeField] SpriteRenderer body;
         [SerializeField] Ch4_MemoryObject_ShatteredGlass glass;
+        [SerializeField] Ch4_SpiritTeleportTrigger trigger;
 
         [Header("Animation Settings")] 
         [SerializeField] Transform target;
-        [SerializeField] float fadeDuration = 0.5f;
-        [SerializeField] float moveDuration = 1f;
+        [SerializeField] AudioClip surpriseSound;
+        [SerializeField] float fadeDuration = 2f;
+        [SerializeField] float moveDuration = 2f;
 
-        MaterialPropertyBlock block;
+        [Header("Teleport Settings")] 
+        [SerializeField] Transform teleportTarget;
+
+        Vector3 originalPosition;
+
+        #endregion
         
         override protected void Start() {
             base.Start();
             isScannable = false;
-            block = new MaterialPropertyBlock();
+            originalPosition = gameObject.transform.position;
         }
 
         public override void AfterScan() => glass.UpdateProgress();
@@ -31,17 +43,30 @@ namespace _01.Scripts.Object.MemoryObject
             fadeSequence
                 .Append(body.DOFade(1f, fadeDuration))
                 .Append(gameObject.transform.DOMove(target.position, moveDuration))
-                .AppendCallback(() => SetScannable(true));
+                .AppendInterval(1.5f)
+                .Append(gameObject.transform.DOJump(target.position, 1f,1,0.4f))
+                .JoinCallback(() => {
+                    if (surpriseSound != null)
+                        SoundManager.Instance.PlaySFX(surpriseSound, 1f);
+                })
+                .AppendInterval(0.5f)
+                .AppendCallback(() => body.flipX = true)
+                .Append(gameObject.transform.DOMove(originalPosition, moveDuration / 2f))
+                .Append(body.DOFade(0f, fadeDuration / 2f))
+                .AppendCallback(() => {
+                    transform.position = teleportTarget.position;
+                    SetScannable(true);
+                });
         }
 
         public override void SetScannable(bool value) {
             base.SetScannable(value);
 
             if (!isScannable) return;
-            block.Clear();
-            body.GetPropertyBlock(block);
-            block.SetColor(BaseColor, Color.white);
-            body.SetPropertyBlock(block);
+            
+            transform.position = teleportTarget.position;
+            trigger.SetTriggered(true);
+            body.color = Color.white;
         }
 
         public override void SetAlreadyScanned(bool val) {
@@ -49,11 +74,8 @@ namespace _01.Scripts.Object.MemoryObject
 
             if (!alreadyScanned) return;
             
-            gameObject.transform.position = target.position;
-            block.Clear();
-            body.GetPropertyBlock(block);
-            block.SetColor(BaseColor, Color.white);
-            body.SetPropertyBlock(block);
+            gameObject.transform.position = teleportTarget.position;
+            body.color = Color.white;
         }
     }
 }
