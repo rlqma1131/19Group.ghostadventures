@@ -24,6 +24,8 @@ public class Ch4_Spider : BasePossessable
 
     // 현재 붙어 있는 거미줄 노드
     [SerializeField] Ch4_SpiderWebNode currentNode;
+    
+    [SerializeField] private GameObject q_Key;
 
     // 이동 목표 좌표
     Vector3 targetPos;
@@ -60,13 +62,22 @@ public class Ch4_Spider : BasePossessable
     {
         base.Start();
         SetActivated(false);
+        if (q_Key) q_Key.SetActive(false);
     }
 
     protected override void Update()
     {
         base.Update();
 
-        // 플레이어가 조종 중이 아니고(autoTransit도 아니면) 아무 일도 안 함
+        if (!hasActivated || !isPossessed)
+        {
+            if (q_Key && q_Key.activeSelf) q_Key.SetActive(false);
+        }
+        else
+        {
+            if (q_Key && !q_Key.activeSelf) q_Key.SetActive(true);
+        }
+        
         if (!isPossessed && !autoTransit)
             return;
 
@@ -93,21 +104,13 @@ public class Ch4_Spider : BasePossessable
         {
             if (!drawMode)
             {
-                drawMode = true;
-                visitedNodeIds.Clear();
-                usedEdges.Clear();
-
-                if (currentNode != null)
-                {
-                    visitedNodeIds.Add(currentNode.Id);
-
-                    if (line)
-                    {
-                        line.enabled = true;
-                        line.positionCount = 1;
-                        line.SetPosition(0, currentNode.transform.position);
-                    }
-                }
+                TurnOnDrawMode();
+                UIManager.Instance?.PromptUI2.ShowPrompt_UnPlayMode("DrawMode On", 1.0f);
+            }
+            else
+            {
+                TurnOffDrawMode();
+                UIManager.Instance?.PromptUI2.ShowPrompt_UnPlayMode("DrawMode Off", 1.0f);
             }
         }
 
@@ -190,6 +193,39 @@ public class Ch4_Spider : BasePossessable
             }
         }
     }
+    
+    void TurnOnDrawMode()
+    {
+        drawMode = true;
+        visitedNodeIds.Clear();
+        usedEdges.Clear();
+
+        if (currentNode != null)
+        {
+            visitedNodeIds.Add(currentNode.Id);
+
+            if (line)
+            {
+                line.enabled = true;
+                line.positionCount = 1;
+                line.SetPosition(0, currentNode.transform.position);
+            }
+        }
+    }
+    
+    void TurnOffDrawMode()
+    {
+        drawMode = false;
+        successPending = false;
+        visitedNodeIds.Clear();
+        usedEdges.Clear();
+
+        if (line)
+        {
+            line.enabled = false;
+            line.positionCount = 0;
+        }
+    }
 
     // 현재 컨트롤러 단계에 맞는 패턴을 세팅
     public void SetPattern(Ch4_PatternAsset pattern)
@@ -221,16 +257,7 @@ public class Ch4_Spider : BasePossessable
 
         SetActivated(true);
 
-        drawMode = false;
-        successPending = false;
-        visitedNodeIds.Clear();
-        usedEdges.Clear();
-
-        if (line)
-        {
-            line.enabled = false;
-            line.positionCount = 0;
-        }
+        TurnOffDrawMode();
     }
 
     // 패턴 완성 판정
