@@ -22,18 +22,24 @@ public class Ch04_EndingTrigger : MonoBehaviour
     private void OnTimelineStopped(PlayableDirector obj)
     {
         //화면에 선택지 캔버스 활성화
-        TrunOnCanvas();
+        TurnOnCanvas();
     }
 
-    private void TrunOnCanvas()
+    private void TurnOnCanvas()
     {
-        Choice_canvas.SetActive(true);
-        ExitText.SetActive(true);
-        ExitDoor.UnlockDoors();
-        if(TriggerColider != null)
-            TriggerColider.SetActive(true);
+        if (Choice_canvas != null && !ReferenceEquals(Choice_canvas, null))
+            Choice_canvas.SetActive(true);
 
+        if (ExitText != null && !ReferenceEquals(ExitText, null))
+            ExitText.SetActive(true);
+
+        if (ExitDoor != null && !ReferenceEquals(ExitDoor, null))
+            ExitDoor.UnlockDoors();
+
+        if (TriggerColider != null && !ReferenceEquals(TriggerColider, null))
+            TriggerColider.SetActive(true);
     }
+
 
 
 }
