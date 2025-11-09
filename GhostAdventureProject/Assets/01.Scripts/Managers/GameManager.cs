@@ -77,7 +77,7 @@ public class GameManager : Singleton<GameManager>
         
         bool IsChapterStart(string name)
         {
-            return name == "Ch01_House" || name == "Ch02_PlayGround" || name == "Ch03_Hospital";
+            return name == "Ch01_House" || name == "Ch02_PlayGround" || name == "Ch03_Hospital" || name == "Ch04_Cottage";
         }
         
         if (IsChapterStart(sceneName) && !SceneLoadContext.CameThroughLoading)
