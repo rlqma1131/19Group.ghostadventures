@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using _01.Scripts.Player;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -34,10 +36,15 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject currentPlayer;
     [SerializeField] private Player player;
+    
+    [Header("Required memory ids in each chapter")]
+    [SerializeField] SerializedDictionary<MemoryData.Chapter, List<string>> memoryIds = new();
 
     public GameObject PlayerObj => currentPlayer;
     public Player Player => player;
     public PlayerController PlayerController => player.Controller;
+    public SerializedDictionary<MemoryData.Chapter, List<string>> MemoryIds => memoryIds;
+    public bool ByPassEnabled { get; set; }
     
     // 게임 이어하기
     private bool loadFromSave = false;

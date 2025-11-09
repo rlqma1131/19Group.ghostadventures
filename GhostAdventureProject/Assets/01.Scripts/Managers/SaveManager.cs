@@ -717,7 +717,7 @@ public static class SaveManager {
         if (File.Exists(SavePath)) File.Delete(SavePath);
         CurrentData = null; // 조회 계열은 이후 false/기본값을 반환
     }
-
+    
     /// <summary>
     /// 퍼즐 풀기를 완료 시 불리는 메소드
     /// </summary>
