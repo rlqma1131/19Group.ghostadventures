@@ -24,7 +24,8 @@ public class Ch04_Memory5_MoveScene : MonoBehaviour
 
     private void OnDirectorStopped(PlayableDirector dir)
     {
-
+        
         SceneManager.LoadScene("End_분기");
+        UIManager.Instance.PlayModeUI_CloseAll();
     }
 }

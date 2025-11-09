@@ -49,8 +49,12 @@ public class Additive_TimelineControl : MonoBehaviour
     }
 
     private void Start() {
+        if(GameManager.Instance.Player != null)
+        {
         player = GameManager.Instance.Player;
         memoryScan = player.MemoryScan;
+
+        }
         // 스킵용 카운트다운 타이머
         timer = new CountdownTimer(SKIP_DURATION);
         timer.OnTimerStart += () => {
