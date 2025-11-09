@@ -129,7 +129,8 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     public void ESCMenu_Open()
     {
         escMenuUI.SetActive(true);
-        UIManager.Instance.SetCursor(UIManager.CursorType.Default);
+        if (UIManager.Instance != null)
+            UIManager.Instance.SetCursor(UIManager.CursorType.Default);
         general.SetActive(true);
         optionMenu.SetActive(false);
         Time.timeScale = 0f;
@@ -155,10 +156,13 @@ public class ESCMenu : MonoBehaviour, IUIClosable
     // 타이틀로
     public void GoToMainMenu()
     {
-        UIManager.Instance.Inventory_PossessableObjectUI.Clear();
-        UIManager.Instance.Inventory_PossessableObjectUI.HideInventory();
-        UIManager.Instance.Inventory_PlayerUI.RemoveClueBeforeStage();
-        UIManager.Instance.PlayModeUI_CloseAll();
+        if (UIManager.Instance != null) {
+            UIManager.Instance.Inventory_PossessableObjectUI.Clear();
+            UIManager.Instance.Inventory_PossessableObjectUI.HideInventory();
+            UIManager.Instance.Inventory_PlayerUI.RemoveClueBeforeStage();
+            UIManager.Instance.PlayModeUI_CloseAll();
+        }
+        
         escMenuUI.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
@@ -207,12 +211,10 @@ public class ESCMenu : MonoBehaviour, IUIClosable
         Debug.Log($"단서 {slotIndex + 1} 키 변경 대기 중...");
     }
 
-    void Update()
-    {
-        if(IsOpen())
-        {
+    void Update() {
+        if (!IsOpen()) return;
+        if (UIManager.Instance != null)
             UIManager.Instance.SetCursor(UIManager.CursorType.Default);
-        }
     }
 
     // private void Update()
