@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _01.Scripts.Object.BaseClasses.Interfaces;
@@ -31,18 +32,19 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
         if (mode == LoadSceneMode.Additive) return; // 컷씬이면 적용 안함
+        if (scene.name == "LoadingScene") return;
         if (SaveManager.CurrentData != null) {
-            StartCoroutine(ApplyNextFrame()); // 다음 프레임에 적용
+            StartCoroutine(ApplyNextFrame(scene.name)); // 다음 프레임에 적용
         }
     }
 
-    IEnumerator ApplyNextFrame() {
+    IEnumerator ApplyNextFrame(string sceneName = null) {
         // 한 프레임 이후 시작 해 모든 Start() 이후
         yield return new WaitForSecondsRealtime(0.2f);
-        ApplySavedStatesInScene();
+        ApplySavedStatesInScene(sceneName);
     }
 
-    void ApplySavedStatesInScene() {
+    void ApplySavedStatesInScene(string sceneName = null) {
         SaveData data = SaveManager.CurrentData;
         if (data == null) return;
 
@@ -192,7 +194,7 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
         // === 인벤토리/진행도 복원 ===
         Inventory_Player inv = UIManager.Instance.Inventory_PlayerUI.GetComponent<Inventory_Player>();
         SaveManager.ApplyPlayerInventoryFromSave(inv);
-        MemoryManager.Instance?.WarmStartFromSave();
+        MemoryManager.Instance?.WarmStartFromSave(sceneName);
         ChapterEndingManager.Instance?.ApplyFromSave();
 
         // === 이벤트 완료 상태 복원 ===

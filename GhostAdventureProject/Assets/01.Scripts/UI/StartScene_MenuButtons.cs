@@ -1,4 +1,8 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -94,6 +98,64 @@ public class StartScene_MenuButtons : MonoBehaviour
         SceneManager.LoadScene("IntroScene_Real");
         if (UIManager.Instance != null)
         {
+            UIManager.Instance.PlayModeUI_CloseAll();
+            UIManager.Instance.startEndingUI_CloseAll();
+        }
+    }
+
+    public void OpenNewGameConfirmInChapterSelection(string chapter) {
+        SaveManager.DeleteSave();
+        ChapterEndingManager.Instance?.ResetAllAndNotify();
+
+        MemoryData.Chapter ch = chapter switch {
+            "1" => MemoryData.Chapter.Chapter1,
+            "2" => MemoryData.Chapter.Chapter2,
+            "3" => MemoryData.Chapter.Chapter3,
+            "4" => MemoryData.Chapter.Chapter4,
+            _ => MemoryData.Chapter.Exception
+        };
+        
+        switch (ch) {
+            case MemoryData.Chapter.Chapter1: StartInChapterOne(); break;
+            case MemoryData.Chapter.Chapter2: StartInChapterTwo(); break;
+            case MemoryData.Chapter.Chapter3: StartInChapterThree(); break;
+            case MemoryData.Chapter.Chapter4: StartInChapterFour(); break;
+            case MemoryData.Chapter.Exception:
+            default: throw new ArgumentException("Incorrect Chapter Exception Occurred", nameof(chapter));
+        }
+    }
+
+    void StartInChapterOne() {
+        GameManager.Instance.ByPassEnabled = true;
+        SceneManager.LoadScene("IntroScene_Real");
+        if (UIManager.Instance != null) {
+            UIManager.Instance.PlayModeUI_CloseAll();
+            UIManager.Instance.startEndingUI_CloseAll();
+        }
+    }
+
+    void StartInChapterTwo() {
+        GameManager.Instance.ByPassEnabled = true;
+        SceneManager.LoadScene("00.Scenes/CutScene/Ch01_To_Ch02");
+        if (UIManager.Instance != null) {
+            UIManager.Instance.PlayModeUI_CloseAll();
+            UIManager.Instance.startEndingUI_CloseAll();
+        }
+    }
+
+    void StartInChapterThree() {
+        GameManager.Instance.ByPassEnabled = true;
+        SceneManager.LoadScene("00.Scenes/CutScene/Ch02_To_Ch03");
+        if (UIManager.Instance != null) {
+            UIManager.Instance.PlayModeUI_CloseAll();
+            UIManager.Instance.startEndingUI_CloseAll();
+        }
+    }
+
+    void StartInChapterFour() {
+        GameManager.Instance.ByPassEnabled = true;
+        SceneManager.LoadScene("00.Scenes/CutScene/Ch03_To_Ch04");
+        if (UIManager.Instance != null) {
             UIManager.Instance.PlayModeUI_CloseAll();
             UIManager.Instance.startEndingUI_CloseAll();
         }

@@ -28,7 +28,7 @@ public class ExampleSceneLink : MonoBehaviour
 public class MemoryData : ScriptableObject
 {
     public enum MemoryType { Positive, Negative, Fake }
-    public enum Chapter { Chapter1, Chapter2, Chapter3, Chapter4 }
+    public enum Chapter { Chapter1, Chapter2, Chapter3, Chapter4, Exception }
 
     [Header("기억 타입")]
     public Chapter chapter;
