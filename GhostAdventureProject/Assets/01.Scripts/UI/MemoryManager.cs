@@ -39,6 +39,7 @@ public class MemoryManager : MonoBehaviour
         closeMemoryStorage?.gameObject.SetActive(false);
     }
 
+
     private void OnDestroy()
     {
         SaveManager.Loaded -= OnSaveLoaded;
@@ -107,6 +108,8 @@ public class MemoryManager : MonoBehaviour
         if (!scannedMemoryList.Contains(m)) scannedMemoryList.Add(m);
 
         OnMemoryCollected?.Invoke(m);
+
+        Debug.Log($"[MemoryManager] 기억 수집: {m.memoryID} - {m.memoryTitle}");
     }
 
     // 저장값으로 런타임 상태 복원

@@ -116,11 +116,18 @@ public class UIManager : Singleton<UIManager>
     {
         SetCursor(CursorType.Default);
 
-        if(SceneManager.GetActiveScene().name == "IntroScene_Real" || SceneManager.GetActiveScene().name =="Ch01_To_Ch02"
-            || SceneManager.GetActiveScene().name == "Ch02_To_Ch03" || SceneManager.GetActiveScene().name == "Ch03_To_Ch04" || SceneManager.GetActiveScene().name == "StartScene")
+        if (SceneManager.GetActiveScene().name == "IntroScene_Real"
+         || SceneManager.GetActiveScene().name == "Ch01_To_Ch02"
+         || SceneManager.GetActiveScene().name == "Ch02_To_Ch03"
+         || SceneManager.GetActiveScene().name == "Ch03_To_Ch04"
+         || SceneManager.GetActiveScene().name == "StartScene"
+         || SceneManager.GetActiveScene().name == "End_Exit"
+         || SceneManager.GetActiveScene().name == "End_분기"
+         || SceneManager.GetActiveScene().name == "End_인정")
         {
             PlayModeUI_CloseAll();
         }
+
 
         Button[] buttons = FindObjectsOfType<Button>(true);
         foreach (Button btn in buttons)

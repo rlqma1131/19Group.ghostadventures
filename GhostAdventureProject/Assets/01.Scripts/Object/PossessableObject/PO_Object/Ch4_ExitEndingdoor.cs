@@ -1,15 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Ch4_ExitEndingdoor : MonoBehaviour
 {
-    public void moveScene()
+    public void MoveScene()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("End_Exit");
+        SceneManager.LoadScene("End_Exit");
+        UIManager.Instance.PlayModeUI_CloseAll();
+
+        if (GameManager.Instance != null)
+        {
+
+            var player = GameManager.Instance.Player;
+            if (player != null)
+            {
+                Debug.Log("Player Destroyed");
+                Destroy(player);
+            }
+        }
+
+
     }
-
-
-
 }

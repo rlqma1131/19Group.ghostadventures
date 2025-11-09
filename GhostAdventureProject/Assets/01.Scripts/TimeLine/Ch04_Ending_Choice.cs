@@ -19,12 +19,14 @@ public class Ch04_Ending_Choice : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")&&canvas?.activeSelf ==true)
+        if (collision.CompareTag("Player"))
         {
-        
+            if (canvas != null && !ReferenceEquals(canvas, null) && canvas.activeSelf)
+            {
                 canvas.SetActive(false);
-
+            }
         }
     }
+
 }
 
