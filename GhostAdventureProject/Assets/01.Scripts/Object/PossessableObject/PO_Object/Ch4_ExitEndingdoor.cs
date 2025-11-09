@@ -6,6 +6,7 @@ public class Ch4_ExitEndingdoor : MonoBehaviour
     public void MoveScene()
     {
         SceneManager.LoadScene("End_Exit");
+        UIManager.Instance.PlayModeUI_CloseAll();
 
         if (GameManager.Instance != null)
         {

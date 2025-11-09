@@ -92,9 +92,19 @@ public class GameManager : Singleton<GameManager>
         
         EnsureManagerExists<SaveStateApplier>(saveStateApplier);
 
-        if (sceneName != "StartScene" && sceneName != "IntroScene_Real" 
-            && mode != LoadSceneMode.Additive && sceneName != "Ch01_To_Ch02" && sceneName != "Ch02_To_Ch03" 
-            && sceneName != "Ch03_To_Ch04" && sceneName != "Ch03_Memory01"&& sceneName != "LoadingScene")
+        if (sceneName != "StartScene"
+            && sceneName != "IntroScene_Real"
+            && mode != LoadSceneMode.Additive
+            && sceneName != "Ch01_To_Ch02"
+            && sceneName != "Ch02_To_Ch03"
+            && sceneName != "Ch03_To_Ch04" 
+            && sceneName != "Ch03_Memory01"
+            && sceneName != "LoadingScene"
+            && sceneName != "End_Exit"
+            && sceneName != "End_분기"
+            && sceneName != "End_인정"
+            )
+
         {
             // 플레이모드 UI 열기
             if (UIManager.Instance != null)

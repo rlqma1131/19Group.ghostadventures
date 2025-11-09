@@ -14424,6 +14424,8 @@ GameObject:
   m_Component:
   - component: {fileID: 943546250}
   - component: {fileID: 943546249}
+  - component: {fileID: 943546251}
+  - component: {fileID: 943546252}
   m_Layer: 0
   m_Name: TiiiimmmmmeLINE
   m_TagString: Untagged
@@ -14496,6 +14498,8 @@ PlayableDirector:
     value: {fileID: 162877173}
   - key: {fileID: -7626427269448140694, guid: 9fd7cbab4deb8d946ac4e14b2e1ad09a, type: 2}
     value: {fileID: 845705374}
+  - key: {fileID: 830285576359309783, guid: 9fd7cbab4deb8d946ac4e14b2e1ad09a, type: 2}
+    value: {fileID: 943546252}
   m_ExposedReferences:
     m_References:
     - 6452957e2612cfd41b90beb895a4ace6: {fileID: 82657698}
@@ -14521,6 +14525,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &943546251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943546248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7b89cafb83b5c143813de0dc6244147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skip: {fileID: 0}
+  nextSceneName: StartScene
+  space1: {fileID: 0}
+  space2: {fileID: 0}
+--- !u!114 &943546252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943546248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 9c64cbfde728022418c623fc28a6e7bb, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 943546251}
+          m_TargetAssemblyTypeName: Scene_To_Scene_MoveScene, Assembly-CSharp
+          m_MethodName: GoScene
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: StartScene
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &949470786
 GameObject:
   m_ObjectHideFlags: 0
@@ -18239,8 +18289,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -1.72575, y: 0.24615002, z: 0}
-    m_Extent: {x: 8.44075, y: 2.79055, z: 0}
+    m_Center: {x: -1.7258, y: 0.24619997, z: 0}
+    m_Extent: {x: 8.440599, y: 2.7898002, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -18645,8 +18695,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -2.0464497, y: 0.3115499, z: 0}
-    m_Extent: {x: 14.83585, y: 4.39765, z: 0}
+    m_Center: {x: -2.0460496, y: 0.31149983, z: 0}
+    m_Extent: {x: 14.83625, y: 4.3984003, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
