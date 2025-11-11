@@ -5,7 +5,7 @@ public class PuzzleStatus : MonoBehaviour
 {
     //public static PuzzleStatus Instance;
 
-    public enum Chapter { Chapter1, Chapter2, Chapter3 }
+    public enum Chapter { Chapter1, Chapter2, Chapter3, Chapter4 }
 
     [SerializeField] private Chapter currentChapter;
     [SerializeField] private TextMeshProUGUI clue;
@@ -50,6 +50,10 @@ public class PuzzleStatus : MonoBehaviour
 
             case Chapter.Chapter3:
                 if (scannedMemory) scannedMemory.text = $"• 기억 수집 {chapterEndingManager.CurrentCh3MemoryCount} / {maxCh3Memories}";
+                break;
+            
+            case Chapter.Chapter4:
+                if (scannedMemory) scannedMemory.text = "• 기억 수집 ? / ?";
                 break;
         }
 

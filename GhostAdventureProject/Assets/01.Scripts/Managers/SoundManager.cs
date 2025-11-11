@@ -10,6 +10,7 @@ public enum SceneType
     Ch01_House,
     Ch02_PlayGround,
     Ch03_Hospital,
+    Ch04_Cottage,
     CutScene
 }
 
@@ -32,6 +33,7 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField] private AudioClip bgm_Ch01_House;
     [SerializeField] private AudioClip bgm_Ch02_PlayGround;
     [SerializeField] private AudioClip bgm_Ch03_Hospital;
+    [SerializeField] private AudioClip bgm_Ch04_Cottage;
 
     [Header("SFX List")]
     public AudioClip cluePickUP;
@@ -78,6 +80,7 @@ public class SoundManager : Singleton<SoundManager>
             case "Ch01_House": return SceneType.Ch01_House;
             case "Ch02_PlayGround": return SceneType.Ch02_PlayGround;
             case "Ch03_Hospital": return SceneType.Ch03_Hospital;
+            case "Ch04_Cottage": return SceneType.Ch04_Cottage;
 
             default: return SceneType.CutScene;
         }
@@ -102,7 +105,9 @@ public class SoundManager : Singleton<SoundManager>
             case SceneType.Ch03_Hospital:
                 ChangeBGM(bgm_Ch03_Hospital);
                 break;
-
+            case SceneType.Ch04_Cottage:
+                ChangeBGM(bgm_Ch04_Cottage);
+                break;
             default:
                 FadeOutAndStopBGM();
                 break;
