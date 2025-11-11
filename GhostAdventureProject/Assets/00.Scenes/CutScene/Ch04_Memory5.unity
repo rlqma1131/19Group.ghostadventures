@@ -3224,7 +3224,7 @@ Camera:
   far clip plane: 1000
   field of view: 94
   orthographic: 1
-  orthographic size: 1.01
+  orthographic size: 2.68
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -3575,8 +3575,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 70.8286, y: 15.149849, z: 0}
-    m_Extent: {x: 91.29961, y: 50.06855, z: 0}
+    m_Center: {x: 70.8281, y: 15.148699, z: 0}
+    m_Extent: {x: 91.2992, y: 50.0681, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -5975,6 +5975,8 @@ GameObject:
   - component: {fileID: 1331474492}
   - component: {fileID: 1331474493}
   - component: {fileID: 1331474494}
+  - component: {fileID: 1331474496}
+  - component: {fileID: 1331474495}
   m_Layer: 17
   m_Name: TimeLine
   m_TagString: Untagged
@@ -6202,6 +6204,8 @@ PlayableDirector:
     value: {fileID: 2012602021}
   - key: {fileID: 7793864488463034814, guid: b38fe42d221541c46ab8948836bb6caa, type: 2}
     value: {fileID: 1564196826}
+  - key: {fileID: -6044461291105450282, guid: b38fe42d221541c46ab8948836bb6caa, type: 2}
+    value: {fileID: 1331474495}
   m_ExposedReferences:
     m_References:
     - a0e8754b39f77e34bb49af4c91721a9e: {fileID: 0}
@@ -6287,6 +6291,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   director: {fileID: 1331474493}
+--- !u!114 &1331474495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331474491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 778e6510bfba0744eb15a0c4d07cbbda, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1331474496}
+          m_TargetAssemblyTypeName: Ch04_Memory5_ResetData, Assembly-CSharp
+          m_MethodName: ResetSaveData
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &1331474496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331474491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad424922e8052f48a258fe25da20ba1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1384876738
 GameObject:
   m_ObjectHideFlags: 0
@@ -8624,8 +8670,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -15.190649, y: -1.8482001, z: 0}
-    m_Extent: {x: 24.43535, y: 9.8056, z: 0}
+    m_Center: {x: -15.19065, y: -1.8483999, z: 0}
+    m_Extent: {x: 24.436249, y: 9.806, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -9194,6 +9240,7 @@ MonoBehaviour:
   skip: {fileID: 274194373}
   space1: {fileID: 540607407}
   space2: {fileID: 512311725}
+  TimeLine: 
   prompt: 
 --- !u!4 &2012602023
 Transform:
