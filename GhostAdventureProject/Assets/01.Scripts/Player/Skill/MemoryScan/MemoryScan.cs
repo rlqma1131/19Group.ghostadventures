@@ -113,7 +113,7 @@ public class MemoryScan : MonoBehaviour
             return;
         }
 
-        Time.timeScale = 0.3f; // 슬로우 모션 시작
+        Time.timeScale = 0.2f; // 슬로우 모션 시작
         player.SoulEnergy.Consume(1); // 에너지 소모
         Debug.Log("스캔 시작");
 
