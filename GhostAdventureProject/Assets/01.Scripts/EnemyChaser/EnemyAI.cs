@@ -32,8 +32,8 @@ public class EnemyAI : MonoBehaviour
     // [SerializeField] private float soundDetectionAngle = 360f;
     
     public static bool IsPaused { get; private set; } = false;
-    public static void PauseAllEnemies() { IsPaused = true; Debug.Log("적 멈춤"); }
-    public static void ResumeAllEnemies() {IsPaused = false; Debug.Log("적 다시 움직임"); }
+    public static void PauseAllEnemies() { IsPaused = true; }
+    public static void ResumeAllEnemies() {IsPaused = false; }
     public bool IsSoundChaseActive => soundOmniActive;
     
     private bool soundOmniActive = false;
