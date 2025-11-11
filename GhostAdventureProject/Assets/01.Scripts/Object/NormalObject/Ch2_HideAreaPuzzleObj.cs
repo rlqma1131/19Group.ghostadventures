@@ -8,6 +8,7 @@ public class Ch2_HideAreaPuzzleObj : HideArea
 
     protected override void Start()
     {
+        base.Start();
         isPossessed = false;
         hasActivated = false;
     }
@@ -26,6 +27,7 @@ public class Ch2_HideAreaPuzzleObj : HideArea
 
     public override void OnPossessionEnterComplete() 
     {
+        base.OnPossessionEnterComplete();
         // 챕터1 아이방 퍼즐에 순서 등록
         Ch1_HideAreaEventManager.Instance.RegisterArea(areaID);
     }

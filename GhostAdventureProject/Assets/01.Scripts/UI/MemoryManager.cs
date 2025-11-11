@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+
+// 기억 획득 & 저장을 담당하는 스크립트입니다.
 
 public class MemoryManager : MonoBehaviour
 {
@@ -13,7 +16,6 @@ public class MemoryManager : MonoBehaviour
     // id → data, title → data (호환용)
     private readonly Dictionary<string, MemoryData> byId = new();
     private readonly Dictionary<string, MemoryData> byTitle = new();
-
     private readonly List<MemoryData> scannedMemoryList = new();
     public IReadOnlyList<MemoryData> ScannedMemories => scannedMemoryList;
 
@@ -36,6 +38,7 @@ public class MemoryManager : MonoBehaviour
 
         closeMemoryStorage?.gameObject.SetActive(false);
     }
+
 
     private void OnDestroy()
     {
@@ -105,30 +108,48 @@ public class MemoryManager : MonoBehaviour
         if (!scannedMemoryList.Contains(m)) scannedMemoryList.Add(m);
 
         OnMemoryCollected?.Invoke(m);
+
+        Debug.Log($"[MemoryManager] 기억 수집: {m.memoryID} - {m.memoryTitle}");
     }
 
     // 저장값으로 런타임 상태 복원
-    public void WarmStartFromSave()
+    public void WarmStartFromSave(string sceneName = null)
     {
         var data = SaveManager.CurrentData;
-        if (data == null) return;
+        if (data == null) { return; }
 
         collectedMemoryIDs.Clear();
         scannedMemoryList.Clear();
 
-        // 1) 저장된 ID들로 복원 (정상 경로)
-        if (data.collectedMemoryIDs != null)
-        {
-            foreach (var id in data.collectedMemoryIDs)
+        if (GameManager.Instance.ByPassEnabled) {
+            Debug.Log("ByPassed memory state called!");
+
+            string[] collectableMemories = GetRequiredMemoryIds(sceneName);
+            if (collectableMemories == null) {
+                Debug.Log("Memory List is null!");
+                return;
+            }
+            foreach (var id in collectableMemories)
                 if (byId.TryGetValue(id, out var m)) TryCollect(m);
         }
+        else {
+            Debug.Log("Normal memory state called!");
+            // 1) 저장된 ID들로 복원 (정상 경로)
+            if (data.collectedMemoryIDs != null) {
+                foreach (var id in data.collectedMemoryIDs)
+                    if (byId.TryGetValue(id, out var m))
+                        TryCollect(m);
+            }
 
-        // 2) 예전 세이브(제목만 저장) 호환
-        if (data.scannedMemoryTitles != null)
-        {
-            foreach (var title in data.scannedMemoryTitles)
-                if (byTitle.TryGetValue(title, out var m)) TryCollect(m);
+            // 2) 예전 세이브(제목만 저장) 호환
+            if (data.scannedMemoryTitles != null) {
+                foreach (var title in data.scannedMemoryTitles)
+                    if (byTitle.TryGetValue(title, out var m))
+                        TryCollect(m);
+            }
         }
+
+        GameManager.Instance.ByPassEnabled = false;
     }
 
     public List<MemoryData> GetCollectedMemories()
@@ -173,5 +194,25 @@ public class MemoryManager : MonoBehaviour
         scannedMemoryList.Clear();
         collectedMemoryIDs.Clear();
         Debug.Log("[MemoryManager] 스캔 기록 초기화됨");
+    }
+    
+    string[] GetRequiredMemoryIds(string scene) {
+        Debug.Log($"Chapter Loaded: {scene}");
+        MemoryData.Chapter chapter = scene switch {
+            "Ch01_House" => MemoryData.Chapter.Chapter1,
+            "Ch02_PlayGround" => MemoryData.Chapter.Chapter2,
+            "Ch03_Hospital" => MemoryData.Chapter.Chapter3,
+            "Ch04_Cottage" => MemoryData.Chapter.Chapter4,
+            _ => MemoryData.Chapter.Exception
+        };
+        string[] requiredIds = chapter switch {
+            MemoryData.Chapter.Chapter1 => GameManager.Instance.MemoryIds[chapter].ToArray(),
+            MemoryData.Chapter.Chapter2 => GameManager.Instance.MemoryIds.Take(2).SelectMany(x => x.Value).ToArray(),
+            MemoryData.Chapter.Chapter3 => GameManager.Instance.MemoryIds.Take(3).SelectMany(x => x.Value).ToArray(),
+            MemoryData.Chapter.Chapter4 => GameManager.Instance.MemoryIds.Take(4).SelectMany(x => x.Value).ToArray(),
+            _ => Array.Empty<string>()
+        };
+
+        return requiredIds;
     }
 }

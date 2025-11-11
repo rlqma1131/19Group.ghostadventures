@@ -1,20 +1,19 @@
 ﻿using DG.Tweening;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityEngine.Playables;
 
 public class MemoryFragment : BaseInteractable
 {
+    [Header("Memory Data")]
     public MemoryData data;
+
+    [Header("Memory State")]
+    [SerializeField] protected bool canStore;
+    [SerializeField] protected bool alreadyScanned;
     
-    [SerializeField] protected bool isScannable = false; // 디버깅용
-    public bool IsScannable => isScannable;
-
-    [SerializeField] private bool canStore = false;
-    public bool CanStore => canStore;
-
-    public AudioClip audioSource1; // 스캔 사운드 재생용
-    public AudioClip audioSource2; // 스캔 사운드 재생용
     [Header("드랍 조각 프리팹")]
     [SerializeField] private GameObject fragmentDropPrefab;
 
@@ -27,6 +26,16 @@ public class MemoryFragment : BaseInteractable
     [SerializeField] private float rotateTime = 2f;
     [SerializeField] private float ellipseRadiusX = 0.8f;
     [SerializeField] private float ellipseRadiusZ = 1.5f;
+    
+    [Header("AudioClip to play when memory scanned")]
+    public AudioClip audioSource1; // 스캔 사운드 재생용
+    public AudioClip audioSource2; // 스캔 사운드 재생용
+    
+    // Properties
+    public bool CanStore => canStore;
+    [Header("컷신 종료시 재생될 타임라인")]
+
+    [SerializeField] private PlayableDirector TimeLine;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -51,19 +60,24 @@ public class MemoryFragment : BaseInteractable
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && isScannable)
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
     }
 
     protected override void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
-            PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+            player.InteractSystem.RemoveInteractable(gameObject);
     }
 
-    public void IsScannedCheck()
+    public virtual void SetAlreadyScanned(bool val) => alreadyScanned = val;
+    public bool IsAlreadyScanned() => alreadyScanned;
+    
+    public virtual void IsScannedCheck()
     {
         if (!isScannable) return;
+        
         isScannable = false;
+        alreadyScanned = true;
         canStore = true;
 
         Scanning();
@@ -71,14 +85,14 @@ public class MemoryFragment : BaseInteractable
         MemoryManager.Instance.TryCollect(data);
 
         if (TryGetComponent(out UniqueId uid))
-            SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable);
+            SaveManager.SetMemoryFragmentScannable(uid.Id, isScannable, alreadyScanned);
 
         var chapter = DetectChapterFromScene(SceneManager.GetActiveScene().name);
         ChapterEndingManager.Instance.RegisterScannedMemory(data.memoryID, chapter);
 
         SaveManager.SaveWhenScanAfter(data.memoryID, data.memoryTitle,
             SceneManager.GetActiveScene().name,
-            GameManager.Instance.Player.transform.position,
+            GameManager.Instance.PlayerObj.transform.position,
             checkpointId: data.memoryID,
             autosave: true);
 
@@ -115,18 +129,17 @@ public class MemoryFragment : BaseInteractable
 
     private IEnumerator PlayDropSequence(GameObject drop)
     {
-        if (drop == null) yield break;
+        if (!drop) yield break;
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null) yield break;
+        if (!player) yield break;
 
         SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드아웃
         SoundManager.Instance.PlaySFX(audioSource1); // 스캔 사운드 재생
         Vector3 startPos = drop.transform.position;
         EnemyAI.PauseAllEnemies();
-        PossessionSystem.Instance.CanMove = false; // 플레이어 이동 비활성화
+        player.PossessionSystem.CanMove = false; // 플레이어 이동 비활성화
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
-         // === 1. 튕기기 애니메이션 ===
+                                                  // === 1. 튕기기 애니메이션 ===
         var bounceSeq = DOTween.Sequence()
             .Append(drop.transform.DOMoveY(startPos.y + bounceHeight, bounceDuration / 2f).SetEase(Ease.OutQuad))
             .Append(drop.transform.DOMoveY(startPos.y, bounceDuration / 2f).SetEase(Ease.InQuad))
@@ -196,16 +209,18 @@ public class MemoryFragment : BaseInteractable
         drop.GetComponent<PixelExploder>()?.Explode(); // 픽셀 폭발 효과 적용
 
         Destroy(drop);
-        StartCoroutine(CutsceneManager.Instance.PlayCutscene()); // 페이드인 줌인
+        StartCoroutine(Global_CutsceneManager.Instance.PlayCutscene()); // 페이드인 줌인
 
         yield return new WaitForSeconds(5f); // 흡수 될때까지 기다림
 
         UIManager.Instance.PlayModeUI_CloseAll(); // 플레이모드 UI 닫기
         SceneManager.LoadScene(data.CutSceneName, LoadSceneMode.Additive); // 스캔 완료 후 씬 전환
+        if (TimeLine) TimeLine.Play(); // 타임라인 재생
         Time.timeScale = 0;
         ApplyMemoryEffect(); // 메모리 효과 적용
         PlusAction();
     }
+    
 
     private Sprite GetFragmentSpriteByType(MemoryData.MemoryType type)
     {
@@ -254,9 +269,4 @@ public class MemoryFragment : BaseInteractable
     }
 
     protected virtual void PlusAction(){}
-
-    public void ApplyFromSave(bool scannable)
-    {
-        isScannable = scannable;
-    }
 }

@@ -1,89 +1,93 @@
-﻿using UnityEngine;
+﻿using System;
+using _01.Scripts.Player;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] public BasePossessable currentTarget;
+    readonly static int Move = Animator.StringToHash("Move");
 
-    public Animator animator { get; private set; }
-    private SpriteRenderer mainSprite;
+    [Header("References")] 
+    [SerializeField] float moveSpeed = 5f;
+    [SerializeField] float slowSpeed = 2f;
+    [SerializeField] bool isSlowdownAvailable = false;
 
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
-        mainSprite = GetComponent<SpriteRenderer>();
+    // Components
+    Player player;
+    Animator animator;
+    SpriteRenderer mainSprite;
+    
+    // Parameter Caches
+    Vector3 move;
+    float currentSpeed;
+    
+    public Animator Animator => animator;
+    public bool IsSlowdownActive { get; private set; }
+    public float CurrentSpeed => (move * currentSpeed).magnitude;
+    public float MinSpeed => slowSpeed;
 
-        // GameManager에 Player 등록
-        if (GameManager.Instance != null)
-        {
-            // GameManager의 SpawnPlayer에서 이미 처리되므로 여기서는 추가 확인만
-            Debug.Log("[PlayerController] Player 초기화 완료");
-        }
+    public void Initialize(Player value) {
+        player = value;
+        animator = value.Animator;
+        mainSprite = value.SpriteRenderer;
+
+        currentSpeed = moveSpeed;
     }
 
-    void Update()
-    {
-        if (PossessionSystem.Instance == null ||
-            PossessionQTESystem.Instance == null ||
-            !PossessionSystem.Instance.CanMove ||
-            PossessionQTESystem.Instance.isRunning)
+    void Update() {
+        if (!PossessionQTESystem.Instance || 
+            PossessionQTESystem.Instance.isRunning || 
+            !player.PossessionSystem.CanMove)
             return;
 
         HandleMovement();
+        HandlePossession();
+    }
+    
+    void OnDestroy() {
+        // GameManager에 Player 파괴 알림
+        GameManager.Instance?.OnPlayerDestroyed();
+    }
+    
+    public void SetSlowdownAvailable(bool value) => isSlowdownAvailable = value;
+    
+    public bool GetSlowdownAvailable() => isSlowdownAvailable;
+    
+    void HandlePossession() {
+        if (Input.GetKeyDown(KeyCode.E)) player.PossessionSystem.TryPossess();
+    }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if(currentTarget != null)
-            {
-                if (CurrentTargetIsPossessable() && currentTarget.HasActivated)
-                {
-                    PossessionSystem.Instance.TryPossess();
-                }
-                else if (!CurrentTargetIsPossessable() && !currentTarget.HasActivated)
-                {
-                    Debug.Log("빙의불가능 상태");
-                    currentTarget.CantPossess();
-                }
+    void HandleMovement() {
+        // Get Input values
+        move = GetInputValue();
+
+        // Slow down by input && Fulfilled condition
+        if (isSlowdownAvailable) {
+            if (Input.GetKeyDown(KeyCode.LeftShift)) {
+                currentSpeed = slowSpeed;
+                IsSlowdownActive = !IsSlowdownActive;
+                currentSpeed = IsSlowdownActive ? slowSpeed : moveSpeed;
             }
         }
-    }
-
-    private void HandleMovement()
-    {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        Vector3 move = new Vector3(h, v, 0);
-        transform.position += move * moveSpeed * Time.deltaTime;
-
-        // 회전
-        if (h > 0.01f)
-        {
-            mainSprite.flipX = false;
+        else {
+            if (IsSlowdownActive) {
+                IsSlowdownActive = false;
+                currentSpeed = moveSpeed;
+            }
         }
-        else if (h < -0.01f)
-        {
-            mainSprite.flipX = true;
-        }
+        
+        // Rotate Sprite which is defined by horizontal input
+        mainSprite.flipX = move.x switch {
+            > 0.01f => false,
+            < -0.01f => true,
+            _ => mainSprite.flipX
+        };
 
-        bool isMoving = move.magnitude > 0.01f;
-        animator.SetBool("Move", isMoving);
+        // Play Move Animation
+        animator.SetBool(Move, move.magnitude > 0.01f);
+        
+        // Move character 
+        transform.position += move * (currentSpeed * Time.deltaTime);
     }
 
-    private bool CurrentTargetIsPossessable()
-    {
-        // 가까운 대상이 빙의 가능 상태인지 확인
-        return currentTarget != null
-            && PlayerInteractSystem.Instance.CurrentClosest == currentTarget.gameObject
-            //&& currentTarget.HasActivated
-            && !currentTarget.IsPossessedState;
-    }
-
-    private void OnDestroy()
-    {
-        // GameManager에 Player 파괴 알림
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnPlayerDestroyed();
-        }
-    }
+    Vector2 GetInputValue() => new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 }

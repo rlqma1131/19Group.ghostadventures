@@ -13,9 +13,8 @@ public class Ch3_MirrorRoomManager : MonoBehaviour
     private bool puzzleCleared = false;
     private GameObject player;
 
-    private void Start()
-    {
-        player = GameManager.Instance.Player;
+    private void Start() {
+        player = GameManager.Instance.PlayerObj;
     }
 
     public void OnDifferenceFound(Ch3_MirrorObj obj)

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1921535597328441362}
   - component: {fileID: 1676930918704881527}
   - component: {fileID: 7309554865739721440}
-  - component: {fileID: 893252122336981838}
+  - component: {fileID: 4916100325503014919}
   m_Layer: 0
   m_Name: Ch2_DrawingClue1
   m_TagString: Untagged
@@ -115,6 +115,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c53ed057b2018fa4badfeba0453a2486, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightObj: {fileID: 0}
+  promptMessage: 
   drawingZoom: {fileID: 0}
   drawingPos: {fileID: 0}
   zoomPanel: {fileID: 0}
@@ -122,6 +124,7 @@ MonoBehaviour:
   hasActivated: 1
   isLastClue: 0
   finalObjectToActivate: {fileID: 0}
+  vcam: {fileID: 0}
 --- !u!114 &7309554865739721440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,7 +138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clueData: {fileID: 11400000, guid: e6b5d5d38aaa7cc4aa9d19f99217bd8f, type: 2}
---- !u!114 &893252122336981838
+--- !u!114 &4916100325503014919
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,10 +147,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5612765187069423067}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 499cb42b5a18ebe44866759087d5f962, type: 3}
+  m_Script: {fileID: 11500000, guid: fc00b9e661a678245a0490099ae2bffe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 0}
+  id: 5cd74f44d9e440808127d0658f91cb61
 --- !u!1 &8492306050705833194
 GameObject:
   m_ObjectHideFlags: 0

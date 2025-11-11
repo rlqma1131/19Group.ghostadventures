@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+
+// 유인 오브젝트, 은신처 QTE
 
 public class QTEUI : MonoBehaviour
 {
@@ -12,6 +12,8 @@ public class QTEUI : MonoBehaviour
     public Image successArc;                // 성공영역
     public float minAngle;                  // 최소 각
     public float maxAngle;                  // 최대 각
+    public AudioClip successSound;  // 성공 사운드
+    public AudioClip failSound;     // 실패 사운드
 
     private float currentAngle = 0f;        // 현재 각
     private bool isRunning = false;         // 실행중인지 확인
@@ -77,6 +79,12 @@ public class QTEUI : MonoBehaviour
             wasSuccess = currentAngle >= minAngle && currentAngle <= maxAngle;
             isRunning = false;
             InvokeResult(wasSuccess);
+
+            // 성공/실패 효과음
+            if (wasSuccess)
+                SoundManager.Instance.PlaySFX(successSound);
+            else
+                SoundManager.Instance.PlaySFX(failSound);
         }
     }
 

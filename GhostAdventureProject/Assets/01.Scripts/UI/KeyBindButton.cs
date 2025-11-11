@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+// 키설정 스크립트입니다.(현재 미사용)
+
 public class KeyBindButton : MonoBehaviour
 {
     public int clueIndex;

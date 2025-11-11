@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// 3챕에서 4챕 알파값 서서히 조절하는 스크립트
 public class Ch03_04_DOFADE : MonoBehaviour
 {
     // Start is called before the first frame update

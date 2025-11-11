@@ -25,7 +25,7 @@ public class ChaseState : EnemyState
     {
         if (enemy.IsPlayerDetectable())
         {
-            var p = GameManager.Instance.Player;
+            var p = GameManager.Instance.PlayerObj;
             if (p != null) lastSeenPos = p.transform.position;
 
             searching   = false;
@@ -41,7 +41,7 @@ public class ChaseState : EnemyState
             searchTimer = SearchDuration;
 
             // 방금 놓친 위치로 이동해 잠깐 수색
-            var p = GameManager.Instance.Player;
+            var p = GameManager.Instance.PlayerObj;
             lastSeenPos = p != null ? p.transform.position : enemy.transform.position;
             enemy.Movement.SetForcedTarget(lastSeenPos);
             return;

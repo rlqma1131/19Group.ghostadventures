@@ -1,30 +1,34 @@
-﻿using UnityEngine;
+﻿using _01.Scripts.Player;
+using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 /// <summary>
 /// TeddyBear 한테 붙는 클래스
 /// </summary>
-public class Ch1_GarageEventManager : MonoBehaviour
+public class Ch1_GarageEventManager : BaseInteractable
 {
-    private Ch1_MemoryPositive_01_TeddyBear bear;
-    [SerializeField] private KeyBoard keyboard;
-    [SerializeField] private KeyBoard_Enter answer;
+    [Header("References")]
+    [SerializeField] private Ch1_KeyBoard keyboard;
+    [SerializeField] private Ch1_KeyBoard_Enter answer;
     [SerializeField] private PlayableDirector cutsceneDirector;
     [SerializeField] private PlayableDirector cutsceneDirector_correct;
-    private bool isCutscenePlaying = false;
-    private bool isCutscenePlaying2 = false;
     [SerializeField] EnergyRestoreZone energyRestoreZone;
-
-    private bool playerNearby = false;
-    private bool openKeyboard = false;
-    [SerializeField] SpriteRenderer door;
+    [SerializeField] private Ch1_MemoryPositive_01_TeddyBear bear;
+    [SerializeField] GameObject door;
+    
     //NPC컷신보고 상호작용 가능하게하기 위해 추가
-    [SerializeField]Cutscene_NPC cutscene_NPC;
-    public KeyBoard_Enter Answer => answer;
+    [SerializeField] Cutscene_NPC cutscene_NPC;
+    
+    [SerializeField] private bool isCutscenePlaying = false;
+    private bool isCutscenePlaying2 = false;
+    private bool playerNearby = false;
+    
+    public Ch1_KeyBoard_Enter Answer => answer;
 
-    void Start()
+    protected override void Start()
     {
-        bear = GetComponent<Ch1_MemoryPositive_01_TeddyBear>();
+        base.Start();
+        player = GameManager.Instance.Player;
         cutsceneDirector.stopped += OnTimelineFinished;
         cutsceneDirector_correct.stopped += OnTimelineFinished2;
     }
@@ -51,27 +55,26 @@ public class Ch1_GarageEventManager : MonoBehaviour
 
                 if (!isCutscenePlaying && EventManager.Instance.IsEventCompleted("Ch1_NPCEvent"))
                 {
-                    PlayerInteractSystem.Instance.eKey.SetActive(false);
+                    player.InteractSystem.eKey.SetActive(false);
                     // [컷씬] 꼬마유령 이벤트
-                    PossessionSystem.Instance.CanMove = false;
-                    GameManager.Instance.PlayerController.animator.SetBool("Move", false);
+                    player.PossessionSystem.CanMove = false;
+                    GameManager.Instance.PlayerController.Animator.SetBool("Move", false);
 
                     UIManager.Instance.PlayModeUI_CloseAll();
                     EnemyAI.PauseAllEnemies();
 
-                    SoulEnergySystem.Instance.DisableHealingEffect(); // 에너지 회복존 비활성화
+                    player.SoulEnergy.DisableHealingEffect(); // 에너지 회복존 비활성화
 
                     cutsceneDirector.Play();
                 }
-                else if (isCutscenePlaying && !openKeyboard && !answer.correct)
+                else if (isCutscenePlaying && !keyboard.IsOpen() && !answer.correct)
                 {
-                    PlayerInteractSystem.Instance.eKey.SetActive(false);
+                    player.InteractSystem.eKey.SetActive(false);
 
-                    SoulEnergySystem.Instance.DisableHealingEffect(); // 에너지 회복존 비활성화
+                    player.SoulEnergy.DisableHealingEffect(); // 에너지 회복존 비활성화
 
-                    openKeyboard = true;
                     keyboard.OpenKeyBoard();
-                    PossessionSystem.Instance.CanMove = false;
+                    player.PossessionSystem.CanMove = false;
                 }
             }
         }
@@ -86,28 +89,28 @@ public class Ch1_GarageEventManager : MonoBehaviour
             UIManager.Instance.PlayModeUI_CloseAll();
             SoundManager.Instance.FadeOutAndStopBGM(1f); // BGM 페이드아웃
             cutsceneDirector_correct.Play();
-            PossessionSystem.Instance.CanMove = false;
+            player.PossessionSystem.CanMove = false;
             // 기억조각 스캔 가능하도록 활성화
             bear.ActivateTeddyBear();
             EnemyAI.PauseAllEnemies();
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             playerNearby = true;
-            PlayerInteractSystem.Instance.eKey.SetActive(true);
+            player.InteractSystem.eKey.SetActive(true);
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected override void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             playerNearby = false;
-            PlayerInteractSystem.Instance.eKey.SetActive(false);
+            player.InteractSystem.eKey.SetActive(false);
         }
     }
 
@@ -125,13 +128,13 @@ public class Ch1_GarageEventManager : MonoBehaviour
         SoundManager.Instance.RestoreLastBGM(1f);
         keyboard.Close();
 
-        SoulEnergySystem.Instance.EnableHealingEffect();
+        player.SoulEnergy.EnableHealingEffect();
         EnemyAI.ResumeAllEnemies();
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
         isCutscenePlaying2 = true;
         energyRestoreZone.IsActive = true; // 에너지 회복존 비활성화
         UIManager.Instance.PlayModeUI_OpenAll();
-        door.color = new Color(door.color.r, door.color.g, door.color.b, 0f); // 문 투명하게
-
+        door.SetActive(false); // 차고문 사라짐
+        gameObject.SetActive(false); // 이벤트 비활성화
     }
 }

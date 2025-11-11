@@ -1,57 +1,57 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using _01.Scripts.Player;
 using Cinemachine;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
 
-public class Ch2_DrawingClue : MonoBehaviour
+public class Ch2_DrawingClue : BaseInteractable
 {
-    [Header("프롬프트 메시지 설정")] [SerializeField]
-    private string promptMessage;
+    [Header("프롬프트 메시지 설정")] 
+    [SerializeField] string promptMessage;
+    [SerializeField] GameObject drawingZoom; // 확대용 UI (Canvas 내)
+    [SerializeField] RectTransform drawingPos; // 시작 위치
+    [SerializeField] Image zoomPanel; // 배경 패널 (페이드용)
+    [SerializeField] GameObject nextClueObject;
+
+    [Header("Object State")]
+    [SerializeField] bool hasActivated;
+    [SerializeField] bool isLastClue;
+    [SerializeField] Ch2_BackStreetObj finalObjectToActivate;
     
-    [SerializeField] private GameObject drawingZoom;             // 확대용 UI (Canvas 내)
-    [SerializeField] private RectTransform drawingPos;           // 시작 위치
-    [SerializeField] private Image zoomPanel;                    // 배경 패널 (페이드용)
-    [SerializeField] private GameObject nextClueObject;
+    [Header("Camera")]
+    [SerializeField] CinemachineVirtualCamera vcam;
 
-    private CluePickup cluePickup;
-    private bool isPlayerInside = false;
-    private bool isZoomActive = false;
-    private bool zoomActivatedOnce = false;
-    [SerializeField] private bool hasActivated = false;
-    [SerializeField] private bool isLastClue = false;
-    [SerializeField] private Ch2_BackStreetObj finalObjectToActivate; 
-    [SerializeField] private CinemachineVirtualCamera vcam;
-
-    public bool HasActivated => hasActivated;                       // 저장용 getter
+    CluePickup cluePickup;
+    bool isPlayerInside;
+    bool isZoomActive;
+    bool zoomActivatedOnce;
+    
+    public bool HasActivated => hasActivated; // 저장용 getter
     public void ApplyHasActivatedFromSave(bool v) => hasActivated = v; // 복원용 setter
-    
-    void Start()
-    {
-        cluePickup = GetComponent<CluePickup>();
 
+    override protected void Start() {
+        base.Start();
+        cluePickup = GetComponent<CluePickup>();
+        
         // 초기화
         drawingZoom.SetActive(false);
         drawingPos.anchoredPosition = new Vector2(0, -Screen.height);
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (!hasActivated || (!isZoomActive && !isPlayerInside))
-                return;
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.E)) {
+            if (!hasActivated || !isZoomActive && !isPlayerInside) return;
 
-            if (isZoomActive)
-                HideDrawingZoom();
-            else
-                ShowDrawingZoom();
+            TriggerEvent();
         }
     }
 
-    private void ShowDrawingZoom()
-    {
+    public override void TriggerEvent() {
+        if (isZoomActive) HideDrawingZoom();
+        else ShowDrawingZoom();
+    }
+
+    void ShowDrawingZoom() {
         isZoomActive = true;
         EnemyAI.PauseAllEnemies();
 
@@ -64,21 +64,17 @@ public class Ch2_DrawingClue : MonoBehaviour
         drawingPos.anchoredPosition = new Vector2(0, -Screen.height);
         drawingPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
-        
-        if (cluePickup != null)
-        {
+        player.InteractSystem.RemoveInteractable(gameObject);
+
+        if (cluePickup != null) {
             cluePickup.PickupClue();
         }
-        
-        if (!string.IsNullOrEmpty(promptMessage))
-        {
-            UIManager.Instance.PromptUI.ShowPrompt(promptMessage, 2f);
+
+        if (!string.IsNullOrEmpty(promptMessage)) {
+            UIManager.Instance.PromptUI.ShowPrompt(promptMessage);
         }
     }
-
-    private void HideDrawingZoom()
-    {
+    void HideDrawingZoom() {
         isZoomActive = false;
         EnemyAI.ResumeAllEnemies();
 
@@ -86,100 +82,83 @@ public class Ch2_DrawingClue : MonoBehaviour
         zoomPanel.DOFade(0f, 0.5f);
 
         // UI 슬라이드 아웃
-        drawingPos.DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
+        drawingPos
+            .DOAnchorPos(new Vector2(0, -Screen.height), 0.5f)
             .SetEase(Ease.InCubic)
-            .OnComplete(() =>
-            {
+            .OnComplete(() => {
                 drawingZoom.SetActive(false);
 
-                if (!zoomActivatedOnce)
-                {
+                if (!zoomActivatedOnce) {
                     // cluePickup?.PickupClue();
-                    
-                    if (isLastClue && finalObjectToActivate != null)
-                    {
+
+                    if (isLastClue && finalObjectToActivate) {
                         PlayFinalLightSequence();
                     }
 
-                    if (nextClueObject != null)
-                    {
-                        var nextClue = nextClueObject.GetComponent<Ch2_DrawingClue>();
-                        if (nextClue != null)
-                            nextClue.Activate();
+                    if (nextClueObject) {
+                        Ch2_DrawingClue nextClue = nextClueObject.GetComponent<Ch2_DrawingClue>();
+                        if (nextClue) nextClue.Activate();
                     }
-                    
+
                     zoomActivatedOnce = true;
                     GetComponent<Collider2D>().enabled = false;
                 }
 
                 if (isPlayerInside)
-                    PlayerInteractSystem.Instance.AddInteractable(gameObject);
+                    player.InteractSystem.AddInteractable(gameObject);
             });
     }
-    
-    private void PlayFinalLightSequence()
-    {
+    void PlayFinalLightSequence() {
         // 1) 플레이어 잠금 + VCam Follow 끊기
-        PossessionSystem.Instance.CanMove = false;
+        player.PossessionSystem.CanMove = false;
         EnemyAI.PauseAllEnemies();
-        var oldFollow = vcam.Follow;
+        Transform oldFollow = vcam.Follow;
         vcam.Follow = null;
 
         // 2) VCam 트랜스폼 & 위치 계산
-        var camTrans = vcam.transform;
+        Transform camTrans = vcam.transform;
         Vector3 orig = camTrans.position;
         Vector3 dest = finalObjectToActivate.transform.position;
         dest.z = orig.z;
 
         // 3) 시퀀스 구성
-        float moveT   = 0.8f;
+        float moveT = 0.8f;
         float revealT = finalObjectToActivate.fadeInTime
                         + finalObjectToActivate.holdTime
                         + finalObjectToActivate.fadeOutTime
                         + finalObjectToActivate.moveDownTime;
 
         DOTween.Sequence()
-               // 카메라(VCam) 이동
-               .Append(camTrans.DOMove(dest, moveT).SetEase(Ease.InOutSine))
-               // 단서 애니메이션 시작
-               .AppendCallback(() => finalObjectToActivate.OnFinalClueActivated())
-               // 애니메이션 전체 시간 대기
-               .AppendInterval(revealT)
-               // 카메라(VCam) 원위치 복귀
-               .Append(camTrans.DOMove(orig, moveT).SetEase(Ease.InOutSine))
-               // Follow 복구 & 플레이어 언락
-               .AppendCallback(() =>
-               {
-                   vcam.Follow = oldFollow;
-                   PossessionSystem.Instance.CanMove = true;
-                   EnemyAI.ResumeAllEnemies();
-               });
+            // 카메라(VCam) 이동
+            .Append(camTrans.DOMove(dest, moveT).SetEase(Ease.InOutSine))
+            // 단서 애니메이션 시작
+            .AppendCallback(() => finalObjectToActivate.OnFinalClueActivated())
+            // 애니메이션 전체 시간 대기
+            .AppendInterval(revealT)
+            // 카메라(VCam) 원위치 복귀
+            .Append(camTrans.DOMove(orig, moveT).SetEase(Ease.InOutSine))
+            // Follow 복구 & 플레이어 언락
+            .AppendCallback(() =>
+            {
+                vcam.Follow = oldFollow;
+                player.PossessionSystem.CanMove = true;
+                EnemyAI.ResumeAllEnemies();
+            });
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
+    override protected void OnTriggerEnter2D(Collider2D other) {
         if (!hasActivated || !other.CompareTag("Player")) return;
 
         isPlayerInside = true;
-
-        if (!isZoomActive)
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+        if (!isZoomActive) player.InteractSystem.AddInteractable(gameObject);
     }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
+    override protected void OnTriggerExit2D(Collider2D other) {
         if (!other.CompareTag("Player")) return;
 
         isPlayerInside = false;
-
-        if (isZoomActive)
-            HideDrawingZoom(); // 범위 밖이면 자동 닫기
-
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        if (isZoomActive) HideDrawingZoom(); // 범위 밖이면 자동 닫기
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
-    
-    public void Activate()
-    {
-        hasActivated = true;
-    }
+
+    void Activate() { hasActivated = true; }
 }

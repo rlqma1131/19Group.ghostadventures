@@ -1,35 +1,33 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.Playables;
 
 public class Ch03_realmemorycutscene : MonoBehaviour
 {
-    [SerializeField] private Ch3_MemoryPuzzleUI ch3_MemoryPuzzleUI;
-    private bool isCutsceneActive = false;
-    [SerializeField] private PlayableDirector cutsceneDirector;
+    [SerializeField] Ch3_MemoryPuzzleUI ch3_MemoryPuzzleUI;
+    [SerializeField] PlayableDirector cutsceneDirector;
 
-    private void Start()
-    {
+    bool isCutsceneActive;
+    Player player;
+
+    void Start() {
+        player = GameManager.Instance.Player;
         cutsceneDirector.stopped += OnCutsceneStopped;
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player") && !isCutsceneActive && ch3_MemoryPuzzleUI.puzzlecompleted)
-        {
+
+    void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.CompareTag("Player") && !isCutsceneActive && ch3_MemoryPuzzleUI.puzzlecompleted) {
             isCutsceneActive = true;
-            PossessionSystem.Instance.CanMove = false;
+            player.PossessionSystem.CanMove = false;
             UIManager.Instance.PlayModeUI_CloseAll();
             cutsceneDirector.Play();
             EnemyAI.PauseAllEnemies();
         }
     }
 
-    void OnCutsceneStopped(PlayableDirector d)
-    {
+    void OnCutsceneStopped(PlayableDirector d) {
         EnemyAI.ResumeAllEnemies();
-        PossessionSystem.Instance.CanMove = true;
+        player.PossessionSystem.CanMove = true;
         UIManager.Instance.PlayModeUI_OpenAll();
         isCutsceneActive = true;
     }

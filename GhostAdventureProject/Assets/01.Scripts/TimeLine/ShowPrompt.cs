@@ -11,13 +11,7 @@ public class ShowPrompt : MonoBehaviour
    [SerializeField] private TextMeshProUGUI PromptText; // 프롬프트 텍스트
     private bool isActive = false;
 
-    //public void ShowPrompt_TimeLine(string dialog)
-    //{
 
-
-    //    UIManager.Instance.PromptUI2.ShowPrompt(dialog, 2f);
-
-    //}
 
     public void ShowPrompt_Cutscene(string line)
     {

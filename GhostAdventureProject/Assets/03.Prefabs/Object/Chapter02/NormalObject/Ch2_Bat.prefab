@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 38845435466870380}
   - component: {fileID: 94361406259380682}
-  - component: {fileID: 2616557673202068796}
   - component: {fileID: 5572676852745645795}
   - component: {fileID: 2624539838169810287}
+  - component: {fileID: 2616557673202068796}
   m_Layer: 0
   m_Name: Ch2_Bat
   m_TagString: Untagged
@@ -87,27 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2616557673202068796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8473885036835415567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2db45fe963d2b4122921ecfa564bc584, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TriggerSound: {fileID: 0}
-  ClearSound: {fileID: 0}
-  correctDoll: {fileID: 0}
-  flySpeed: 2
-  curvePoints: 5
-  jitterAmplitude: 1
-  pathSpan: 18
-  fadeDuration: 0.25
-  soundConfig: {fileID: 0}
 --- !u!95 &5572676852745645795
 Animator:
   serializedVersion: 5
@@ -174,3 +153,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.35, y: 1.36}
   m_EdgeRadius: 0
+--- !u!114 &2616557673202068796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8473885036835415567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2db45fe963d2b4122921ecfa564bc584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  correctDoll: {fileID: 0}
+  ani: {fileID: 5572676852745645795}
+  sr: {fileID: 94361406259380682}
+  col: {fileID: 2624539838169810287}
+  flySpeed: 2
+  curvePoints: 5
+  jitterAmplitude: 1
+  pathSpan: 18
+  fadeDuration: 0.25
+  soundConfig: {fileID: 0}
+  TriggerSound_clip: {fileID: 8300000, guid: 2b513d286500a450a9dbbb282ec760ed, type: 3}
+  ClearSound_clip: {fileID: 8300000, guid: 1bf86caf7f3384b02b7081974b36efbf, type: 3}

@@ -6,8 +6,9 @@ public class Ch3_MemoryPositive_Mirror : MemoryFragment
 {
     private Ch3_Scanner scanner;
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         scanner = FindObjectOfType<Ch3_Scanner>();
     }
 

@@ -16,6 +16,7 @@ public class Ch3_Drawers : BasePossessable
 
     protected override void Start()
     {
+        base.Start();
         isPossessed = false;
         zoomCamera.Priority = 5;
     }
@@ -43,6 +44,8 @@ public class Ch3_Drawers : BasePossessable
 
     public override void OnPossessionEnterComplete()
     {
+        base.OnPossessionEnterComplete();
+        
         EnemyAI.PauseAllEnemies();
         zoomCamera.Priority = 20;
         SoundManager.Instance.PlaySFX(openDrawerSFX, 1f);

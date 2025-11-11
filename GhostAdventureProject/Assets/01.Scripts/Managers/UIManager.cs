@@ -1,12 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public interface IUIClosable // Esc키로 닫을 수 있는 UI
+
+
+public interface IUIClosable
 {
+    // Esc키로 닫을 수 있는 UI는 IUIClosable를 상속받습니다.UIManager - closableUI List에도 추가해줘야 정상작동 됩니다.
     void Close();
     bool IsOpen();
 }
@@ -30,7 +36,8 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private NoticePopup saveNoticePopup;           // 저장팝업 (오른쪽 하단)
     [SerializeField] private GameObject[] puzzleStatusPanels;       // * 퍼즐상태 (오른쪽 상단)
     [SerializeField] private GameObject qteEffectCanvas;            // QTE 이펙트 캔버스
-
+    [SerializeField] Image fullScreenFadeImage;
+    
     // 외부 접근용
     public SoulGauge SoulGaugeUI => soulGauge;
     public Prompt PromptUI => prompt;
@@ -94,24 +101,33 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Texture2D moveAbleCursor;  // 움직임가능하다는표시 커서
     [SerializeField] private Texture2D swipeCursor;     // 드래그 가능하다는 표시 커서
     [SerializeField] private Vector2 hotspot = Vector2.zero; // 클릭판정지점
-    [SerializeField] private EventSystem eventSystem;   // 이벤트시스템
 
     // -------------------------------------------------------------------------------------------
     public AudioClip clickSound;                        // UI 클릭 사운드
     // -------------------------------------------------------------------------------------------
-   
-
+    
+    public void Initialize_Player(Player player) {
+        qte3.Initialize(player);
+        escMenu.Initialize(player);
+        memoryStorage.Initialize(player);
+    }
+    
     private void Start()
     {
         SetCursor(CursorType.Default);
 
-        if(SceneManager.GetActiveScene().name == "IntroScene_Real" || SceneManager.GetActiveScene().name =="Ch01_To_Ch02"
-            || SceneManager.GetActiveScene().name == "Ch02_To_Ch03" || SceneManager.GetActiveScene().name == "Ch03_To_Ch04" || SceneManager.GetActiveScene().name == "StartScene")
+        if (SceneManager.GetActiveScene().name == "IntroScene_Real"
+         || SceneManager.GetActiveScene().name == "Ch01_To_Ch02"
+         || SceneManager.GetActiveScene().name == "Ch02_To_Ch03"
+         || SceneManager.GetActiveScene().name == "Ch03_To_Ch04"
+         || SceneManager.GetActiveScene().name == "StartScene"
+         || SceneManager.GetActiveScene().name == "End_Exit"
+         || SceneManager.GetActiveScene().name == "End_분기"
+         || SceneManager.GetActiveScene().name == "End_인정")
         {
             PlayModeUI_CloseAll();
         }
-        
-        eventSystem = FindObjectOfType<EventSystem>();
+
 
         Button[] buttons = FindObjectsOfType<Button>(true);
         foreach (Button btn in buttons)
@@ -211,6 +227,31 @@ public class UIManager : Singleton<UIManager>
     {
         playModeUI.SetActive(false);
         Debug.Log("플레이모드UI 끄기");
+    }
+    
+    // FadeOut/In Function
+    public void FadeOutIn(float fadeDuration = 2f, Action onStart = null, Action onProcess = null, Action onEnd = null) {
+        onStart?.Invoke();
+        FadeOut(fadeDuration / 2f, () => {
+            onProcess?.Invoke();
+            FadeIn(fadeDuration / 2f, onEnd);
+        });
+    }
+
+    void FadeOut(float fadeDuration = 1f, Action onComplete = null) {
+        fullScreenFadeImage.gameObject.SetActive(true);
+        fullScreenFadeImage.DOFade(1f, fadeDuration).OnComplete(() =>
+        {
+            onComplete?.Invoke();
+        });
+    }
+
+    void FadeIn(float fadeDuration = 1f, Action onComplete = null) {
+        fullScreenFadeImage.DOFade(0f, fadeDuration).OnComplete(() =>
+        {
+            fullScreenFadeImage.gameObject.SetActive(false);
+            onComplete?.Invoke();
+        });
     }
 
     // 스타트엔딩UI 모두 켜기

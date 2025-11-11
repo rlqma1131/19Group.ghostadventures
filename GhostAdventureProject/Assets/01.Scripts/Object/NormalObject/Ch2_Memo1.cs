@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -15,12 +16,14 @@ public class Ch2_Memo1 : MonoBehaviour
     
     private bool isPlayerInside = false;
     private bool isZoomActive = false;
-    
+    Player player;
     private CluePickup cluePickup;
     
     void Start()
     {
         cluePickup = GetComponent<CluePickup>();
+        player = GameManager.Instance.Player;
+        
         // 초기화
         drawingZoom.SetActive(false);
         drawingPos.anchoredPosition = new Vector2(0, -Screen.height);
@@ -54,7 +57,7 @@ public class Ch2_Memo1 : MonoBehaviour
         drawingPos.anchoredPosition = new Vector2(0, -Screen.height);
         drawingPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
 
         if (cluePickup != null)
         {
@@ -84,7 +87,7 @@ public class Ch2_Memo1 : MonoBehaviour
                 drawingZoom.SetActive(false);
 
                 if (isPlayerInside)
-                    PlayerInteractSystem.Instance.AddInteractable(gameObject);
+                    player.InteractSystem.AddInteractable(gameObject);
             });
     }
 
@@ -95,7 +98,7 @@ public class Ch2_Memo1 : MonoBehaviour
         isPlayerInside = true;
 
         if (!isZoomActive)
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -107,6 +110,6 @@ public class Ch2_Memo1 : MonoBehaviour
         if (isZoomActive)
             HideDrawingZoom(); // 범위 밖이면 자동 닫기
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 }

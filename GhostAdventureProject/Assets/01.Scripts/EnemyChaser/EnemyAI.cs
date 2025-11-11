@@ -32,8 +32,8 @@ public class EnemyAI : MonoBehaviour
     // [SerializeField] private float soundDetectionAngle = 360f;
     
     public static bool IsPaused { get; private set; } = false;
-    public static void PauseAllEnemies() { IsPaused = true; Debug.Log("적 멈춤"); }
-    public static void ResumeAllEnemies() {IsPaused = false; Debug.Log("적 다시 움직임"); }
+    public static void PauseAllEnemies() { IsPaused = true; }
+    public static void ResumeAllEnemies() {IsPaused = false; }
     public bool IsSoundChaseActive => soundOmniActive;
     
     private bool soundOmniActive = false;
@@ -93,7 +93,7 @@ public class EnemyAI : MonoBehaviour
     
     public bool IsPlayerObjectDetectableNow()
     {
-        var p = GameManager.Instance != null ? GameManager.Instance.Player : null;
+        var p = GameManager.Instance != null ? GameManager.Instance.PlayerObj : null;
         if (p == null) return false;
 
         // 최소 조건: 씬에서 활성화되어 있어야 함(숨기/빙의 시 비활성 처리 가정)
@@ -116,8 +116,8 @@ public class EnemyAI : MonoBehaviour
     {
         isTeleporting = true;
         
-        float facing = GameManager.Instance.Player != null
-            ? GameManager.Instance.Player.transform.localScale.x
+        float facing = GameManager.Instance.PlayerObj != null
+            ? GameManager.Instance.PlayerObj.transform.localScale.x
             : 1f;
         Vector3 targetPos = playerPos + new Vector3(facing * offsetDistance, 2f, 0);
         transform.position = targetPos;
@@ -171,7 +171,7 @@ public class EnemyAI : MonoBehaviour
     // “감지 가능?” 통합 판정: 전방위 모드면 반경, 아니면 전/후 시야
     public bool IsPlayerDetectable()
     {
-        var playerObj = GameManager.Instance != null ? GameManager.Instance.Player : null;
+        var playerObj = GameManager.Instance != null ? GameManager.Instance.PlayerObj : null;
         if (playerObj == null || Detection == null) return false;
 
         if (!playerObj.activeInHierarchy) return false;

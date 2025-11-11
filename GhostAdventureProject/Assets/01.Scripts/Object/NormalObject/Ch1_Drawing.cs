@@ -17,8 +17,9 @@ public class Ch1_Drawing : BaseInteractable
     private bool isZoomActive = false;
     private bool zoomActivatedOnce = false;
 
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         cluePickup = GetComponent<CluePickup>();
 
         // UI 초기화
@@ -58,7 +59,7 @@ public class Ch1_Drawing : BaseInteractable
         drawingPos.anchoredPosition = new Vector2(0, -Screen.height);
         drawingPos.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.OutCubic);
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 
     private void HideDrawingZoom()
@@ -85,7 +86,7 @@ public class Ch1_Drawing : BaseInteractable
                 }
 
                 if (isPlayerInside)
-                    PlayerInteractSystem.Instance.AddInteractable(gameObject);
+                    player.InteractSystem.AddInteractable(gameObject);
             });
         
         cluePickup.PickupClue();
@@ -99,7 +100,7 @@ public class Ch1_Drawing : BaseInteractable
         isPlayerInside = true;
 
         if (!isZoomActive)
-            PlayerInteractSystem.Instance.AddInteractable(gameObject);
+            player.InteractSystem.AddInteractable(gameObject);
     }
 
     protected override void OnTriggerExit2D(Collider2D other)
@@ -111,6 +112,6 @@ public class Ch1_Drawing : BaseInteractable
         if (isZoomActive)
             HideDrawingZoom(); // 플레이어가 나가면 자동 닫기
 
-        PlayerInteractSystem.Instance.RemoveInteractable(gameObject);
+        player.InteractSystem.RemoveInteractable(gameObject);
     }
 }

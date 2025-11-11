@@ -1,122 +1,141 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using _01.Scripts.Extensions;
+using _01.Scripts.Object.BaseClasses.Interfaces;
+using _01.Scripts.Player;
 using UnityEngine;
+using static _01.Scripts.Utilities.Timer;
+
 /// <summary>
 /// 가까운 하나의 오브젝트만 상호작용가능하게(상호작용키 팝업되도록) 하는 클래스
 /// 상호작용 팝업은 BaseInteractable.cs
 /// </summary>
 public class PlayerInteractSystem : MonoBehaviour
 {
-    // 싱글톤
-    public static PlayerInteractSystem Instance { get; private set; }
-
+    [Header("References")]
     [SerializeField] public GameObject eKey;
-    [SerializeField] private GameObject currentClosest; 
-    public GameObject CurrentClosest => currentClosest;// 디버깅용
+    [SerializeField] GameObject currentClosest;
+
+    [Header("Sensor Settings")] 
+    [SerializeField] LayerMask detectableLayer;
+    [SerializeField] float radius = 0.5f;
+    [SerializeField] float checkInterval = 0.1f;
+    [SerializeField] int checkCountThreshold = 12;
+    [SerializeField] float checkDistanceThreshold = 0.001f;
+
+    CountdownTimer checkTimer;
+    Collider2D[] results;
+    Player player;
     
-    private HashSet<GameObject> nearbyInteractables = new();
+    public GameObject CurrentClosest => currentClosest;// 디버깅용
 
-    //오브젝트 겹치는 Collider2D 모음(같은 오브젝트의 다중 콜라이더/겹침 대응)
-    private readonly Dictionary<GameObject, HashSet<Collider2D>> objectToCols = new();
+    HashSet<GameObject> nearbyInteractables = new();
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+    public void Initialize(Player value) {
+        player = value;
+        results = new Collider2D[checkCountThreshold];
+        
+        checkTimer = new CountdownTimer(checkInterval);
+        checkTimer.OnTimerStop += () => {
+            if (!player.PossessionSystem.PossessedTarget) UpdateClosest();
+            else UpdateClosest(true);
+            checkTimer.Start();
+        };
+        
+        checkTimer.Start();
     }
 
-    private void Update()
-    {
-        if (nearbyInteractables.Count == 0)
-        {
-            UpdateClosest(null);
-            return;
-        }
+    void Update() => checkTimer.Tick(Time.unscaledDeltaTime);
+    
+    GameObject GetClosestGameObject() {
+        GameObject newClosest = null;
+        float distance = float.MaxValue;
+        
+        int size = Physics2D.OverlapCircleNonAlloc(transform.position, radius, results, detectableLayer);
+        for (int i = 0; i < size; i++) {
+            if (!results[i]) continue;
+            
+            float newDist = Vector2.Distance(transform.position, results[i].transform.position);
+            if (!newClosest || newDist < distance + checkDistanceThreshold &&
+                nearbyInteractables.Contains(results[i].gameObject) &&
+                newClosest.CompareLayerPriority(results[i].gameObject) <= 0) {
 
-        GameObject closest = null;
-        float closestDist = float.MaxValue;
-
-        // 가장 가까운 오브젝트 판별
-        foreach (var obj in nearbyInteractables)
-        {
-            if (obj == null) continue;
-            float dist = Vector3.Distance(GameManager.Instance.Player.transform.position, obj.transform.position);
-            if (dist < closestDist)
-            {
-                closestDist = dist;
-                closest = obj;
+                if (!results[i].gameObject.TryGetComponent(out IInteractable interactable)) continue;
+                
+                if (results[i].TryGetComponent(out BasePossessable possessable)) {
+                    if (!possessable.HasActivated() || !possessable.IsScannable()) continue;
+                    newClosest = results[i].gameObject;
+                    distance = newDist;
+                } else if (results[i].TryGetComponent(out MemoryFragment fragment)) {
+                    if (!fragment.IsScannable()) continue;
+                    newClosest = results[i].gameObject;
+                    distance = newDist;
+                }
+                else {
+                    if (!interactable.IsScannable()) continue;
+                    newClosest = results[i].gameObject;
+                    distance = newDist;
+                }
             }
         }
-        UpdateClosest(closest);
+        
+        return newClosest;
     }
 
-    private void UpdateClosest(GameObject newClosest)
-    {
+    void UpdateClosest(bool forceTargetAsNull = false) {
+        GameObject newClosest = !forceTargetAsNull ? GetClosestGameObject() : null;
+
+        if (currentClosest == newClosest) return;
+        
         // 이전 오브젝트 처리
-        if (currentClosest != null && currentClosest != newClosest)
-        {
+        if (currentClosest) {
             // 팝업 끄기
-            if (currentClosest.TryGetComponent<BaseInteractable>(out var prevInteractable))
-            {
+            if (currentClosest.TryGetComponent(out IInteractable prevInteractable)) {
                 eKey.SetActive(false);
-                prevInteractable.SetHighlight(false);
+                prevInteractable.ShowHighlight(false);
             }
         }
 
         currentClosest = newClosest;
 
         // 새 오브젝트 처리
-        if (currentClosest != null)
-        {
-            if(currentClosest.TryGetComponent<MemoryFragment>(out var memory))
-            {
-                if (!memory.IsScannable)
-                {
-                    eKey.SetActive(false);
-                    memory.SetHighlight(false);
-                    return;
-                }
+        if (!currentClosest) return;
+        
+        if (currentClosest.TryGetComponent(out MemoryFragment memory)) {
+            if (!memory.IsScannable()) {
+                eKey.SetActive(false);
+                memory.ShowHighlight(false);
+                return;
             }
+        }
 
-            // 팝업 켜기
-            if (currentClosest.TryGetComponent<BaseInteractable>(out var nextInteractable))
-            {
-                eKey.SetActive(true);
-                nextInteractable.SetHighlight(true);
-            }
+        // 팝업 켜기
+        // 상호작용 가능 물체가 아닐 시 Highlight Object 띄우지 않기
+        if (!currentClosest.TryGetComponent(out IInteractable nextInteractable)) return;
+        
+        // 만약 Possessable Object라면 현재 빙의 가능 상태면 Highlight Object 작동
+        if (currentClosest.TryGetComponent(out IPossessable nextPossessable)) {
+            if (!nextPossessable.HasActivated()) return;
+            eKey.SetActive(true);
+            nextInteractable.ShowHighlight(true);
+        }
+        else {
+            eKey.SetActive(true);
+            nextInteractable.ShowHighlight(true);
         }
     }
 
     // 플레이어 근처에 있는 오브젝트들
-    public void AddInteractable(GameObject obj)
-    {
-        if (obj == null)
-            return;
-
+    public void AddInteractable(GameObject obj) {
+        if (!obj) return;
         nearbyInteractables.Add(obj);
     }
 
     // 플레이어 근처를 벗어난 오브젝트들
-    public void RemoveInteractable(GameObject obj)
-    {
-        if (nearbyInteractables.Contains(obj))
-        {
-            nearbyInteractables.Remove(obj);
-            if (currentClosest == obj)
-            {
-                UpdateClosest(null);
-            }
-        }
+    public void RemoveInteractable(GameObject obj) {
+        if (!nearbyInteractables.Contains(obj)) return;
+        nearbyInteractables.Remove(obj);
     }
 
-    public GameObject GetEKey()
-    {
-        return eKey;
-    }
+    public GameObject GetEKey() => eKey;
 }
