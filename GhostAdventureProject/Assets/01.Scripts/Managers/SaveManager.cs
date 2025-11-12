@@ -341,6 +341,7 @@ public static class SaveManager {
     /// Save Data 내 Parameter들이 선언되어 있는지 확인 및 선언하는 함수
     /// </summary>
     static void EnsureData() {
+        
         // Initialize save data class or Use existing data
         CurrentData ??= new SaveData();
 

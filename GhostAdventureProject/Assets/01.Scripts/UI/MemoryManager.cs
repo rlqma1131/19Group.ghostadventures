@@ -34,7 +34,7 @@ public class MemoryManager : MonoBehaviour
 
         // 저장 로드 직후 복원
         SaveManager.Loaded += OnSaveLoaded;
-        WarmStartFromSave(); // 이미 로드된 상태일 수 있어 한 번 더 시도
+        // WarmStartFromSave(); // 이미 로드된 상태일 수 있어 한 번 더 시도
 
         closeMemoryStorage?.gameObject.SetActive(false);
     }
@@ -130,7 +130,10 @@ public class MemoryManager : MonoBehaviour
                 return;
             }
             foreach (var id in collectableMemories)
-                if (byId.TryGetValue(id, out var m)) TryCollect(m);
+                if (byId.TryGetValue(id, out var m)) {
+                    TryCollect(m);
+                    SaveManager.AddCollectedMemoryID(m.memoryID);
+                }
         }
         else {
             Debug.Log("Normal memory state called!");
@@ -148,7 +151,8 @@ public class MemoryManager : MonoBehaviour
                         TryCollect(m);
             }
         }
-
+        
+        SaveManager.SaveGame(SaveManager.CurrentData);
         GameManager.Instance.ByPassEnabled = false;
     }
 

@@ -117,7 +117,7 @@ public class GameManager : Singleton<GameManager>
             SaveManager.SetSceneAndPosition(sceneName, playerPos);
 
             // 바로 저장 실행
-            SaveManager.SaveGame();
+            SaveManager.SaveGame(SaveManager.CurrentData);
         }
 
         if (sceneName == "StartScene" || sceneName == "End_Exit" || sceneName == "End_인정" || sceneName == "End_분기") {
