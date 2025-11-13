@@ -109,10 +109,12 @@ public class ChapterEndingManager : Singleton<ChapterEndingManager>
         if (appliedFromSaveOnce) return;
         appliedFromSaveOnce = true;
 
+        Debug.Log("[ChapterEndingManager] Data restore process started");
+        
         // Ch1 단서
         if (SaveManager.TryGetChapterClueProgress(1, out var p1) && p1.clueIds != null && p1.clueIds.Count > 0)
         {
-            Debug.Log($"ChapterEndingManager : 지워진 수집단서들 {collectedAllCh1Clue}");
+            Debug.Log($"[ChapterEndingManager] 지워진 수집단서들 {collectedAllCh1Clue}");
             collectedAllCh1Clue.Clear();
             collectedAllCh1ClueOrder.Clear(); 
             foreach (var id in p1.clueIds)
@@ -121,7 +123,7 @@ public class ChapterEndingManager : Singleton<ChapterEndingManager>
                 collectedAllCh1ClueOrder.Add(id);
             }
             allCh1CluesCollected = p1.allCollected;
-            Debug.Log($"ChapterEndingManager : 로드된 수집단서들 {collectedAllCh1Clue}");
+            Debug.Log($"[ChapterEndingManager] 로드된 수집단서들 {collectedAllCh1Clue}");
         }
         // Ch2 단서
         if (SaveManager.TryGetChapterClueProgress(2, out var p2) && p2.clueIds != null && p2.clueIds.Count > 0)
@@ -157,9 +159,13 @@ public class ChapterEndingManager : Singleton<ChapterEndingManager>
 
     public void ResetAllAndNotify()
     {
+        Debug.Log("[ChapterEndingManager] All data reset");
+        
         // 진행도 컨테이너 전부 초기화
         collectedAllCh1Clue.Clear();
         collectedAllCh2Clue.Clear();
+        collectedAllCh1ClueOrder.Clear();
+        collectedAllCh2ClueOrder.Clear();
 
         scannedCh1Memories.Clear();
         scannedCh2Memories.Clear();

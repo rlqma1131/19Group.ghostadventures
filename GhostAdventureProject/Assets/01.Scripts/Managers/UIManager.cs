@@ -329,6 +329,8 @@ public class UIManager : Singleton<UIManager>
             go.SetActive(active);
 
             var cg = go.GetComponent<CanvasGroup>();
+            if (go.TryGetComponent(out PuzzleStatus comp))
+                comp.Refresh();
             if (cg != null) { cg.alpha = active ? 1f : 0f; cg.interactable = active; cg.blocksRaycasts = active; }
         }
     }

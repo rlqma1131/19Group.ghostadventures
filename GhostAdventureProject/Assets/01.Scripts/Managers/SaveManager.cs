@@ -715,8 +715,8 @@ public static class SaveManager {
     /// 저장된 데이터 파일을 삭제하는 메소드
     /// </summary>
     public static void DeleteSave() {
-        if (File.Exists(SavePath)) File.Delete(SavePath);
         CurrentData = null; // 조회 계열은 이후 false/기본값을 반환
+        if (File.Exists(SavePath)) File.Delete(SavePath);
     }
     
     /// <summary>
