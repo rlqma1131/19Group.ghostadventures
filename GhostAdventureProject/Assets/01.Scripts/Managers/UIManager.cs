@@ -347,6 +347,7 @@ public class UIManager : Singleton<UIManager>
         if (sceneName.Contains("Ch01")) return PuzzleStatus.Chapter.Chapter1;
         if (sceneName.Contains("Ch02")) return PuzzleStatus.Chapter.Chapter2;
         if (sceneName.Contains("Ch03")) return PuzzleStatus.Chapter.Chapter3;
+        if (sceneName.Contains("Ch04")) return PuzzleStatus.Chapter.Chapter4;
 
         return PuzzleStatus.Chapter.Chapter1; // 기본값
     }
