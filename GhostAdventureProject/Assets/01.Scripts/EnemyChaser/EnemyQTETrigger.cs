@@ -19,7 +19,11 @@ public class EnemyQTETrigger : MonoBehaviour
         {
             if (enemyAI != null)
             {
-                enemyAI.ChangeState(enemyAI.QTEState);
+                if (other.TryGetComponent(out PlayerCondition comp)) {
+                    if (comp.IsInvincible()) enemyAI.ChangeState(enemyAI.PatrolState);
+                    else enemyAI.ChangeState(enemyAI.QTEState);
+                }
+                
             }
         }
         

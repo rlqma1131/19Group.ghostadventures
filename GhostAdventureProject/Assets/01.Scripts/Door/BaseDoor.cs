@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using _01.Scripts.Player;
+using _01.Scripts.Utilities;
 using UnityEngine;
 
 public abstract class BaseDoor : BaseInteractable
@@ -66,23 +67,14 @@ public abstract class BaseDoor : BaseInteractable
     protected void TeleportPlayer() {
         if (EnemyAI.IsAnyQTERunning) return;
 
-        GameObject player = GameManager.Instance?.PlayerObj;
-        if (player == null)
-            return;
+        if (player == null) return;
+        
+        player.Condition.StartInvincibleTimer();
 
-        // 1) 충돌 무시 시작
-        int playerLayer = player.layer;
-        int enemyLayer = LayerMask.NameToLayer("Enemy");
-        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true);
-
-        // 2) 순간이동
         Vector3 teleportPosition = targetDoor != null
             ? targetDoor.position
             : (Vector3)targetPos;
         player.transform.position = teleportPosition;
-
-        // 3) 1초 후 다시 충돌 허용
-        StartCoroutine(RestoreCollision(playerLayer, enemyLayer, 1.5f));
     }
 
     private IEnumerator RestoreCollision(int pLayer, int eLayer, float delay) {

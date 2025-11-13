@@ -32,7 +32,7 @@ public class SaveStateApplier : Singleton<SaveStateApplier>
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
         if (mode == LoadSceneMode.Additive) return; // 컷씬이면 적용 안함
-        if (scene.name == "LoadingScene") return;
+        if (scene.name == "LoadingScene"|| scene.name == "StartScene") return;
         if (SaveManager.CurrentData != null) {
             StartCoroutine(ApplyNextFrame(scene.name)); // 다음 프레임에 적용
         }

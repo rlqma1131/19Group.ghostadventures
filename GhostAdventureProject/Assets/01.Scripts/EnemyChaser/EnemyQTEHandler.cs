@@ -33,12 +33,11 @@ public class EnemyQTEHandler : MonoBehaviour
         qteUI = UIManager.Instance.QTE_UI_2;
         qteEffect = QTEEffectManager.Instance;
 
-        player = qteEffect.player;
+        player = GameManager.Instance.Player;
         playerTransform = player.transform;
     }
 
-    public void StartQTE()
-    {
+    public void StartQTE() {
         // 목숨이 1개 남았을 때 잡히면 즉시 게임오버
         if (player.Condition.GetCurrentLives() <= 1)
         {

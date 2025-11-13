@@ -22,6 +22,8 @@ public class Ch1_TV : BasePossessable
     private bool isControlMode = false;
     private int channel = 1;
 
+    [SerializeField] GameObject colliderInHallway;
+
     protected override void Start()
     {
         base.Start();
@@ -35,6 +37,12 @@ public class Ch1_TV : BasePossessable
         col = GetComponent<Collider2D>();
         spaceBar = UIManager.Instance.spacebar_Key;
         UI.SetActive(false);
+    }
+
+    public override void SetActivated(bool value){
+        base.SetActivated(value);
+        
+        if (!value) colliderInHallway.SetActive(false); 
     }
 
     public void ActivateTV()
@@ -111,6 +119,7 @@ public class Ch1_TV : BasePossessable
             MarkActivatedChanged();
 
             col.enabled = false;
+            colliderInHallway.SetActive(false);
             SaveManager.MarkPuzzleSolved("티비");
         }
         else if (channel != 9 && Input.GetKeyDown(KeyCode.Space))

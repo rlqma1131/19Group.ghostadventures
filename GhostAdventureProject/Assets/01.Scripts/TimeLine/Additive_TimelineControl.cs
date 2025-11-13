@@ -64,16 +64,17 @@ public class Additive_TimelineControl : MonoBehaviour
         timer.OnTimerStop += () => {
             // Basic initialization
             isHolding = false;
-            if (skip) skip.fillAmount = 1f;
             
             // Event Condition => Did the user hold the button long enough?
             if (timer.IsFinished) {
+                if (skip) skip.fillAmount = 0f;
                 if (currentLoadMode != LoadSceneMode.Additive) return;
                 CloseScene();
                 // GoScene(nextSceneName);
             }
             else {
                 flashingCoroutine = StartCoroutine(FlashImages());
+                if (skip) skip.fillAmount = 1f;
             }
         };
         
@@ -84,15 +85,14 @@ public class Additive_TimelineControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space)) {
             timer.Start();
         }
-        if (Input.GetKey(KeyCode.Space)) {
-            // Time passes when the key is held
-            timer.Tick(Time.unscaledDeltaTime);
 
-            // 이미지의 fillAmount를 1에서 0으로 변경
-            if (skip) {
+        if (isHolding) {
+            timer.Tick(Time.unscaledDeltaTime);
+            if (skip) { 
                 skip.fillAmount = timer.Progress; 
             }
         }
+        
         if (Input.GetKeyUp(KeyCode.Space)) {
             timer.Stop();
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _01.Scripts.Player;
+using _01.Scripts.Utilities;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -9,20 +10,40 @@ public class PlayerCondition : MonoBehaviour
     [Header("Player Life Settings")]
     [SerializeField] int maxPlayerLives = 5; //  이것만 바꿔주면 , 판당 목숨도 알아서 조절되고 QTE 시스템도 알아서 작동할것입니다. 
     [SerializeField] int currentPlayerLives;
+    [SerializeField] bool isInvincible;
 
     [Header("Timeline Reference")] 
     [SerializeField] PlayableDirector director;
     [SerializeField] List<ParticleSystem> particleSystems;
     
     Player player;
+    Timer invincibleTimer;
     
     // 이벤트 시스템 - 다른 스크립트들이 구독할 수 있음
     public static event Action<int> OnLifeChanged; // 생명이 변경될 때
 
     void Awake() => Initialize_Comp();
 
+    void Start() {
+        invincibleTimer = new Timer.CountdownTimer(1f) {
+            OnTimerStart = () => { isInvincible = true; },
+            OnTimerStop = () => { if (invincibleTimer.IsFinished) isInvincible = false; }
+        };
+    }
+
+    void Update() {
+        invincibleTimer.Tick(Time.unscaledDeltaTime);
+    }
+
     void Reset() => Initialize_Comp();
 
+    public bool IsInvincible() => isInvincible;
+    
+    public void StartInvincibleTimer() {
+        invincibleTimer.Stop();
+        invincibleTimer.Start();
+    }
+    
     void Initialize_Comp() {
         if (!director) director = GetComponentInChildren<PlayableDirector>();
         if (particleSystems.Count <= 0) particleSystems = new List<ParticleSystem>(GetComponentsInChildren<ParticleSystem>());
