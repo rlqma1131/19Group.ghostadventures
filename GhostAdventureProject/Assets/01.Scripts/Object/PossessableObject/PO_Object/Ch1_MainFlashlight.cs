@@ -190,6 +190,7 @@ public class Ch1_MainFlashlight : BasePossessable
     public override void OnPossessionEnterComplete()
     {
         base.OnPossessionEnterComplete();
+        UIManager.Instance.PromptUI.ShowPrompt("손전등을 이용하여 알파벳을 만들 수 있을 거 같아.", 5f);
         EnemyAI.PauseAllEnemies();
         isControlMode = true;
         UIManager.Instance.PlayModeUI_CloseAll();
