@@ -85,6 +85,7 @@ public class Ch3_MusicBox : BaseInteractable
             {
                 SuccessPlayMusicBox();
                 isPlay = true;
+                SetScannable(false);
             }
         }
     }

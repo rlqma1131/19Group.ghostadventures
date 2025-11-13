@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,7 @@ public class Inventory_PossessableObject : MonoBehaviour
     private Inventory_Player inventory_Player;                      // 인벤토리 - 플레이어
     private HaveItem haveItem;
 
-    void Start()
+    void Awake()
     {
         if (Instance == null)
             Instance = this;
@@ -25,10 +26,13 @@ public class Inventory_PossessableObject : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+
+    void Start(){
         inventory_Player = UIManager.Instance.Inventory_PlayerUI;
     }
 
-     private void Update()
+    private void Update()
     {
         // if (InventoryInputFocus.Current != InvSide.Possess) return;
 
@@ -219,7 +223,7 @@ public class Inventory_PossessableObject : MonoBehaviour
         }
     }
 
-    public ItemData selectedItem() => selectedSlot != null ? selectedSlot.item : null;
+    public ItemData SelectedItem() => selectedSlot != null ? selectedSlot.item : null;
     public bool IsSpawnslots() => spawnedSlots.Count > 0 ? true: false;
 
 

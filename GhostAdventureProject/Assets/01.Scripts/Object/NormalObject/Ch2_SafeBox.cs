@@ -36,12 +36,12 @@ public class Ch2_SafeBox : BaseInteractable
             if(safeBoxOpenAble && !safeBoxOpen)
             {
                 if(needItem == null) return;
-                if(needItem != inventory.selectedItem())
+                if(needItem != inventory.SelectedItem())
                 {
                     UIManager.Instance.PromptUI.ShowPrompt("잠겨있어. 열쇠가 필요해");
                     return;
                 }
-                else if(needItem == inventory.selectedItem())
+                else if(needItem == inventory.SelectedItem())
                 {
                     StartCoroutine(OpenSafeBox());
                     return;

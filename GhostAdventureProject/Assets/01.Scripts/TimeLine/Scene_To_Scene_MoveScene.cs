@@ -3,6 +3,7 @@ using _01.Scripts.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static _01.Scripts.Utilities.Timer;
 
 // Additive 모드가 아닌 일반 컷신 씬에서
 //  - 타임라인 종료 시 다음 씬 이동
@@ -13,7 +14,7 @@ public class Scene_To_Scene_MoveScene : MonoBehaviour
     [SerializeField] string nextSceneName; //이동할 씬 이름
 
     float skipTimer; 
-    const float SKIP_DURATION = 3.0f; // 스킵에 필요한 시간 (3초)
+    const float SKIP_DURATION = 2.0f; // 스킵에 필요한 시간 (3초)
     bool isSkipActive; // 스킵 활성화 여부
 
     // 스킵이미지 깜빡임
@@ -25,6 +26,7 @@ public class Scene_To_Scene_MoveScene : MonoBehaviour
     bool isHolding;
     Coroutine flashingCoroutine; // 깜빡임 코루틴 저장
     Player player;
+    CountdownTimer timer;
 
     void Awake() {
         if (skip != null)
@@ -34,47 +36,49 @@ public class Scene_To_Scene_MoveScene : MonoBehaviour
 
     void Start() {
         player = GameManager.Instance.Player;
-       
+        
+        timer = new CountdownTimer(SKIP_DURATION);
+        timer.OnTimerStart += () => {
+            isHolding = true;
+            ShowImage2Only();
+        };
+        timer.OnTimerStop += () => {
+            // Basic initialization
+            isHolding = false;
+            
+            // Event Condition => Did the user hold the button long enough?
+            if (timer.IsFinished) {
+                if (skip) skip.fillAmount = 0f;
+                GoScene(nextSceneName);
+                if (currentLoadMode != LoadSceneMode.Additive) return;
+              
+                // GoScene(nextSceneName);
+            }
+            else {
+                flashingCoroutine = StartCoroutine(FlashImages());
+                if (skip) skip.fillAmount = 1f;
+            }
+        };
+        
+        flashingCoroutine = StartCoroutine(FlashImages());
         flashingCoroutine = StartCoroutine(FlashImages());
     }
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKey(KeyCode.Space)) {
-
-            isHolding = true;
-            skipTimer += Time.unscaledDeltaTime;
-            if (skip != null)
-                skip.fillAmount = 1.0f - skipTimer / SKIP_DURATION;
-
-            if (skipTimer >= SKIP_DURATION) {
-                isSkipActive = true;
-            }
-            // 누르는 동안 space2 이미지만 보여줌
-            ShowImage2Only();
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            timer.Start();
         }
 
+        if (isHolding) {
+            timer.Tick(Time.unscaledDeltaTime);
+            if (skip) { 
+                skip.fillAmount = timer.Progress; 
+            }
+        }
+        
         if (Input.GetKeyUp(KeyCode.Space)) {
-            // 타이머와 이미지 fillAmount 초기화
-            isHolding = false;
-            skipTimer = 0f;
-            if (skip != null) {
-                skip.fillAmount = 1f;
-            }
-
-            if (flashingCoroutine != null)
-                StopCoroutine(flashingCoroutine);
-            flashingCoroutine = StartCoroutine(FlashImages());
-        }
-
-        // 스킵 활성화 시 씬 이동
-        if (isSkipActive) {
-            if (currentLoadMode != LoadSceneMode.Additive) {
-                GoScene(nextSceneName);
-            }
-
-            //GoScene(nextSceneName);
-            isSkipActive = false; // 스킵 상태 초기화
+            timer.Stop();
         }
     }
 

@@ -20,15 +20,11 @@ public class Ch2_DoorLock : BaseInteractable
     private void Update(){
         if (Input.GetKeyDown(KeyCode.Q)) {
             if(isDoorOpenAble && !isDoorOpen) {
-                if(needItem != inventory.selectedItem()) {
+                if(needItem.name != inventory.SelectedItem().name) {
                     UIManager.Instance.PromptUI.ShowPrompt("문을 열 수 있는 카드키가 필요해");
                     return;
                 }
-                else if(needItem == inventory.selectedItem()) {
-                    OpenDoorLock();
-                    return;
-                }
-                return;
+                OpenDoorLock();
             }
         }
     }

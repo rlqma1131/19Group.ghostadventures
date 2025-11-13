@@ -8,7 +8,7 @@ public class Ch2_MemoryFake_02_CCTV : MemoryFragment
 
     public void ActivateCCTV()
     {
-        isScannable = true;
+        SetScannable(true);
     }
 
     public override void Scanning()

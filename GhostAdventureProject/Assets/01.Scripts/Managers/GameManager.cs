@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using _01.Scripts.Player;
+using _01.Scripts.Utilities;
 using AYellowpaper.SerializedCollections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,16 +14,20 @@ public class GameManager : Singleton<GameManager>
     /// 디버깅용으로 저장 데이터 삭제 기능
     /// P키
     /// </summary>
-#if UNITY_EDITOR
+
     private void Update()
     {
+        stopWatch.Tick(Time.unscaledDeltaTime);
+        UpdateTimeTxt(stopWatch.GetTime());
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.P))
         {
             SaveManager.DeleteSave();
             Debug.Log("[GameManager] 저장 데이터 삭제됨");
         }
-    }
 #endif
+    }
+
     [Header("Managers")]
     [SerializeField] private GameObject chapterEndingManager;
     [SerializeField] private GameObject uiManager;
@@ -40,6 +47,11 @@ public class GameManager : Singleton<GameManager>
     [Header("Required memory ids in each chapter")]
     [SerializeField] SerializedDictionary<MemoryData.Chapter, List<string>> memoryIds = new();
 
+    [Header("StopWatch")] 
+    [SerializeField] TextMeshProUGUI timeTxt;
+
+    [SerializeField] CanvasGroup ResetBtn;
+
     public GameObject PlayerObj => currentPlayer;
     public Player Player => player;
     public PlayerController PlayerController => player.Controller;
@@ -49,12 +61,29 @@ public class GameManager : Singleton<GameManager>
     // 게임 이어하기
     private bool loadFromSave = false;
     private SaveData pendingSaveData;
+    Timer.StopwatchTimer stopWatch;
 
     protected override void Awake()
     {
         base.Awake();
         string sceneName = SceneManager.GetActiveScene().name;
         Application.runInBackground = true;
+    }
+
+    void Start(){
+        stopWatch = new Timer.StopwatchTimer();
+        stopWatch.OnTimerStop = () => {
+            stopWatch.Reset();
+        };
+
+        UpdateTimeTxt(stopWatch.GetTime());
+    }
+
+    void UpdateTimeTxt(float time){
+        int minutes = (int)(time / 60);
+        int seconds = (int)(time % 60);
+        
+        timeTxt.text = $"{minutes:00}:{seconds:00}";
     }
 
     private void OnEnable()
@@ -120,7 +149,12 @@ public class GameManager : Singleton<GameManager>
             SaveManager.SaveGame();
         }
 
-        if (sceneName == "StartScene" || sceneName == "End_Exit" || sceneName == "End_인정" || sceneName == "End_분기") {
+        if (sceneName == "StartScene" || sceneName == "End_Exit" || sceneName == "End_인정" || sceneName == "End_분기")
+        {
+            if (sceneName == "StartScene") {
+                ResetBtn.alpha = 1f;
+                ResetBtn.interactable = true;
+            }
             if (currentPlayer != null) {
                 Debug.Log("[GameManager] StartScene 로드됨 - Player 제거");
                 Destroy(currentPlayer);
@@ -129,6 +163,9 @@ public class GameManager : Singleton<GameManager>
             }
             return;
         }
+
+        ResetBtn.alpha = 0f;
+        ResetBtn.interactable = false;
 
         var chapterEndingManagerComp = EnsureManagerExists<ChapterEndingManager>(chapterEndingManager);
         var uiManagerComp = EnsureManagerExists<UIManager>(uiManager);
@@ -152,6 +189,14 @@ public class GameManager : Singleton<GameManager>
         Debug.Log($"씬 로드됨: {scene.name}");
     }
 
+    public void StartStopWatch() {
+        stopWatch.Start();
+    }
+
+    public void ResetStopWatch(){
+        stopWatch.Stop();
+    }
+    
     public void SetPendingLoad(SaveData data)
     {
         loadFromSave = true;

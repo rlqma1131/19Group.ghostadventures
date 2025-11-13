@@ -130,6 +130,7 @@ public class StartScene_MenuButtons : MonoBehaviour
 
     void StartInChapterOne() {
         GameManager.Instance.ByPassEnabled = true;
+        GameManager.Instance.StartStopWatch();
         SceneManager.LoadScene("IntroScene_Real");
         if (UIManager.Instance != null) {
             UIManager.Instance.PlayModeUI_CloseAll();
@@ -139,6 +140,7 @@ public class StartScene_MenuButtons : MonoBehaviour
 
     void StartInChapterTwo() {
         GameManager.Instance.ByPassEnabled = true;
+        GameManager.Instance.StartStopWatch();
         SceneManager.LoadScene("00.Scenes/CutScene/Ch01_To_Ch02");
         if (UIManager.Instance != null) {
             UIManager.Instance.PlayModeUI_CloseAll();
@@ -148,6 +150,7 @@ public class StartScene_MenuButtons : MonoBehaviour
 
     void StartInChapterThree() {
         GameManager.Instance.ByPassEnabled = true;
+        GameManager.Instance.StartStopWatch();
         SceneManager.LoadScene("00.Scenes/CutScene/Ch02_To_Ch03");
         if (UIManager.Instance != null) {
             UIManager.Instance.PlayModeUI_CloseAll();
@@ -157,6 +160,7 @@ public class StartScene_MenuButtons : MonoBehaviour
 
     void StartInChapterFour() {
         GameManager.Instance.ByPassEnabled = true;
+        GameManager.Instance.StartStopWatch();
         SceneManager.LoadScene("00.Scenes/CutScene/Ch03_To_Ch04");
         if (UIManager.Instance != null) {
             UIManager.Instance.PlayModeUI_CloseAll();

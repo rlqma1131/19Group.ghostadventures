@@ -55,14 +55,14 @@ public class Ch3_Console : BaseInteractable
 
             inventory = Inventory_PossessableObject.Instance;
 
-            if (inventory == null || cardKey != inventory.selectedItem()
+            if (inventory == null || cardKey != inventory.SelectedItem()
                 || !PossessionStateManager.Instance.IsPossessing())
             {
                 UIManager.Instance.PromptUI.ShowPrompt("조작하려면 카드키가 필요해보여.. 방법이 없을까?", 2f);
                 return;
             }
 
-            if (cardKey == inventory.selectedItem() && cardKey != null && !isZoomed)
+            if (cardKey == inventory.SelectedItem() && cardKey != null && !isZoomed)
             {
                 EnemyAI.PauseAllEnemies();
                 UIManager.Instance.PlayModeUI_CloseAll();
@@ -77,7 +77,7 @@ public class Ch3_Console : BaseInteractable
                 }
                 return;
             }
-            else if (cardKey == inventory.selectedItem() && cardKey != null && isZoomed)
+            else if (cardKey == inventory.SelectedItem() && cardKey != null && isZoomed)
             {
                 EnemyAI.ResumeAllEnemies();
                 UIManager.Instance.PlayModeUI_OpenAll();
